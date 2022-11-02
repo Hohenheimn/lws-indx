@@ -3,6 +3,8 @@
 // import { notification } from "antd";
 // import React from "react";
 
+export const sample = {};
+
 // const statusType = (status: any) => {
 //   if (status <= 100) {
 //     return "info";
