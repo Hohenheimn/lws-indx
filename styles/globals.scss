@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "antd/dist/antd.css";
 // @import "tw-elements";
 
 @layer base {
@@ -60,14 +61,14 @@ html {
   @media (max-width: 500px) {
     font-size: 3vw;
   }
-  @apply text-neutral-800;
+  @apply text-neutral-800 h-[100%];
 }
 
 body {
   font-family: "Hind", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  @apply font-normal;
+  @apply font-normal h-[100%];
 }
 
 #__next {

@@ -11,7 +11,9 @@ export const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex">
       <SideBar />
-      <div className="container overflow-hidden flex flex-col">{children}</div>
+      <div className="w-[100%] mx-auto overflow-hidden flex flex-col">
+        {children}
+      </div>
     </div>
   );
 };

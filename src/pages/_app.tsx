@@ -3,7 +3,7 @@ import React from "react";
 import Head from "next/head";
 import Router from "next/router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { capitalizeTitle } from "../../utils/helpers";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
@@ -60,7 +60,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
         setShowLoading={(show: boolean) => setShowLoading(show)}
       >
         <AnimatePresence mode="wait">
-          <AnimateContainer variants={fadeIn}>
+          <AnimateContainer variants={fadeIn} className="flex flex-col">
             <AnimatePresence mode="wait">
               <Layout key={router.asPath}>
                 <Component {...pageProps} router={router} />

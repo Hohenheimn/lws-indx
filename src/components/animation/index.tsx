@@ -12,6 +12,7 @@ interface AnimateContainerProps {
   children: React.ReactNode;
   variants?: {};
   triggerOnce?: boolean;
+  className?: string | "";
 }
 
 export function PageContainer({
@@ -38,6 +39,7 @@ export function AnimateContainer({
   children,
   triggerOnce,
   variants,
+  className,
   ...rest
 }: AnimateContainerProps) {
   const [ref, inView] = useInView({
@@ -52,6 +54,7 @@ export function AnimateContainer({
       animate={inView ? "animate" : "exit"}
       exit="exit"
       variants={variants}
+      className={className}
       {...rest}
     >
       {children}
