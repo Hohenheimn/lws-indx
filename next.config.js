@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
   publicRuntimeConfig: {
@@ -22,10 +21,6 @@ module.exports = {
   images: {
     domains: ["picsum.photos"],
   },
-  plugins: [
-    // load `moment/locale/ja.js` and `moment/locale/it.js`
-    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ja|it/),
-  ],
   resolve: {
     alias: {
       "@ant-design/icons/lib/dist$": path.resolve(__dirname, "./src/icons.js"),
