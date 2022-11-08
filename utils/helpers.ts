@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 export function statusPalette(status: string) {
   switch (status?.toLowerCase()) {
     case "pending":
@@ -27,7 +29,7 @@ export function statusPalette(status: string) {
 export function classNameMerge(
   ...classes: Array<boolean | string | undefined>
 ) {
-  return classes.filter(Boolean).join(" ");
+  return twMerge(classes.filter((value) => value).join(" "));
 }
 
 export function formatNumber(currency: string, decimal?: number) {

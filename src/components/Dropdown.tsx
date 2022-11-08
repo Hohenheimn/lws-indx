@@ -7,14 +7,9 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   }>;
 }
 
-export function Dropdown({
-  children,
-  className,
-  overlayMenu,
-  ...rest
-}: DropdownProps) {
+export function Dropdown({ children, className, overlayMenu }: DropdownProps) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Menu>
         <Float
           placement="top"
@@ -28,7 +23,7 @@ export function Dropdown({
           offset={6}
           className="[&>div]:w-full"
         >
-          <Menu.Button>{children}</Menu.Button>
+          <Menu.Button className="w-full">{children}</Menu.Button>
           <Menu.Items className="min-w-[10rem] w-full bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
             {overlayMenu.map(({ label }) => {
               return (

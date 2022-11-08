@@ -22,7 +22,7 @@ div.ant-picker {
   }
 
   input {
-    @apply text-base h-auto leading-normal;
+    @apply text-base h-auto leading-normal font-normal;
   }
   .ant-picker-active-bar {
     @apply bg-primary-600;
@@ -80,14 +80,29 @@ div.ant-picker-dropdown {
       @apply text-primary-500;
     }
   }
-  //   @media (max-width: 768px) {
-  //     @apply w-full;
-  //     .ant-picker-panel-container,
-  //     .ant-picker-date-panel,
-  //     .ant-picker-header,
-  //     .ant-picker-body,
-  //     .ant-picker-content {
-  //       @apply w-full;
-  //     }
-  //   }
+}
+
+// Radio
+
+div.ant-radio-group {
+  @apply flex leading-['normal'] h-auto;
+  .ant-radio-wrapper {
+    @apply text-default-text;
+  }
+}
+
+label.ant-radio-button-wrapper {
+  @apply px-8 py-2 leading-['normal'] h-auto bg-transparent border border-solid border-primary-500 flex-auto text-base;
+  &:not(:first-child)::before {
+    @apply w-0;
+  }
+  &::after {
+    @apply transition opacity-0 absolute top-0 left-0 w-full h-full -z-[1] bg-primary-500;
+  }
+  &.ant-radio-button-wrapper-checked {
+    @apply shadow-none bg-primary-500 border-primary-500 text-white;
+    &::after {
+      @apply opacity-100;
+    }
+  }
 }

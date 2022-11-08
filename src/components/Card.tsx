@@ -7,7 +7,7 @@ export default function Cards({ children, className, ...rest }: CardProps) {
   return (
     <div
       className={classNameMerge(
-        "bg-white p-6 rounded-2xl shadow-md shadow-slate-300",
+        "bg-white p-6 rounded-2xl shadow-md shadow-slate-300 relative",
         className
       )}
       {...rest}

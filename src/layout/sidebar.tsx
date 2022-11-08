@@ -35,10 +35,16 @@ export default function SideBar() {
 
   return (
     <div className="hidden md:block">
-      <div className="flex flex-col h-screen overflow-auto bg-white shadow-lg min-w-[20rem] pt-14 pb-7 px-4">
+      <div className="flex flex-col h-screen overflow-y-auto overflow-x-hidden bg-white shadow-lg w-[20rem] pt-14 pb-7 px-4">
         <div className="space-y-5 flex-1">
-          <div className="items-center">
-            <h2 className="text-4xl font-bold text-center uppercase">Index</h2>
+          <div className="items-center h-10 w-full relative mb-14">
+            <Image
+              src="/images/logo.png"
+              alt="random pics"
+              fill
+              sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+              className="object-center object-contain"
+            />
           </div>
           <div className="flex-1 flex-col space-y-5">
             {sideMenu.map(({ label, link }, index) => {
@@ -46,7 +52,7 @@ export default function SideBar() {
               return (
                 <Button
                   onClick={() => router.push(link)}
-                  className={`text-left ${
+                  className={`text-left px-8 py-3 text-lg font-medium border-none ${
                     !activeRoute &&
                     "bg-transparent text-default-text hover:text-white shadow-none min-[172px]"
                   }`}
@@ -79,22 +85,19 @@ export default function SideBar() {
               },
             ]}
           >
-            <div
-              className="flex flex-grow-0 items-center justify-center space-x-5 w-full cursor-pointer text-default-text text-base"
-              id="menu-button"
-              aria-expanded="true"
-              aria-haspopup="true"
-            >
-              <div className="h-10 w-10 rounded-full overflow-hidden relative">
+            <div className="flex flex-grow-0 items-center justify-center w-full cursor-pointer text-default-text text-base space-x-4">
+              <div className="relative w-10 h-10">
                 <Image
-                  src="https://picsum.photos/200/300"
+                  src="https://picsum.photos/500/500"
                   alt="random pics"
                   fill
                   sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                  className="object-center"
+                  className="object-center rounded-full"
                 />
               </div>
-              <div>Kelscey Ortiz</div>
+              <div className="truncate font-medium max-w-[70%]">
+                Kelscey Ortiz
+              </div>
               <div>
                 <AiFillCaretDown />
               </div>

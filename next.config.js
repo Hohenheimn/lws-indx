@@ -21,10 +21,10 @@ module.exports = {
   images: {
     domains: ["picsum.photos"],
   },
-  resolve: {
-    alias: {
-      "@ant-design/icons/lib/dist$": path.resolve(__dirname, "./src/icons.js"),
-      moment: `moment/moment.js`,
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     "@ant-design/icons/lib/dist$": path.resolve(__dirname, "./src/icons.js"),
+  //     moment: `moment/moment.js`,
+  //   },
+  // },
 };

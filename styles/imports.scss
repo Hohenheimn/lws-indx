@@ -41,7 +41,7 @@
 
 @layer base {
   html {
-    @apply min-h-[100%] h-auto text-[2.6vw] xs:text-[2.2vw] sm:text-[1.7vw] md:text-[1.5vw] lg:text-[1.3vw] xl:text-[1.1vw] 2xl:text-[.9vw];
+    @apply min-h-[100%] h-auto text-[2.6vw] xs:text-[2.2vw] sm:text-[1.7vw] md:text-[1.5vw] lg:text-[1.3vw] xl:text-[1.1vw] 2xl:text-[.8vw];
   }
   body {
     font-family: "Hind", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -73,6 +73,6 @@
   h4,
   h5,
   h6 {
-    @apply font-bold leading-[normal] text-default-text;
+    @apply font-bold leading-none text-default-text;
   }
 }

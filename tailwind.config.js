@@ -1,4 +1,5 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("./styles/theme.js");
+
 module.exports = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -9,24 +10,9 @@ module.exports = {
     extend: {
       screens: {
         xs: "425px",
-        // => @media (min-width: 992px) { ... }
       },
       colors: {
-        primary: {
-          100: "#7ddce0",
-          200: "#68d6db",
-          300: "#52d1d6",
-          400: "#3dcbd1",
-          500: "#27c5cc",
-          600: "#23b1b8",
-          700: "#1f9ea3",
-          800: "#1b8a8f",
-          900: "#17767a",
-        },
-        default: {
-          page: "#F7F8FF",
-          text: "#333333",
-        },
+        ...colors,
       },
     },
   },

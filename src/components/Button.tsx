@@ -39,7 +39,7 @@ export const Button: ButtonProps = ({
       <button
         type="button"
         className={classNameMerge(
-          "inline-block overflow-hidden whitespace-nowrap tracking-wider px-8 py-3 w-full bg-primary-500 text-white font-medium text-lg rounded shadow-md hover:bg-primary-600 hover:shadow-lg active:bg-primary-700 active:shadow-lg transition duration-300 ease-in-out",
+          "overflow-hidden whitespace-nowrap tracking-wider w-full bg-primary-500 border border-solid border-primary-500 text-white font-medium px-8 py-2 text-base rounded shadow-md hover:bg-primary-600 hover:shadow-lg active:bg-primary-700 active:shadow-lg transition duration-300 ease-in-out",
           className
         )}
         data-mdb-ripple="true"
