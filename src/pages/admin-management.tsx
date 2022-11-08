@@ -5,7 +5,7 @@ import { PageContainer } from "../components/animation";
 export default function AdminManagement() {
   return (
     <PageContainer>
-      <h1>Admin Management</h1>
+      <h3>Admin Management</h3>
     </PageContainer>
   );
 }

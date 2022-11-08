@@ -5,7 +5,7 @@ import { PageContainer } from "../components/animation";
 export default function AccountProfile() {
   return (
     <PageContainer>
-      <h1>Account Profile</h1>
+      <h3>Account Profile</h3>
     </PageContainer>
   );
 }

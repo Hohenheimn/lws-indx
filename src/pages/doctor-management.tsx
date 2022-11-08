@@ -5,7 +5,7 @@ import { PageContainer } from "../components/animation";
 export default function DoctorManagement() {
   return (
     <PageContainer>
-      <h1>Doctor Management</h1>
+      <h3>Doctor Management</h3>
     </PageContainer>
   );
 }

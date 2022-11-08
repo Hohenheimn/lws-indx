@@ -1,18 +1,15 @@
 import { useInView } from "react-intersection-observer";
 import { pageTransition } from "./animation";
 import { motion } from "framer-motion";
+import { classNameMerge } from "../../../utils/helpers";
 
-interface PageContainerProps {
-  children: React.ReactNode;
-  className?: string | "";
+interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
 }
 
-interface AnimateContainerProps {
-  children: React.ReactNode;
+interface AnimateContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
   triggerOnce?: boolean;
-  className?: string | "";
 }
 
 export function PageContainer({
@@ -27,7 +24,7 @@ export function PageContainer({
       initial="initial"
       animate="animate"
       exit="exit"
-      className={`py-[5rem] px-[5%] flex-1 ${className ?? ""}`}
+      className={classNameMerge("py-14 px-[5%] flex-1 space-y-10", className)}
       {...rest}
     >
       {children}

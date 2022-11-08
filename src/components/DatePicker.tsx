@@ -1,8 +1,7 @@
 import React from "react";
-import { DatePicker as DP } from "antd";
 
 interface DatePickerProps
-  extends React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> {}
+  extends React.FC<React.InputHTMLAttributes<HTMLInputElement>> {}
 
 export const DatePicker: DatePickerProps = ({
   children,
@@ -10,7 +9,7 @@ export const DatePicker: DatePickerProps = ({
   disabled,
   ...rest
 }) => {
-  return <DP />;
+  return <></>;
 };
 
 export default DatePicker;

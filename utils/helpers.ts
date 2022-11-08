@@ -24,7 +24,13 @@ export function statusPalette(status: string) {
   }
 }
 
-export function formatNumber(currency: any, decimal?: any) {
+export function classNameMerge(
+  ...classes: Array<boolean | string | undefined>
+) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function formatNumber(currency: string, decimal?: number) {
   return parseFloat(currency)
     .toFixed(decimal ?? 2)
     .toString()
@@ -43,7 +49,7 @@ export function contactNumberFormatter(number: string) {
   return number.replace(/\s+/g, "").replace(/#/g, "");
 }
 
-export function getYoutubeId(url: any) {
+export function getYoutubeId(url: string) {
   const regex =
     /^.*(youtu.be|v|embed|watch\?|youtube.comuser[^#]*#([^]*?)*)\??v?=?([^#]*).*/g;
   const match = regex.exec(url);

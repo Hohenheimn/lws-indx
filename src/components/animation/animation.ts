@@ -16,19 +16,16 @@ export const stagger = {
 export const pageTransition = {
   initial: {
     opacity: 0,
-    y: 60,
   },
   animate: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.3,
       ease: [0.6, -0.05, 0.01, 0.99],
     },
   },
   exit: {
     opacity: 0,
-    y: 60,
     transition: {
       type: "ease-in",
     },

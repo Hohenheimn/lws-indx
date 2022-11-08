@@ -60,7 +60,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
         setShowLoading={(show: boolean) => setShowLoading(show)}
       >
         <AnimatePresence mode="wait">
-          <AnimateContainer variants={fadeIn} className="flex flex-col">
+          <AnimateContainer variants={fadeIn} className="flex flex-col flex-1">
             <AnimatePresence mode="wait">
               <Layout key={router.asPath}>
                 <Component {...pageProps} router={router} />

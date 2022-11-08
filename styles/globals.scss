@@ -1,194 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import "antd/dist/antd.css";
-// @import "tw-elements";
-
-@layer base {
-  h1 {
-    @apply text-4xl font-bold;
-  }
-}
-
-@font-face {
-  font-family: "Hind";
-  src: url("/fonts/Hind-Light.ttf");
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Hind";
-  src: url("/fonts/Hind-Regular.ttf");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Hind";
-  src: url("/fonts/Hind-Medium.ttf");
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Hind";
-  src: url("/fonts/Hind-SemiBold.ttf");
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Hind";
-  src: url("/fonts/Hind-Bold.ttf");
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-
-html {
-  font-size: 0.8vw;
-
-  @media screen and (min-device-width: 1200px) and (max-device-width: 1600px) {
-    font-size: 1vw;
-  }
-  @media (max-width: 1024px) {
-    font-size: 1.1vw;
-  }
-  @media (max-width: 768px) {
-    font-size: 1.6vw;
-  }
-  @media (max-width: 500px) {
-    font-size: 3vw;
-  }
-  @apply text-neutral-800 h-[100%];
-}
-
-body {
-  font-family: "Hind", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  @apply font-normal h-[100%];
-}
+@import "./imports.scss";
 
 #__next {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-svg g {
-  fill: inherit;
+  @apply min-h-[100%] flex flex-col;
 }
 
 button[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
+  @apply opacity-50 cursor-not-allowed pointer-events-none;
 }
 
-// Space
-
-.ant-space-vertical {
-  height: auto;
-  width: 100%;
-
-  .ant-space-item {
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
+::-webkit-scrollbar {
+  @apply w-2;
 }
 
-// Select
-
-.ant-select-single:not(.ant-select-customize-input) .ant-select-selector::after,
-.ant-select-selection-placeholder {
-  line-height: normal !important;
+::-webkit-scrollbar-track {
+  @apply bg-slate-200;
 }
 
-div.ant-select-focused.ant-select-single:not(.ant-select-customize-input) {
-  .ant-select-selector {
-    border: 1px solid #036548 !important;
-    box-shadow: none;
-  }
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-lg hover:bg-slate-400;
 }
 
-div.ant-select-dropdown {
-  .ant-select-item-option-content {
-    font-size: 1rem;
-    padding: 1rem 0.5rem;
-  }
-}
-
-.available-time-container {
-  @media (max-width: 768px) {
-    text-align: center;
-  }
-}
-
-// Datepicker
-
-div.ant-picker-dropdown {
-  .ant-picker-panels {
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-  }
-  @media (max-width: 768px) {
-    width: 100%;
-    .ant-picker-panel-container,
-    .ant-picker-date-panel,
-    .ant-picker-header,
-    .ant-picker-body,
-    .ant-picker-content {
-      width: 100%;
-    }
-  }
-}
-
-// Modal
-
-div.ant-modal-root {
-  .ant-modal-wrap {
-    padding: 2.5% 0 2.5% 0;
-  }
-}
-
-#registration {
-  position: relative !important;
-  .ant-modal-mask {
-    background: transparent;
-  }
-  .ant-modal-wrap {
-    position: absolute !important;
-  }
-}
-
-// List
-
-ul,
-ol {
-  overflow: visible;
-  padding-left: 15px;
-  @media (max-width: 768px) {
-    padding: 0;
-  }
-}
-
-// Notification
-
-.ant-notification {
-  .ant-notification-notice-with-icon {
-    .anticon {
-      color: #e3000f;
-    }
-    .ant-notification-notice-message {
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: #e3000f;
-    }
-  }
+::selection {
+  @apply text-white bg-primary-900;
 }
 
 // Loading
@@ -231,3 +64,5 @@ ol {
     }
   }
 }
+
+@import "./antd.scss";
