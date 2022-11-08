@@ -1,6 +1,6 @@
 import React from "react";
 import { PageContainer } from "../components/animation";
-import DatePicker from "antd/lib/date-picker";
+// import DatePicker from "antd/lib/date-picker";
 import Card from "../components/Card";
 
 const dummyData = [
@@ -14,8 +14,20 @@ export default function Dashboard() {
     <PageContainer>
       <div className="flex justify-between align-middle">
         <h3>Dashboard</h3>
-        <div>
+        {/* <div>
           <DatePicker.RangePicker />
+        </div> */}
+        <div className="flex items-center justify-center">
+          <div className="datepicker relative form-floating mb-3 xl:w-96">
+            <input
+              type="text"
+              className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              placeholder="Select a date"
+            />
+            <label htmlFor="floatingInput" className="text-gray-700">
+              Select a date
+            </label>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6">
