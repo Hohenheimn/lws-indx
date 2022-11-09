@@ -1,0 +1,68 @@
+@import "./imports.scss";
+
+#__next {
+  @apply min-h-[100%] flex flex-col;
+}
+
+button[disabled] {
+  @apply opacity-50 cursor-not-allowed pointer-events-none;
+}
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-200;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-lg hover:bg-slate-400;
+}
+
+::selection {
+  @apply text-white bg-primary-900;
+}
+
+// Loading
+#nprogress {
+  height: 100vh;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 1000000;
+  pointer-events: visible;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: 0.3s all;
+  .bar {
+    background: #a6c23c;
+    height: 4px;
+  }
+
+  .spinner {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    .spinner-icon {
+      border-radius: 50%;
+      border-top-color: #a6c23c !important;
+      border-left-color: #a6c23c !important;
+      height: 5rem;
+      width: 5rem;
+      border: 5px solid transparent;
+      animation: rotate 1s infinite linear;
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+}
+
+@import "./antd.scss";
