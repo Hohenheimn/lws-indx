@@ -1,7 +1,7 @@
 // Datepicker
 
 div.ant-picker {
-  @apply w-full rounded-md px-4 py-3 font-medium text-base leading-normal h-auto;
+  @apply w-full rounded-md px-4 py-3 font-medium text-base leading-normal h-auto border-slate-200;
 
   &.ant-picker-focused {
     @apply shadow-[0_0_3px_0_primary-500];
@@ -104,5 +104,189 @@ label.ant-radio-button-wrapper {
     &::after {
       @apply opacity-100;
     }
+  }
+}
+
+// Input
+
+input.ant-input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: normal;
+  height: auto;
+  color: #000;
+
+  &::placeholder {
+    font-weight: 500;
+  }
+
+  &:hover,
+  &:focus {
+    border: 1px solid #e3000f;
+    box-shadow: 0 0 5px 0 #e3000f;
+  }
+
+  &.ant-input-disabled {
+    // &::placeholder {
+    //   color: #fff;
+    // }
+
+    color: #fff;
+    background: #ccc;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}
+
+span.ant-input-search {
+  min-width: 5rem;
+  .ant-input-wrapper {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: 0.3s all;
+    background: #fff;
+
+    &:focus-within,
+    &:hover {
+      border: 1px solid #e3000f;
+      box-shadow: 0 0 5px 0 #e3000f;
+    }
+
+    input.ant-input {
+      height: auto !important;
+      line-height: normal !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 1rem;
+      font-size: 1rem;
+      transition: 0.3s all;
+      flex: 1;
+      &::placeholder {
+        font-weight: 500;
+      }
+    }
+
+    .ant-input-group-addon {
+      width: auto;
+      background: transparent;
+      left: 1px;
+      button.ant-btn {
+        height: 100% !important;
+        width: 100%;
+        line-height: normal !important;
+        transition: 0.3s all;
+        border: none;
+
+        &.ant-btn-icon-only {
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          padding-right: 1rem;
+          .anticon {
+            font-size: 1rem;
+            justify-content: flex-end;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Select
+
+div.ant-select {
+  min-width: 12rem;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+
+  .ant-select-selector {
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    line-height: normal !important;
+    height: auto !important;
+
+    .ant-select-selection-item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: normal;
+      height: auto;
+      font-size: 1rem;
+    }
+
+    .ant-select-selection-search {
+      left: 1rem;
+      input {
+        height: 100% !important;
+        line-height: normal !important;
+      }
+    }
+  }
+
+  &:hover .ant-select-selector {
+    border: 1px solid #e3000f !important;
+    // box-shadow: 0 0 10px 0 #a8c440;
+  }
+
+  .ant-select-arrow {
+    color: inherit;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &.ant-select-focused.ant-select-single:not(.ant-select-customize-input) {
+    .ant-select-selector {
+      border: 1px solid #e3000f !important;
+      // box-shadow: 0 0 10px 0 #a8c440;
+    }
+  }
+
+  &.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+    .ant-select-selector {
+    background: #e8e8e8;
+    border: 1px solid #c1c1c1;
+  }
+
+  &.ant-select-multiple {
+    .ant-select-selection-item {
+      padding: 0.5em;
+    }
+  }
+}
+
+div.ant-form-item {
+  @apply mb-4;
+  &.ant-form-item-has-error {
+    input {
+      @apply border-danger;
+    }
+  }
+  @apply text-inherit;
+  &.ant-form-item-with-help {
+    .ant-upload-select {
+      @apply border border-gray-300;
+    }
+  }
+  div.ant-form-item-label {
+    @apply p-0;
+    label {
+      @apply w-full text-base leading-[normal];
+    }
+  }
+
+  .ant-form-item-control-input {
+    @apply min-h-0;
+  }
+
+  div.ant-form-item-explain {
+    .ant-form-item-explain-error {
+      @apply text-danger;
+    }
+    @apply py-1 text-sm;
   }
 }

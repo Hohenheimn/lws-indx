@@ -1,497 +1,471 @@
 import React from "react";
-import { PageContainer } from "../components/animation";
-import DatePicker from "antd/lib/date-picker";
-// import Radio from "antd/lib/radio";
-import Card from "../components/Card";
-import "chart.js/auto";
-import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
+import { AnimateContainer, PageContainer } from "../components/animation";
+import Form from "antd/lib/form";
+import Input from "../components/Input";
 import { Button } from "../components/Button";
-import colors from "../../styles/theme";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Radio } from "../components/Radio";
+import "chart.js/auto";
+import { IoIosAdd } from "react-icons/io";
+import {
+  AiOutlineSearch,
+  AiOutlineCalendar,
+  AiOutlineClockCircle,
+  AiOutlineStop,
+} from "react-icons/ai";
+import {
+  BsCameraVideo,
+  BsCheck2Square,
+  BsPencilSquare,
+  BsTrash,
+} from "react-icons/bs";
+import Calendar from "../components/Calendar";
+import { Select } from "../components/Select";
+import Card from "../components/Card";
+import { isEqual, isBefore, isAfter, parse, format } from "date-fns";
+import { fadeIn } from "../components/animation/animation";
+import Modal from "../components/Modal";
+import { PatternFormat } from "react-number-format";
+import { scroller } from "react-scroll";
 
-const randomNumber = () => {
-  return Math.random() * (100 - 1);
-};
-
-const dummyData = [
+const fakeDoctors = [
   {
-    content: "102",
-    description: "Total Registered Users",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: colors.orange[50],
-          borderColor: colors.orange[300],
-          borderWidth: 2,
-          tension: 0.3,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
-    },
-    percentage: 60.2,
-    rate: "up",
+    name: "Marc Medina",
   },
   {
-    content: "75",
-    description: "Total Paid Subscribers",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: colors.cyan[50],
-          borderColor: colors.cyan[300],
-          borderWidth: 2,
-          tension: 0.3,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
-    },
-    percentage: 57.4,
-    rate: "down",
+    name: "Bianca Medina",
   },
   {
-    content: "329",
-    description: "Total Patient Records",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: colors.emerald[50],
-          borderColor: colors.emerald[300],
-          borderWidth: 2,
-          tension: 0.3,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
-    },
-    percentage: 22.1,
-    rate: "up",
+    name: "Beatrice Medina",
   },
   {
-    content: "10",
-    description: "Total Cancelled Subscribers",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: colors.fuchsia[50],
-          borderColor: colors.fuchsia[300],
-          borderWidth: 2,
-          tension: 0.3,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
-    },
-    percentage: 33.8,
-    rate: "up",
+    name: "Marcus Medina",
+  },
+  {
+    name: "Marco Medina",
+  },
+  {
+    name: "Brylle Medina",
   },
 ];
 
-const chartData = {
-  labels: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
-  datasets: [
-    {
-      label: "Sample 1",
-      data: [65, 59, 80, 81, 56, 55, 40, 80, 81, 56, 55, 40],
-      backgroundColor: [colors.primary[500]],
-      borderColor: ["transparent"],
-      borderWidth: 1,
-    },
-    {
-      label: "Sample 2",
-      data: [80, 70, 25, 55, 38, 65, 42, 55, 38, 65, 42, 55],
-      backgroundColor: [colors.secondary[500]],
-      borderColor: ["transparent"],
-      borderWidth: 1,
-    },
-  ],
-};
+const fakePatients = [
+  {
+    name: "Marquise Finney",
+    email: "marquise@gmail.com",
+    mobile_number: "09xx-xxx-xxxx",
+    issue: "Tooth Ache",
+    doctor: "Marc Medina",
+    branch: "Cavite",
+    unit: "Room 100",
+    schedule: parse("11/22/2022", "MM/dd/yyyy", new Date()),
+  },
+  {
+    name: "Darien Guy",
+    email: "darien@gmail.com",
+    mobile_number: "09xx-xxx-xxxx",
+    issue: "Braces",
+    doctor: "Bianca Medina",
+    branch: "Quezon City",
+    unit: "Room 854",
+    schedule: parse("11/15/2022", "MM/dd/yyyy", new Date()),
+  },
+  {
+    name: "Leticia Coffin",
+    email: "leticia@gmail.com",
+    mobile_number: "09xx-xxx-xxxx",
+    issue: "Whitening",
+    doctor: "Marcus Medina",
+    branch: "Quezon City",
+    unit: "Room 143",
+    schedule: parse("11/13/2022", "MM/dd/yyyy", new Date()),
+  },
+  {
+    name: "Denver Hardman",
+    email: "denver@gmail.com",
+    mobile_number: "09xx-xxx-xxxx",
+    issue: "Tooth Ache",
+    doctor: "Beatrice Medina",
+    branch: "Quezon City",
+    unit: "Room 542",
+    schedule: parse("11/08/2022", "MM/dd/yyyy", new Date()),
+  },
+  {
+    name: "Arman Whiting",
+    email: "arman@gmail.com",
+    mobile_number: "09xx-xxx-xxxx",
+    issue: "Bunot",
+    doctor: "Marco Medina",
+    branch: "Manila",
+    unit: "Room 732",
+    schedule: parse("11/25/2022", "MM/dd/yyyy", new Date()),
+  },
+  {
+    name: "Francisco Coffey",
+    email: "francisco@gmail.com",
+    mobile_number: "09xx-xxx-xxxx",
+    issue: "Braces",
+    doctor: "Brylle Medina",
+    branch: "Makati",
+    unit: "Room 696",
+    schedule: parse("11/28/2022", "MM/dd/yyyy", new Date()),
+  },
+];
 
-const doughnutData = {
-  labels: ["Male", "Female"],
-  datasets: [
-    {
-      data: [65, 30],
-      backgroundColor: [colors.primary[500], colors.secondary[500]],
-      borderColor: [colors.primary[500], colors.secondary[500]],
-      hoverOffset: 15,
-    },
-  ],
-};
-
-const pieData = {
-  labels: [
-    "18 - 25 Years Old",
-    "26 - 30 Years Old",
-    "31 - 35 Years Old",
-    "36 - 40 Years Old",
-    "41 - 45 Years Old",
-    "46 - 50 Years Old",
-  ],
-  datasets: [
-    {
-      data: [23, 30, 5, 18, 9, 15],
-      backgroundColor: [
-        colors.primary[600],
-        colors.primary[500],
-        colors.primary[400],
-        colors.primary[300],
-        colors.primary[200],
-        colors.primary[100],
-      ],
-      borderColor: [
-        colors.primary[600],
-        colors.primary[500],
-        colors.primary[400],
-        colors.primary[300],
-        colors.primary[200],
-        colors.primary[100],
-      ],
-      hoverOffset: 15,
-    },
-  ],
-};
-
-const locationData = {
-  labels: [
-    "Asia",
-    "Africa",
-    "Europe",
-    "South America",
-    "North America",
-    "Autralia",
-    "Autralia",
-    "Autralia",
-    "Autralia",
-    "Autralia",
-  ],
-  datasets: [
-    {
-      label: "Sample 1",
-      data: [65, 59, 80, 81, 56, 55, 40, 80, 81, 56],
-      backgroundColor: [colors.primary[500]],
-      borderColor: ["transparent"],
-      borderWidth: 1,
-      barPercentage: 1.06,
-    },
-    {
-      label: "Sample 2",
-      data: [80, 70, 25, 55, 38, 65, 42, 55, 38, 65],
-      backgroundColor: [colors.secondary[500]],
-      borderColor: ["transparent"],
-      borderWidth: 1,
-      barPercentage: 1.06,
-    },
-  ],
-};
-
-const userData = [
-  "Angelina Jolie",
-  "Anne Hathaway",
-  "Liam Neson",
-  "Andrew Garfield",
-  "Gerald Anderson",
+const fakeBranches = [
+  { name: "Cavite" },
+  { name: "Manila" },
+  { name: "Makati" },
+  { name: "Quezon City" },
 ];
 
 export default function Dashboard() {
+  let [selectedDate, setSelectedDate] = React.useState({
+    dateStart: new Date(),
+    dateEnd: new Date(),
+  });
+  let [doctorFilter, setDoctorFilter] = React.useState("");
+  let [branchFilter, setBranchFilter] = React.useState("");
+  let [showScheduleModal, setShowScheduleModal] = React.useState(false);
+  const [RegistrationForm] = Form.useForm();
+
+  const filteredPatients = fakePatients.filter((patient) => {
+    if (!isEqual(selectedDate.dateEnd, selectedDate.dateStart)) {
+      return (
+        (((patient.doctor.toLowerCase().includes(doctorFilter.toLowerCase()) &&
+          patient.branch.toLowerCase().includes(branchFilter.toLowerCase()) &&
+          isBefore(selectedDate.dateStart, patient.schedule)) ||
+          isEqual(selectedDate.dateStart, patient.schedule)) &&
+          isAfter(selectedDate.dateEnd, patient.schedule)) ||
+        isEqual(selectedDate.dateEnd, patient.schedule)
+      );
+    } else
+      return (
+        patient.doctor.toLowerCase().includes(doctorFilter.toLowerCase()) &&
+        patient.branch.toLowerCase().includes(branchFilter.toLowerCase())
+      );
+  });
+
   return (
-    <PageContainer>
-      <div className="flex justify-between align-middle">
-        <h3>Dashboard</h3>
-        <div>
-          <DatePicker.RangePicker />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6">
-        {dummyData.map(
-          ({ content, description, lineData, percentage, rate }, index) => {
-            return (
-              <Card key={index} className="text-center space-y-1 pb-10 z-[1]">
-                <h4>{content}</h4>
-                <div className="text-base max-w-[8rem] m-auto font-medium">
-                  {description}
+    <>
+      <PageContainer>
+        <div className="space-y-4">
+          <h3>Dashboard</h3>
+          <div className="flex justify-between items-center gap-4 flex-wrap">
+            <div className="basis-full lg:basis-1/2">
+              <Input
+                placeholder="Search"
+                prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+                className="rounded-2xl border-none text-lg"
+              />
+            </div>
+            <div className="basis-full lg:basis-auto flex gap-4">
+              <Button
+                className="p-3 w-full"
+                onClick={() => setShowScheduleModal(true)}
+              >
+                <div className="flex justify-center items-center">
+                  <IoIosAdd className="inline-block text-2xl" />{" "}
+                  <span>Add New Schedule</span>
                 </div>
-                <p
-                  className={`${
-                    rate === "up" ? "text-green-500" : "text-red-500"
-                  } text-xs  leading-tight`}
-                >
-                  {rate === "up" ? "▲" : "▼"} {percentage}%
-                </p>
-                <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none -z-[1]">
-                  <Line
-                    data={lineData}
-                    options={{
-                      plugins: {
-                        legend: {
-                          display: false,
-                        },
-                      },
-                      tooltips: {
-                        enabled: false,
-                      },
-                      elements: {
-                        point: {
-                          radius: 0,
-                        },
-                      },
-                      scales: {
-                        x: {
-                          scaleLabel: false,
-                          ticks: {
-                            display: false,
-                          },
-                          grid: {
-                            drawBorder: false,
-                            display: false,
-                            ticks: false,
-                          },
-                        },
-                        y: {
-                          scaleLabel: false,
-                          ticks: {
-                            display: false,
-                          },
-                          grid: { drawBorder: false, display: false },
-                        },
-                      },
-                      maintainAspectRatio: false,
-                    }}
-                  />
+              </Button>
+              <Button className="p-3 w-full">
+                <div className="flex justify-center items-center">
+                  <IoIosAdd className="inline-block text-2xl" />{" "}
+                  <span>Add New Patient</span>
                 </div>
-              </Card>
-            );
-          }
-        )}
-      </div>
-      <Card className="space-y-6">
-        <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-          <h5>Total Revenue</h5>
-          <Radio.Group
-            onChange={(e: string) => console.log(e)}
-            className="flex items-center justify-center [&_button]:rounded-none [&_button]:first:[&>div]:rounded-tl-md [&_button]:first:[&>div]:rounded-bl-md [&_button]:last:[&>div]:rounded-tr-md [&_button]:last:[&>div]:rounded-br-md"
-          >
-            <Radio.Button value="daily" label="Daily" />
-            <Radio.Button value="monthly" label="Monthly" />
-            <Radio.Button value="yearly" label="Yearly" />
-          </Radio.Group>
-        </div>
-        <div className="h-[25rem] w-full">
-          <Bar
-            data={chartData}
-            options={{
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
-                  },
-                },
-                y: {
-                  grid: {
-                    display: true,
-                  },
-                },
-              },
-              responsive: true,
-              maintainAspectRatio: false,
-            }}
-          />
-        </div>
-      </Card>
-      <div className="grid grid-cols-10 gap-8">
-        <Card className="space-y-6 col-span-6">
-          <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-            <h5>Male vs Female</h5>
-          </div>
-          <div className="h-[25rem] w-full">
-            <Doughnut
-              data={doughnutData}
-              options={{
-                plugins: {
-                  legend: {
-                    position: "bottom",
-                    fullSize: true,
-                    labels: {
-                      boxWidth: 10,
-                      boxHeight: 10,
-                      padding: 50,
-                    },
-                  },
-                },
-                cutout: "85%",
-                layout: { padding: 15 },
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </Card>
-        <Card className="space-y-6 col-span-4">
-          <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-            <h5>Age</h5>
-          </div>
-          <div className="h-[25rem] w-full">
-            <Pie
-              data={pieData}
-              plugins={[ChartDataLabels]}
-              options={{
-                plugins: {
-                  datalabels: {
-                    anchor: "end",
-                    align: "end",
-                    formatter: (
-                      value: number,
-                      ctx: { chart: { data: { datasets: { data: any }[] } } }
-                    ) => {
-                      const datapoints = ctx.chart.data.datasets[0].data;
-                      const total = datapoints.reduce(
-                        (total: any, datapoint: any) => total + datapoint,
-                        0
-                      );
-                      const percentage = (value / total) * 100;
-                      return percentage.toFixed(2) + "%";
-                    },
-                    color: "#000",
-                    font: {
-                      weight: 600,
-                    },
-                  },
-                  legend: {
-                    position: "bottom",
-                    fullSize: true,
-                    labels: {
-                      boxWidth: 10,
-                      boxHeight: 10,
-                      padding: 50,
-                    },
-                  },
-                },
-                layout: { padding: 15 },
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </Card>
-        <Card className="space-y-6 col-span-6">
-          <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-            <h5>Location</h5>
-            <div className="flex items-center justify-center space-x-5">
-              <Button>Country</Button>
-              <Button>City</Button>
+              </Button>
             </div>
           </div>
-          <div className="h-[25rem] w-full">
-            <Bar
-              data={locationData}
-              options={{
-                plugins: {
-                  legend: {
-                    position: "top",
-                    fullSize: true,
-                    labels: {
-                      usePointStyle: true,
-                      boxWidth: 10,
-                      boxHeight: 10,
-                      padding: 50,
-                    },
-                  },
-                },
-                scales: {
-                  x: {
-                    grid: {
-                      drawBorder: false,
-                      display: false,
-                    },
-                  },
-                  y: {
-                    grid: {
-                      drawBorder: false,
-                      display: true,
-                    },
-                  },
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </Card>
-        <Card className="space-y-6 col-span-4">
-          <div className="flex flex-col justify-between items-center space-y-6">
-            <h5>Most Users</h5>
-            <div className="flex items-center justify-center space-x-5">
-              <Button>Active</Button>
-              <Button>Inactive</Button>
-            </div>
-            <div>
-              {userData.map((user, index) => {
-                return (
-                  <div key={index} className="text-base">
-                    {user}
+          <div>
+            <div className="flex justify-between gap-4 lg:mt-20 flex-wrap">
+              <div className="basis-full lg:basis-[45%] h-[30rem]">
+                <Calendar onChange={(value: any) => setSelectedDate(value)} />
+              </div>
+              <div className="basis-full lg:basis-[45%] space-y-4 mt-4 lg:mt-0">
+                <div className="text-2xl font-medium">UPCOMING APPOINMENTS</div>
+                <div className="grid grid-cols-12 items-center gap-4">
+                  <div className="text-sm text-gray-500 font-medium col-span-2">
+                    FILTER BY:
                   </div>
-                );
-              })}
+                  <div className="text-sm text-gray-500 font-medium col-span-5">
+                    <Select
+                      placeholder="Select Doctor"
+                      onChange={(value: string) => setDoctorFilter(value)}
+                      className="border-none"
+                    >
+                      {fakeDoctors.map(({ name }, index) => {
+                        return (
+                          <Select.Option value={name} key={index}>
+                            {name}
+                          </Select.Option>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                  <div className="text-sm text-gray-500 font-medium col-span-5">
+                    <Select
+                      placeholder="Select Branch"
+                      onChange={(value: string) => setBranchFilter(value)}
+                      className="border-none"
+                    >
+                      {fakeBranches.map(({ name }, index) => {
+                        return (
+                          <Select.Option value={name} key={index}>
+                            {name}
+                          </Select.Option>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                </div>
+                <div className="max-h-[35rem] overflow-y-auto p-4 -m-4 space-y-4">
+                  {filteredPatients.length > 0 ? (
+                    filteredPatients.map(
+                      (
+                        {
+                          name,
+                          email,
+                          mobile_number,
+                          doctor,
+                          issue,
+                          branch,
+                          unit,
+                          schedule,
+                        },
+                        index
+                      ) => {
+                        return (
+                          <AnimateContainer key={name} variants={fadeIn}>
+                            <Card className="text-base rounded-2xl overflow-hidden hover:[&_.card-overlay]:opacity-100">
+                              <div>
+                                <div className="flex items-center gap-6">
+                                  <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex justify-center items-center leading-[normal]">
+                                    {name.charAt(0)}
+                                  </div>
+                                  <div className="space-y-0">
+                                    <div className="font-bold text-xl">
+                                      {name}
+                                    </div>
+                                    <div>{email}</div>
+                                    <div>{mobile_number}</div>
+                                    <div className="flex items-center gap-4">
+                                      <div className="align-middle text-sm whitespace-nowrap">
+                                        <AiOutlineCalendar className="inline-block align-middle" />{" "}
+                                        <span>
+                                          {format(schedule, "MM/dd/yyyy")}
+                                        </span>
+                                      </div>
+                                      <div className="align-middle text-sm whitespace-nowrap">
+                                        <AiOutlineClockCircle className="inline-block align-middle" />{" "}
+                                        <span>15.00hs</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="space-y-0 font-medium">
+                                    <div>{issue}</div>
+                                    <div>Dr. {doctor}</div>
+                                    <div>
+                                      {branch} - {unit}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
+                                  <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
+                                  <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" />
+                                  <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" />
+                                  <BsPencilSquare className="align-middle cursor-pointer hover:text-secondary transition" />
+                                  <BsTrash className="align-middle cursor-pointer hover:text-secondary transition" />
+                                </div>
+                              </div>
+                            </Card>
+                          </AnimateContainer>
+                        );
+                      }
+                    )
+                  ) : (
+                    <AnimateContainer key="empty-patient" variants={fadeIn}>
+                      <div className="text-4xl text-gray-400 text-center">
+                        No Records
+                      </div>
+                    </AnimateContainer>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </Card>
-      </div>
-    </PageContainer>
+        </div>
+      </PageContainer>
+      <Modal
+        show={showScheduleModal}
+        onClose={() => setShowScheduleModal(false)}
+        className="w-[60rem]"
+        id="schedule-modal"
+      >
+        <div className="space-y-8">
+          <div className="font-semibold text-3xl">Add New Schedule</div>
+          <Form
+            form={RegistrationForm}
+            layout="vertical"
+            onFinish={(values) => {
+              console.log(values);
+            }}
+            onFinishFailed={(data) => {
+              scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
+                smooth: true,
+                offset: -50,
+                containerId: "schedule-modal",
+              });
+            }}
+          >
+            <div id="sample" />
+            <Form.Item
+              label="Type of Schedule"
+              name="type_of_schedule"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Select placeholder="Patient Schedule" id="type_of_schedule">
+                {fakeBranches.map(({ name }, index) => {
+                  return (
+                    <Select.Option value={name} key={index}>
+                      {name}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="First Name"
+              name="first_name"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Input id="first_name" placeholder="Juan" />
+            </Form.Item>
+            <Form.Item
+              label="Last Name"
+              name="last_name"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Input id="last_name" placeholder="Dela Cruz" />
+            </Form.Item>
+            <Form.Item
+              label="Email Address"
+              name="email"
+              rules={[
+                { required: true, message: "This is required!" },
+                { type: "email", message: "Must be a valid email" },
+              ]}
+              required={false}
+            >
+              <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
+            </Form.Item>
+            <Form.Item
+              label="Mobile Number"
+              name="mobile_number"
+              rules={[
+                { required: true, message: "This is required!" },
+                {
+                  pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                  message: "Please use correct format!",
+                },
+              ]}
+              required={false}
+            >
+              <PatternFormat
+                customInput={Input}
+                placeholder="09XX-XXX-XXXXX"
+                mask="X"
+                format="####-###-####"
+                allowEmptyFormatting={false}
+                id="mobile_number"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Reason for Visit"
+              name="reason_for_visit"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Select
+                placeholder="Select Reason for Visit"
+                id="reason_for_visit"
+              >
+                {fakeBranches.map(({ name }, index) => {
+                  return (
+                    <Select.Option value={name} key={index}>
+                      {name}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Doctor"
+              name="doctor"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Select placeholder="Select Doctor" id="doctor">
+                {fakeBranches.map(({ name }, index) => {
+                  return (
+                    <Select.Option value={name} key={index}>
+                      {name}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Branch"
+              name="branch"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Select placeholder="Select Branch" id="branch">
+                {fakeBranches.map(({ name }, index) => {
+                  return (
+                    <Select.Option value={name} key={index}>
+                      {name}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Room"
+              name="room"
+              rules={[{ required: true, message: "This is required!" }]}
+              required={false}
+            >
+              <Select placeholder="Select Room" id="room">
+                {fakeBranches.map(({ name }, index) => {
+                  return (
+                    <Select.Option value={name} key={index}>
+                      {name}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <div className="flex justify-end items-center gap-4">
+              <div className="w-40">
+                <Button
+                  className="p-4 bg-transparent border-none text-gray-500"
+                  onClick={() => setShowScheduleModal(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+              <div className="w-40">
+                <Button type="submit" className="p-4">
+                  Save
+                </Button>
+              </div>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+    </>
   );
 }

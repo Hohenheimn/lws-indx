@@ -1,7 +1,7 @@
 import { useInView } from "react-intersection-observer";
 import { pageTransition } from "./animation";
 import { motion } from "framer-motion";
-import { classNameMerge } from "../../../utils/helpers";
+import { twMerge } from "tailwind-merge";
 
 interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
@@ -24,7 +24,7 @@ export function PageContainer({
       initial="initial"
       animate="animate"
       exit="exit"
-      className={classNameMerge("py-14 px-[5%] flex-1 space-y-10", className)}
+      className={twMerge("py-14 px-[5%] flex-1 space-y-10", className)}
       {...rest}
     >
       {children}

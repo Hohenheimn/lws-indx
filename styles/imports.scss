@@ -39,9 +39,31 @@
   font-display: swap;
 }
 
+@layer utilities {
+  .date-today {
+    @apply bg-primary-100 rounded-full [&>.date-wrapper]:text-secondary-500 font-semibold;
+  }
+
+  .date-in-range {
+    @apply bg-primary-50 hover:opacity-70 [&>.date-wrapper]:text-gray-400 rounded-none;
+  }
+
+  .date-hovered {
+    @apply border-dashed border-primary-100;
+  }
+
+  .date-in-range-first {
+    @apply rounded-tl-full rounded-bl-full border-none [&>.date-wrapper]:bg-primary-500 [&>.date-wrapper]:text-white;
+  }
+
+  .date-in-range-last {
+    @apply rounded-tr-full rounded-br-full border-none [&>.date-wrapper]:bg-primary-500 [&>.date-wrapper]:text-white;
+  }
+}
+
 @layer base {
   html {
-    @apply min-h-[100%] h-auto text-[2.6vw] xs:text-[2.2vw] sm:text-[1.7vw] md:text-[1.5vw] lg:text-[1.3vw] xl:text-[1.1vw] 2xl:text-[.8vw];
+    @apply min-h-[100%] h-auto text-[2.6vw] xs:text-[2.2vw] sm:text-[1.7vw] md:text-[1.5vw] lg:text-[1.3vw] xl:text-[1.1vw] 2xl:text-[.95vw];
   }
   body {
     font-family: "Hind", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,

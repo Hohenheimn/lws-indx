@@ -11,6 +11,10 @@ module.exports = {
       screens: {
         xs: "425px",
       },
+      transitionDuration: {
+        DEFAULT: "150ms",
+      },
+
       colors: {
         ...colors,
       },

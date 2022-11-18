@@ -1,7 +1,7 @@
 import React from "react";
 import { RadioGroup } from "@headlessui/react";
 import { Button as Btn } from "./Button";
-import { classNameMerge } from "../../utils/helpers";
+import { twMerge } from "tailwind-merge";
 
 type RadioButtonProps = {
   label: string;
@@ -20,11 +20,11 @@ const Button: React.FC<RadioButtonProps> = ({ label, value, className }) => {
     <RadioGroup.Option value={value}>
       {({ checked }) => (
         <Btn
-          className={classNameMerge(
+          className={twMerge(
             `${
               checked
                 ? "bg-primary-500"
-                : "bg-transparent text-default-text hover:text-white border border-solid border-primary-500"
+                : "bg-transparent text-default-text hover:text-white border border-solid border-slate-200"
             }`,
             className
           )}

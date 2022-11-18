@@ -1,10 +1,16 @@
 import React from "react";
-import { classNameMerge } from "../../utils/helpers";
+import { twMerge } from "tailwind-merge";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+type A = React.HTMLAttributes<HTMLInputElement>;
+
+type InputProps = {
   appearance?: "filled" | "outlined" | "standard";
   label?: string;
-}
+  name?: string;
+  disabled?: boolean;
+  prefix?: React.ReactNode | string;
+  suffix?: React.ReactNode | string;
+} & Omit<A, "prefix">;
 
 type AppearanceCheckerProps = {
   input: string;
@@ -32,47 +38,52 @@ function appearanceChecker(appearance?: string): AppearanceCheckerProps {
 export const Input: React.ForwardRefRenderFunction<
   HTMLInputElement,
   InputProps
-> = ({ children, className, disabled, appearance, label, ...rest }) => {
-  if (appearance === "filled") {
-    return (
-      <div className="relative">
-        <input
-          type="text"
-          className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-primary-500 appearance-none focus:border-primary-600 placeholder:opacity-0 focus:placeholder:opacity-50 placeholder:transition placeholder:ease-in placeholder:duration-[3000] peer"
-          {...rest}
-        />
-        {label && (
-          <label
-            htmlFor="floating_filled"
-            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
-          >
-            {label}
-          </label>
-        )}
-      </div>
-    );
-  }
+> = ({
+  children,
+  className,
+  disabled,
+  appearance,
+  label,
+  name,
+  prefix,
+  suffix,
+  ...rest
+}) => {
   return (
-    <div className="relative z-0">
-      <input
-        type="text"
-        className={classNameMerge(
-          appearanceChecker(appearance).input,
-          "block w-full text-sm bg-trasparent text-gray-900 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-600 placeholder:opacity-0 focus:placeholder:opacity-50 placeholder:transition placeholder:ease-in placeholder:duration-[3000] peer"
-        )}
-        {...rest}
-      />
+    <div>
       {label && (
         <label
-          htmlFor={rest.id}
-          className={classNameMerge(
-            appearanceChecker(appearance).label,
-            "absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform origin-[0] peer-focus:text-primary-600 peer-focus:dark:text-primary-500"
-          )}
+          htmlFor={name}
+          className="block text-base font-normal text-gray-500"
         >
           {label}
         </label>
       )}
+      <div className="relative">
+        {prefix && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            {prefix}
+          </div>
+        )}
+        <input
+          type="text"
+          name={name}
+          id={name}
+          className={twMerge(
+            "focus:border-primary-500 focus:ring-primary-500 sm:text-sm placeholder:text-gray-300 p-4 bg-white border-gray-300 shadow-md rounded-md",
+            `transition block w-full ${prefix ? "pl-8" : ""} ${
+              suffix ? "pr-12" : ""
+            }`,
+            className
+          )}
+          {...rest}
+        />
+        {suffix && (
+          <div className="absolute inset-y-0 right-0 flex items-center">
+            {suffix}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

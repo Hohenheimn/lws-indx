@@ -1,144 +1,301 @@
-import { Menu, Transition } from "@headlessui/react";
-// import { DotsVerticalIcon } from "@heroicons/react/outline";
-// import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import React, { useEffect } from "react";
 import {
   add,
   eachDayOfInterval,
+  eachMonthOfInterval,
+  eachYearOfInterval,
   endOfMonth,
   format,
   getDay,
+  getDate,
+  getYear,
   isEqual,
-  isSameMonth,
   isToday,
+  isBefore,
+  isAfter,
   parse,
-  startOfToday,
+  startOfMonth,
 } from "date-fns";
-import { useState } from "react";
-import { classNameMerge } from "../../utils/helpers";
-import { AnimateContainer } from "./animation";
-import { fadeIn } from "./animation/animation";
+import { PageContainer } from "../components/animation";
+import { twMerge } from "tailwind-merge";
+import { Button } from "../components/Button";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import Modal from "../components/Modal";
 
-export default function Calendar() {
-  let today = startOfToday();
-  let [selectedDay, setSelectedDay] = useState(today);
-  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
-  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
+function getMonth(date: number | Date) {
+  return format(date, "MMMM");
+}
+
+interface CalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+  onChange?: any;
+}
+
+export default function Calendar({ onChange }: CalendarProps) {
+  let today = new Date();
+  let [monthModalIsOpen, setMonthModalIsOpen] = React.useState(false);
+  let [yearModalIsOpen, setYearModalIsOpen] = React.useState(false);
+  let [selectedDay, setSelectedDay] = React.useState(getDate(today));
+  let [selectedMonth, setSelectedMonth] = React.useState(getMonth(today));
+  let [selectedYear, setSelectedYear] = React.useState(getYear(today));
+  let [selectedDate, setSelectedDate] = React.useState(today);
+  let [selectedDateStart, setSelectedDateStart] = React.useState(today);
+  let [selectedDateEnd, setSelectedDateEnd] = React.useState(today);
+  let [hoveredDate, setHoveredDate] = React.useState<Date | undefined | null>(
+    null
+  );
+
+  useEffect(() => {
+    let parsedDate = parse(
+      `${selectedMonth} ${selectedDay} ${selectedYear}`,
+      "MMMM dd yyyy",
+      new Date()
+    );
+
+    setSelectedDate(parsedDate);
+  }, [selectedDay, selectedMonth, selectedYear]);
+
+  useEffect(() => {
+    onChange({
+      dateStart: selectedDateStart,
+      dateEnd: selectedDateEnd,
+    });
+  }, [selectedDateStart, selectedDateEnd]);
 
   let days = eachDayOfInterval({
-    start: firstDayCurrentMonth,
-    end: endOfMonth(firstDayCurrentMonth),
+    start: startOfMonth(selectedDate),
+    end: endOfMonth(selectedDate),
   });
 
-  function previousMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
+  let months = eachMonthOfInterval({
+    start: new Date(selectedYear, 0, 1),
+    end: new Date(selectedYear, 11, 1),
+  });
+
+  let years = eachYearOfInterval({
+    start: add(startOfMonth(selectedDate), { years: -4 }),
+    end: add(startOfMonth(selectedDate), { years: 4 }),
+  });
+
+  function getBetweenDates(start: Date, end: Date) {
+    if (start && end && !isEqual(start, end)) {
+      return eachDayOfInterval({
+        start,
+        end,
+      });
+    }
+
+    return [];
   }
 
-  function nextMonth() {
-    let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
+  function dateExists(dateArray: Date[], dateSelected: Date) {
+    return dateArray.find((date) => isEqual(date, dateSelected));
   }
 
-  //   let selectedDayMeetings = meetings.filter((meeting) =>
-  //     isSameDay(parseISO(meeting.startDatetime), selectedDay)
-  //   );
+  function dateHover(date: Date) {
+    if (hoveredDate) {
+      if (isBefore(hoveredDate, selectedDateStart)) {
+        return dateExists(
+          getBetweenDates(hoveredDate, selectedDateStart),
+          date
+        );
+      }
+
+      if (isAfter(hoveredDate, selectedDateEnd)) {
+        return dateExists(getBetweenDates(selectedDateEnd, hoveredDate), date);
+      }
+    }
+  }
+
+  function calendarNavigation(
+    nav: number,
+    format: "days" | "months" | "years"
+  ) {
+    let navigate = add(selectedDate, { [format]: nav });
+    setSelectedDate(navigate);
+  }
 
   return (
-    <div className="pt-16">
-      <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6">
-        <div className="flex items-center">
-          <AnimateContainer
-            key={currentMonth}
-            variants={fadeIn}
-            className="flex-auto font-semibold text-gray-900"
-          >
-            <h2 className="text-lg">
-              {format(firstDayCurrentMonth, "MMMM yyyy")}
-            </h2>
-          </AnimateContainer>
-          <div className="flex space-x-2 ">
-            <button
-              type="button"
-              onClick={previousMonth}
-              className="flex flex-none outline-none text-sm items-center justify-center text-gray-400 hover:text-primary-500 transition"
-            >
-              <span className="sr-only">Previous month</span>
-              <div aria-hidden="true">Previous</div>
-              {/* <ChevronLeftIcon  /> */}
-            </button>
-            <button
-              onClick={nextMonth}
-              type="button"
-              className="flex flex-none outline-none text-sm items-center justify-center text-gray-400 hover:text-primary-500 transition"
-            >
-              <span className="sr-only">Next month</span>
-              <div aria-hidden="true">Next</div>
-              {/* <ChevronRightIcon className="w-5 h-5" aria-hidden="true" /> */}
-            </button>
+    <>
+      <div className="flex w-full h-full bg-white shadow-lg rounded-3xl p-8 items-center justify-center">
+        <div className="flex flex-col">
+          <div className="flex items-center justify-between">
+            <BsArrowLeft
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              onClick={() => calendarNavigation(-1, "months")}
+            />
+            <div className="text-gray-500 text-center uppercase text-base font-medium">
+              <div
+                onClick={() => setMonthModalIsOpen(true)}
+                className="cursor-pointer transition hover:text-primary-500"
+              >
+                {format(selectedDate, "MMMM")}{" "}
+              </div>
+              <div
+                className="cursor-pointer transition hover:text-primary-500"
+                onClick={() => setYearModalIsOpen(true)}
+              >
+                {format(selectedDate, "yyyy")}
+              </div>
+            </div>
+            <BsArrowRight
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              onClick={() => calendarNavigation(1, "months")}
+            />
           </div>
-        </div>
-        <AnimateContainer key={currentMonth} variants={fadeIn}>
-          <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-gray-500">
-            <div>S</div>
-            <div>M</div>
-            <div>T</div>
-            <div>W</div>
-            <div>T</div>
-            <div>F</div>
-            <div>S</div>
+          <div className="grid grid-cols-7 mt-7 leading-6 text-center text-slate-400 text-lg font-semibold">
+            <div>Su</div>
+            <div>Mo</div>
+            <div>Tu</div>
+            <div>We</div>
+            <div>Th</div>
+            <div>Fr</div>
+            <div>Sa</div>
           </div>
           <div className="grid grid-cols-7 mt-2 text-sm">
             {days.map((day, dayIdx) => {
               return (
                 <div
                   key={day.toString()}
-                  className={classNameMerge(
+                  className={twMerge(
+                    "bg-transparent border border-transparent rounded-none transition flex justify-center items-center h-14 w-14 font-medium",
                     dayIdx === 0 && colStartClasses[getDay(day)],
-                    "py-1.5"
+                    isToday(day) && "date-today",
+                    dateExists(
+                      getBetweenDates(selectedDateStart, selectedDateEnd),
+                      day
+                    ) && "date-in-range",
+                    dateHover(day) && "date-hovered",
+                    isEqual(
+                      getBetweenDates(selectedDateStart, selectedDateEnd)[0],
+                      day
+                    ) && "date-in-range-first",
+                    isEqual(
+                      getBetweenDates(selectedDateStart, selectedDateEnd)[
+                        getBetweenDates(selectedDateStart, selectedDateEnd)
+                          .length - 1
+                      ],
+                      day
+                    ) && "date-in-range-last"
                   )}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDay(day)}
-                    className={classNameMerge(
-                      isEqual(day, selectedDay) && "text-white",
-                      !isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        "text-primary-500",
-                      !isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        isSameMonth(day, firstDayCurrentMonth) &&
-                        "text-gray-900",
-                      !isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        !isSameMonth(day, firstDayCurrentMonth) &&
-                        "text-gray-400",
-                      isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        "bg-primary-500",
-                      isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        "bg-primary-500",
-                      !isEqual(day, selectedDay) && "hover:bg-gray-200",
-                      (isEqual(day, selectedDay) || isToday(day)) &&
-                        "font-semibold",
-                      "mx-auto flex h-8 w-8 items-center justify-center rounded-full transition"
+                  <div
+                    className={twMerge(
+                      "transition duration-100 h-full w-full bg-transparent rounded-full text-slate-400 date-wrapper"
                     )}
                   >
-                    <time
-                      dateTime={format(day, "yyyy-MM-dd")}
-                      className="leading-none"
+                    <button
+                      type="button"
+                      onMouseEnter={() => {
+                        if (!isEqual(hoveredDate ?? 0, day)) {
+                          setHoveredDate(day);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        setHoveredDate(null);
+                      }}
+                      onClick={() => {
+                        if (!selectedDateStart) {
+                          setSelectedDateStart(day);
+                        }
+                        if (selectedDateStart) {
+                          setSelectedDateEnd(day);
+                        }
+
+                        if (isBefore(day, selectedDateStart)) {
+                          setSelectedDateStart(day);
+                          setSelectedDateEnd(selectedDateEnd);
+                        }
+
+                        setSelectedDate(day);
+                      }}
+                      className={twMerge(
+                        "mx-auto flex h-full w-full items-center justify-center rounded-full transition"
+                      )}
                     >
-                      {format(day, "d")}
-                    </time>
-                  </button>
+                      <time
+                        dateTime={format(day, "yyyy-MM-dd")}
+                        className="leading-none"
+                      >
+                        {format(day, "d")}
+                      </time>
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
-        </AnimateContainer>
+          {/* <Button
+              onClick={() => {
+                setSelectedDateStart(today);
+                setSelectedDateEnd(today);
+              }}
+            >
+              Clear
+            </Button> */}
+        </div>
       </div>
-    </div>
+      <Modal show={monthModalIsOpen} onClose={setMonthModalIsOpen}>
+        <div className="bg-white text-center grid grid-cols-1 md:grid-cols-3 gap-5">
+          {months.map((month, index) => {
+            return (
+              <div
+                key={index}
+                className={twMerge(
+                  "transition hover:text-primary cursor-pointer bg-transparent rounded-lg p-2 uppercase",
+                  getMonth(month) === selectedMonth &&
+                    "text-primary font-semibold"
+                )}
+                onClick={() => {
+                  setSelectedMonth(getMonth(month));
+                  setMonthModalIsOpen(false);
+                }}
+              >
+                {format(month, "MMM")}
+              </div>
+            );
+          })}
+        </div>
+      </Modal>
+      <Modal
+        show={yearModalIsOpen}
+        onClose={setYearModalIsOpen}
+        className="p-0"
+      >
+        <div className="bg-white py-[5%] space-y-6 text-center">
+          <div className="grid grid-cols-3 gap-5 border-b border-b-slate-300 pb-4 justify-items-center items-center">
+            <BsArrowLeft
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              onClick={() => calendarNavigation(-1, "months")}
+            />
+            <div className="font-bold">2020 - 2030</div>
+            <BsArrowRight
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              onClick={() => calendarNavigation(1, "months")}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {years.map((year, index) => {
+              return (
+                <div
+                  key={index}
+                  className={twMerge(
+                    "transition hover:text-primary cursor-pointer bg-transparent rounded-lg uppercase",
+                    getYear(year) === selectedYear &&
+                      "text-primary font-semibold"
+                  )}
+                  onClick={() => {
+                    setSelectedYear(getYear(year));
+                    setYearModalIsOpen(false);
+                  }}
+                >
+                  {getYear(year)}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }
 
