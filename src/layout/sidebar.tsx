@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "../components/Button";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { AiFillCaretDown } from "react-icons/ai";

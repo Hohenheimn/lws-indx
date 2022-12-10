@@ -121,21 +121,23 @@ export default function Login({ router }: any) {
               }}
               className="w-full"
             >
-              <Form.Item
-                name="username"
-                rules={[{ required: true, message: "Username is required" }]}
-                required={false}
-              >
-                <Input id="username" placeholder="Username" />
-              </Form.Item>
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: "Password is required" }]}
-                required={false}
-              >
-                <Input id="password" placeholder="Password" type="password" />
-              </Form.Item>
-              <Button appearance="link" className="!text-primary-500">
+              <div className="grid grid-cols-1 gap-y-4">
+                <Form.Item
+                  name="username"
+                  rules={[{ required: true, message: "Username is required" }]}
+                  required={false}
+                >
+                  <Input id="username" placeholder="Username" />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  rules={[{ required: true, message: "Password is required" }]}
+                  required={false}
+                >
+                  <Input id="password" placeholder="Password" type="password" />
+                </Form.Item>
+              </div>
+              <Button appearance="link" className="!text-primary-500 mt-2">
                 Forgot password?
               </Button>
               <div className="space-y-4 mt-10">

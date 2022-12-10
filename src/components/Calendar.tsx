@@ -59,6 +59,7 @@ export default function Calendar({ onChange }: CalendarProps) {
       dateStart: selectedDateStart,
       dateEnd: selectedDateEnd,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDateStart, selectedDateEnd]);
 
   let days = eachDayOfInterval({

@@ -118,7 +118,11 @@ export function Select({
                     return "";
                   }
 
-                  return value.charAt(0).toUpperCase() + value.slice(1);
+                  if (value) {
+                    return value?.charAt(0).toUpperCase() + value?.slice(1);
+                  }
+
+                  return "";
                 }}
                 onChange={(event) => {
                   setQuery(event.target.value);

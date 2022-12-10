@@ -7,7 +7,7 @@ import LoadingScreen from "./LoadingScreen";
 import { AnimateContainer } from "../components/animation";
 import { fadeIn } from "../components/animation/animation";
 import { AnimatePresence } from "framer-motion";
-import SideBar from "./Sidebar";
+import { SideBar } from "./Sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
