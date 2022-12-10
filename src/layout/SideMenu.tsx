@@ -8,7 +8,7 @@ import { notification, Menu } from "antd";
 import MobileDrawer from "./MobileDrawer";
 import { Context } from "../../utils/context/Provider";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SideMenuProps extends React.HTMLAttributes<HTMLDivElement> {
   openMenus?: string;
 }
 
@@ -100,7 +100,7 @@ const sideMenu: Array<sideMenuProps> = [
   },
 ];
 
-export const Sidebar = ({ openMenus, ...rest }: SidebarProps) => {
+export const SideMenu = ({ openMenus, ...rest }: SideMenuProps) => {
   const router = useRouter();
   const { openDrawer, setOpenDrawer } = React.useContext(Context);
   let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
@@ -242,4 +242,4 @@ export const Sidebar = ({ openMenus, ...rest }: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+export default SideMenu;
