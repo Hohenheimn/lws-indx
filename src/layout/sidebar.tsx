@@ -8,7 +8,7 @@ import { notification, Menu } from "antd";
 import MobileDrawer from "./MobileDrawer";
 import { Context } from "../../utils/context/Provider";
 
-interface SideBarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   openMenus?: string;
 }
 
@@ -26,7 +26,7 @@ type sideMenuProps = {
   }>;
 };
 
-const sideMenu = [
+const sideMenu: Array<sideMenuProps> = [
   {
     label: "Dashboard",
     link: "/",
@@ -100,15 +100,14 @@ const sideMenu = [
   },
 ];
 
-export const SideBar = () => {
-  // const router = useRouter();
-  // const { openDrawer, setOpenDrawer } = React.useContext(Context);
-  // let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
+export const Sidebar = ({ openMenus, ...rest }: SidebarProps) => {
+  const router = useRouter();
+  const { openDrawer, setOpenDrawer } = React.useContext(Context);
+  let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
 
   return (
     <>
-      asdf
-      {/* <MobileDrawer
+      <MobileDrawer
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         setOpenDrawer={(value: boolean) => setOpenDrawer(value)}
@@ -141,7 +140,7 @@ export const SideBar = () => {
                 }
               >
                 {sideMenu.map(
-                  ({ show, subMenu, link, label, disabled, key }: any) => {
+                  ({ show, subMenu, link, label, disabled, key }) => {
                     if (!show) {
                       return null;
                     }
@@ -154,7 +153,7 @@ export const SideBar = () => {
                               subMenuLabel,
                               disabledSubMenu,
                               showSubMenu,
-                            }: any) => {
+                            }) => {
                               if (!showSubMenu) {
                                 return null;
                               }
@@ -238,9 +237,9 @@ export const SideBar = () => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };
 
-export default SideBar;
+export default Sidebar;
