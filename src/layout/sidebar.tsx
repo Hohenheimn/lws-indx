@@ -107,7 +107,8 @@ export const SideBar = ({ openMenus, ...rest }: SideBarProps) => {
 
   return (
     <>
-      <MobileDrawer
+      asdf
+      {/* <MobileDrawer
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         setOpenDrawer={(value: boolean) => setOpenDrawer(value)}
@@ -237,7 +238,7 @@ export const SideBar = ({ openMenus, ...rest }: SideBarProps) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
