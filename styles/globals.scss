@@ -4,16 +4,12 @@
   @apply min-h-[100%] flex flex-col;
 }
 
-button[disabled] {
-  @apply opacity-50 cursor-not-allowed pointer-events-none;
-}
-
 ::-webkit-scrollbar {
   @apply w-2;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-200;
+  @apply bg-slate-200 rounded-lg;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -21,7 +17,7 @@ button[disabled] {
 }
 
 ::selection {
-  @apply text-white bg-primary-900;
+  @apply text-white bg-primary-600;
 }
 
 // Loading

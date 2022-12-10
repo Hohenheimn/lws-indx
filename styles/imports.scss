@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "antd/dist/antd.css";
 
 @font-face {
   font-family: "Hind";
@@ -39,6 +38,58 @@
   font-display: swap;
 }
 
+@layer components {
+  ul.styled-menu {
+    @apply bg-transparent text-primary border-none list-none p-0 text-base absolute h-full px-4;
+    li.ant-menu-item {
+      @apply transition p-6 rounded-md w-auto bg-transparent text-default-text text-[1em] before:bg-primary-500;
+
+      &.ant-menu-item-active {
+        @apply text-white bg-primary;
+      }
+      &.ant-menu-item-selected {
+        @apply opacity-100 text-white bg-primary;
+      }
+      &::after {
+        @apply hidden;
+      }
+    }
+    .ant-menu-submenu {
+      .ant-menu {
+        @apply bg-transparent text-[1em];
+        li.ant-menu-item {
+          @apply text-default-text p-6 my-1 text-[1em];
+          &.ant-menu-item-active {
+            @apply text-white bg-primary;
+          }
+          &.ant-menu-item-selected {
+            @apply opacity-100 text-white bg-primary;
+          }
+        }
+      }
+      &.ant-menu-submenu {
+        .ant-menu-submenu-title {
+          @apply transition p-6 rounded-md w-auto bg-transparent text-default-text text-[1em] m-0;
+          .ant-menu-submenu-arrow {
+            @apply text-inherit;
+          }
+        }
+      }
+      // &.ant-menu-submenu-active {
+      //   .ant-menu-submenu-title {
+      //     @apply bg-primary text-white;
+      //   }
+      // }
+      &.ant-menu-submenu-open {
+        @apply rounded-md bg-transparent;
+        .ant-menu-submenu-title {
+          @apply text-default-text bg-transparent;
+        }
+      }
+    }
+  }
+}
+
 @layer utilities {
   .date-today {
     @apply bg-primary-100 rounded-full [&>.date-wrapper]:text-secondary-500 font-semibold;
@@ -59,17 +110,70 @@
   .date-in-range-last {
     @apply rounded-tr-full rounded-br-full border-none [&>.date-wrapper]:bg-primary-500 [&>.date-wrapper]:text-white;
   }
+  .divided-border {
+    @apply [&>*]:border-b-gray-200 [&>*]:border-b-2 last-of-type:[&>*]:border-none [&>*]:py-4 lg:[&>*]:border-r-gray-200 lg:[&>*]:border-b-0 lg:[&>*]:border-r-2 lg:last-of-type:[&>*]:border-none lg:[&>*]:px-4;
+  }
+  ::placeholder {
+    @apply font-normal text-zinc-400 text-sm tracking-normal #{!important};
+  }
+  [data-ping="normal"] {
+    @apply overflow-visible #{!important};
+    &::after {
+      @apply content-[''] pointer-events-none block absolute left-0 top-0 w-full h-full rounded-md opacity-0 transition-all duration-500 bg-transparent shadow-[0px_0px_5px_5px] shadow-primary-500 border-none scale-100 #{!important};
+    }
+    &:active::after {
+      @apply shadow-[0_0_0_0] shadow-primary-500 opacity-80 duration-[0ms] #{!important};
+    }
+  }
+  [data-ping="link"] {
+    @apply opacity-100 transition-all duration-500 scale-95 #{!important};
+    &:active {
+      @apply opacity-50 duration-[0ms] scale-100 #{!important};
+    }
+  }
+  [data-ping-type="primary"] {
+    &::after {
+      @apply shadow-primary-500 #{!important};
+    }
+    &:active::after {
+      @apply shadow-primary-500 #{!important};
+    }
+  }
+  [data-ping-type="secondary"] {
+    &::after {
+      @apply shadow-secondary-500 #{!important};
+    }
+    &:active::after {
+      @apply shadow-secondary-500 #{!important};
+    }
+  }
+  [data-ping-type="danger"] {
+    &::after {
+      @apply shadow-danger-500 #{!important};
+    }
+    &:active::after {
+      @apply shadow-danger-500 #{!important};
+    }
+  }
+  [data-ping-type="link"] {
+    &::after {
+      @apply shadow-gray-500 #{!important};
+    }
+    &:active::after {
+      @apply shadow-gray-500 #{!important};
+    }
+  }
 }
 
 @layer base {
   html {
-    @apply min-h-[100%] h-auto text-[2.6vw] xs:text-[2.2vw] sm:text-[1.7vw] md:text-[1.5vw] lg:text-[1.3vw] xl:text-[1.1vw] 2xl:text-[.95vw];
+    @apply min-h-[100%] text-[4.5vw] xs:text-[3vw] sm:text-[2.5vw] md:text-[1.8vw] lg:text-[1.3vw] xl:text-[1.2vw] 2xl:text-[1vw] 3xl:text-[.9vw];
   }
   body {
     font-family: "Hind", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
       "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    @apply font-normal min-h-[100%] h-auto text-default-text;
+    @apply font-normal min-h-[100%] text-default-text;
   }
   h1 {
     @apply text-5xl;

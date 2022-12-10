@@ -24,14 +24,27 @@ export function statusPalette(status: string) {
   }
 }
 
+export function paymentStatusPalette(status: string) {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "text-default-text bg-slate-300";
+    case "partial payment":
+      return "text-white bg-danger-300";
+    case "paid":
+      return "text-white bg-green-400";
+    default:
+      return "text-default-text bg-transparent";
+  }
+}
+
 export function classNameMerge(
   ...classes: Array<boolean | string | undefined>
 ) {
   return classes.filter((value) => value).join(" ");
 }
 
-export function formatNumber(currency: string, decimal?: number) {
-  return parseFloat(currency)
+export function numberSeparator(currency: string | number, decimal?: number) {
+  return parseFloat(currency.toString())
     .toFixed(decimal ?? 2)
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -69,7 +82,7 @@ export function convertMobile(mobile: string) {
     .replace(/#/g, "");
 }
 
-export function capitalizeTitle(title: any, route: any) {
+export function capitalizeTitle(title: string, route: any) {
   let homepage = route === "/";
   let notFound = route === "/404";
 

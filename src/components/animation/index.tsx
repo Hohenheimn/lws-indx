@@ -10,6 +10,7 @@ interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 interface AnimateContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
   triggerOnce?: boolean;
+  rootMargin?: string;
 }
 
 export function PageContainer({
@@ -24,7 +25,10 @@ export function PageContainer({
       initial="initial"
       animate="animate"
       exit="exit"
-      className={twMerge("py-14 px-[5%] flex-1 space-y-10", className)}
+      className={twMerge(
+        "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto",
+        className
+      )}
       {...rest}
     >
       {children}
@@ -37,11 +41,12 @@ export function AnimateContainer({
   triggerOnce,
   variants,
   className,
+  rootMargin,
   ...rest
 }: AnimateContainerProps) {
   const [ref, inView] = useInView({
     triggerOnce: triggerOnce ?? false,
-    rootMargin: "-40px 0px",
+    rootMargin: rootMargin ?? "-40px 0px",
   });
 
   return (
@@ -51,7 +56,7 @@ export function AnimateContainer({
       animate={inView ? "animate" : "exit"}
       exit="exit"
       variants={variants}
-      className={className}
+      className={twMerge(className)}
       {...rest}
     >
       {children}

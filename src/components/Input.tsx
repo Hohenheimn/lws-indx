@@ -1,5 +1,8 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import { AnimateContainer } from "./animation";
+import { fadeInUp, fadeIn } from "./animation/animation";
 
 type A = React.HTMLAttributes<HTMLInputElement>;
 
@@ -10,6 +13,8 @@ type InputProps = {
   disabled?: boolean;
   prefix?: React.ReactNode | string;
   suffix?: React.ReactNode | string;
+  type?: string;
+  value?: string;
 } & Omit<A, "prefix">;
 
 type AppearanceCheckerProps = {
@@ -47,10 +52,14 @@ export const Input: React.ForwardRefRenderFunction<
   name,
   prefix,
   suffix,
+  type = "text",
+  value,
   ...rest
 }) => {
+  let [showPassword, setShowPassword] = React.useState(false);
+
   return (
-    <div>
+    <div className="w-full">
       {label && (
         <label
           htmlFor={name}
@@ -66,21 +75,37 @@ export const Input: React.ForwardRefRenderFunction<
           </div>
         )}
         <input
-          type="text"
+          type={showPassword && type === "password" ? "text" : type}
           name={name}
           id={name}
           className={twMerge(
-            "focus:border-primary-500 focus:ring-primary-500 sm:text-sm placeholder:text-gray-300 p-4 bg-white border-gray-300 shadow-md rounded-md",
-            `transition block w-full ${prefix ? "pl-8" : ""} ${
-              suffix ? "pr-12" : ""
-            }`,
+            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-gray-300 shadow rounded-md transition block w-full text-sm leading-[normal]",
+            `${prefix ? "pl-8" : ""} ${suffix ? "pr-12" : ""}`,
             className
           )}
+          defaultValue=""
           {...rest}
         />
-        {suffix && (
-          <div className="absolute inset-y-0 right-0 flex items-center">
+        {(type === "password" || suffix) && (
+          <div className="absolute inset-y-0 right-0 flex items-center px-4 gap-4 text-base [&>svg]:transition [&>*]:cursor-pointer [&>svg]:text-default-text hover:[&>svg]:opacity-70">
             {suffix}
+            {type === "password" && (
+              <AnimateContainer variants={fadeIn} key={showPassword.toString()}>
+                {showPassword ? (
+                  <BsEyeFill
+                    onClick={() => setShowPassword(false)}
+                    data-ping="link"
+                    data-ping-type={"link"}
+                  />
+                ) : (
+                  <BsEyeSlashFill
+                    onClick={() => setShowPassword(true)}
+                    data-ping="link"
+                    data-ping-type={"link"}
+                  />
+                )}
+              </AnimateContainer>
+            )}
           </div>
         )}
       </div>

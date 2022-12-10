@@ -10,7 +10,7 @@ import { AnimatePresence } from "framer-motion";
 import Layout from "../layout";
 import "../../styles/globals.scss";
 import { AnimateContainer } from "../components/animation";
-import { fadeIn } from "../components/animation/animation";
+import { fadeIn, stagger } from "../components/animation/animation";
 
 const AppProvider = dynamic(() => import("../../utils/context/Provider"));
 
@@ -18,13 +18,6 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps, router }: AppProps) {
   const [showLoading, setShowLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    const use = async () => {
-      (await import("tw-elements")).default;
-    };
-    use();
-  }, []);
 
   Router.events.on("routeChangeStart", (url) => {
     if (Router?.router?.route !== url) {
@@ -60,13 +53,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
         setShowLoading={(show: boolean) => setShowLoading(show)}
       >
         <AnimatePresence mode="wait">
-          <AnimateContainer variants={fadeIn} className="flex flex-col flex-1">
-            <AnimatePresence mode="wait">
-              <Layout key={router.asPath}>
-                <Component {...pageProps} router={router} />
-              </Layout>
-            </AnimatePresence>
-          </AnimateContainer>
+          <div key={router.route} className="flex flex-col flex-auto">
+            <Component {...pageProps} router={router} />
+          </div>
         </AnimatePresence>
       </AppProvider>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}

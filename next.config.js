@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+  // reactStrictMode: false,
   publicRuntimeConfig: {
     site: {
       name: "Index",

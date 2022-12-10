@@ -4,40 +4,61 @@ import { twMerge } from "tailwind-merge";
 type ButtonProps = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode;
-  disabled?: boolean;
   className?: string;
   type?: "button" | "submit" | "reset" | undefined;
   variant?: string;
+  appearance?: "primary" | "secondary" | "danger" | "link" | "disabled";
 };
+
+function appearanceChecker(
+  appearance?: "primary" | "secondary" | "danger" | "link" | "disabled"
+) {
+  switch (appearance) {
+    case "primary":
+      return "bg-primary-500 border-primary-500 hover:bg-primary-500 hover:shadow-lg active:bg-primary-700 active:shadow-lg text-white";
+    case "secondary":
+      return "bg-secondary-500 border-secondary-500 hover:bg-secondary-500 hover:shadow-lg active:bg-secondary-700 active:shadow-lg text-white";
+    case "danger":
+      return "bg-danger-500 border-danger-500 hover:bg-danger-500 hover:shadow-lg active:bg-danger-700 active:shadow-lg text-white";
+    case "link":
+      return "bg-transparent shadow-none text-default-text w-auto p-0 m-0 border-none tracking-normal hover:text-primary-500 overflow-visible";
+    case "disabled":
+      return "cursor-not-allowed bg-gray-300 border-transparent";
+    default:
+      return "";
+  }
+}
 
 export const Button = ({
   children,
   className = "",
-  disabled,
   type = "button",
   variant,
+  appearance,
   ...rest
 }: ButtonProps) => {
   return (
-    <div
+    <button
+      type={type}
       className={twMerge(
-        disabled ? "cursor-not-allowed" : "",
-        "relative overflow-hidden ripple-surface-light w-full"
+        "tracking-wider w-full border border-solid text-default-text font-normal px-8 py-2 text-base rounded-md shadow-md transition duration-300 ease-in-out relative ",
+        appearanceChecker(appearance),
+        className
       )}
+      disabled={appearance === "disabled"}
+      data-ping={
+        appearance === "link"
+          ? "link"
+          : appearance === "disabled"
+          ? ""
+          : "normal"
+      }
+      data-ping-type={appearance !== "disabled" ? appearance : ""}
+      {...rest}
     >
-      <button
-        type={type}
-        className={twMerge(
-          "overflow-hidden whitespace-nowrap tracking-wider w-full bg-primary-500 border border-solid border-primary-500 text-white font-medium px-8 py-2 text-base rounded-md shadow-md hover:bg-primary-600 hover:shadow-lg active:bg-primary-700 active:shadow-lg transition duration-300 ease-in-out",
-          className
-        )}
-        data-mdb-ripple="true"
-        data-mdb-ripple-color="light"
-        disabled={disabled ?? false}
-        {...rest}
-      >
+      <div className="whitespace-nowrap text-ellipsis overflow-hidden">
         {children}
-      </button>
-    </div>
+      </div>
+    </button>
   );
 };

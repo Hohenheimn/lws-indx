@@ -25,27 +25,12 @@ import { fadeIn } from "../components/animation/animation";
 import Modal from "../components/Modal";
 import { PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
-
-const fakeDoctors = [
-  {
-    name: "Marc Medina",
-  },
-  {
-    name: "Bianca Medina",
-  },
-  {
-    name: "Beatrice Medina",
-  },
-  {
-    name: "Marcus Medina",
-  },
-  {
-    name: "Marco Medina",
-  },
-  {
-    name: "Brylle Medina",
-  },
-];
+import fakeDoctors from "../../utils/global-data/fakeDoctors";
+import fakeBranches from "../../utils/global-data/fakeBranches";
+import PrivateRoute from "../auth/HOC/PrivateRoute";
+import VerifyAuth from "../auth/HOC/VerifyAuth";
+import { NextPageProps } from "../../utils/types/NextPageProps";
+import { NextApiRequest } from "next";
 
 const fakePatients = [
   {
@@ -110,14 +95,7 @@ const fakePatients = [
   },
 ];
 
-const fakeBranches = [
-  { name: "Cavite" },
-  { name: "Manila" },
-  { name: "Makati" },
-  { name: "Quezon City" },
-];
-
-export default function Dashboard() {
+export function Dashboard({}: NextPageProps) {
   let [selectedDate, setSelectedDate] = React.useState({
     dateStart: new Date(),
     dateEnd: new Date(),
@@ -147,147 +125,157 @@ export default function Dashboard() {
   return (
     <>
       <PageContainer>
-        <div className="space-y-4">
-          <h3>Dashboard</h3>
-          <div className="flex justify-between items-center gap-4 flex-wrap">
-            <div className="basis-full lg:basis-1/2">
-              <Input
-                placeholder="Search"
-                prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
-                className="rounded-2xl border-none text-lg"
+        <h3>Dashboard</h3>
+        <div className="flex justify-between items-center gap-4 flex-wrap lg:flex-nowrap">
+          <div className="basis-full lg:basis-1/2">
+            <Input
+              placeholder="Search"
+              prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+              className="rounded-full border-none text-lg"
+            />
+          </div>
+          <div className="basis-full lg:basis-auto flex-wrap xs:flex-nowrap flex gap-4">
+            <Button
+              className="p-3 w-full"
+              onClick={() => setShowScheduleModal(true)}
+              appearance="primary"
+            >
+              <div className="flex justify-center items-center">
+                <IoIosAdd className="inline-block text-2xl" />{" "}
+                <span>Add New Schedule</span>
+              </div>
+            </Button>
+            <Button className="p-3 w-full" appearance="primary">
+              <div className="flex justify-center items-center">
+                <IoIosAdd className="inline-block text-2xl" />{" "}
+                <span>Add New Patient</span>
+              </div>
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-col flex-auto">
+          <div className="flex justify-start xl:justify-between gap-4 xl:mt-10 flex-wrap flex-auto">
+            <div className="basis-full xl:basis-[45%] max-h-[30rem]">
+              <Calendar
+                onChange={(
+                  value: React.SetStateAction<{
+                    dateStart: Date;
+                    dateEnd: Date;
+                  }>
+                ) => setSelectedDate(value)}
               />
             </div>
-            <div className="basis-full lg:basis-auto flex gap-4">
-              <Button
-                className="p-3 w-full"
-                onClick={() => setShowScheduleModal(true)}
-              >
-                <div className="flex justify-center items-center">
-                  <IoIosAdd className="inline-block text-2xl" />{" "}
-                  <span>Add New Schedule</span>
+            <div className="basis-full xl:basis-[45%] space-y-4 mt-4 xl:mt-0 flex flex-col">
+              <div className="text-2xl font-medium">UPCOMING APPOINMENTS</div>
+              <div className="grid grid-cols-12 items-center gap-4">
+                <div className="text-sm text-gray-500 font-medium col-span-12 xs:col-span-2">
+                  FILTER BY:
                 </div>
-              </Button>
-              <Button className="p-3 w-full">
-                <div className="flex justify-center items-center">
-                  <IoIosAdd className="inline-block text-2xl" />{" "}
-                  <span>Add New Patient</span>
+                <div className="text-sm text-gray-500 font-medium col-span-12 xs:col-span-5">
+                  <Select
+                    placeholder="Select Doctor"
+                    onChange={(value: string) => setDoctorFilter(value)}
+                    className="border-none"
+                  >
+                    {fakeDoctors.map(({ name }, index) => {
+                      return (
+                        <Select.Option value={name} key={index}>
+                          {name}
+                        </Select.Option>
+                      );
+                    })}
+                  </Select>
                 </div>
-              </Button>
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between gap-4 lg:mt-20 flex-wrap">
-              <div className="basis-full lg:basis-[45%] h-[30rem]">
-                <Calendar onChange={(value: any) => setSelectedDate(value)} />
+                <div className="text-sm text-gray-500 font-medium col-span-12 xs:col-span-5">
+                  <Select
+                    placeholder="Select Branch"
+                    onChange={(value: string) => setBranchFilter(value)}
+                    className="border-none"
+                  >
+                    {fakeBranches.map(({ name }, index) => {
+                      return (
+                        <Select.Option value={name} key={index}>
+                          {name}
+                        </Select.Option>
+                      );
+                    })}
+                  </Select>
+                </div>
               </div>
-              <div className="basis-full lg:basis-[45%] space-y-4 mt-4 lg:mt-0">
-                <div className="text-2xl font-medium">UPCOMING APPOINMENTS</div>
-                <div className="grid grid-cols-12 items-center gap-4">
-                  <div className="text-sm text-gray-500 font-medium col-span-2">
-                    FILTER BY:
-                  </div>
-                  <div className="text-sm text-gray-500 font-medium col-span-5">
-                    <Select
-                      placeholder="Select Doctor"
-                      onChange={(value: string) => setDoctorFilter(value)}
-                      className="border-none"
-                    >
-                      {fakeDoctors.map(({ name }, index) => {
-                        return (
-                          <Select.Option value={name} key={index}>
-                            {name}
-                          </Select.Option>
-                        );
-                      })}
-                    </Select>
-                  </div>
-                  <div className="text-sm text-gray-500 font-medium col-span-5">
-                    <Select
-                      placeholder="Select Branch"
-                      onChange={(value: string) => setBranchFilter(value)}
-                      className="border-none"
-                    >
-                      {fakeBranches.map(({ name }, index) => {
-                        return (
-                          <Select.Option value={name} key={index}>
-                            {name}
-                          </Select.Option>
-                        );
-                      })}
-                    </Select>
-                  </div>
-                </div>
-                <div className="max-h-[35rem] overflow-y-auto p-4 -m-4 space-y-4">
-                  {filteredPatients.length > 0 ? (
-                    filteredPatients.map(
-                      (
-                        {
-                          name,
-                          email,
-                          mobile_number,
-                          doctor,
-                          issue,
-                          branch,
-                          unit,
-                          schedule,
-                        },
-                        index
-                      ) => {
-                        return (
-                          <AnimateContainer key={name} variants={fadeIn}>
-                            <Card className="text-base rounded-2xl overflow-hidden hover:[&_.card-overlay]:opacity-100">
-                              <div>
-                                <div className="flex items-center gap-6">
-                                  <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex justify-center items-center leading-[normal]">
-                                    {name.charAt(0)}
-                                  </div>
-                                  <div className="space-y-0">
-                                    <div className="font-bold text-xl">
-                                      {name}
+              <div className="flex flex-col flex-auto relative min-h-[70vh] xl:min-h-0">
+                <div className="absolute top-0 inset-x-0 h-full w-full pt-4">
+                  <div className="overflow-auto space-y-4 h-full w-full box-content p-4 -m-4">
+                    {filteredPatients.length > 0 ? (
+                      filteredPatients.map(
+                        (
+                          {
+                            name,
+                            email,
+                            mobile_number,
+                            doctor,
+                            issue,
+                            branch,
+                            unit,
+                            schedule,
+                          },
+                          index
+                        ) => {
+                          return (
+                            <AnimateContainer key={name} variants={fadeIn}>
+                              <Card className="text-base rounded-2xl overflow-hidden hover:[&_.card-overlay]:opacity-100">
+                                <div>
+                                  <div className="flex items-center flex-wrap gap-6 xs:text-left xs:flex-nowrap text-center">
+                                    <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex basis-full xs:basis-auto justify-center items-center leading-[normal]">
+                                      {name.charAt(0)}
                                     </div>
-                                    <div>{email}</div>
-                                    <div>{mobile_number}</div>
-                                    <div className="flex items-center gap-4">
-                                      <div className="align-middle text-sm whitespace-nowrap">
-                                        <AiOutlineCalendar className="inline-block align-middle" />{" "}
-                                        <span>
-                                          {format(schedule, "MM/dd/yyyy")}
-                                        </span>
+                                    <div className="space-y-0 basis-full xs:basis-auto">
+                                      <div className="font-bold text-xl">
+                                        {name}
                                       </div>
-                                      <div className="align-middle text-sm whitespace-nowrap">
-                                        <AiOutlineClockCircle className="inline-block align-middle" />{" "}
-                                        <span>15.00hs</span>
+                                      <div>{email}</div>
+                                      <div>{mobile_number}</div>
+                                      <div className="flex items-center xs:justify-start justify-center gap-4">
+                                        <div className="align-middle text-sm whitespace-nowrap">
+                                          <AiOutlineCalendar className="inline-block align-middle" />{" "}
+                                          <span>
+                                            {format(schedule, "MM/dd/yyyy")}
+                                          </span>
+                                        </div>
+                                        <div className="align-middle text-sm whitespace-nowrap">
+                                          <AiOutlineClockCircle className="inline-block align-middle" />{" "}
+                                          <span>15.00hs</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-0 font-medium basis-full xs:basis-auto">
+                                      <div>{issue}</div>
+                                      <div>Dr. {doctor}</div>
+                                      <div>
+                                        {branch} - {unit}
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="space-y-0 font-medium">
-                                    <div>{issue}</div>
-                                    <div>Dr. {doctor}</div>
-                                    <div>
-                                      {branch} - {unit}
-                                    </div>
+                                  <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
+                                    <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    <BsPencilSquare className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    <BsTrash className="align-middle cursor-pointer hover:text-secondary transition" />
                                   </div>
                                 </div>
-                                <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
-                                  <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
-                                  <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" />
-                                  <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" />
-                                  <BsPencilSquare className="align-middle cursor-pointer hover:text-secondary transition" />
-                                  <BsTrash className="align-middle cursor-pointer hover:text-secondary transition" />
-                                </div>
-                              </div>
-                            </Card>
-                          </AnimateContainer>
-                        );
-                      }
-                    )
-                  ) : (
-                    <AnimateContainer key="empty-patient" variants={fadeIn}>
-                      <div className="text-4xl text-gray-400 text-center">
-                        No Records
-                      </div>
-                    </AnimateContainer>
-                  )}
+                              </Card>
+                            </AnimateContainer>
+                          );
+                        }
+                      )
+                    ) : (
+                      <AnimateContainer key="empty-patient" variants={fadeIn}>
+                        <div className="text-4xl text-gray-400 text-center">
+                          No Records
+                        </div>
+                      </AnimateContainer>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -316,7 +304,6 @@ export default function Dashboard() {
               });
             }}
           >
-            <div id="sample" />
             <Form.Item
               label="Type of Schedule"
               name="type_of_schedule"
@@ -449,19 +436,20 @@ export default function Dashboard() {
               </Select>
             </Form.Item>
             <div className="flex justify-end items-center gap-4">
-              <div className="w-40">
-                <Button
-                  className="p-4 bg-transparent border-none text-gray-500"
-                  onClick={() => setShowScheduleModal(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-              <div className="w-40">
-                <Button type="submit" className="p-4">
-                  Save
-                </Button>
-              </div>
+              <Button
+                appearance="link"
+                className="p-4 bg-transparent border-none text-gray-500 font-semibold"
+                onClick={() => setShowScheduleModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                appearance="primary"
+                className="max-w-[10rem]"
+                type="submit"
+              >
+                Save
+              </Button>
             </div>
           </Form>
         </div>
@@ -469,3 +457,9 @@ export default function Dashboard() {
     </>
   );
 }
+
+export const getServerSideProps = VerifyAuth((ctx, profile, openMenus) => {
+  return { props: { profile, openMenus } };
+});
+
+export default PrivateRoute(Dashboard);

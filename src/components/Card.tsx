@@ -7,7 +7,7 @@ export default function Card({ children, className, ...rest }: CardProps) {
   return (
     <div
       className={twMerge(
-        "bg-white p-6 rounded-2xl shadow-md shadow-slate-300 relative",
+        "bg-white p-6 rounded-2xl shadow-md shadow-slate-300 relative text-base",
         className
       )}
       {...rest}
