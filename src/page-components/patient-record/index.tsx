@@ -11,7 +11,7 @@ import Prescription from "./Prescription";
 import TreatmentPlan from "./TreatmentPlan";
 import TreatmentRecords from "./TreatmentRecords";
 
-export default [
+export const patientRecord = [
   {
     label: `Personal Record`,
     key: "1",
@@ -143,3 +143,5 @@ export default [
     ),
   },
 ];
+
+export default patientRecord;

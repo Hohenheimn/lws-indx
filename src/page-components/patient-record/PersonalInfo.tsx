@@ -558,7 +558,7 @@ export function PersonalInfo() {
                 className="col-span-full text-base"
               >
                 <Checkbox id="patient_consent" className="font-medium">
-                  Patient's Consent
+                  {`Patient's Consent`}
                 </Checkbox>
               </Form.Item>
             </div>

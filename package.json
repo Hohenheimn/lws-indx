@@ -47,6 +47,7 @@
     "@types/chart.js": "^2.9.37",
     "@types/react-scroll": "^1.8.5",
     "eslint": "^8.29.0",
+    "eslint-config-next": "^13.0.6",
     "postcss-import": "^15.0.0"
   }
 }
