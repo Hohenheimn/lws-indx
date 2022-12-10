@@ -100,10 +100,10 @@ const sideMenu = [
   },
 ];
 
-export const SideBar = ({ openMenus, ...rest }: SideBarProps) => {
-  const router = useRouter();
-  const { openDrawer, setOpenDrawer } = React.useContext(Context);
-  let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
+export const SideBar = () => {
+  // const router = useRouter();
+  // const { openDrawer, setOpenDrawer } = React.useContext(Context);
+  // let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
 
   return (
     <>

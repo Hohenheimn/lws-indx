@@ -40,7 +40,7 @@ export const Layout = ({
       </AnimatePresence>
       <div className="flex flex-col overflow-hidden flex-auto">
         <div className="flex flex-auto">
-          {profile && <SideBar openMenus={openMenus} />}
+          {profile && <SideBar />}
           <div className="w-[100%] mx-auto flex flex-col flex-auto bg-default-page relative">
             <div className="absolute top-0 left-0 h-full w-full flex flex-auto">
               {children}
