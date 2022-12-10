@@ -26,7 +26,7 @@ type sideMenuProps = {
   }>;
 };
 
-const sideMenu: Array<sideMenuProps> = [
+const sideMenu = [
   {
     label: "Dashboard",
     link: "/",
@@ -140,7 +140,7 @@ export const SideBar = ({ openMenus, ...rest }: SideBarProps) => {
                 }
               >
                 {sideMenu.map(
-                  ({ show, subMenu, link, label, disabled, key }) => {
+                  ({ show, subMenu, link, label, disabled, key }: any) => {
                     if (!show) {
                       return null;
                     }
@@ -153,7 +153,7 @@ export const SideBar = ({ openMenus, ...rest }: SideBarProps) => {
                               subMenuLabel,
                               disabledSubMenu,
                               showSubMenu,
-                            }) => {
+                            }: any) => {
                               if (!showSubMenu) {
                                 return null;
                               }
