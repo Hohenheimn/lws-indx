@@ -1,5 +1,4 @@
 import React from "react";
-import dynamic from "next/dynamic";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FaHome, FaUser } from "react-icons/fa";
 import { Button } from "../components/Button";
@@ -8,6 +7,7 @@ import LoadingScreen from "./LoadingScreen";
 import { AnimateContainer } from "../components/animation";
 import { fadeIn } from "../components/animation/animation";
 import { AnimatePresence } from "framer-motion";
+import SideBar from "./Sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,8 +15,6 @@ interface LayoutProps {
   openMenus: string;
   router: any;
 }
-
-const SideBar = dynamic(() => import("./Sidebar"));
 
 export const Layout = ({
   children,
