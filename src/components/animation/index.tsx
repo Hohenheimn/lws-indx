@@ -11,6 +11,7 @@ interface AnimateContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
   triggerOnce?: boolean;
   rootMargin?: string;
+  transition?: {};
 }
 
 export function PageContainer({
@@ -26,10 +27,11 @@ export function PageContainer({
       animate="animate"
       exit="exit"
       className={twMerge(
-        "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto",
+        "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto scroll-smooth",
         className
       )}
       {...rest}
+      id="main-container"
     >
       {children}
     </motion.div>

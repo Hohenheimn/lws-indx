@@ -355,8 +355,8 @@ export function Financials({}: NextPageProps) {
   );
 }
 
-export const getServerSideProps = VerifyAuth((ctx, profile, openMenus) => {
-  return { props: { profile, openMenus } };
+export const getServerSideProps = VerifyAuth((ctx, serverSideProps) => {
+  return { props: { ...serverSideProps } };
 });
 
 export default PrivateRoute(Financials);

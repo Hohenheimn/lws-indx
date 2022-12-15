@@ -46,7 +46,7 @@ export function Dropdown({
           <Menu.Button className="w-full">{children}</Menu.Button>
           <Menu.Items
             className={twMerge(
-              "min-w-[10rem] w-full bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none flex flex-col items-center justify-center",
+              "min-w-[10rem] w-full bg-white border border-default rounded-md shadow-lg overflow-hidden focus:outline-none flex flex-col items-center justify-center",
               className
             )}
           >

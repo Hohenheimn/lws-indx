@@ -1,33 +1,40 @@
 import React, { useState } from "react";
 // import { fetchData } from "../../../utils/api";
 // import { useQuery } from "react-query";
-import Restricted from "./Restricted";
-import Login from "./Login";
+import Restricted from "../Restricted";
+import Login from "../Login";
 import Layout from "../../layout";
 import Router from "next/router";
+import Website from "../Website";
 
 type AuthProps = {
   profile: any;
   openMenus: string;
+  subdomain: string;
   router: typeof Router;
 };
 
 export default function PrivateRoute(Component: any) {
-  const Auth = ({ profile, router, openMenus, ...rest }: AuthProps) => {
+  const Auth = ({
+    profile,
+    router,
+    openMenus,
+    subdomain,
+    ...rest
+  }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState("");
 
-    const restrictedPages = ["entry-validation", "raffle-pick"];
+    const restrictedPages = ["/", "raffle-pick"];
+    const allowedSubDomain = ["lws-dentist", "ampong-clinic"];
 
-    if (
-      !profile?.is_staff &&
-      restrictedPages.includes(router.route.split("/")[1])
-    ) {
-      return <Restricted />;
-    }
-
-    if (profile) {
+    if (subdomain && profile) {
       return (
-        <Layout profile={profile} openMenus={openMenus} router={router}>
+        <Layout
+          profile={profile}
+          openMenus={openMenus}
+          router={router}
+          subdomain={subdomain}
+        >
           <Component
             profile={profile}
             router={router}
@@ -39,7 +46,15 @@ export default function PrivateRoute(Component: any) {
       );
     }
 
-    return <Login {...rest} router={router} />;
+    if (allowedSubDomain.includes(subdomain) && !profile) {
+      return <Login {...rest} router={router} />;
+    }
+
+    return (
+      <Layout>
+        <Website router={router} />
+      </Layout>
+    );
   };
 
   return Auth;

@@ -128,13 +128,13 @@ export function Select({
                   setQuery(event.target.value);
                 }}
                 className={twMerge(
-                  "transition focus:ring-0 focus:border-primary-500 hover:border-primary-500 bg-white border border-gray-300 w-full rounded-[inherit] text-sm leading-[normal] p-4",
+                  "transition focus:ring-0 focus:border-primary-500 hover:border-primary-500 bg-white border border-default w-full rounded-[inherit] text-sm leading-[normal] p-4",
                   className
                 )}
                 {...rest}
               />
             </Combobox.Button>
-            <Combobox.Options className="max-h-60 overflow-auto shadow-lg border border-gray-300 bg-white rounded-md">
+            <Combobox.Options className="max-h-60 overflow-auto shadow-lg border border-default bg-white rounded-md">
               {filteredChildren.map((child: React.ReactElement) => {
                 return React.cloneElement(child, {
                   active: selectedValue === child.props.value,

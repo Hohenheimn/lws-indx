@@ -7,16 +7,16 @@ import { SwapRightOutlined } from "@ant-design/icons";
 import { setCookie } from "nookies";
 
 import React from "react";
-import { Context } from "../../../utils/context/Provider";
-import { AnimateContainer, PageContainer } from "../../components/animation";
+import { Context } from "../../utils/context/Provider";
+import { AnimateContainer, PageContainer } from "../components/animation";
 import {
   fadeIn,
   fadeInLeft,
   fadeInRight,
-} from "../../components/animation/animation";
+} from "../components/animation/animation";
 import Image from "next/image";
-import Input from "../../components/Input";
-import { Button } from "../../components/Button";
+import Input from "../components/Input";
+import { Button } from "../components/Button";
 import { motion } from "framer-motion";
 // import { Media } from "../../../context/Media";
 

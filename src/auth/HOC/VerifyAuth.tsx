@@ -2,8 +2,14 @@ import { NextPageContext } from "next";
 import { parseCookies, destroyCookie } from "nookies";
 // import axios from "axios";
 
+type ggspTypes = {
+  profile: any;
+  openMenus: string;
+  subdomain: string;
+};
+
 export default function VerifyAuth(gssp: {
-  (ctx: NextPageContext, profile: any, openMenus: string): {};
+  (ctx: NextPageContext, { profile, openMenus, subdomain }: ggspTypes): {};
 }) {
   return async (ctx: any) => {
     const { req, res } = ctx;
@@ -11,6 +17,16 @@ export default function VerifyAuth(gssp: {
     let profile = req?.profile ?? null;
     let openMenus = req?.cookies?.om ?? null;
     let token = parseCookies(ctx).a_t;
+    let subdomain =
+      req.headers.host.split(".").length > 1
+        ? req.headers.host.split(".")[0]
+        : null;
+
+    // if (subdomain && subdomain !== "lws-dentist") {
+    //   return {
+    //     notFound: true,
+    //   };
+    // }
 
     if (!token) {
       profile = false;
@@ -32,7 +48,7 @@ export default function VerifyAuth(gssp: {
       //   });
     }
 
-    return await gssp(ctx, profile, openMenus);
+    return await gssp(ctx, { profile, openMenus, subdomain });
   };
 }
 

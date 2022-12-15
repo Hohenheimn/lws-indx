@@ -2,6 +2,7 @@ import React from "react";
 import { RadioGroup } from "@headlessui/react";
 import { Button as Btn } from "./Button";
 import { twMerge } from "tailwind-merge";
+import { Radio as Rad } from "antd";
 
 type RadioButtonProps = {
   label: string;
@@ -9,8 +10,7 @@ type RadioButtonProps = {
   className?: string;
 };
 
-interface RadioProps
-  extends React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> {
+interface RadioProps extends React.FC<RadioButtonProps> {
   Group: any;
   Button: typeof Button;
 }
@@ -21,7 +21,7 @@ const Button: React.FC<RadioButtonProps> = ({ label, value, className }) => {
       {({ checked }) => (
         <Btn
           className={twMerge(
-            `font-normal border-slate-300 p-3`,
+            `font-normal border-default p-3`,
             `${
               checked
                 ? "bg-primary-500 text-white font-medium"
@@ -32,6 +32,30 @@ const Button: React.FC<RadioButtonProps> = ({ label, value, className }) => {
         >
           {label}
         </Btn>
+      )}
+    </RadioGroup.Option>
+  );
+};
+
+export const Radio: RadioProps = ({ label, value, className }) => {
+  return (
+    <RadioGroup.Option value={value}>
+      {({ checked }) => (
+        <>
+          <input
+            type="radio"
+            className={twMerge(
+              "w-4 h-4 text-blue-600 bg-gray-100 border-default !outline-0 !ring-0",
+              className
+            )}
+          />
+          <label
+            htmlFor={value}
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            {label}
+          </label>
+        </>
       )}
     </RadioGroup.Option>
   );
@@ -66,63 +90,6 @@ const Group = ({ children, className, ...rest }: any) => {
     >
       {children}
     </RadioGroup>
-  );
-};
-
-export const Radio: RadioProps = ({
-  children,
-  className = "",
-  disabled,
-  ...rest
-}) => {
-  return (
-    <div></div>
-    // <RadioGroup
-    //   onChange={(e: string) => console.log(e)}
-    //   className="flex items-center justify-center [&_button]:rounded-none [&_button]:first:[&>div]:rounded-tl-md [&_button]:first:[&>div]:rounded-bl-md [&_button]:last:[&>div]:rounded-tr-md [&_button]:last:[&>div]:rounded-br-md"
-    // >
-    //   <RadioGroup.Option value="startup">
-    //     {({ checked }) => (
-    //       <Button
-    //         className={`
-    //                   ${
-    //                     checked
-    //                       ? "bg-primary-500"
-    //                       : "bg-transparent text-default-text hover:text-white border border-solid border-primary-500"
-    //                   }
-    //                     `}
-    //       >
-    //         Daily
-    //       </Button>
-    //     )}
-    //   </RadioGroup.Option>
-    //   <RadioGroup.Option value="business">
-    //     {({ checked }) => (
-    //       <Button
-    //         className={`${
-    //           checked
-    //             ? "bg-primary-500"
-    //             : "bg-transparent text-default-text hover:text-white border border-solid border-primary-500"
-    //         }`}
-    //       >
-    //         Monthly
-    //       </Button>
-    //     )}
-    //   </RadioGroup.Option>
-    //   <RadioGroup.Option value="enterprise">
-    //     {({ checked }) => (
-    //       <Button
-    //         className={`${
-    //           checked
-    //             ? "bg-primary-500"
-    //             : "bg-transparent text-default-text hover:text-white border border-solid border-primary-500"
-    //         }`}
-    //       >
-    //         Yearly
-    //       </Button>
-    //     )}
-    //   </RadioGroup.Option>
-    // </RadioGroup>
   );
 };
 

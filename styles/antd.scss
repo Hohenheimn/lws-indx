@@ -3,7 +3,7 @@
 // Datepicker
 
 div.ant-picker {
-  @apply w-full rounded-md px-4 py-4 font-medium text-sm leading-[normal] h-auto border border-gray-300 shadow;
+  @apply w-full rounded-md px-4 py-4 font-medium text-sm leading-[normal] h-auto border border-default shadow;
 
   &.ant-picker-range {
     @apply text-center;
@@ -272,7 +272,7 @@ form.ant-form {
     }
     &.ant-form-item-with-help {
       .ant-upload-select {
-        @apply border border-gray-300;
+        @apply border border-default;
       }
     }
     div.ant-form-item-label {
@@ -413,7 +413,7 @@ div.ant-table-wrapper {
       }
 
       &.ant-pagination-item {
-        @apply border border-solid border-gray-100 m-0 p-3 text-base text-default-text;
+        @apply border border-solid border-default m-0 p-3 text-base text-default-text;
         a {
           @apply text-inherit transition;
         }
@@ -489,7 +489,7 @@ div.ant-tabs {
   }
 }
 
-// Radio
+// Checkbox
 
 div.ant-checkbox-group {
   .ant-checkbox-wrapper {
@@ -519,7 +519,7 @@ label.ant-checkbox-wrapper {
   .ant-checkbox {
     @apply leading-[normal];
     .ant-checkbox-inner {
-      @apply h-4 w-4 border-gray-300;
+      @apply h-4 w-4 border-default;
 
       &:after {
         @apply h-[70%] w-[40%];
@@ -529,4 +529,93 @@ label.ant-checkbox-wrapper {
     //   @apply h-0 w-0;
     // }
   }
+}
+
+// Checkbox
+
+div.ant-checkbox-group {
+  .ant-checkbox-wrapper {
+    @apply ml-0;
+  }
+}
+
+label.ant-checkbox-wrapper {
+  @apply text-[1em];
+  &:hover {
+    .ant-checkbox {
+      .ant-checkbox-inner {
+        @apply border-primary;
+      }
+    }
+  }
+  &.ant-checkbox-wrapper-checked {
+    .ant-checkbox {
+      &:after {
+        @apply border-none;
+      }
+      .ant-checkbox-inner {
+        @apply bg-primary border-primary;
+      }
+    }
+  }
+  .ant-checkbox {
+    @apply leading-[normal];
+    .ant-checkbox-inner {
+      @apply h-4 w-4 border-default-secondary;
+
+      &:after {
+        @apply h-[70%] w-[40%];
+      }
+    }
+    // input {
+    //   @apply h-0 w-0;
+    // }
+  }
+}
+
+// Radio
+
+div.ant-radio-group {
+  @apply text-[1em];
+  .ant-radio-wrapper {
+    @apply ml-0;
+  }
+}
+
+label.ant-radio-wrapper {
+  @apply text-[1em];
+  &:hover {
+    .ant-radio {
+      .ant-radio-inner {
+        @apply border-primary;
+      }
+    }
+  }
+  &.ant-radio-wrapper-checked {
+    .ant-radio {
+      &:after {
+        @apply border-none;
+      }
+      .ant-radio-inner {
+        @apply bg-white border-primary;
+      }
+    }
+  }
+  .ant-radio {
+    @apply leading-[normal];
+
+    .ant-radio-inner {
+      @apply border-default-secondary shadow-none h-4 w-4;
+
+      &:after {
+        @apply h-4 w-4 -ml-2 -mt-2 bg-primary;
+      }
+    }
+  }
+}
+
+// Textarea
+
+textarea.ant-input {
+  @apply p-4 rounded-lg text-sm focus:border-primary-500 focus:ring-0 focus:shadow-input hover:border-primary-500 bg-white border text-default;
 }

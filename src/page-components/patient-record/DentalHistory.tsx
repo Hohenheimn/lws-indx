@@ -9,7 +9,7 @@ import { Select } from "../../components/Select";
 export function DentalHistory() {
   const [DentalHistoryForm] = Form.useForm();
   return (
-    <Card className="flex-auto">
+    <Card className="flex-auto md:p-12 p-6">
       <Form
         form={DentalHistoryForm}
         layout="vertical"

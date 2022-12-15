@@ -79,7 +79,7 @@ export const Input: React.ForwardRefRenderFunction<
           name={name}
           id={name}
           className={twMerge(
-            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-gray-300 shadow rounded-md transition block w-full text-sm leading-[normal]",
+            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-default shadow rounded-md transition block w-full text-sm leading-[normal]",
             `${prefix ? "pl-8" : ""} ${suffix ? "pr-12" : ""}`,
             className
           )}

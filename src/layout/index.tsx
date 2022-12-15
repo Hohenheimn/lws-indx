@@ -8,12 +8,14 @@ import { AnimateContainer } from "../components/animation";
 import { fadeIn } from "../components/animation/animation";
 import { AnimatePresence } from "framer-motion";
 import SideMenu from "./SideMenu";
+import { scroller } from "react-scroll";
 
 interface LayoutProps {
   children: React.ReactNode;
-  profile: string;
-  openMenus: string;
-  router: any;
+  profile?: string;
+  openMenus?: string;
+  router?: any;
+  subdomain?: string;
 }
 
 export const Layout = ({
@@ -21,6 +23,7 @@ export const Layout = ({
   profile,
   openMenus,
   router,
+  subdomain,
 }: LayoutProps) => {
   const { setOpenDrawer, showLoading, setShowLoading } =
     React.useContext(Context);
@@ -40,44 +43,46 @@ export const Layout = ({
       </AnimatePresence>
       <div className="flex flex-col overflow-hidden flex-auto">
         <div className="flex flex-auto">
-          {profile && <SideMenu openMenus={openMenus} />}
+          {profile && subdomain && <SideMenu openMenus={openMenus} />}
           <div className="w-[100%] mx-auto flex flex-col flex-auto bg-default-page relative">
             <div className="absolute top-0 left-0 h-full w-full flex flex-auto">
               {children}
             </div>
           </div>
         </div>
-        <div className="w-full bg-white border border-solid border-gray-300 z-50 flex justify-evenly items-center gap-8 py-2 px-4 md:hidden">
-          <Button
-            appearance="link"
-            className="text-gray-500 text-[.6rem] rounded-none"
-            onClick={() => router.push("/")}
-          >
-            <div className="flex flex-col justify-center items-center gap-2 uppercase">
-              <FaHome className="text-2xl" />
-              <div>Home</div>
-            </div>
-          </Button>
-          <Button
-            appearance="link"
-            className="text-gray-500 text-[.6rem] rounded-none"
-          >
-            <div className="flex flex-col justify-center items-center gap-2 uppercase">
-              <FaUser className="text-2xl" />
-              <div>Profile</div>
-            </div>
-          </Button>
-          <Button
-            appearance="link"
-            className="text-gray-500 text-[.6rem] rounded-none"
-            onClick={() => setOpenDrawer(true)}
-          >
-            <div className="flex flex-col justify-center items-center gap-2 uppercase">
-              <FiMoreHorizontal className="text-2xl" />
-              <div>See More</div>
-            </div>
-          </Button>
-        </div>
+        {profile && subdomain && (
+          <div className="w-full bg-white border border-solid border-default z-50 flex justify-evenly items-center gap-8 py-2 px-4 md:hidden">
+            <Button
+              appearance="link"
+              className="text-gray-500 text-[.6rem] rounded-none"
+              onClick={() => router.push("/")}
+            >
+              <div className="flex flex-col justify-center items-center gap-2 uppercase">
+                <FaHome className="text-2xl" />
+                <div>Home</div>
+              </div>
+            </Button>
+            <Button
+              appearance="link"
+              className="text-gray-500 text-[.6rem] rounded-none"
+            >
+              <div className="flex flex-col justify-center items-center gap-2 uppercase">
+                <FaUser className="text-2xl" />
+                <div>Profile</div>
+              </div>
+            </Button>
+            <Button
+              appearance="link"
+              className="text-gray-500 text-[.6rem] rounded-none"
+              onClick={() => setOpenDrawer(true)}
+            >
+              <div className="flex flex-col justify-center items-center gap-2 uppercase">
+                <FiMoreHorizontal className="text-2xl" />
+                <div>See More</div>
+              </div>
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );

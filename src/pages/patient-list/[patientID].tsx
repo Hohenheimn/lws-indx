@@ -156,9 +156,9 @@ export function PatientRecord({
   );
 }
 
-export const getServerSideProps = VerifyAuth((ctx, profile, openMenus) => {
+export const getServerSideProps = VerifyAuth((ctx, serverSideProps) => {
   let selectedPatientID = Number(ctx.query.patientID);
 
-  return { props: { profile, openMenus, selectedPatientID } };
+  return { props: { ...serverSideProps, selectedPatientID } };
 });
 export default PrivateRoute(PatientRecord);
