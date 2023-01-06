@@ -15,6 +15,20 @@ import { Drawer } from "antd";
 import { twMerge } from "tailwind-merge";
 import { scroller } from "react-scroll";
 import { fadeIn, stagger, zoomIn } from "../components/animation/animation";
+import {
+  BsCheckCircle,
+  BsClock,
+  BsHandThumbsUp,
+  BsReverseLayoutSidebarReverse,
+  BsShieldCheck,
+  BsShieldLock,
+} from "react-icons/bs";
+import { AiOutlineArrowDown } from "react-icons/ai";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "../../utils/api";
+import { Context } from "../../utils/context/Provider";
+import Modal from "../components/Modal";
+import { PatternFormat } from "react-number-format";
 
 const { TextArea } = Inp;
 
@@ -38,14 +52,33 @@ const menu: Array<sideMenuProps> = [
   {
     label: "Register Now",
     link: "/registration",
-    appearance: "disabled",
+    appearance: "primary",
   },
 ];
 
 export default function Website({ router }: any) {
   let [openDrawer, setOpenDrawer] = React.useState(false);
   let [activeHeader, setActiveHeader] = React.useState(false);
+  let [showSuccessModal, setShowSuccessModal] = React.useState(false);
+  const { setShowLoading } = React.useContext(Context);
   const [ContactForm] = Form.useForm();
+
+  const { mutate: contact } = useMutation(
+    (payload: {}) =>
+      postData({
+        url: "/api/contact-us",
+        payload,
+        options: {
+          isLoading: (show: boolean) => setShowLoading(show),
+        },
+      }),
+    {
+      onSuccess: () => {
+        setShowSuccessModal(true);
+        ContactForm.resetFields();
+      },
+    }
+  );
 
   return (
     <>
@@ -155,10 +188,9 @@ export default function Website({ router }: any) {
                   <span className="text-primary font-semibold">Index Card</span>
                 </h1>
                 <div>
-                  Lorem ipsum dolor sit amet consectetur. Adipiscing augue enim
-                  pharetra massa sollicitudin. Eu diam lorem ullamcorper dui
-                  vitae. Posuere praesent ut et orci nec. Habitant ipsum aliquam
-                  a id
+                  Clinic management software made simple—Easy patient
+                  registration and dental appointments, secured dental records,
+                  and smart clinic analytics.
                 </div>
                 <div className="lg:m-0">
                   <Button appearance="primary" className="w-full max-w-xs py-4">
@@ -196,61 +228,59 @@ export default function Website({ router }: any) {
         <div className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12">
           <AnimateContainer variants={fadeIn}>
             <div className="text-center space-y-2">
-              <h1 className="font-semibold text-blumine">Challenges</h1>
-              <div>Every Dental Clinics struggle with this 3 key areas:</div>
+              <h1 className="font-semibold text-blumine">
+                We Understand Your Inconvenience
+              </h1>
+              <div>
+                Managing a clinic is not easy. These struggles are often
+                experienced by dentists and clinic managers:
+              </div>
             </div>
           </AnimateContainer>
           <AnimateContainer variants={fadeIn}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 text-center">
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
-                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl">
-                  P
+                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl text-blumine">
+                  <BsReverseLayoutSidebarReverse />
                 </Avatar>
-                <h3 className="font-medium text-blumine">
-                  Using index cards for
-                  <br />
-                  patient record profiling
-                </h3>
+                <h4 className="font-medium text-blumine">
+                  Index cards are unreliable
+                </h4>
                 <div>
-                  Dentists have been using index cards for decades to profile
-                  their patients. And it was quite successful until the cards
-                  got lost or damaged. And this can cause delays in treatment,
-                  misdiagnosis and over-treatment.
+                  Dentists have been using index cards or paper records for
+                  decades. However, cards and paper may get lost or damaged
+                  which can cause delays in treatment, misdiagnosis and waste
+                  more time recording information all over again.
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
-                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl">
-                  P
+                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl text-blumine">
+                  <BsShieldCheck />
                 </Avatar>
-                <h3 className="font-medium text-blumine">
-                  Patient Record Safety
-                  <br /> and Security.
-                </h3>
+                <h4 className="font-medium text-blumine">
+                  Unsecure paper records
+                </h4>
                 <div>
-                  You can lose a lot of money if you do not have the right tools
-                  to keep your patient records safe. However, it is not just
-                  legal troubles you face. Patients could also bring potential
-                  lawsuits against you in the event of a data leak or hack.
+                  You can lose a lot of money and credibility if you do not have
+                  the right tools to keep your patient records safe. Aside from
+                  losing patients, potential legal troubles for data leak may
+                  also be faced.
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
-                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl">
-                  P
+                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl text-blumine">
+                  <BsClock />
                 </Avatar>
-                <h3 className="font-medium text-blumine">
-                  Time Management of
-                  <br /> Clinic Operations
-                </h3>
+                <h4 className="font-medium text-blumine">
+                  Paper Records Slows Clinic Operations
+                </h4>
                 <div>
-                  {`Running a dental practice is tough enough. You can't afford to
-                lose your patients, or the time and money spent processing paper
-                records. But it happens all too often. You are losing patients
-                and your productivity is down.`}
+                  {`Running a dental practice is tough enough. You can't afford to lose your patients, or the time and money spent processing paper records. But it happens all too often. You are losing patients and your productivity is down.`}
                 </div>
               </div>
             </div>
           </AnimateContainer>
-          <AnimateContainer variants={fadeIn}>
+          {/* <AnimateContainer variants={fadeIn}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
                 <div className="items-center h-48 w-full relative">
@@ -297,7 +327,7 @@ export default function Website({ router }: any) {
                 </div>
               </div>
             </div>
-          </AnimateContainer>
+          </AnimateContainer> */}
         </div>
         <div
           className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12"
@@ -320,18 +350,15 @@ export default function Website({ router }: any) {
               <div className="space-y-4 text-center lg:text-left">
                 <h1 className="text-blumine font-semibold">What is INDX</h1>
                 <div>
-                  INDX is an EMR platform that provides a smarter clinic
-                  management experience for dentists and patients. From the easy
-                  consultation process to conveniently accessing patient
-                  records, INDX makes healthcare simpler and more efficient.
-                  <br />
-                  <br />
                   INDX is dental software that helps you manage your practice
-                  more efficiently. With easy-to-use checklists, templates and
-                  other productivity tools, you can get and stay organized,
-                  schedule appointments efficiently, track patient communication
-                  and finances, improve relations and marketing through
-                  electronic forms, and more.
+                  more efficiently and securely. With easy-to-use calendar,
+                  templates and other productivity tools, you can get and stay
+                  organized, schedule appointments efficiently, track patient
+                  communication and finances, improve relations and marketing
+                  through electronic forms, and more. It will help you get more
+                  patients at the door, grow your practice with ease, track your
+                  clinic’s performance, and maximize your profits, all in an
+                  easy-to-use, organized and streamlined platform.
                 </div>
                 <Button appearance="primary" className="md:w-auto py-4">
                   Get Started
@@ -353,19 +380,33 @@ export default function Website({ router }: any) {
                     For Dental Clinic Managers
                   </div>
                   <br />
-                  INDX is dental software that helps you manage your practice
-                  more efficiently. With easy-to-use checklists, templates and
-                  other productivity tools, you can get and stay organized,
-                  schedule appointments efficiently, track patient communication
-                  and finances, improve relations and marketing through
-                  electronic forms, and more.
+                  Running a dental clinic is not easy, from taking care of
+                  patient records to managing your team and business.
+                  <br />
+                  <br />
+                  Some dental clinics use the traditional process in running
+                  their clinic business but this leads to slower and inefficient
+                  results. With INDX, you can track patient records easily and
+                  manage your clinic in one dashboard.
                   <br />
                   <br />
                   <div className="font-medium text-blumine">
                     For Resident Doctors
                   </div>
-                  <br />• Accessibility 24/7
-                  <br /> • Convenience
+                  <br />
+                  Managing a dental practice can quickly become overwhelming. No
+                  other dental software caters specifically to the needs of
+                  resident dentists.
+                  <br />
+                  <br />
+                  INDX uniquely designed Dental Clinic Management software for
+                  the busy practicing dentist.
+                  <br />
+                  <br />
+                  Not only does INDX streamline your practice workflow, our
+                  intuitive system increases administrative efficiency, saves
+                  you time and helps you focus on what matters most - providing
+                  the very best in patient care.
                 </div>
                 <Button appearance="primary" className="md:w-auto py-4">
                   Get Started
@@ -404,8 +445,8 @@ export default function Website({ router }: any) {
           >
             <div className="border-2 border-solid border-primary rounded-2xl flex items-center p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl">
-                  P
+                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                  <BsShieldLock />
                 </Avatar>
               </div>
               <h4 className="font-medium text-blumine max-xs:text-xl">
@@ -414,8 +455,8 @@ export default function Website({ router }: any) {
             </div>
             <div className="border-2 border-solid border-primary rounded-2xl flex items-center p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl">
-                  P
+                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                  <BsHandThumbsUp />
                 </Avatar>
               </div>
               <h4 className="font-medium text-blumine max-xs:text-xl">
@@ -424,8 +465,8 @@ export default function Website({ router }: any) {
             </div>
             <div className="border-2 border-solid border-primary rounded-2xl flex items-center p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl">
-                  P
+                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                  <AiOutlineArrowDown />
                 </Avatar>
               </div>
               <h4 className="font-medium text-blumine max-xs:text-xl">
@@ -448,17 +489,17 @@ export default function Website({ router }: any) {
                   className="object-right object-fill"
                 />
               </div>
-              <h2 className="text-inherit">Secure your slot now!</h2>
+              <h2 className="text-inherit">Register</h2>
               <div className="font-light">
                 Reserve a slot today, and get a free subscription for 3 months.
               </div>
+              <br />
               <Button
                 appearance="primary"
                 className="bg-white text-primary md:w-auto p-4 px-8 hover:bg-white hover:scale-105 font-medium"
               >
                 Register Now!
               </Button>
-              <div>BE THE FIRST TO EXPERIENCE!</div>
             </AnimateContainer>
             <AnimateContainer
               variants={zoomIn}
@@ -483,15 +524,14 @@ export default function Website({ router }: any) {
           >
             <div className="space-y-2">
               <h1 className="text-inherit font-semibold relative w-fit m-auto after:content-[''] after:absolute after:w-[40%] after:h-full after:border-b-2 border-b-white after:left-[50%] after:-translate-x-[50%] after:top-0 after:z-10">
-                Get in touch
+                If you have questions? Email us!
               </h1>
-              <div>Ask us anything or just say hi</div>
             </div>
             <Form
               form={ContactForm}
               layout="vertical"
               onFinish={(values) => {
-                console.log(values);
+                contact(values);
               }}
               className="w-full text-left"
             >
@@ -521,28 +561,40 @@ export default function Website({ router }: any) {
                   />
                 </Form.Item>
                 <Form.Item
-                  name="email"
+                  name="email_address"
                   rules={[
-                    { required: true, message: "Email Address is required" },
+                    {
+                      required: true,
+                      message: "Email Address is required",
+                    },
+                    { type: "email", message: "Must be a valid email" },
                   ]}
                   required={false}
                 >
                   <Input
-                    id="email"
+                    id="email_address"
                     placeholder="Email Address"
                     className="!bg-transparent text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
                   />
                 </Form.Item>
                 <Form.Item
-                  name="contact_number"
+                  name="mobile_number"
                   rules={[
-                    { required: true, message: "Contact Number is required" },
+                    { required: true, message: "Mobile Number is required" },
+                    {
+                      pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                      message: "Please use correct format!",
+                    },
                   ]}
                   required={false}
                 >
-                  <Input
-                    id="contact_number"
-                    placeholder="Contact Number"
+                  <PatternFormat
+                    customInput={Input}
+                    placeholder="Mobile Number"
+                    mask="X"
+                    format="####-###-####"
+                    allowEmptyFormatting={false}
+                    id="mobile_number"
                     className="!bg-transparent text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
                   />
                 </Form.Item>
@@ -600,6 +652,32 @@ export default function Website({ router }: any) {
           </div>
         </AnimateContainer>
       </PageContainer>
+      <Modal
+        show={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        className="w-[70rem]"
+      >
+        <div className="space-y-12 text-center text-base max-w-[50rem] m-auto">
+          <BsCheckCircle className="text-primary text-9xl m-auto" />
+          <div>
+            <h2 className="font-normal mb-2">Registration Successful</h2>
+            <div className="text-default-secondary">
+              Lorem ipsum dolor sit amet consectetur. Adipiscing augue enim
+              pharetra massa sollicitudin. Eu diam lorem ullamcorper dui vitae.
+              Posuere praesent ut et orci nec. Habitant ipsum aliquam a id{" "}
+            </div>
+          </div>
+          <Button
+            appearance="primary"
+            className="max-w-[20rem] p-4"
+            onClick={() => {
+              setShowSuccessModal(false);
+            }}
+          >
+            Confirm
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 }

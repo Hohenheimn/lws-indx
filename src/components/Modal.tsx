@@ -49,14 +49,14 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" />
         </Transition.Child>
 
         <div
           className="fixed inset-0 z-10 md:p-[5%] overflow-hidden md:overflow-auto"
           {...rest}
         >
-          <div className="flex items-center justify-center sm:items-center h-full md:h-auto">
+          <div className="flex items-center justify-center sm:items-center h-full">
             <Transition.Child
               as={React.Fragment}
               enter="ease-out duration-300"
