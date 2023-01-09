@@ -19,6 +19,7 @@ import {
   BsCheckCircle,
   BsClock,
   BsHandThumbsUp,
+  BsLinkedin,
   BsReverseLayoutSidebarReverse,
   BsShieldCheck,
   BsShieldLock,
@@ -649,20 +650,23 @@ export default function Website({ router }: any) {
             <Button
               appearance="link"
               className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+              onClick={() =>
+                window.open("https://www.facebook.com/indxhealth", "_blank")
+              }
             >
               <FaFacebookF />
             </Button>
             <Button
               appearance="link"
               className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+              onClick={() =>
+                window.open(
+                  "https://www.linkedin.com/company/indx-health/?viewAsMember=true&original_referer=",
+                  "_blank"
+                )
+              }
             >
-              <FaTwitter />
-            </Button>
-            <Button
-              appearance="link"
-              className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
-            >
-              <FaInstagram />
+              <BsLinkedin />
             </Button>
           </div>
         </AnimateContainer>
