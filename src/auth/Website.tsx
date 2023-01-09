@@ -194,7 +194,11 @@ export default function Website({ router }: any) {
                   and smart clinic analytics.
                 </div>
                 <div className="lg:m-0">
-                  <Button appearance="primary" className="w-full max-w-xs py-4">
+                  <Button
+                    appearance="primary"
+                    className="w-full max-w-xs py-4"
+                    onClick={() => router.push("/registration")}
+                  >
                     Register Now!
                   </Button>
                 </div>
@@ -361,7 +365,11 @@ export default function Website({ router }: any) {
                   clinic’s performance, and maximize your profits, all in an
                   easy-to-use, organized and streamlined platform.
                 </div>
-                <Button appearance="primary" className="md:w-auto py-4">
+                <Button
+                  appearance="primary"
+                  className="md:w-auto py-4"
+                  onClick={() => router.push("/registration")}
+                >
                   Get Started
                 </Button>
               </div>
@@ -409,7 +417,11 @@ export default function Website({ router }: any) {
                   you time and helps you focus on what matters most - providing
                   the very best in patient care.
                 </div>
-                <Button appearance="primary" className="md:w-auto py-4">
+                <Button
+                  appearance="primary"
+                  className="md:w-auto py-4"
+                  onClick={() => router.push("/registration")}
+                >
                   Get Started
                 </Button>
               </div>
@@ -518,6 +530,7 @@ export default function Website({ router }: any) {
               <Button
                 appearance="primary"
                 className="bg-white text-primary md:w-auto p-4 px-8 hover:bg-white hover:scale-105 font-medium"
+                onClick={() => router.push("/registration")}
               >
                 Register Now!
               </Button>
