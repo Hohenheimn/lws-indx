@@ -180,7 +180,7 @@ export default function Registration({ router }: any) {
                     className="col-span-full text-sm mt-4"
                   >
                     <Checkbox id="terms">
-                      {`Lorem ipsum dolor sit amet consectetur. Adipiscing augue enim pharetra massa sollicitudin. Eu diam lorem ullamcorper dui vitae. Posuere praesent ut et orci nec. Habitant ipsum aliquam a id`}
+                      {`By clicking the submit button below, I hereby agree to and accept the following Terms and Conditions governing my use of Indx Health website and services. I further reaffirm my acceptance of the website's Privacy Policy.`}
                     </Checkbox>
                   </Form.Item>
                 </div>
@@ -204,9 +204,7 @@ export default function Registration({ router }: any) {
           <div>
             <h2 className="font-normal mb-2">Registration Successful</h2>
             <div className="text-default-secondary">
-              Lorem ipsum dolor sit amet consectetur. Adipiscing augue enim
-              pharetra massa sollicitudin. Eu diam lorem ullamcorper dui vitae.
-              Posuere praesent ut et orci nec. Habitant ipsum aliquam a id{" "}
+              Success, Your account has been successfully created
             </div>
           </div>
           <Button

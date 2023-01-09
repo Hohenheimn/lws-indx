@@ -217,7 +217,7 @@ export default function Website({ router }: any) {
             className="relative lg:absolute lg:top-0 lg:right-0 h-[100vw] lg:h-full lg:w-1/2 w-full"
           >
             <Image
-              src="/images/hero.png"
+              src="/images/hero-2.png"
               alt="hero"
               fill
               sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
@@ -443,35 +443,61 @@ export default function Website({ router }: any) {
             variants={fadeIn}
             className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-left"
           >
-            <div className="border-2 border-solid border-primary rounded-2xl flex items-center p-[5%] gap-x-4">
+            <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
                 <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
                   <BsShieldLock />
                 </Avatar>
               </div>
-              <h4 className="font-medium text-blumine max-xs:text-xl">
-                Security Guaranteed
-              </h4>
+              <div>
+                <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
+                  Security Guaranteed
+                </h4>
+                <div>
+                  Patient data security is our utmost priority. With Indx, you
+                  can rest assured that patient records are safely secure with
+                  our data healthcare compliance and usage of high security
+                  platform for data storage. Indx is the first fully secure
+                  clinic management software in the country.
+                </div>
+              </div>
             </div>
-            <div className="border-2 border-solid border-primary rounded-2xl flex items-center p-[5%] gap-x-4">
+            <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
                 <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
                   <BsHandThumbsUp />
                 </Avatar>
               </div>
-              <h4 className="font-medium text-blumine max-xs:text-xl">
-                User-Friendly/End-to-end Clinic Management
-              </h4>
+              <div>
+                <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
+                  User-Friendly/End-to-end Clinic Management
+                </h4>
+                <div>
+                  Providing you ease of use is our goal. Every feature is
+                  developed keeping you in mind. Our team of designers and
+                  engineers have worked on providing an intuitive process with
+                  simple and functional design to give you a quick and easy
+                  experience with the most efficient results.
+                </div>
+              </div>
             </div>
-            <div className="border-2 border-solid border-primary rounded-2xl flex items-center p-[5%] gap-x-4">
+            <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
                 <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
                   <AiOutlineArrowDown />
                 </Avatar>
               </div>
-              <h4 className="font-medium text-blumine max-xs:text-xl">
-                Easy Importing and migration
-              </h4>
+              <div>
+                <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
+                  Easy Importing and migration
+                </h4>
+                <div>
+                  Start transforming your paper records to digital records. We
+                  understand that manual recording of patient data has been used
+                  for ages, that’s why we developed a feature to help you easily
+                  migrate your paper records digitally.
+                </div>
+              </div>
             </div>
           </AnimateContainer>
           <div className="relative !mt-[30vw] lg:!mt-40 !mb-20 grid grid-cols-1 lg:grid-cols-2 lg:text-left text-center">
@@ -647,7 +673,7 @@ export default function Website({ router }: any) {
           </div>
         </AnimateContainer>
         <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
-          <div className="text-white bg-blumine p-4 text-center !m-0">
+          <div className="text-white bg-primary p-4 text-center !m-0">
             ©2022 Copyright | INDX Dental
           </div>
         </AnimateContainer>
