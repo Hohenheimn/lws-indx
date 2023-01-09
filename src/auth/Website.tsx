@@ -431,12 +431,6 @@ export default function Website({ router }: any) {
           <AnimateContainer variants={fadeIn}>
             <div className="text-center space-y-2 max-w-[45rem] m-auto">
               <h1 className="font-semibold text-blumine">3 Key Features</h1>
-              <div>
-                Lorem ipsum dolor sit amet consectetur. Adipiscing augue enim
-                pharetra massa sollicitudin. Eu diam lorem ullamcorper dui
-                vitae. Posuere praesent ut et orci nec. Habitant ipsum aliquam a
-                id
-              </div>
             </div>
           </AnimateContainer>
           <AnimateContainer
