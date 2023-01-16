@@ -201,9 +201,9 @@ export default function Website({ router }: any) {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    Clinic management software made simple—Easy patient
-                    registration and dental appointments, secured dental
-                    records, and smart clinic analytics.
+                    Start running your dental clinic the simplest way. Easily
+                    manage patient registration and dental appointments, have
+                    secure dental records and smart clinic analytics.
                   </div>
                   <div className="lg:m-0">
                     <Button
@@ -535,7 +535,8 @@ export default function Website({ router }: any) {
               </div>
               <h2 className="text-inherit">Get INDX for Your Clinic Now</h2>
               <div className="font-light">
-                Reserve a slot today, and get a free 3 months subscription.
+                Reserve a slot today, and get a{" "}
+                <span className="uppercase">free</span> 3 months subscription.
               </div>
               <Button
                 appearance="primary"
