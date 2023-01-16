@@ -10,22 +10,24 @@ import { CiMedal } from "react-icons/ci";
 import Avatar from "../components/Avatar";
 import { Input as Inp } from "antd";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
-import { GrMenu } from "react-icons/gr";
+import { GrLocal, GrMenu } from "react-icons/gr";
 import { Drawer } from "antd";
 import { twMerge } from "tailwind-merge";
 import { scroller } from "react-scroll";
 import { fadeIn, stagger, zoomIn } from "../components/animation/animation";
 import {
   BsCheckCircle,
-  BsClock,
   BsHandThumbsUp,
   BsInstagram,
   BsLinkedin,
-  BsReverseLayoutSidebarReverse,
-  BsShieldCheck,
   BsShieldLock,
 } from "react-icons/bs";
-import { AiOutlineArrowDown } from "react-icons/ai";
+import {
+  AiOutlineArrowDown,
+  AiOutlineIdcard,
+  AiOutlineUnlock,
+} from "react-icons/ai";
+import { MdRunningWithErrors } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "../../utils/api";
 import { Context } from "../../utils/context/Provider";
@@ -239,7 +241,7 @@ export default function Website({ router }: any) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 text-center">
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
                 <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
-                  <BsReverseLayoutSidebarReverse />
+                  <AiOutlineIdcard />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
                   Index cards are unreliable
@@ -253,7 +255,7 @@ export default function Website({ router }: any) {
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
                 <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
-                  <BsShieldCheck />
+                  <AiOutlineUnlock />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
                   Unsecure paper records
@@ -267,7 +269,7 @@ export default function Website({ router }: any) {
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
                 <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
-                  <BsClock />
+                  <MdRunningWithErrors />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
                   Paper Records Slows Clinic Operations
@@ -454,7 +456,7 @@ export default function Website({ router }: any) {
           >
             <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-5xl text-blumine">
                   <BsShieldLock />
                 </Avatar>
               </div>
@@ -473,7 +475,7 @@ export default function Website({ router }: any) {
             </div>
             <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-5xl text-blumine">
                   <BsHandThumbsUp />
                 </Avatar>
               </div>
@@ -492,7 +494,7 @@ export default function Website({ router }: any) {
             </div>
             <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-5xl text-blumine">
                   <AiOutlineArrowDown />
                 </Avatar>
               </div>
