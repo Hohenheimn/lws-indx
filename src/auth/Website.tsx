@@ -217,7 +217,7 @@ export default function Website({ router }: any) {
             className="relative lg:absolute lg:top-0 lg:right-0 h-[100vw] lg:h-full lg:w-1/2 w-full"
           >
             <Image
-              src="/images/hero-2.png"
+              src="/images/hero.png"
               alt="hero"
               fill
               sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
