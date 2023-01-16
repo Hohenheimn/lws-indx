@@ -187,26 +187,33 @@ export default function Website({ router }: any) {
           <div className=" justify-center h-auto lg:h-full w-full lg:max-w-[45rem] flex flex-col items-center lg:items-start lg:text-left text-center space-y-4 xs:space-y-8 p-[2%] xs:p-[5%]">
             <div className="flex flex-col lg:flex-auto justify-center">
               <AnimateContainer variants={fadeIn} className="space-y-8">
-                <h2 className="font-normal text-6xl xs:text-7xl">
-                  Your Digital <br />
-                  <span className="text-primary font-semibold">Index Card</span>
-                </h2>
-                <div>
-                  Clinic management software made simple—Easy patient
-                  registration and dental appointments, secured dental records,
-                  and smart clinic analytics.
+                <div className="space-y-2">
+                  <h2 className="font-normal text-4xl xs:text-5xl">
+                    Your Digital
+                    <span className="text-primary font-semibold">
+                      {" "}
+                      Index Card
+                    </span>
+                  </h2>
+                  <div className="xs:text-2xl text-blumine">
+                    The first fully EMR in the country
+                  </div>
                 </div>
-                <div className="lg:m-0">
-                  <Button
-                    appearance="blumine"
-                    className="w-full max-w-xs py-4"
-                    onClick={() => router.push("/registration")}
-                  >
-                    Register Now!
-                  </Button>
-                </div>
-                <div className="xs:text-2xl text-blumine">
-                  The first fully EMR in the country
+                <div className="space-y-4">
+                  <div>
+                    Clinic management software made simple—Easy patient
+                    registration and dental appointments, secured dental
+                    records, and smart clinic analytics.
+                  </div>
+                  <div className="lg:m-0">
+                    <Button
+                      appearance="blumine"
+                      className="w-full max-w-xs py-4"
+                      onClick={() => router.push("/registration")}
+                    >
+                      Register Now!
+                    </Button>
+                  </div>
                 </div>
               </AnimateContainer>
             </div>
