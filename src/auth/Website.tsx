@@ -1,4 +1,4 @@
-import { Space, Form, notification, Menu } from "antd";
+import { Space, Form, notification, Menu, Card } from "antd";
 import dynamic from "next/dynamic";
 
 import React from "react";
@@ -19,6 +19,7 @@ import {
   BsCheckCircle,
   BsClock,
   BsHandThumbsUp,
+  BsInstagram,
   BsLinkedin,
   BsReverseLayoutSidebarReverse,
   BsShieldCheck,
@@ -183,11 +184,11 @@ export default function Website({ router }: any) {
         >
           <div className=" justify-center h-auto lg:h-full w-full lg:max-w-[45rem] flex flex-col items-center lg:items-start lg:text-left text-center space-y-4 xs:space-y-8 p-[2%] xs:p-[5%]">
             <div className="flex flex-col lg:flex-auto justify-center">
-              <AnimateContainer variants={fadeIn} className="space-y-4">
-                <h1 className="font-normal text-6xl xs:text-7xl">
+              <AnimateContainer variants={fadeIn} className="space-y-8">
+                <h2 className="font-normal text-6xl xs:text-7xl">
                   Your Digital <br />
                   <span className="text-primary font-semibold">Index Card</span>
-                </h1>
+                </h2>
                 <div>
                   Clinic management software made simple—Easy patient
                   registration and dental appointments, secured dental records,
@@ -195,23 +196,15 @@ export default function Website({ router }: any) {
                 </div>
                 <div className="lg:m-0">
                   <Button
-                    appearance="primary"
+                    appearance="blumine"
                     className="w-full max-w-xs py-4"
                     onClick={() => router.push("/registration")}
                   >
                     Register Now!
                   </Button>
                 </div>
-              </AnimateContainer>
-            </div>
-            <div className="xs:text-2xl text-blumine">
-              <AnimateContainer variants={fadeIn}>
-                <div>
-                  <CiMedal className="inline-block text-[2em] mr-2" />
+                <div className="xs:text-2xl text-blumine">
                   The first fully EMR in the country
-                </div>
-                <div className="font-light">
-                  Hassle-Free. Simplified Clinic Management Tool.
                 </div>
               </AnimateContainer>
             </div>
@@ -233,9 +226,9 @@ export default function Website({ router }: any) {
         <div className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12">
           <AnimateContainer variants={fadeIn}>
             <div className="text-center space-y-2">
-              <h1 className="font-semibold text-blumine">
+              <h2 className="font-semibold text-blumine">
                 We Understand Your Inconvenience
-              </h1>
+              </h2>
               <div>
                 Managing a clinic is not easy. These struggles are often
                 experienced by dentists and clinic managers:
@@ -245,7 +238,7 @@ export default function Website({ router }: any) {
           <AnimateContainer variants={fadeIn}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 text-center">
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
-                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl text-blumine">
+                <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
                   <BsReverseLayoutSidebarReverse />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
@@ -259,7 +252,7 @@ export default function Website({ router }: any) {
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
-                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl text-blumine">
+                <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
                   <BsShieldCheck />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
@@ -273,7 +266,7 @@ export default function Website({ router }: any) {
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
-                <Avatar className="bg-primary bg-opacity-30 h-24 w-24 text-4xl text-blumine">
+                <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
                   <BsClock />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
@@ -353,20 +346,22 @@ export default function Website({ router }: any) {
             </AnimateContainer>
             <AnimateContainer variants={fadeIn}>
               <div className="space-y-4 text-center lg:text-left">
-                <h1 className="text-blumine font-semibold">What is INDX</h1>
+                <h2 className="text-blumine font-semibold">
+                  INDX Take Care of Your Clinic Activities
+                </h2>
                 <div>
-                  INDX is dental software that helps you manage your practice
-                  more efficiently and securely. With easy-to-use calendar,
-                  templates and other productivity tools, you can get and stay
-                  organized, schedule appointments efficiently, track patient
-                  communication and finances, improve relations and marketing
-                  through electronic forms, and more. It will help you get more
-                  patients at the door, grow your practice with ease, track your
-                  clinic’s performance, and maximize your profits, all in an
-                  easy-to-use, organized and streamlined platform.
+                  Indx is a clinic management software that allows dentists to
+                  efficiently run their clinics. Securely keep your records in
+                  one place and simply manage it with ease. Schedule
+                  appointments seamlessly, keep and access patient records
+                  anytime, track finances and more. Let Indx help you take care
+                  of your patients, clinic and practice. Focus on growing your
+                  practice and maximizing profits while we take care of your
+                  clinic activities for you with a simple, secure and easy to
+                  use platform.
                 </div>
                 <Button
-                  appearance="primary"
+                  appearance="blumine"
                   className="md:w-auto py-4"
                   onClick={() => router.push("/registration")}
                 >
@@ -378,11 +373,13 @@ export default function Website({ router }: any) {
           <div className="grid grid-cols-1 lg:grid-cols-[40%_1fr] gap-8 items-center text-center lg:text-left">
             <AnimateContainer variants={fadeIn}>
               <div className="space-y-4">
-                <h1 className="text-blumine font-semibold">Why choose INDX</h1>
+                <h2 className="text-blumine font-semibold">
+                  Why it’s time to choose INDX?
+                </h2>
                 <div>
                   <div className="font-medium">Simple.Secured.Smart</div>
-                  Our software gives you the simple yet smartest tools for your
-                  dental clinic management experience.
+                  Our software gives you the simplest yet smartest tools for
+                  your dental clinic management experience.
                   <br />
                   <br />
                   <div className="font-medium text-blumine">
@@ -390,17 +387,20 @@ export default function Website({ router }: any) {
                   </div>
                   <br />
                   Running a dental clinic is not easy, from taking care of
-                  patient records to managing your team and business.
+                  patient records to managing every single part of the clinic.
+                  Most clinics use manual processes in running their clinics but
+                  this leads to slower and inefficient results.
                   <br />
                   <br />
-                  Some dental clinics use the traditional process in running
-                  their clinic business but this leads to slower and inefficient
-                  results. With INDX, you can track patient records easily and
-                  manage your clinic in one dashboard.
+                  You simply need a partner that will help you manage the clinic
+                  efficiently. We developed INDX, keeping you in mind. With
+                  INDX, every feature was made simpler while giving you more
+                  efficient results. Do more with less clicks. Track patient
+                  records easily and manage your clinic in one dashboard.
                   <br />
                   <br />
                   <div className="font-medium text-blumine">
-                    For Resident Doctors
+                    For Dental Practitioners
                   </div>
                   <br />
                   Managing a dental practice can quickly become overwhelming. No
@@ -418,7 +418,7 @@ export default function Website({ router }: any) {
                   the very best in patient care.
                 </div>
                 <Button
-                  appearance="primary"
+                  appearance="blumine"
                   className="md:w-auto py-4"
                   onClick={() => router.push("/registration")}
                 >
@@ -440,10 +440,12 @@ export default function Website({ router }: any) {
             </AnimateContainer>
           </div>
         </div>
-        <div className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12">
+        <div className="flex flex-col flex-none px-[5%] relative space-y-12">
           <AnimateContainer variants={fadeIn}>
             <div className="text-center space-y-2 max-w-[45rem] m-auto">
-              <h1 className="font-semibold text-blumine">3 Key Features</h1>
+              <h2 className="font-semibold text-blumine">
+                3 Smart Benefits Your Clinic Needs
+              </h2>
             </div>
           </AnimateContainer>
           <AnimateContainer
@@ -452,7 +454,7 @@ export default function Website({ router }: any) {
           >
             <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
                   <BsShieldLock />
                 </Avatar>
               </div>
@@ -471,7 +473,7 @@ export default function Website({ router }: any) {
             </div>
             <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
                   <BsHandThumbsUp />
                 </Avatar>
               </div>
@@ -490,7 +492,7 @@ export default function Website({ router }: any) {
             </div>
             <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
               <div>
-                <Avatar className="bg-primary bg-opacity-30 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
+                <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-3xl text-blumine">
                   <AiOutlineArrowDown />
                 </Avatar>
               </div>
@@ -511,7 +513,7 @@ export default function Website({ router }: any) {
             <AnimateContainer
               variants={fadeIn}
               rootMargin="0px 0px"
-              className="w-full bg-primary text-white rounded-2xl p-[5%]"
+              className="w-full bg-primary text-white rounded-2xl px-[5%] py-[10%]"
             >
               <div className="relative w-full pointer-events-none lg:hidden block h-[50vw] -mt-[30vw] mb-4">
                 <Image
@@ -522,17 +524,16 @@ export default function Website({ router }: any) {
                   className="object-right object-fill"
                 />
               </div>
-              <h2 className="text-inherit">Register</h2>
+              <h2 className="text-inherit">Get INDX for Your Clinic Now</h2>
               <div className="font-light">
-                Reserve a slot today, and get a free subscription for 3 months.
+                Reserve a slot today, and get a free 3 months subscription.
               </div>
-              <br />
               <Button
                 appearance="primary"
-                className="bg-white text-primary md:w-auto p-4 px-8 hover:bg-white hover:scale-105 font-medium"
+                className="bg-white text-primary md:w-auto mt-8 p-4 px-8 hover:bg-white hover:scale-105 font-medium"
                 onClick={() => router.push("/registration")}
               >
-                Register Now!
+                Register Now
               </Button>
             </AnimateContainer>
             <AnimateContainer
@@ -550,116 +551,140 @@ export default function Website({ router }: any) {
               </div>
             </AnimateContainer>
           </div>
-        </div>
-        <AnimateContainer variants={fadeIn}>
-          <div
-            className="bg-primary text-white md:min-h-screen flex flex-col flex-none py-[10%] px-[5%] relative space-y-12 text-lg text-center justify-center"
-            id="contact-us"
-          >
-            <div className="space-y-2">
-              <h1 className="text-inherit font-semibold relative w-fit m-auto after:content-[''] after:absolute after:w-[40%] after:h-full after:border-b-2 border-b-white after:left-[50%] after:-translate-x-[50%] after:top-0 after:z-10">
-                If you have questions? Email us!
-              </h1>
-            </div>
-            <Form
-              form={ContactForm}
-              layout="vertical"
-              onFinish={(values) => {
-                contact(values);
-              }}
-              className="w-full text-left"
+          <AnimateContainer variants={fadeIn}>
+            <Card
+              className="space-y-12 text-lg rounded-2xl shadow-[0px_0px_.3rem_0px_rgba(0,0,0,.25)] p-4"
+              id="contact-us"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Form.Item
-                  name="first_name"
-                  rules={[
-                    { required: true, message: "First Name is required" },
-                  ]}
-                  required={false}
-                >
-                  <Input
-                    id="first_name"
-                    placeholder="First Name"
-                    className="!bg-transparent text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
+              <div className="grid grid-cols-1 md:grid-cols-[40%_1fr] relative grid-flow-row-dense gap-4">
+                <div className="row-start-2 md:row-start-1">
+                  <div className="space-y-2">
+                    <h2 className="text-blumine mb-8">
+                      Reach us for questions
+                    </h2>
+                  </div>
+                  <Form
+                    form={ContactForm}
+                    layout="vertical"
+                    onFinish={(values) => {
+                      contact(values);
+                    }}
+                    className="w-full text-left"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        label="First Name"
+                        name="first_name"
+                        rules={[
+                          { required: true, message: "First Name is required" },
+                        ]}
+                        required={false}
+                      >
+                        <Input
+                          id="first_name"
+                          placeholder="First Name"
+                          className="shadow-none border-2"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        label="Last Name"
+                        name="last_name"
+                        rules={[
+                          { required: true, message: "Last Name is required" },
+                        ]}
+                        required={false}
+                      >
+                        <Input
+                          id="last_name"
+                          placeholder="Last Name"
+                          className="shadow-none border-2"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        label="Email Address"
+                        name="email_address"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Email Address is required",
+                          },
+                          { type: "email", message: "Must be a valid email" },
+                        ]}
+                        required={false}
+                      >
+                        <Input
+                          id="email_address"
+                          placeholder="Email Address"
+                          className="shadow-none border-2"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        label="Mobile Number"
+                        name="mobile_number"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Mobile Number is required",
+                          },
+                          {
+                            pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                            message: "Please use correct format!",
+                          },
+                        ]}
+                        required={false}
+                      >
+                        <PatternFormat
+                          customInput={Input}
+                          placeholder="Mobile Number"
+                          mask="X"
+                          format="####-###-####"
+                          allowEmptyFormatting={false}
+                          id="mobile_number"
+                          className="shadow-none border-2"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="message"
+                        rules={[
+                          { required: true, message: "Message is required" },
+                        ]}
+                        required={false}
+                        className="md:col-span-2"
+                      >
+                        <TextArea
+                          id="message"
+                          placeholder="Your Message here"
+                          rows={8}
+                          className="!border-2"
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className="flex justify-center items-center mt-8">
+                      <Button
+                        type="submit"
+                        appearance="blumine"
+                        className="md:max-w-[15rem] p-4 hover:scale-105 font-medium"
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </Form>
+                </div>
+                <div className="h-full min-h-[20rem] pointer-events-none relative">
+                  <Image
+                    src="/images/macbook-cms.png"
+                    alt="random pics"
+                    fill
+                    sizes="(max-width: 500px) 100px"
+                    className="object-right object-fill"
                   />
-                </Form.Item>
-                <Form.Item
-                  name="last_name"
-                  rules={[{ required: true, message: "Last Name is required" }]}
-                  required={false}
-                >
-                  <Input
-                    id="last_name"
-                    placeholder="Last Name"
-                    className="!bg-transparent text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="email_address"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Email Address is required",
-                    },
-                    { type: "email", message: "Must be a valid email" },
-                  ]}
-                  required={false}
-                >
-                  <Input
-                    id="email_address"
-                    placeholder="Email Address"
-                    className="!bg-transparent text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="mobile_number"
-                  rules={[
-                    { required: true, message: "Mobile Number is required" },
-                    {
-                      pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
-                      message: "Please use correct format!",
-                    },
-                  ]}
-                  required={false}
-                >
-                  <PatternFormat
-                    customInput={Input}
-                    placeholder="Mobile Number"
-                    mask="X"
-                    format="####-###-####"
-                    allowEmptyFormatting={false}
-                    id="mobile_number"
-                    className="!bg-transparent text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="message"
-                  rules={[{ required: true, message: "Message is required" }]}
-                  required={false}
-                  className="md:col-span-2"
-                >
-                  <TextArea
-                    id="message"
-                    placeholder="Your Message here"
-                    rows={8}
-                    className="!bg-transparent !text-white !border-white hover:!border-primary-300 focus:!border-primary-300 !shadow-none placeholder:!text-primary-300"
-                  />
-                </Form.Item>
+                </div>
               </div>
-              <div className="flex justify-center items-center mt-8">
-                <Button
-                  type="submit"
-                  appearance="primary"
-                  className="!bg-white text-primary md:max-w-[15rem] p-4 md:p-6 hover:bg-white hover:scale-105 font-medium"
-                >
-                  Submit
-                </Button>
-              </div>
-            </Form>
-          </div>
-        </AnimateContainer>
+            </Card>
+          </AnimateContainer>
+        </div>
         <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
-          <div className="bg-white p-8 flex justify-center items-center gap-8 flex-none !m-0">
+          <div className="p-8 pt-0 flex justify-center items-center gap-8 flex-none !mt-4 !m-0">
             <Button
               appearance="link"
               className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
@@ -681,9 +706,22 @@ export default function Website({ router }: any) {
             >
               <BsLinkedin />
             </Button>
+            <Button
+              appearance="link"
+              className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+              onClick={() =>
+                window.open("https://www.instagram.com/indxhealth/", "_blank")
+              }
+            >
+              <BsInstagram />
+            </Button>
           </div>
         </AnimateContainer>
-        <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
+        <AnimateContainer
+          variants={fadeIn}
+          rootMargin="0px 0px"
+          className="!m-0"
+        >
           <div className="text-white bg-primary p-4 text-center !m-0">
             ©2022 Copyright | INDX Dental
           </div>

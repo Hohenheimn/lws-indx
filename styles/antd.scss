@@ -264,7 +264,7 @@ div.ant-select {
 form.ant-form {
   @apply text-base;
   .ant-form-item {
-    @apply mb-0 text-[1em];
+    @apply mb-0 text-[1em] [&_label]:focus-within:text-blumine [&_input]:focus-within:shadow-none [&_input]:focus-within:border-blumine;
     &.ant-form-item-has-error {
       input {
         @apply border-danger focus:shadow-danger;

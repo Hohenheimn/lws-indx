@@ -41,6 +41,19 @@ module.exports = {
     800: "#132F4F",
     900: "#0F253E",
   },
+  geraldine: {
+    DEFAULT: "#FF8A8E",
+    50: "#FFE6E7",
+    100: "#FFDCDD",
+    200: "#FFC7C9",
+    300: "#FFB3B5",
+    400: "#FF9EA2",
+    500: "#FF8A8E",
+    600: "#FF767A",
+    700: "#FF6167",
+    800: "#FF4D53",
+    900: "#FF383F",
+  },
   danger: {
     DEFAULT: "#F00000",
     50: "#FFEDED",
@@ -56,7 +69,7 @@ module.exports = {
   },
   default: {
     DEFAULT: "#D5D5D9",
-    secondary: "#707070",
+    secondary: "#434E65",
     page: "#F7F8FF",
     text: "#333333",
   },

@@ -180,12 +180,28 @@ export default function Registration({ router }: any) {
                     className="col-span-full text-sm mt-4"
                   >
                     <Checkbox id="terms">
-                      {`By clicking the submit button below, I hereby agree to and accept the following Terms and Conditions governing my use of Indx Health website and services. I further reaffirm my acceptance of the website's Privacy Policy.`}
+                      By clicking the submit button below, I hereby agree to and
+                      accept the following{" "}
+                      <a
+                        className="underline font-semibold"
+                        onClick={() => router.push("/terms-and-conditions")}
+                      >
+                        Terms and Conditions
+                      </a>{" "}
+                      governing my use of Indx Health website and services. I
+                      further reaffirm my acceptance of the {`website's`}{" "}
+                      <a
+                        className="underline font-semibold"
+                        onClick={() => router.push("/privacy-policy")}
+                      >
+                        Privacy Policy
+                      </a>
+                      .
                     </Checkbox>
                   </Form.Item>
                 </div>
                 <div className="space-y-4 mt-10">
-                  <Button className="py-4" appearance="primary" type="submit">
+                  <Button className="py-4" appearance="blumine" type="submit">
                     Register Now!
                   </Button>
                 </div>
