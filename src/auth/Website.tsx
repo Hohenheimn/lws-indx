@@ -14,7 +14,12 @@ import { GrLocal, GrMenu } from "react-icons/gr";
 import { Drawer } from "antd";
 import { twMerge } from "tailwind-merge";
 import { scroller } from "react-scroll";
-import { fadeIn, stagger, zoomIn } from "../components/animation/animation";
+import {
+  fadeIn,
+  fadeInUp,
+  stagger,
+  zoomIn,
+} from "../components/animation/animation";
 import {
   BsCheckCircle,
   BsHandThumbsUp,
@@ -33,6 +38,8 @@ import { postData } from "../../utils/api";
 import { Context } from "../../utils/context/Provider";
 import Modal from "../components/Modal";
 import { PatternFormat } from "react-number-format";
+import { AnimatePresence } from "framer-motion";
+import { countdownTimer } from "../components/animation/animation";
 
 const { TextArea } = Inp;
 
@@ -60,12 +67,28 @@ const menu: Array<sideMenuProps> = [
   },
 ];
 
+const textArray = [
+  "The first fully secure EMR in the country",
+  "Keep your clinic records simple",
+  "Easily import paper records to digital",
+];
 export default function Website({ router }: any) {
   let [openDrawer, setOpenDrawer] = React.useState(false);
   let [activeHeader, setActiveHeader] = React.useState(false);
   let [showSuccessModal, setShowSuccessModal] = React.useState(false);
+  let [heroTextId, setHeroTextId] = React.useState(0);
   const { setShowLoading } = React.useContext(Context);
   const [ContactForm] = Form.useForm();
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (textArray.length === heroTextId + 1) {
+        setHeroTextId(0);
+      } else {
+        setHeroTextId(heroTextId + 1);
+      }
+    }, 3000);
+  }, [heroTextId]);
 
   const { mutate: contact } = useMutation(
     (payload: {}) =>
@@ -83,6 +106,8 @@ export default function Website({ router }: any) {
       },
     }
   );
+
+  let heroText = textArray[heroTextId];
 
   return (
     <>
@@ -195,9 +220,18 @@ export default function Website({ router }: any) {
                       Index Card
                     </span>
                   </h2>
-                  <div className="xs:text-2xl text-blumine">
-                    The first fully EMR in the country
-                  </div>
+                  <AnimatePresence mode="wait">
+                    <AnimateContainer
+                      variants={
+                        textArray.length === heroTextId + 3
+                          ? fadeIn
+                          : countdownTimer
+                      }
+                      key={heroText}
+                    >
+                      <div className="xs:text-2xl text-blumine">{heroText}</div>
+                    </AnimateContainer>
+                  </AnimatePresence>
                 </div>
                 <div className="space-y-4">
                   <div>
@@ -379,7 +413,7 @@ export default function Website({ router }: any) {
               </div>
             </AnimateContainer>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-[40%_1fr] gap-8 items-center text-center lg:text-left">
+          <div className="grid grid-cols-1 lg:grid-cols-[35%_1fr] gap-8 items-center text-center lg:text-left">
             <AnimateContainer variants={fadeIn}>
               <div className="space-y-4">
                 <h2 className="text-blumine font-semibold">
