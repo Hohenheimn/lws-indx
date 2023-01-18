@@ -220,7 +220,7 @@ export default function Registration({ router }: any) {
           <div>
             <h2 className="font-normal mb-2">Registration Successful</h2>
             <div className="text-default-secondary">
-              Success, Your account has been successfully created
+              Your registration has been confirmed. Stay tuned for more updates.
             </div>
           </div>
           <Button
