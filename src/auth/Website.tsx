@@ -779,12 +779,49 @@ export default function Website({ router }: any) {
         <div className="space-y-12 text-center text-base max-w-[50rem] m-auto">
           <BsCheckCircle className="text-primary text-9xl m-auto" />
           <div>
-            <h2 className="font-normal mb-2">Registration Successful</h2>
+            <h2 className="font-normal mb-2">Thank you!</h2>
             <div className="text-default-secondary">
-              Lorem ipsum dolor sit amet consectetur. Adipiscing augue enim
-              pharetra massa sollicitudin. Eu diam lorem ullamcorper dui vitae.
-              Posuere praesent ut et orci nec. Habitant ipsum aliquam a id{" "}
+              {`We've`} received your message and will respond within 24 hours.
+              <br />
+              In the meantime, make sure to follow us on social!
             </div>
+            <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
+              <div className="p-8 pt-0 flex justify-center items-center gap-8 flex-none !mt-4 !m-0">
+                <Button
+                  appearance="link"
+                  className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                  onClick={() =>
+                    window.open("https://www.facebook.com/indxhealth", "_blank")
+                  }
+                >
+                  <FaFacebookF />
+                </Button>
+                <Button
+                  appearance="link"
+                  className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                  onClick={() =>
+                    window.open(
+                      "https://www.linkedin.com/company/indx-health/?viewAsMember=true&original_referer=",
+                      "_blank"
+                    )
+                  }
+                >
+                  <BsLinkedin />
+                </Button>
+                <Button
+                  appearance="link"
+                  className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                  onClick={() =>
+                    window.open(
+                      "https://www.instagram.com/indxhealth/",
+                      "_blank"
+                    )
+                  }
+                >
+                  <BsInstagram />
+                </Button>
+              </div>
+            </AnimateContainer>
           </div>
           <Button
             appearance="primary"
