@@ -31,6 +31,7 @@ export default class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#603cba" />
           <meta name="theme-color" content="#ffffff" />
           */}
+
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
@@ -38,9 +39,9 @@ export default class MyDocument extends Document {
             crossOrigin=""
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
             rel="stylesheet"
-          ></link>
+          />
           <link
             rel="preload"
             href="/fonts/Hind-Light.ttf"
@@ -70,6 +71,39 @@ export default class MyDocument extends Document {
             href="/fonts/Hind-Bold.ttf"
             as="font"
             crossOrigin=""
+          />
+          {/* <!-- Messenger Chat Plugin Code --> */}
+          <div id="fb-root"></div>
+
+          {/* <!-- Your Chat Plugin code --> */}
+          <div id="fb-customer-chat" className="fb-customerchat"></div>
+
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `var chatbox = document.getElementById('fb-customer-chat');
+            chatbox.setAttribute("page_id", "125712340772581");
+            chatbox.setAttribute("attribution", "biz_inbox");`,
+            }}
+          />
+
+          {/* <!-- Your SDK code --> */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.fbAsyncInit = function() {
+        FB.init({
+          xfbml            : true,
+          version          : 'v15.0'
+        });
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));`,
+            }}
           />
         </Head>
         <body>

@@ -89,7 +89,7 @@ export default function Registration({ router }: any) {
             className="absolute md:relative h-full w-full md:w-auto top-0 left-0 flex flex-col justify-center items-center flex-auto p-[5%] md:p-20 bg-white"
           >
             <div className="space-y-6 w-full">
-              <h1 className="font-medium">Pre-Registration Form</h1>
+              <h1 className="font-['Mulish']">Pre-Registration Form</h1>
               <Form
                 form={RegistrationForm}
                 layout="vertical"

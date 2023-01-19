@@ -245,7 +245,7 @@ export default function Website({ router }: any) {
                       className="w-full max-w-xs py-4"
                       onClick={() => router.push("/registration")}
                     >
-                      Register Now!
+                      Register Now
                     </Button>
                   </div>
                 </div>
@@ -420,7 +420,7 @@ export default function Website({ router }: any) {
                   Why it’s time to choose INDX?
                 </h2>
                 <div>
-                  <div className="font-medium">Simple.Secured.Smart</div>
+                  <div className="font-medium">Simple. Secured. Smart</div>
                   Our software gives you the simplest yet smartest tools for
                   your dental clinic management experience.
                   <br />
@@ -522,7 +522,7 @@ export default function Website({ router }: any) {
               </div>
               <div>
                 <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
-                  User-Friendly/End-to-end Clinic Management
+                  User-Friendly and Simplified System
                 </h4>
                 <div>
                   Providing you ease of use is our goal. Every feature is
@@ -569,8 +569,7 @@ export default function Website({ router }: any) {
               </div>
               <h2 className="text-inherit">Get INDX for Your Clinic Now</h2>
               <div className="font-light">
-                Reserve a slot today, and get a{" "}
-                <span className="uppercase">free</span> 3 months subscription.
+                Reserve a slot today, and get a free 3-month subscription.
               </div>
               <Button
                 appearance="primary"
@@ -697,7 +696,7 @@ export default function Website({ router }: any) {
                       >
                         <TextArea
                           id="message"
-                          placeholder="Your Message here"
+                          placeholder="Your message here"
                           rows={8}
                           className="!border-2"
                         />
