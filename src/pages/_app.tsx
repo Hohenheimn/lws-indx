@@ -29,7 +29,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
-        <title>{capitalizeTitle("Index CMS", router.asPath)}</title>
+        <title>{capitalizeTitle("Indx", router.asPath)}</title>
         <meta property="og:title" content="Index Content" key="ogtitle" />
         <meta
           property="og:image"
@@ -38,15 +38,15 @@ export default function App({ Component, pageProps, router }: AppProps) {
         />
         <meta
           property="og:description"
-          content="Index Description"
+          content="Your Digital INDX Card"
           key="ogdesc"
         />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
-        <meta key="robots" name="robots" content="noindex,follow" />
-        <meta key="googlebot" name="googlebot" content="noindex,follow" />
+        {/* <meta key="robots" name="robots" content="noindex,follow" />
+        <meta key="googlebot" name="googlebot" content="noindex,follow" /> */}
       </Head>
       <AppProvider
         showLoading={showLoading}
