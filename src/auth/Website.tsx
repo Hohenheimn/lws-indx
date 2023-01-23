@@ -68,7 +68,7 @@ const menu: Array<sideMenuProps> = [
 ];
 
 const textArray = [
-  "The first fully secure EMR in the country",
+  "The first fully secured EMR in the country",
   "Keep your clinic records simple",
   "Easily import paper records to digital",
 ];
@@ -213,6 +213,15 @@ export default function Website({ router }: any) {
             <div className="flex flex-col lg:flex-auto justify-center">
               <AnimateContainer variants={fadeIn} className="space-y-8">
                 <div className="space-y-2">
+                  {/* <div className="relative h-14 w-full">
+                    <Image
+                      src="/images/logo.png"
+                      alt="random pics"
+                      fill
+                      sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                      className="object-left object-contain"
+                    />
+                  </div> */}
                   <h2 className="font-normal text-4xl xs:text-5xl">
                     Your Digital
                     <span className="text-primary font-semibold">
@@ -236,8 +245,8 @@ export default function Website({ router }: any) {
                 <div className="space-y-4">
                   <div>
                     Start running your dental clinic the simplest way. Easily
-                    manage patient registration and dental appointments, have
-                    secure dental records and smart clinic analytics.
+                    manage patient details, organize dental appointments, and
+                    secure dental records with a smart clinic platform.
                   </div>
                   <div className="lg:m-0">
                     <Button
@@ -273,8 +282,9 @@ export default function Website({ router }: any) {
                 We Understand Your Inconvenience
               </h2>
               <div>
-                Managing a clinic is not easy. These struggles are often
-                experienced by dentists and clinic managers:
+                Clinic management is a difficult task. Aside from usual
+                day-to-day patient struggles, dentists and clinic managers also
+                experience the following issues:
               </div>
             </div>
           </AnimateContainer>
@@ -289,9 +299,10 @@ export default function Website({ router }: any) {
                 </h4>
                 <div>
                   Dentists have been using index cards or paper records for
-                  decades. However, cards and paper may get lost or damaged
-                  which can cause delays in treatment, misdiagnosis and waste
-                  more time recording information all over again.
+                  decades. However, these physical documents may get lost or
+                  damaged which may lead to delays in treatment, misdiagnosis
+                  and waste more time doing the entire recording process all
+                  over again.
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
@@ -299,13 +310,12 @@ export default function Website({ router }: any) {
                   <AiOutlineUnlock />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
-                  Unsecure paper records
+                  Unsecured paper records
                 </h4>
                 <div>
-                  You can lose a lot of money and credibility if you do not have
-                  the right tools to keep your patient records safe. Aside from
-                  losing patients, potential legal troubles for data leak may
-                  also be faced.
+                  You might lose a lot of money and credibility if you do not
+                  keep your patient records safe. Worse is that you might face
+                  legal actions for leaking their data accidentally.
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
@@ -313,10 +323,10 @@ export default function Website({ router }: any) {
                   <MdRunningWithErrors />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
-                  Paper Records Slows Clinic Operations
+                  Paper records slow clinic operations
                 </h4>
                 <div>
-                  {`Running a dental practice is tough enough. You can't afford to lose your patients, or the time and money spent processing paper records. But it happens all too often. You are losing patients and your productivity is down.`}
+                  {`Dental clinic is a fast-paced environment. You can't afford to lose valuable seconds and potential patients just because you're processing patient records manually.`}
                 </div>
               </div>
             </div>
@@ -390,18 +400,17 @@ export default function Website({ router }: any) {
             <AnimateContainer variants={fadeIn}>
               <div className="space-y-4 text-center lg:text-left">
                 <h2 className="text-blumine font-semibold">
-                  INDX Take Care of Your Clinic Activities
+                  INDX Takes Care of Your Clinic Activities
                 </h2>
                 <div>
-                  Indx is a clinic management software that allows dentists to
-                  efficiently run their clinics. Securely keep your records in
-                  one place and simply manage it with ease. Schedule
-                  appointments seamlessly, keep and access patient records
-                  anytime, track finances and more. Let Indx help you take care
-                  of your patients, clinic and practice. Focus on growing your
-                  practice and maximizing profits while we take care of your
-                  clinic activities for you with a simple, secure and easy to
-                  use platform.
+                  INDX is a clinic management software that allows dentists to
+                  run their clinics efficiently. It secures your records in one
+                  place and lets you manage them easily. You can even schedule
+                  appointments, access patient data, and track your finances
+                  wherever you are! Let INDX help you take care of your
+                  patients, clinic and practice. Focus on growing your craft and
+                  maximize your profits while we take care of your clinic
+                  activities with this simple, secure and easy to use platform.
                 </div>
                 <Button
                   appearance="blumine"
@@ -422,43 +431,53 @@ export default function Website({ router }: any) {
                 <div>
                   <div className="font-medium">Simple. Secured. Smart</div>
                   Our software gives you the simplest yet smartest tools for
-                  your dental clinic management experience.
+                  your seamless dental clinic management experience.
                   <br />
                   <br />
                   <div className="font-medium text-blumine">
                     For Dental Clinic Managers
                   </div>
                   <br />
-                  Running a dental clinic is not easy, from taking care of
-                  patient records to managing every single part of the clinic.
-                  Most clinics use manual processes in running their clinics but
-                  this leads to slower and inefficient results.
+                  Running a dental clinic is never easy - from taking patient
+                  records, managing day-to-day operations, to meeting business
+                  targets. Most managers might even do all these tasks manually
+                  leading to slower and inefficient clinic operations.
                   <br />
                   <br />
-                  You simply need a partner that will help you manage the clinic
-                  efficiently. We developed INDX, keeping you in mind. With
-                  INDX, every feature was made simpler while giving you more
-                  efficient results. Do more with less clicks. Track patient
-                  records easily and manage your clinic in one dashboard.
+                  If you’re guilty with the above practice, then you need a
+                  partner to help you manage your clinic efficiently - like
+                  INDX. With INDX, your dental clinic management duties are now
+                  simpler while giving you more for your business. Track patient
+                  records, book appointments, and manage your entire clinic in
+                  one dashboard.
                   <br />
                   <br />
                   <div className="font-medium text-blumine">
                     For Dental Practitioners
                   </div>
                   <br />
-                  Managing a dental practice can quickly become overwhelming. No
-                  other dental software caters specifically to the needs of
-                  resident dentists.
+                  Dentists also do a lot while inside their clinics. Aside from
+                  providing the best dental care for your patients, you must
+                  also perform multiple procedures to attend to all their needs.
+                  That’s quite overwhelming for any practitioner doing
+                  everything manually.
                   <br />
                   <br />
-                  INDX uniquely designed Dental Clinic Management software for
-                  the busy practicing dentist.
+                  That’s why INDX Clinic Management software was uniquely
+                  designed for dental practitioners who want to complete
+                  multiple tasks without compromising their patients’ health and
+                  safety.
                   <br />
                   <br />
                   Not only does INDX streamline your practice workflow, our
-                  intuitive system increases administrative efficiency, saves
-                  you time and helps you focus on what matters most - providing
-                  the very best in patient care.
+                  intuitive system increases your administrative efficiency,
+                  saves you from time-consuming tasks, and helps you focus more
+                  on what matters most - provide the best dental care your
+                  patient needs.
+                  <br />
+                  <br />
+                  Focus on your dental practice while we securely manage your
+                  clinic activities for you.
                 </div>
                 <Button
                   appearance="blumine"
@@ -487,7 +506,7 @@ export default function Website({ router }: any) {
           <AnimateContainer variants={fadeIn}>
             <div className="text-center space-y-2 max-w-[45rem] m-auto">
               <h2 className="font-semibold text-blumine">
-                3 Smart Benefits Your Clinic Needs
+                3 Smart Benefits of INDX for Your Clinic Needs
               </h2>
             </div>
           </AnimateContainer>
@@ -506,11 +525,11 @@ export default function Website({ router }: any) {
                   Security Guaranteed
                 </h4>
                 <div>
-                  Patient data security is our utmost priority. With Indx, you
-                  can rest assured that patient records are safely secure with
-                  our data healthcare compliance and usage of high security
-                  platform for data storage. Indx is the first fully secure
-                  clinic management software in the country.
+                  INDX is the first fully-secured clinic management software in
+                  the country with patient data security as one of our utmost
+                  priorities. With INDX, you are assured that your patient
+                  records are safely stored in our high-security platform in
+                  accordance with data healthcare compliance regulations.
                 </div>
               </div>
             </div>
@@ -525,11 +544,10 @@ export default function Website({ router }: any) {
                   User-Friendly and Simplified System
                 </h4>
                 <div>
-                  Providing you ease of use is our goal. Every feature is
-                  developed keeping you in mind. Our team of designers and
-                  engineers have worked on providing an intuitive process with
-                  simple and functional design to give you a quick and easy
-                  experience with the most efficient results.
+                  Our goal is to provide you an easy-to-use clinic management
+                  system. Our team of designers and engineers developed a simple
+                  yet functional design to ensure your hassle-free experience
+                  within the platform.
                 </div>
               </div>
             </div>
@@ -544,9 +562,9 @@ export default function Website({ router }: any) {
                   Easy Importing and migration
                 </h4>
                 <div>
-                  Start transforming your paper records to digital records. We
-                  understand that manual recording of patient data has been used
-                  for ages, that’s why we developed a feature to help you easily
+                  Start transforming your paper records to digital ones. We
+                  understand that manual patient data recording has been used
+                  for ages. That’s why we developed a feature to help you easily
                   migrate your paper records digitally.
                 </div>
               </div>
@@ -569,7 +587,8 @@ export default function Website({ router }: any) {
               </div>
               <h2 className="text-inherit">Get INDX for Your Clinic Now</h2>
               <div className="font-light">
-                Reserve a slot today, and get a free 3-month subscription.
+                Reserve a slot today, and get a free 3-months subscription from
+                us!
               </div>
               <Button
                 appearance="primary"
@@ -603,7 +622,7 @@ export default function Website({ router }: any) {
                 <div className="row-start-2 md:row-start-1">
                   <div className="space-y-2">
                     <h2 className="text-blumine mb-8">
-                      Reach us for questions
+                      Reach Us for Questions
                     </h2>
                   </div>
                   <Form
