@@ -31,11 +31,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
       <Head>
         <title>{capitalizeTitle("Indx", router.asPath)}</title>
         <meta property="og:title" content="Index Content" key="ogtitle" />
-        <meta
-          property="og:image"
-          content="/images/main-og.webp"
-          key="ogimage"
-        />
+        <meta property="og:image" content="/images/main-og.png" key="ogimage" />
         <meta
           property="og:description"
           content="Your Digital INDX Card"
