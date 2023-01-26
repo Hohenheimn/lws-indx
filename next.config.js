@@ -25,6 +25,7 @@ module.exports = {
   env: {
     REACT_APP_API_BASE_URL: process.env.REACT_APP_API_BASE_URL,
     REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,
+    REACT_APP_GA_ID: process.env.REACT_APP_GA_ID,
   },
 
   // resolve: {

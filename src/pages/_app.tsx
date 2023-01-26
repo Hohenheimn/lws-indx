@@ -11,6 +11,7 @@ import Layout from "../layout";
 import "../../styles/globals.scss";
 import { AnimateContainer } from "../components/animation";
 import { fadeIn, stagger } from "../components/animation/animation";
+import Script from "next/script";
 
 const AppProvider = dynamic(() => import("../../utils/context/Provider"));
 
@@ -41,9 +42,16 @@ export default function App({ Component, pageProps, router }: AppProps) {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
-        {/* <meta key="robots" name="robots" content="noindex,follow" />
-        <meta key="googlebot" name="googlebot" content="noindex,follow" /> */}
       </Head>
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.REACT_APP_GA_ID}', {
+                page_path: window.location.pathname,
+              });
+              `}
+      </Script>
       <AppProvider
         showLoading={showLoading}
         setShowLoading={(show: boolean) => setShowLoading(show)}
