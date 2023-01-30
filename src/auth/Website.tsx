@@ -32,7 +32,7 @@ import {
   AiOutlineIdcard,
   AiOutlineUnlock,
 } from "react-icons/ai";
-import { MdRunningWithErrors } from "react-icons/md";
+import { MdBrokenImage, MdRunningWithErrors } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "../../utils/api";
 import { Context } from "../../utils/context/Provider";
@@ -206,7 +206,7 @@ export default function Website({ router }: any) {
         }}
       >
         <div
-          className="relative flex flex-col md:min-h-screen flex-none mt-[5rem] lg:mt-0 mb-8"
+          className="relative flex flex-col md:min-h-screen flex-none mt-[5rem] lg:mt-0 mb-8 shadow-[inset_0_-200px_150px_0_rgba(88,88,88,0.1)]"
           id="hero"
         >
           <div className=" justify-center h-auto lg:h-full w-full lg:max-w-[45rem] flex flex-col items-center lg:items-start lg:text-left text-center space-y-4 xs:space-y-8 p-[2%] xs:p-[5%]">
@@ -222,7 +222,7 @@ export default function Website({ router }: any) {
                       className="object-left object-contain"
                     />
                   </div> */}
-                  <h2 className="font-normal text-4xl xs:text-5xl">
+                  <h2 className="font-bold text-4xl xs:text-5xl">
                     Your Digital
                     <span className="text-primary font-semibold">
                       {" "}
@@ -238,7 +238,9 @@ export default function Website({ router }: any) {
                       }
                       key={heroText}
                     >
-                      <div className="xs:text-2xl text-blumine">{heroText}</div>
+                      <div className="xs:text-2xl text-blumine font-medium">
+                        {heroText}
+                      </div>
                     </AnimateContainer>
                   </AnimatePresence>
                 </div>
@@ -292,7 +294,7 @@ export default function Website({ router }: any) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 text-center">
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
                 <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
-                  <AiOutlineIdcard />
+                  <MdBrokenImage />
                 </Avatar>
                 <h4 className="font-medium text-blumine">
                   Index cards are unreliable
@@ -301,8 +303,8 @@ export default function Website({ router }: any) {
                   Dentists have been using index cards or paper records for
                   decades. However, these physical documents may get lost or
                   damaged which may lead to delays in treatment, misdiagnosis
-                  and waste more time doing the entire recording process all
-                  over again.
+                  and even time wastage for doing the entire recording process
+                  all over again.
                 </div>
               </div>
               <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
@@ -410,7 +412,7 @@ export default function Website({ router }: any) {
                   wherever you are! Let INDX help you take care of your
                   patients, clinic and practice. Focus on growing your craft and
                   maximize your profits while we take care of your clinic
-                  activities with this simple, secure and easy to use platform.
+                  activities with this simple, secured and easy-to-use platform.
                 </div>
                 <Button
                   appearance="blumine"
@@ -426,7 +428,7 @@ export default function Website({ router }: any) {
             <AnimateContainer variants={fadeIn}>
               <div className="space-y-4">
                 <h2 className="text-blumine font-semibold">
-                  Why it’s time to choose INDX?
+                  It’s time to choose INDX
                 </h2>
                 <div>
                   <div className="font-medium">Simple. Secured. Smart</div>
@@ -446,7 +448,9 @@ export default function Website({ router }: any) {
                   <br />
                   If you’re guilty with the above practice, then you need a
                   partner to help you manage your clinic efficiently - like
-                  INDX. With INDX, your dental clinic management duties are now
+                  INDX. <br />
+                  <br />
+                  With INDX, your dental clinic management duties are now
                   simpler while giving you more for your business. Track patient
                   records, book appointments, and manage your entire clinic in
                   one dashboard.
@@ -458,9 +462,9 @@ export default function Website({ router }: any) {
                   <br />
                   Dentists also do a lot while inside their clinics. Aside from
                   providing the best dental care for your patients, you must
-                  also perform multiple procedures to attend to all their needs.
-                  That’s quite overwhelming for any practitioner doing
-                  everything manually.
+                  also do other tasks to fulfill your clinic duties. That’s
+                  quite overwhelming for any practitioner doing everything
+                  manually.
                   <br />
                   <br />
                   That’s why INDX Clinic Management software was uniquely
@@ -587,7 +591,7 @@ export default function Website({ router }: any) {
               </div>
               <h2 className="text-inherit">Get INDX for Your Clinic Now</h2>
               <div className="font-light">
-                Reserve a slot today, and get a free 3-months subscription from
+                Reserve a slot today, and get a free 3-month subscription from
                 us!
               </div>
               <Button
@@ -785,7 +789,7 @@ export default function Website({ router }: any) {
           className="!m-0"
         >
           <div className="text-white bg-primary p-4 text-center !m-0">
-            ©2022 Copyright | INDX Dental
+            ©2023 Copyright | INDX Dental
           </div>
         </AnimateContainer>
       </PageContainer>
