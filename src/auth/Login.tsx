@@ -38,28 +38,26 @@ export default function Login({ router }: any) {
     })
   );
 
-  function handleLogin() {
-    LoginForm.validateFields().then((values) => {
-      values.api_key = process.env.MY_API_KEY;
+  function handleLogin(values: any) {
+    values.api_key = process.env.MY_API_KEY;
 
-      login(values, {
-        onSuccess: async (res) => {
-          setCookie(null, "a_t", res?.token);
-          router.push(router.route);
-          notification.success({
-            key: "login",
-            message: "Login Successfull",
-            description: `It's nice to see you`,
-          });
-        },
-        onError: () => {
-          notification.warning({
-            key: "login",
-            message: `Incorrect Username or Password`,
-            description: `Kindly check your credentials`,
-          });
-        },
-      });
+    login(values, {
+      onSuccess: async (res) => {
+        setCookie(null, "a_t", res?.token);
+        router.push(router.route);
+        notification.success({
+          key: "login",
+          message: "Login Successfull",
+          description: `It's nice to see you`,
+        });
+      },
+      onError: () => {
+        notification.warning({
+          key: "login",
+          message: `Incorrect Username or Password`,
+          description: `Kindly check your credentials`,
+        });
+      },
     });
   }
 
