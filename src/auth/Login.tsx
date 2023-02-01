@@ -18,6 +18,8 @@ import Image from "next/image";
 import Input from "../components/Input";
 import { Button } from "../components/Button";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "../../utils/api";
 // import { Media } from "../../../context/Media";
 
 export default function Login({ router }: any) {
@@ -25,38 +27,45 @@ export default function Login({ router }: any) {
   const { setShowLoading } = React.useContext(Context);
   const [showSome, setShowSome] = React.useState("0");
 
-  // const { mutate: login } = useMutation((payload: any) =>
-  //   postData({
-  //     url: "/rest-auth/login/",
-  //     payload,
-  //     options: {
-  //       noAuth: true,
-  //       isLoading: (show: boolean) => setShowLoading(show),
-  //     },
-  //   })
-  // );
+  const { mutate: login } = useMutation((payload: any) =>
+    postData({
+      url: "/api/auth/login/",
+      payload,
+      options: {
+        noAuth: true,
+        isLoading: (show: boolean) => setShowLoading(show),
+      },
+    })
+  );
 
-  // function handleLogin() {
-  //   LoginForm.validateFields().then((values) => {
-  //     values.api_key = process.env.MY_API_KEY;
+  function handleLogin() {
+    LoginForm.validateFields().then((values) => {
+      values.api_key = process.env.MY_API_KEY;
 
-  //     login(values, {
-  //       onSuccess: async (res) => {
-  //         setCookie(null, "a_t", res?.token);
-  //         router.push(router.route);
-  //         notification.success({
-  //           key: "login",
-  //           message: "Login Successfull",
-  //           description: `It's nice to see you`,
-  //         });
-  //       },
-  //     });
-  //   });
-  // }
+      login(values, {
+        onSuccess: async (res) => {
+          setCookie(null, "a_t", res?.token);
+          router.push(router.route);
+          notification.success({
+            key: "login",
+            message: "Login Successfull",
+            description: `It's nice to see you`,
+          });
+        },
+        onError: () => {
+          notification.warning({
+            key: "login",
+            message: `Incorrect Username or Password`,
+            description: `Kindly check your credentials`,
+          });
+        },
+      });
+    });
+  }
 
   return (
     <PageContainer className="md:p-0">
-      <div className="flex items-center justify-center flex-auto overflow-hidden">
+      <div className="flex items-center justify-center flex-auto h-full">
         <motion.div
           initial={{ x: "-100%" }}
           animate={{
@@ -100,31 +109,14 @@ export default function Login({ router }: any) {
               form={LoginForm}
               layout="vertical"
               onFinish={(values) => {
-                if (
-                  values.username === "kelscey90" &&
-                  values.password === "password123"
-                ) {
-                  setCookie(null, "a_t", "1");
-                  notification.success({
-                    key: "login",
-                    message: `Welcome ${values.username}`,
-                    description: `It's nice to see you!`,
-                  });
-                  router.push(router.route);
-                } else {
-                  notification.warning({
-                    key: "login",
-                    message: `Incorrect Username or Password`,
-                    description: `Kindly check your credentials`,
-                  });
-                }
+                handleLogin(values);
               }}
               className="w-full"
             >
               <div className="grid grid-cols-1 gap-y-4">
                 <Form.Item
-                  name="username"
-                  rules={[{ required: true, message: "Username is required" }]}
+                  name="email"
+                  rules={[{ required: true, message: "Email is required" }]}
                   required={false}
                 >
                   <Input id="username" placeholder="Username" />

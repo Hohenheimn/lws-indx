@@ -7,45 +7,56 @@ import Input from "../../components/Input";
 import { Select } from "../../components/Select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { numberSeparator } from "../../../utils/helpers";
+import { numberSeparator, paymentStatusPalette } from "../../../utils/helpers";
+import { twMerge } from "tailwind-merge";
 
 let fakeData = [
   {
     id: 1,
-    charting: "Charting A",
+    invoice_number: "Inv-001",
     date_created: "01/02/2022",
     total_amount: 1000,
+    mode_of_payment: "GCash",
+    payment_status: "pending",
   },
   {
     id: 2,
-    charting: "Charting B",
+    invoice_number: "Inv-002",
     date_created: "01/02/2022",
     total_amount: 1000,
+    mode_of_payment: "GCash",
+    payment_status: "partial payment",
   },
   {
     id: 3,
-    charting: "Charting C",
+    invoice_number: "Inv-003",
     date_created: "01/02/2022",
     total_amount: 1000,
+    mode_of_payment: "GCash",
+    payment_status: "pending",
   },
   {
     id: 4,
-    charting: "Charting D",
+    invoice_number: "Inv-004",
     date_created: "01/02/2022",
     total_amount: 1000,
+    mode_of_payment: "GCash",
+    payment_status: "paid",
   },
   {
     id: 5,
-    charting: "Charting E",
+    invoice_number: "Inv-005",
     date_created: "01/02/2022",
     total_amount: 1000,
+    mode_of_payment: "GCash",
+    payment_status: "pending",
   },
 ];
 
 const columns: any = [
   {
-    title: "Charting",
-    dataIndex: "charting",
+    title: "Invoice Number",
+    dataIndex: "invoice_number",
     width: "10rem",
     align: "center",
   },
@@ -54,6 +65,34 @@ const columns: any = [
     dataIndex: "date_created",
     width: "10rem",
     align: "center",
+  },
+  {
+    title: "Amount",
+    dataIndex: "total_amount",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Mode of Payment",
+    dataIndex: "mode_of_payment",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Payment Status",
+    dataIndex: "payment_status",
+    width: "10rem",
+    align: "center",
+    render: (status: string) => (
+      <div
+        className={twMerge(
+          "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs",
+          paymentStatusPalette(status)
+        )}
+      >
+        {status}
+      </div>
+    ),
   },
   {
     title: "Action",
@@ -84,12 +123,19 @@ export function TreatmentRecords() {
               <Input
                 placeholder="Search"
                 prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
-                className="rounded-full text-lg shadow-none"
+                className="rounded-full text-base shadow-none"
               />
             </div>
-            <div>
+            <div className="grid grid-cols-[1fr_40%] gap-4 basis-1/2">
+              <Select
+                placeholder="View Payment Status"
+                className="p-4 text-base"
+              >
+                <Select.Option value="1">1</Select.Option>
+                <Select.Option value="2">2</Select.Option>
+              </Select>
               <Button className="p-3 max-w-xs" appearance="primary">
-                New Chart
+                Create Invoice
               </Button>
             </div>
           </div>

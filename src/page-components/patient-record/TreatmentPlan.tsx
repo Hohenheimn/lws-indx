@@ -93,7 +93,7 @@ export function TreatmentPlan() {
               <Input
                 placeholder="Search"
                 prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
-                className="rounded-full text-lg shadow-none"
+                className="rounded-full text-base shadow-none"
               />
             </div>
             <div>
