@@ -1,130 +1,124 @@
-import { Checkbox, DatePicker, Form } from "antd";
+import { Checkbox, DatePicker, Form, Table } from "antd";
 import React from "react";
 import { scroller } from "react-scroll";
 import { Button } from "../../components/Button";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import { Select } from "../../components/Select";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
+import { numberSeparator } from "../../../utils/helpers";
+
+let fakeData = [
+  {
+    id: 1,
+    treatment_plan: "Treatment Plan A",
+    date_created: "01/02/2022",
+    total_amount: 1000,
+  },
+  {
+    id: 2,
+    treatment_plan: "Treatment Plan B",
+    date_created: "01/02/2022",
+    total_amount: 1000,
+  },
+  {
+    id: 3,
+    treatment_plan: "Treatment Plan C",
+    date_created: "01/02/2022",
+    total_amount: 1000,
+  },
+  {
+    id: 4,
+    treatment_plan: "Treatment Plan D",
+    date_created: "01/02/2022",
+    total_amount: 1000,
+  },
+  {
+    id: 5,
+    treatment_plan: "Treatment Plan E",
+    date_created: "01/02/2022",
+    total_amount: 1000,
+  },
+];
+
+const columns: any = [
+  {
+    title: "Treatment Plan",
+    dataIndex: "treatment_plan",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Date Created",
+    dataIndex: "date_created",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Total Amount",
+    dataIndex: "total_amount",
+    width: "15rem",
+    align: "center",
+    render: (amount: number) => {
+      return `₱${numberSeparator(amount, 0)}`;
+    },
+  },
+  {
+    title: "Action",
+    width: "10rem",
+    align: "center",
+    render: () => {
+      return (
+        <div className="grid grid-cols-3">
+          <BsEyeFill className="m-auto hover:opacity-50 transition" />
+          <BsPencilSquare className="m-auto hover:opacity-50 transition" />
+          <BsTrashFill className="m-auto hover:opacity-50 transition" />
+        </div>
+      );
+    },
+  },
+];
 
 export function TreatmentPlan() {
-  const [TreatmentPlanForm] = Form.useForm();
   return (
-    <Card className="flex-auto md:p-12 p-6">
-      <Form
-        form={TreatmentPlanForm}
-        layout="vertical"
-        onFinish={(values) => {
-          console.log(values);
-        }}
-        onFinishFailed={(data) => {
-          scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
-            smooth: true,
-            offset: -50,
-            containerId: "patient-record-container",
-          });
-        }}
-        className="w-full !text-sm"
-      >
-        <div className="space-y-12">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
-              <h4 className="basis-full md:basis-auto">Medical History</h4>
-            </div>
-            <div className="grid grid-cols-12 gap-4">
-              <Form.Item
-                label="Previous Dentist"
-                name="previous_dentist"
-                rules={[
-                  { required: true, message: "Previous Dentist is required" },
-                ]}
-                required={false}
-                className="col-span-12 md:col-span-6"
-              >
-                <Input id="previous_dentist" placeholder="Previous Dentist" />
-              </Form.Item>
-              <Form.Item
-                label="Last Dentist Visit"
-                name="last_dentist_visit"
-                rules={[
-                  { required: true, message: "Last Dentist Visit is required" },
-                ]}
-                required={false}
-                className="col-span-12 md:col-span-6"
-              >
-                <DatePicker
-                  id="last_dentist_visit"
-                  placeholder="Last Dentist Visit"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Reason for Last Visit"
-                name="reason_last_visit"
-                rules={[
-                  {
-                    required: true,
-                    message: "Reason for Last Visit is required",
-                  },
-                ]}
-                required={false}
-                className="col-span-12"
-              >
-                <Input
-                  id="reason_last_visit"
-                  placeholder="Reason for Last Visit"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Chief Complaint"
-                name="chief_complaint"
-                rules={[
-                  {
-                    required: true,
-                    message: "Chief Complaint is required",
-                  },
-                ]}
-                required={false}
-                className="col-span-12"
-              >
-                <Input id="chief_complaint" placeholder="Chief Complaint" />
-              </Form.Item>
-            </div>
+    <Card className="flex-auto p-0">
+      <div className="space-y-8 h-full flex flex-col">
+        <div className="space-y-4 md:p-12 p-6 !pb-0">
+          <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
+            <h4 className="basis-full md:basis-auto">Treatment Plan</h4>
           </div>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h4>Do you have any of the following?</h4>
+          <div className="flex justify-between align-middle gap-4">
+            <div className="basis-1/2">
+              <Input
+                placeholder="Search"
+                prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+                className="rounded-full text-lg shadow-none"
+              />
             </div>
-            <Form.Item
-              name="concern"
-              valuePropName="checked"
-              required={false}
-              className="col-span-full text-base"
-            >
-              <Checkbox.Group className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center py-4 lg:px-[10%] text-lg">
-                <Checkbox value="1">Bad Breath</Checkbox>
-                <Checkbox value="2">Food Collection between Teeth</Checkbox>
-                <Checkbox value="3">Clicking or Lock Jaw</Checkbox>
-                <Checkbox value="4">Loose Teeth or Broken Fillings</Checkbox>
-                <Checkbox value="5">Grinding Teeth</Checkbox>
-                <Checkbox value="6">Sensitivity to Hot Water</Checkbox>
-                <Checkbox value="7">Periodental Treatment</Checkbox>
-                <Checkbox value="8">Sensitivity to Sweets</Checkbox>
-                <Checkbox value="9">Sensitivity to Cold Water</Checkbox>
-                <Checkbox value="10">Sores Or Growth In Your Mouth</Checkbox>
-                <Checkbox value="11">Sensitivity when Biting</Checkbox>
-              </Checkbox.Group>
-            </Form.Item>
-          </div>
-          <div className="flex justify-center items-center">
-            <Button
-              appearance="primary"
-              type="submit"
-              className="max-w-md py-4"
-            >
-              Save
-            </Button>
+            <div>
+              <Button className="p-3 max-w-xs" appearance="primary">
+                New Treatment Plan
+              </Button>
+            </div>
           </div>
         </div>
-      </Form>
+        <div className="flex flex-auto">
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={fakeData}
+            showHeader={true}
+            tableLayout="fixed"
+            pagination={{
+              pageSize: 5,
+              hideOnSinglePage: true,
+              showSizeChanger: false,
+            }}
+            className="[&.ant-table]:!rounded-none"
+          />
+        </div>
+      </div>
     </Card>
   );
 }
