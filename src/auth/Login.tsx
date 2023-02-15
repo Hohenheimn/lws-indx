@@ -21,33 +21,31 @@ import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "../../utils/api";
 // import { Media } from "../../../context/Media";
+import { useRouter } from "next/router";
 
-export default function Login({ router }: any) {
+export default function Login() {
+  const router = useRouter();
   const [LoginForm] = Form.useForm();
-  const { setShowLoading } = React.useContext(Context);
-  const [showSome, setShowSome] = React.useState("0");
+  const { setIsAppLoading } = React.useContext(Context);
 
-  const { mutate: login } = useMutation((payload: any) =>
-    postData({
-      url: "/api/auth/login/",
-      payload,
-      options: {
-        noAuth: true,
-        isLoading: (show: boolean) => setShowLoading(show),
-      },
-    })
-  );
-
-  function handleLogin(values: any) {
-    values.api_key = process.env.MY_API_KEY;
-
-    login(values, {
+  const { mutate: login } = useMutation(
+    (payload: any) =>
+      postData({
+        url: "/api/auth/login",
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      }),
+    {
       onSuccess: async (res) => {
-        setCookie(null, "a_t", res?.token);
-        router.push(router.route);
+        setCookie(null, "a_t", res?.token, {
+          path: "/",
+        });
+        router.reload();
         notification.success({
           key: "login",
-          message: "Login Successfull",
+          message: "Login Successful",
           description: `It's nice to see you`,
         });
       },
@@ -58,8 +56,8 @@ export default function Login({ router }: any) {
           description: `Kindly check your credentials`,
         });
       },
-    });
-  }
+    }
+  );
 
   return (
     <PageContainer className="md:p-0">
@@ -74,12 +72,23 @@ export default function Login({ router }: any) {
           className="hidden md:flex relative h-screen basis-full md:basis-[45%]"
         >
           <Image
-            src="https://picsum.photos/1500/1500"
+            src="/images/login-bg.png"
             alt="random pics"
             fill
             sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
             className="object-center"
           />
+          <div className="w-full h-full relative flex justify-center items-center">
+            <div className="h-28 w-full relative">
+              <Image
+                src="/images/white-logo.png"
+                alt="random pics"
+                fill
+                sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                className="object-center object-contain"
+              />
+            </div>
+          </div>
         </motion.div>
         <motion.div
           initial={{ x: "100%" }}
@@ -107,7 +116,7 @@ export default function Login({ router }: any) {
               form={LoginForm}
               layout="vertical"
               onFinish={(values) => {
-                handleLogin(values);
+                login(values);
               }}
               className="w-full"
             >

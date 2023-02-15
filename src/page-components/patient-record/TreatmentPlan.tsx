@@ -1,4 +1,4 @@
-import { Checkbox, DatePicker, Form, Table } from "antd";
+import { Checkbox, DatePicker, Form, Popover, Table } from "antd";
 import React from "react";
 import { scroller } from "react-scroll";
 import { Button } from "../../components/Button";
@@ -8,6 +8,7 @@ import { Select } from "../../components/Select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { numberSeparator } from "../../../utils/helpers";
+import { NextPageProps } from "../../../utils/types/NextPageProps";
 
 let fakeData = [
   {
@@ -64,23 +65,9 @@ const columns: any = [
       return `₱${numberSeparator(amount, 0)}`;
     },
   },
-  {
-    title: "Action",
-    width: "10rem",
-    align: "center",
-    render: () => {
-      return (
-        <div className="grid grid-cols-3">
-          <BsEyeFill className="m-auto hover:opacity-50 transition" />
-          <BsPencilSquare className="m-auto hover:opacity-50 transition" />
-          <BsTrashFill className="m-auto hover:opacity-50 transition" />
-        </div>
-      );
-    },
-  },
 ];
 
-export function TreatmentPlan() {
+export function TreatmentPlan({ patientRecord }: any) {
   return (
     <Card className="flex-auto p-0">
       <div className="space-y-8 h-full flex flex-col">
@@ -92,7 +79,7 @@ export function TreatmentPlan() {
             <div className="basis-1/2">
               <Input
                 placeholder="Search"
-                prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+                prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
                 className="rounded-full text-base shadow-none"
               />
             </div>
@@ -114,6 +101,67 @@ export function TreatmentPlan() {
               pageSize: 5,
               hideOnSinglePage: true,
               showSizeChanger: false,
+            }}
+            components={{
+              table: ({ ...rest }: any) => {
+                let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+                return (
+                  <table
+                    {...rest}
+                    style={{ flex: `${tableFlexGrow} 1 auto` }}
+                  />
+                );
+              },
+              body: {
+                row: ({ ...rest }: any) => {
+                  return (
+                    <Popover
+                      placement="bottom"
+                      showArrow={false}
+                      content={
+                        <div className="grid grid-cols-1 gap-2">
+                          <Button
+                            appearance="link"
+                            className="text-casper-500 p-2"
+                            // onClick={() =>
+                            //   router.push(
+                            //     `/admin/patient-list/${rest["data-row-key"]}`
+                            //   )
+                            // }
+                          >
+                            <div className="flex items-center gap-2">
+                              <BsEyeFill className="text-base" />
+                              <div>View</div>
+                            </div>
+                          </Button>
+                          <Button
+                            appearance="link"
+                            className="text-casper-500 p-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <BsPencilSquare className="text-base" />
+                              <div>Edit</div>
+                            </div>
+                          </Button>
+                          <Button
+                            appearance="link"
+                            className="text-casper-500 p-2"
+                            // onClick={() => deletePatient(rest["data-row-key"])}
+                          >
+                            <div className="flex items-center gap-2">
+                              <BsTrashFill className="text-base" />
+                              <div>Delete</div>
+                            </div>
+                          </Button>
+                        </div>
+                      }
+                      trigger="click"
+                    >
+                      <tr {...rest} />
+                    </Popover>
+                  );
+                },
+              },
             }}
             className="[&.ant-table]:!rounded-none"
           />

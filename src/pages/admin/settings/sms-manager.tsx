@@ -1,29 +1,31 @@
 import React from "react";
-import { PageContainer } from "../../components/animation";
+import { PageContainer } from "../../../components/animation";
 import DatePicker from "antd/lib/date-picker";
 // import Radio from "antd/lib/radio";
-import Card from "../../components/Card";
+import Card from "../../../components/Card";
 import "chart.js/auto";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
-import { Button } from "../../components/Button";
-import colors from "../../../styles/theme";
+import { Button } from "../../../components/Button";
+import colors from "../../../../styles/theme";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Radio } from "../../components/Radio";
-import { Select } from "../../components/Select";
-import fakeDoctors from "../../../utils/global-data/fakeDoctors";
-import fakeBranches from "../../../utils/global-data/fakeBranches";
-import { numberSeparator, paymentStatusPalette } from "../../../utils/helpers";
-import PrivateRoute from "../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../auth/HOC/VerifyAuth";
+import { Radio } from "../../../components/Radio";
+import { Select } from "../../../components/Select";
+import {
+  numberSeparator,
+  paymentStatusPalette,
+} from "../../../../utils/helpers";
+import PrivateRoute from "../../../auth/HOC/PrivateRoute";
+import VerifyAuth from "../../../auth/HOC/VerifyAuth";
 import Table from "antd/lib/table/Table";
 import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../components/Input";
+import Input from "../../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import Image from "next/image";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { IoIosAdd } from "react-icons/io";
-import { NextPageProps } from "../../../utils/types/NextPageProps";
+import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import { Popover } from "antd";
 
 let fakeData = [
   {
@@ -56,23 +58,9 @@ const columns: any = [
     width: "20rem",
     align: "center",
   },
-  {
-    title: "Action",
-    width: "5rem",
-    align: "center",
-    render: () => {
-      return (
-        <div className="grid grid-cols-3">
-          <BsEyeFill className="m-auto hover:opacity-50 transition" />
-          <BsPencilSquare className="m-auto hover:opacity-50 transition" />
-          <BsTrashFill className="m-auto hover:opacity-50 transition" />
-        </div>
-      );
-    },
-  },
 ];
 
-export function SMSManager({}: NextPageProps) {
+export function SMSManager({ router }: NextPageProps) {
   return (
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
@@ -90,11 +78,11 @@ export function SMSManager({}: NextPageProps) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center gap-4 flex-wrap">
+      <div className="flex justify-between items-center gap-4 flex-wrap mb-4">
         <div className="basis-full lg:basis-1/2">
           <Input
             placeholder="Search"
-            prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+            prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
             className="rounded-full border-none text-lg"
           />
         </div>
@@ -120,6 +108,47 @@ export function SMSManager({}: NextPageProps) {
           pageSize: 5,
           hideOnSinglePage: true,
           showSizeChanger: false,
+        }}
+        components={{
+          table: ({ ...rest }: any) => {
+            let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+            return (
+              <table {...rest} style={{ flex: `${tableFlexGrow} 1 auto` }} />
+            );
+          },
+          body: {
+            row: ({ ...rest }: any) => {
+              return (
+                <Popover
+                  placement="bottom"
+                  showArrow={false}
+                  content={
+                    <div className="grid grid-cols-1 gap-2">
+                      <Button appearance="link" className="text-casper-500 p-2">
+                        <div className="flex items-center gap-2">
+                          <BsPencilSquare className="text-base" />
+                          <div>Edit</div>
+                        </div>
+                      </Button>
+                      <Button
+                        appearance="link"
+                        className="text-casper-500 p-2"
+                        // onClick={() => deletePatient(rest["data-row-key"])}
+                      >
+                        <div className="flex items-center gap-2">
+                          <BsTrashFill className="text-base" />
+                          <div>Delete</div>
+                        </div>
+                      </Button>
+                    </div>
+                  }
+                  trigger="click"
+                >
+                  <tr {...rest} />
+                </Popover>
+              );
+            },
+          },
         }}
       />
     </PageContainer>

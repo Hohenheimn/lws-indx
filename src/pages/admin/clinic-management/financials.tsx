@@ -1,28 +1,29 @@
 import React from "react";
-import { PageContainer } from "../../components/animation";
+import { PageContainer } from "../../../components/animation";
 import DatePicker from "antd/lib/date-picker";
 // import Radio from "antd/lib/radio";
-import Card from "../../components/Card";
+import Card from "../../../components/Card";
 import "chart.js/auto";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
-import { Button } from "../../components/Button";
-import colors from "../../../styles/theme";
+import { Button } from "../../../components/Button";
+import colors from "../../../../styles/theme";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Radio } from "../../components/Radio";
-import { Select } from "../../components/Select";
-import fakeDoctors from "../../../utils/global-data/fakeDoctors";
-import fakeBranches from "../../../utils/global-data/fakeBranches";
-import { numberSeparator, paymentStatusPalette } from "../../../utils/helpers";
-import PrivateRoute from "../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../auth/HOC/VerifyAuth";
+import { Radio } from "../../../components/Radio";
+import { Select } from "../../../components/Select";
+import {
+  numberSeparator,
+  paymentStatusPalette,
+} from "../../../../utils/helpers";
+import PrivateRoute from "../../../auth/HOC/PrivateRoute";
+import VerifyAuth from "../../../auth/HOC/VerifyAuth";
 import Table from "antd/lib/table/Table";
 import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../components/Input";
+import Input from "../../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import Image from "next/image";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
-import { NextPageProps } from "../../../utils/types/NextPageProps";
+import { NextPageProps } from "../../../../utils/types/NextPageProps";
 
 const randomNumber = () => {
   return Math.random() * (100 - 1);
@@ -226,7 +227,7 @@ export function Financials({}: NextPageProps) {
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="basis-auto whitespace-nowrap">Financials</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center md:basis-auto basis-full">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center md:basis-auto basis-full">
           <Select placeholder="Select Doctor" className="border-transparent">
             {fakeDoctors.map(({ name }, index) => {
               return (
@@ -246,7 +247,7 @@ export function Financials({}: NextPageProps) {
             })}
           </Select>
           <DatePicker.RangePicker className="[&.ant-picker]:border-transparent" />
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {dummyData.map(
@@ -320,7 +321,7 @@ export function Financials({}: NextPageProps) {
         <div className="basis-full lg:basis-1/2">
           <Input
             placeholder="Search"
-            prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+            prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
             className="rounded-full border-none text-lg"
           />
         </div>

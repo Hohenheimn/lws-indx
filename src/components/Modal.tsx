@@ -35,11 +35,7 @@ export default function Modal({
 }: ModalProps) {
   return (
     <Transition.Root show={show} as={"div"}>
-      <Dialog
-        as="div"
-        className="relative z-[99999999999999999999]"
-        onClose={onClose}
-      >
+      <Dialog as="div" className="relative z-[1000]" onClose={onClose}>
         <Transition.Child
           as={"div"}
           enter="ease-out duration-300"
@@ -52,11 +48,8 @@ export default function Modal({
           <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" />
         </Transition.Child>
 
-        <div
-          className="fixed inset-0 z-10 md:p-[5%] overflow-hidden md:overflow-auto"
-          {...rest}
-        >
-          <div className="flex items-center justify-center sm:items-center h-full">
+        <div className="fixed inset-0 z-10 overflow-auto" {...rest}>
+          <div className="flex items-center justify-center sm:items-center min-h-full md:p-[5%]">
             <Transition.Child
               as={React.Fragment}
               enter="ease-out duration-300"
@@ -68,7 +61,7 @@ export default function Modal({
             >
               <Dialog.Panel
                 className={twMerge(
-                  "relative transform rounded-none md:rounded-lg bg-white text-left shadow-xl transition-all max-w-[100rem] p-[5%] h-full md:h-auto overflow-auto",
+                  "relative transform rounded-none md:rounded-lg bg-white text-left shadow-xl transition-all max-w-full p-[5%] h-full md:h-auto overflow-auto",
                   className
                 )}
               >

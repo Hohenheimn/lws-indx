@@ -1,21 +1,21 @@
 import React from "react";
-import { PageContainer } from "../../components/animation";
+import { PageContainer } from "../../../components/animation";
 import DatePicker from "antd/lib/date-picker";
 // import Radio from "antd/lib/radio";
-import Card from "../../components/Card";
+import Card from "../../../components/Card";
 import "chart.js/auto";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
-import { Button } from "../../components/Button";
-import colors from "../../../styles/theme";
+import { Button } from "../../../components/Button";
+import colors from "../../../../styles/theme";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Radio } from "../../components/Radio";
-import { Select } from "../../components/Select";
-import fakeDoctors from "../../../utils/global-data/fakeDoctors";
-import fakeBranches from "../../../utils/global-data/fakeBranches";
-import { numberSeparator } from "../../../utils/helpers";
-import PrivateRoute from "../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../utils/types/NextPageProps";
+import { Radio } from "../../../components/Radio";
+import { Select } from "../../../components/Select";
+
+import { numberSeparator } from "../../../../utils/helpers";
+import PrivateRoute from "../../../auth/HOC/PrivateRoute";
+import VerifyAuth from "../../../auth/HOC/VerifyAuth";
+import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import { ScriptableContext } from "chart.js/auto";
 
 const randomNumber = () => {
   return Math.random() * (100 - 1);
@@ -29,10 +29,16 @@ const dummyData = [
       labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       datasets: [
         {
-          backgroundColor: colors.orange[50],
-          borderColor: colors.orange[300],
+          backgroundColor: (context: ScriptableContext<"line">) => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(35, 35, 35, 200);
+            gradient.addColorStop(0, colors.primary["400"]);
+            gradient.addColorStop(0.2, colors.primary["200"]);
+            return gradient;
+          },
+          borderColor: colors.primary["500"],
           borderWidth: 2,
-          tension: 0.3,
+          tension: 0.2,
           fill: true,
           data: [
             randomNumber(),
@@ -56,10 +62,16 @@ const dummyData = [
       labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       datasets: [
         {
-          backgroundColor: colors.cyan[50],
-          borderColor: colors.cyan[300],
+          backgroundColor: (context: ScriptableContext<"line">) => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(35, 35, 35, 200);
+            gradient.addColorStop(0, colors.secondary["400"]);
+            gradient.addColorStop(0.2, colors.secondary["200"]);
+            return gradient;
+          },
+          borderColor: colors.secondary["500"],
           borderWidth: 2,
-          tension: 0.3,
+          tension: 0.2,
           fill: true,
           data: [
             randomNumber(),
@@ -83,10 +95,16 @@ const dummyData = [
       labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       datasets: [
         {
-          backgroundColor: colors.emerald[50],
-          borderColor: colors.emerald[300],
+          backgroundColor: (context: ScriptableContext<"line">) => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(35, 35, 35, 200);
+            gradient.addColorStop(0, colors.blumine["400"]);
+            gradient.addColorStop(0.2, colors.blumine["200"]);
+            return gradient;
+          },
+          borderColor: colors.blumine["500"],
           borderWidth: 2,
-          tension: 0.3,
+          tension: 0.2,
           fill: true,
           data: [
             randomNumber(),
@@ -124,15 +142,27 @@ const chartData = {
     {
       label: "Sample 1",
       data: [65, 59, 80, 81, 56, 55, 40, 80, 81, 56, 55, 40],
-      backgroundColor: [colors.primary[500]],
-      borderColor: ["transparent"],
+      backgroundColor: (context: ScriptableContext<"line">) => {
+        const ctx = context.chart.ctx;
+        const gradient = ctx.createLinearGradient(50, 50, 50, 200);
+        gradient.addColorStop(0, colors.primary["500"]);
+        gradient.addColorStop(1, colors.primary["200"]);
+        return gradient;
+      },
+      borderColor: [colors.primary["400"]],
       borderWidth: 1,
     },
     {
       label: "Sample 2",
       data: [80, 70, 25, 55, 38, 65, 42, 55, 38, 65, 42, 55],
-      backgroundColor: [colors.secondary[500]],
-      borderColor: ["transparent"],
+      backgroundColor: (context: ScriptableContext<"line">) => {
+        const ctx = context.chart.ctx;
+        const gradient = ctx.createLinearGradient(50, 50, 50, 200);
+        gradient.addColorStop(0, colors.secondary["500"]);
+        gradient.addColorStop(1, colors.secondary["200"]);
+        return gradient;
+      },
+      borderColor: [colors.secondary["400"]],
       borderWidth: 1,
     },
   ],
@@ -143,8 +173,17 @@ const doughnutData = {
   datasets: [
     {
       data: [65, 30],
-      backgroundColor: [colors.primary[500], colors.secondary[500]],
-      borderColor: [colors.primary[500], colors.secondary[500]],
+      backgroundColor: (context: ScriptableContext<"line">) => {
+        const ctx = context.chart.ctx;
+        const gradient = ctx.createLinearGradient(20, 20, 20, 100);
+        const gradient2 = ctx.createLinearGradient(20, 20, 20, 100);
+        gradient.addColorStop(0, colors.secondary["500"]);
+        gradient.addColorStop(1, colors.secondary["200"]);
+        gradient2.addColorStop(0, colors.primary["500"]);
+        gradient2.addColorStop(1, colors.primary["200"]);
+        return [gradient, gradient2];
+      },
+      borderColor: [colors.secondary["400"], colors.primary["400"]],
       hoverOffset: 15,
     },
   ],
@@ -229,7 +268,7 @@ export function ClinicAnalytics({}: NextPageProps) {
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="basis-auto whitespace-nowrap">Clinic Analytics</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center md:basis-auto basis-full">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center md:basis-auto basis-full">
           <Select placeholder="Select Doctor" className="border-transparent">
             {fakeDoctors.map(({ name }, index) => {
               return (
@@ -249,7 +288,7 @@ export function ClinicAnalytics({}: NextPageProps) {
             })}
           </Select>
           <DatePicker.RangePicker className="[&.ant-picker]:border-transparent" />
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {dummyData.map(
@@ -270,7 +309,7 @@ export function ClinicAnalytics({}: NextPageProps) {
                 >
                   {rate === "up" ? "▲" : "▼"} {percentage}%
                 </p>
-                <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none -z-[1]">
+                <div className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none -z-[1]">
                   <Line
                     data={lineData}
                     options={{

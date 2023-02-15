@@ -60,7 +60,7 @@ const columns: any = [
   },
 ];
 
-export function ChangeHistory() {
+export function ChangeHistory({ patientRecord }: any) {
   return (
     <Card className="flex-auto p-0">
       <div className="space-y-8 h-full flex flex-col">
@@ -72,7 +72,7 @@ export function ChangeHistory() {
             <div className="basis-1/2">
               <Input
                 placeholder="Search"
-                prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+                prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
                 className="rounded-full text-base shadow-none"
               />
             </div>

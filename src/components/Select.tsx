@@ -6,23 +6,33 @@ import { AiOutlineStop } from "react-icons/ai";
 import { BiChevronUp } from "react-icons/bi";
 
 type SelectOptionProps = {
-  value: string;
-  children: React.ReactNode;
+  value: any;
+  children: React.ReactNode | React.ReactNode[];
   className?: string;
   active?: boolean;
+  lastChildRef?: any;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 };
 
 interface SelectProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode[];
+  children: React.ReactNode | React.ReactNode[];
   label?: string;
   onChange?: any;
   name?: string;
+  value?: string;
+  loading?: boolean;
+  lastChildRef?: any;
+  noFilter?: boolean;
+  onSearch?: any;
+  displayValueKey?: any;
 }
 
 const Option: React.FC<SelectOptionProps> = ({
   children,
   value,
   active,
+  lastChildRef,
+  onClick,
   ...rest
 }) => {
   return (
@@ -33,9 +43,10 @@ const Option: React.FC<SelectOptionProps> = ({
         "transition bg-white p-4 hover:bg-primary-500 hover:text-white cursor-pointer text-sm",
         `${active ? "bg-primary-500 text-white" : ""}`
       )}
+      onClick={onClick}
       {...rest}
     >
-      {children}
+      <div ref={lastChildRef}>{children}</div>
     </Combobox.Option>
   );
 };
@@ -46,22 +57,58 @@ export function Select({
   onChange,
   label,
   id,
+  value,
+  loading = false,
+  noFilter = false,
+  lastChildRef,
+  onSearch,
+  displayValueKey,
   ...rest
 }: SelectProps) {
   const [selectedValue, setSelectedValue] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [isActive, setIsActive] = React.useState(false);
 
-  const filteredChildren: any = children.filter(({ props: { value } }: any) => {
-    return value.toLowerCase().includes(query.toLowerCase());
-  });
+  let filteredTypeChildren = Array.isArray(children)
+    ? children.filter((child: any) => {
+        return child;
+      })
+    : [];
+
+  const filteredChildren: any = !noFilter
+    ? filteredTypeChildren.filter(({ props }: any) => {
+        return props?.children?.toLowerCase().includes(query.toLowerCase());
+      })
+    : filteredTypeChildren;
+
+  let flattenChildren: any = Array.isArray(filteredChildren)
+    ? filteredChildren.flat(Infinity)
+    : filteredChildren;
+
+  const childrenWithProps = React.Children.map(
+    flattenChildren,
+    (child: any) => {
+      let isLastChild =
+        Array.isArray(flattenChildren) &&
+        flattenChildren?.slice(-1)?.pop()?.key === child?.key;
+
+      if (React.isValidElement<any>(child)) {
+        return React.cloneElement(child, {
+          active: selectedValue === child.props.value,
+          key: child.props.value,
+          lastChildRef: isLastChild ? lastChildRef : null,
+        });
+      }
+      return child;
+    }
+  );
 
   return (
     <Combobox
-      value={selectedValue}
+      value={value ?? selectedValue}
       onChange={(value) => {
+        onChange(value);
         setSelectedValue(value);
-        onChange && onChange(value);
         setQuery("");
       }}
     >
@@ -89,7 +136,7 @@ export function Select({
               }
             >
               <div
-                className={`transition absolute inset-y-0 right-0 px-4 flex items-center text-gray-300 text-lg h-full`}
+                className={`transition absolute inset-y-0 right-0 px-4 flex items-center text-casper-500 text-lg h-full`}
               >
                 <AiOutlineStop
                   onClick={(e) => {
@@ -111,20 +158,28 @@ export function Select({
                 key={open.toString()}
                 onFocus={() => setIsActive(true)}
                 onBlur={() => {
+                  setQuery("");
                   setIsActive(false);
                 }}
                 displayValue={(value: string) => {
                   if (open) {
                     return "";
                   }
-
                   if (value) {
-                    return value?.charAt(0).toUpperCase() + value?.slice(1);
+                    if (displayValueKey) {
+                      return (
+                        value[displayValueKey]?.charAt(0).toUpperCase() +
+                        value[displayValueKey]?.slice(1)
+                      );
+                    } else {
+                      return value?.charAt(0).toUpperCase() + value?.slice(1);
+                    }
                   }
 
                   return "";
                 }}
                 onChange={(event) => {
+                  if (onSearch) onSearch(event.target.value);
                   setQuery(event.target.value);
                 }}
                 className={twMerge(
@@ -135,12 +190,7 @@ export function Select({
               />
             </Combobox.Button>
             <Combobox.Options className="max-h-60 overflow-auto shadow-lg border border-default bg-white rounded-md">
-              {filteredChildren.map((child: React.ReactElement) => {
-                return React.cloneElement(child, {
-                  active: selectedValue === child.props.value,
-                  key: child.props.value,
-                });
-              })}
+              {childrenWithProps}
             </Combobox.Options>
           </Float>
         );

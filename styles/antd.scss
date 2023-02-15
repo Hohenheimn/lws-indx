@@ -312,7 +312,7 @@ div.ant-table-wrapper {
     .ant-table-content {
       @apply overflow-auto;
       table {
-        @apply h-full;
+        @apply flex-auto;
       }
       thead.ant-table-thead {
         th.ant-table-cell {
@@ -328,7 +328,8 @@ div.ant-table-wrapper {
 
       tbody.ant-table-tbody {
         tr.ant-table-row {
-          @apply cursor-pointer [&>td]:last-of-type:border-b-0 relative;
+          // [&>td]:last-of-type:border-b-0
+          @apply cursor-pointer relative;
           td.ant-table-cell {
             @apply font-normal text-base border-b-slate-300 py-4;
             &.table-data-overlay {
@@ -618,4 +619,50 @@ label.ant-radio-wrapper {
 
 textarea.ant-input {
   @apply p-4 rounded-lg text-sm focus:border-primary-500 focus:ring-0 focus:shadow-input hover:border-primary-500 bg-white border text-black;
+}
+
+// Timepicker
+
+div.ant-picker-dropdown {
+  .ant-picker-panel,
+  .ant-picker-panel-container {
+    .ant-picker-ok {
+      button.ant-btn-primary {
+        @apply bg-primary-500 border-primary-500 hover:bg-primary-500 hover:shadow-lg active:bg-primary-700 active:shadow-lg text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300;
+      }
+    }
+  }
+}
+
+// Popover
+
+div.ant-popover {
+  @apply p-0;
+
+  .ant-popover-content {
+    .ant-popover-inner {
+      @apply rounded-xl bg-transparent;
+      .ant-popover-inner-content {
+        @apply bg-white border-casper-500 rounded-[inherit];
+      }
+    }
+  }
+  &.ant-popover-placement-top {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          @apply -mb-48;
+        }
+      }
+    }
+  }
+  &.ant-popover-placement-bottom {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          @apply -mt-48;
+        }
+      }
+    }
+  }
 }

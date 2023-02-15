@@ -5,9 +5,22 @@ import { Button } from "../../components/Button";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import { Select } from "../../components/Select";
+import { differenceInYears, parse } from "date-fns";
+import gender from "../../../utils/global-data/gender";
+import moment from "moment";
+import { NumericFormat } from "react-number-format";
 
-export function PersonalInfo() {
+export function PersonalInfo({ patientRecord }: any) {
   const [PersonalInfoForm] = Form.useForm();
+
+  React.useEffect(() => {
+    PersonalInfoForm.setFieldsValue({
+      ...patientRecord,
+      birthdate: moment(patientRecord?.birthdate, "MM-DD-YYYY"),
+      age: differenceInYears(new Date(), new Date(patientRecord?.birthdate)),
+    });
+  });
+
   return (
     <Card className="flex-auto">
       <Form
@@ -69,37 +82,21 @@ export function PersonalInfo() {
               </Form.Item>
               <Form.Item
                 label="Birthdate"
+                name="birthdate"
                 className="col-span-12 lg:col-span-8"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                  <Form.Item
-                    name="month"
-                    rules={[
-                      { required: true, message: "Birth Month is required" },
-                    ]}
-                    required={false}
-                  >
-                    <DatePicker placeholder="Month" id="birth_month" />
-                  </Form.Item>
-                  <Form.Item
-                    name="day"
-                    rules={[
-                      { required: true, message: "Birth Day is required" },
-                    ]}
-                    required={false}
-                  >
-                    <DatePicker placeholder="Day" id="birth_day" />
-                  </Form.Item>
-                  <Form.Item
-                    name="year"
-                    rules={[
-                      { required: true, message: "Birth Year is required" },
-                    ]}
-                    required={false}
-                  >
-                    <DatePicker placeholder="Year" id="birth_year" />
-                  </Form.Item>
-                </div>
+                <DatePicker
+                  placeholder="Birthdate"
+                  id="birthdate"
+                  format="MMMM DD, YYYY"
+                  onChange={(dob, dobString) => {
+                    const date = parse(dobString, "MMMM dd, yyyy", new Date());
+
+                    PersonalInfoForm.setFieldsValue({
+                      age: differenceInYears(new Date(), date),
+                    });
+                  }}
+                />
               </Form.Item>
               <Form.Item
                 label="Age"
@@ -108,7 +105,7 @@ export function PersonalInfo() {
                 required={false}
                 className="col-span-12 lg:col-span-2"
               >
-                <Input id="age" placeholder="Age" />
+                <Input id="age" placeholder="Age" disabled={true} />
               </Form.Item>
               <Form.Item
                 label="Gender"
@@ -117,7 +114,15 @@ export function PersonalInfo() {
                 required={false}
                 className="col-span-12 lg:col-span-2"
               >
-                <Input id="gender" placeholder="Gender" />
+                <Select placeholder="Gender" id="gender">
+                  {gender.map((gender, index) => {
+                    return (
+                      <Select.Option value={gender} key={index}>
+                        {gender}
+                      </Select.Option>
+                    );
+                  })}
+                </Select>
               </Form.Item>
               <Form.Item
                 label="Civil Status"
@@ -178,25 +183,25 @@ export function PersonalInfo() {
               </Form.Item>
               <Form.Item
                 label="Landline Number"
-                name="landline_number"
+                name="landline_no"
                 rules={[
                   { required: true, message: "Landline Number is required" },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="landline_number" placeholder="Landline Number" />
+                <Input id="landline_no" placeholder="Landline Number" />
               </Form.Item>
               <Form.Item
                 label="Mobile Number"
-                name="mobile_number"
+                name="mobile_no"
                 rules={[
                   { required: true, message: "Mobile Number is required" },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="mobile_number" placeholder="Mobile Number" />
+                <Input id="mobile_no" placeholder="Mobile Number" />
               </Form.Item>
             </div>
           </div>
@@ -254,7 +259,12 @@ export function PersonalInfo() {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="zip_code" placeholder="Zip Code" />
+                <NumericFormat
+                  customInput={Input}
+                  id="zip_code"
+                  allowNegative={false}
+                  placeholder="Zip Code"
+                />
               </Form.Item>
             </div>
           </div>
@@ -312,7 +322,12 @@ export function PersonalInfo() {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="zip_code" placeholder="Zip Code" />
+                <NumericFormat
+                  customInput={Input}
+                  id="zip_code"
+                  allowNegative={false}
+                  placeholder="Zip Code"
+                />
               </Form.Item>
             </div>
           </div>
@@ -370,7 +385,12 @@ export function PersonalInfo() {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="office_zip_code" placeholder="Zip Code" />
+                <NumericFormat
+                  customInput={Input}
+                  id="office_zip_code"
+                  allowNegative={false}
+                  placeholder="Zip Code"
+                />
               </Form.Item>
             </div>
           </div>

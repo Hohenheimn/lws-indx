@@ -43,6 +43,10 @@ export function classNameMerge(
   return classes.filter((value) => value).join(" ");
 }
 
+export function removeNumberFormatting(number: string) {
+  return Number(number.toString().replace(/[^0-9\.-]+/g, ""));
+}
+
 export function numberSeparator(currency: string | number, decimal?: number) {
   return parseFloat(currency.toString())
     .toFixed(decimal ?? 2)

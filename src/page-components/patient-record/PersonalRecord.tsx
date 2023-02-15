@@ -9,14 +9,14 @@ import { Checkbox } from "antd";
 import { BsTrash } from "react-icons/bs";
 import { Button } from "../../components/Button";
 
-export function PersonalRecord() {
+export function PersonalRecord({ patientRecord }: any) {
   return (
     <div className="space-y-8">
       <div className="space-y-4 pt-4">
         <h4>Share Patient Record</h4>
         <Input
           placeholder="Search"
-          prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
+          prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
           className="rounded-full border-none text-lg max-w-md py-4 shadow-md"
         />
       </div>

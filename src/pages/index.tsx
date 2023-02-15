@@ -1,465 +1,916 @@
+import { Space, Form, notification, Menu, Card } from "antd";
+import dynamic from "next/dynamic";
+
 import React from "react";
 import { AnimateContainer, PageContainer } from "../components/animation";
-import Form from "antd/lib/form";
+import Image from "next/image";
 import Input from "../components/Input";
 import { Button } from "../components/Button";
-import "chart.js/auto";
-import { IoIosAdd } from "react-icons/io";
+import { CiMedal } from "react-icons/ci";
+import Avatar from "../components/Avatar";
+import { Input as Inp } from "antd";
+import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { GrLocal, GrMenu } from "react-icons/gr";
+import { Drawer } from "antd";
+import { twMerge } from "tailwind-merge";
+import { scroller } from "react-scroll";
 import {
-  AiOutlineSearch,
-  AiOutlineCalendar,
-  AiOutlineClockCircle,
-  AiOutlineStop,
-} from "react-icons/ai";
+  fadeIn,
+  fadeInUp,
+  stagger,
+  zoomIn,
+} from "../components/animation/animation";
 import {
-  BsCameraVideo,
-  BsCheck2Square,
-  BsPencilSquare,
-  BsTrash,
+  BsCheckCircle,
+  BsHandThumbsUp,
+  BsInstagram,
+  BsLinkedin,
+  BsShieldLock,
 } from "react-icons/bs";
-import Calendar from "../components/Calendar";
-import { Select } from "../components/Select";
-import Card from "../components/Card";
-import { isEqual, isBefore, isAfter, parse, format } from "date-fns";
-import { fadeIn } from "../components/animation/animation";
+import {
+  AiOutlineArrowDown,
+  AiOutlineIdcard,
+  AiOutlineUnlock,
+} from "react-icons/ai";
+import { MdBrokenImage, MdRunningWithErrors } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "../../utils/api";
+import { Context } from "../../utils/context/Provider";
 import Modal from "../components/Modal";
 import { PatternFormat } from "react-number-format";
-import { scroller } from "react-scroll";
-import fakeDoctors from "../../utils/global-data/fakeDoctors";
-import fakeBranches from "../../utils/global-data/fakeBranches";
-import PrivateRoute from "../auth/HOC/PrivateRoute";
-import VerifyAuth from "../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../utils/types/NextPageProps";
-import { NextApiRequest } from "next";
+import { AnimatePresence } from "framer-motion";
+import { countdownTimer } from "../components/animation/animation";
+import Script from "next/script";
+import Layout from "../layout";
 
-const fakePatients = [
+const { TextArea } = Inp;
+
+type sideMenuProps = {
+  label: string;
+  link: string;
+  appearance: string;
+};
+
+const menu: Array<sideMenuProps> = [
   {
-    name: "Marquise Finney",
-    email: "marquise@gmail.com",
-    mobile_number: "09xx-xxx-xxxx",
-    issue: "Tooth Ache",
-    doctor: "Marc Medina",
-    branch: "Cavite",
-    unit: "Room 100",
-    schedule: parse("11/22/2022", "MM/dd/yyyy", new Date()),
+    label: "About Indx",
+    link: "#about",
+    appearance: "link",
   },
   {
-    name: "Darien Guy",
-    email: "darien@gmail.com",
-    mobile_number: "09xx-xxx-xxxx",
-    issue: "Braces",
-    doctor: "Bianca Medina",
-    branch: "Quezon City",
-    unit: "Room 854",
-    schedule: parse("11/15/2022", "MM/dd/yyyy", new Date()),
+    label: "Contact Us",
+    link: "#contact-us",
+    appearance: "link",
   },
   {
-    name: "Leticia Coffin",
-    email: "leticia@gmail.com",
-    mobile_number: "09xx-xxx-xxxx",
-    issue: "Whitening",
-    doctor: "Marcus Medina",
-    branch: "Quezon City",
-    unit: "Room 143",
-    schedule: parse("11/13/2022", "MM/dd/yyyy", new Date()),
-  },
-  {
-    name: "Denver Hardman",
-    email: "denver@gmail.com",
-    mobile_number: "09xx-xxx-xxxx",
-    issue: "Tooth Ache",
-    doctor: "Beatrice Medina",
-    branch: "Quezon City",
-    unit: "Room 542",
-    schedule: parse("11/08/2022", "MM/dd/yyyy", new Date()),
-  },
-  {
-    name: "Arman Whiting",
-    email: "arman@gmail.com",
-    mobile_number: "09xx-xxx-xxxx",
-    issue: "Bunot",
-    doctor: "Marco Medina",
-    branch: "Manila",
-    unit: "Room 732",
-    schedule: parse("11/25/2022", "MM/dd/yyyy", new Date()),
-  },
-  {
-    name: "Francisco Coffey",
-    email: "francisco@gmail.com",
-    mobile_number: "09xx-xxx-xxxx",
-    issue: "Braces",
-    doctor: "Brylle Medina",
-    branch: "Makati",
-    unit: "Room 696",
-    schedule: parse("11/28/2022", "MM/dd/yyyy", new Date()),
+    label: "Register Now",
+    link: "/registration",
+    appearance: "primary",
   },
 ];
 
-export function Dashboard({}: NextPageProps) {
-  let [selectedDate, setSelectedDate] = React.useState({
-    dateStart: new Date(),
-    dateEnd: new Date(),
-  });
-  let [doctorFilter, setDoctorFilter] = React.useState("");
-  let [branchFilter, setBranchFilter] = React.useState("");
-  let [showScheduleModal, setShowScheduleModal] = React.useState(false);
-  const [RegistrationForm] = Form.useForm();
+const textArray = [
+  "The first fully secured EMR in the country",
+  "Keep your clinic records simple",
+  "Easily import paper records to digital",
+];
+export function Website({ router }: any) {
+  let [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  let [isHeaderActive, setIsHeaderActive] = React.useState(false);
+  let [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
+  let [heroTextId, setHeroTextId] = React.useState(0);
+  const { setIsAppLoading } = React.useContext(Context);
+  const [ContactForm] = Form.useForm();
 
-  const filteredPatients = fakePatients.filter((patient) => {
-    if (!isEqual(selectedDate.dateEnd, selectedDate.dateStart)) {
-      return (
-        (((patient.doctor.toLowerCase().includes(doctorFilter.toLowerCase()) &&
-          patient.branch.toLowerCase().includes(branchFilter.toLowerCase()) &&
-          isBefore(selectedDate.dateStart, patient.schedule)) ||
-          isEqual(selectedDate.dateStart, patient.schedule)) &&
-          isAfter(selectedDate.dateEnd, patient.schedule)) ||
-        isEqual(selectedDate.dateEnd, patient.schedule)
-      );
-    } else
-      return (
-        patient.doctor.toLowerCase().includes(doctorFilter.toLowerCase()) &&
-        patient.branch.toLowerCase().includes(branchFilter.toLowerCase())
-      );
-  });
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (textArray.length === heroTextId + 1) {
+        setHeroTextId(0);
+      } else {
+        setHeroTextId(heroTextId + 1);
+      }
+    }, 3000);
+  }, [heroTextId]);
+
+  const { mutate: contact } = useMutation(
+    (payload: {}) =>
+      postData({
+        url: "/api/contact-us",
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      }),
+    {
+      onSuccess: () => {
+        setIsSuccessModalOpen(true);
+        ContactForm.resetFields();
+      },
+    }
+  );
+
+  let heroText = textArray[heroTextId];
 
   return (
     <>
-      <PageContainer>
-        <h3>Dashboard</h3>
-        <div className="flex justify-between items-center gap-4 flex-wrap lg:flex-nowrap">
-          <div className="basis-full lg:basis-1/2">
-            <Input
-              placeholder="Search"
-              prefix={<AiOutlineSearch className="text-lg text-gray-300" />}
-              className="rounded-full border-none text-lg"
+      <Script strategy="lazyOnload" id="indx-messenger-plugin">
+        {`
+            var chatbox = document.getElementById('fb-customer-chat');
+            chatbox.setAttribute("page_id", "150654878314479");
+            chatbox.setAttribute("attribution", "biz_inbox");
+
+            window.fbAsyncInit = function() {
+              FB.init({
+                xfbml            : true,
+                version          : 'v13.0'
+              });
+            };
+      
+            (function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        `}
+      </Script>
+      <Drawer
+        open={isDrawerOpen}
+        closable={false}
+        className="[&>.ant-drawer-content-wrapper]:max-xs:!w-full md:hidden"
+      >
+        <div className="flex flex-col flex-auto bg-white shadow-lg w-full h-full py-8">
+          <div className="space-y-8 flex flex-col flex-1 relative">
+            <div className="items-center h-12 w-full relative">
+              <Image
+                src="/images/logo.png"
+                alt="random pics"
+                fill
+                sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                className="object-center object-contain cursor-pointer"
+                onClick={() => router.push("#hero")}
+              />
+            </div>
+            <div className="flex flex-col flex-auto overflow-auto relative space-y-8 p-4">
+              {menu.map(({ link, label, appearance }, index) => {
+                return (
+                  <Button
+                    appearance={appearance}
+                    key={index}
+                    onClick={() => {
+                      router.push(link);
+                      setIsDrawerOpen(false);
+                    }}
+                    className={appearance !== "link" ? "p-4" : ""}
+                  >
+                    {label}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </Drawer>
+      <Layout>
+        <div
+          className={twMerge(
+            "fixed top-0 left-0 flex justify-between items-center py-4 px-[5%] w-full z-50 transition mr-6 duration-300",
+            isHeaderActive ? "bg-white shadow-md" : "bg-transparent"
+          )}
+        >
+          <div className="items-center h-16 w-32 relative">
+            <Image
+              src="/images/logo.png"
+              alt="random pics"
+              fill
+              sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+              className="object-center object-contain cursor-pointer"
+              onClick={() => router.push("#hero")}
             />
           </div>
-          <div className="basis-full lg:basis-auto flex-wrap xs:flex-nowrap flex gap-4">
+          <div className="hidden md:flex gap-20 items-center">
+            {menu.map(({ label, link, appearance }, index) => (
+              <div key={index}>
+                <Button
+                  appearance={appearance}
+                  className={twMerge(
+                    "text-[1.1rem]",
+                    appearance !== "link" ? "p-4" : ""
+                  )}
+                  onClick={() => {
+                    router.push(link);
+                  }}
+                >
+                  {label}
+                </Button>
+              </div>
+            ))}
+          </div>
+          <div className="block md:hidden">
             <Button
-              className="p-3 w-full"
-              onClick={() => setShowScheduleModal(true)}
-              appearance="primary"
+              appearance="link"
+              className="text-2xl"
+              onClick={() => setIsDrawerOpen(true)}
             >
-              <div className="flex justify-center items-center">
-                <IoIosAdd className="inline-block text-2xl" />{" "}
-                <span>Add New Schedule</span>
-              </div>
-            </Button>
-            <Button className="p-3 w-full" appearance="primary">
-              <div className="flex justify-center items-center">
-                <IoIosAdd className="inline-block text-2xl" />{" "}
-                <span>Add New Patient</span>
-              </div>
+              <GrMenu />
             </Button>
           </div>
         </div>
-        <div className="flex flex-col flex-auto">
-          <div className="flex justify-start xl:justify-between gap-4 xl:mt-10 flex-wrap flex-auto">
-            <div className="basis-full xl:basis-[45%] max-h-[30rem]">
-              <Calendar
-                onChange={(
-                  value: React.SetStateAction<{
-                    dateStart: Date;
-                    dateEnd: Date;
-                  }>
-                ) => setSelectedDate(value)}
-              />
-            </div>
-            <div className="basis-full xl:basis-[45%] space-y-4 mt-4 xl:mt-0 flex flex-col">
-              <div className="text-2xl font-medium">UPCOMING APPOINMENTS</div>
-              <div className="grid grid-cols-12 items-center gap-4">
-                <div className="text-sm text-gray-500 font-medium col-span-12 xs:col-span-2">
-                  FILTER BY:
-                </div>
-                <div className="text-sm text-gray-500 font-medium col-span-12 xs:col-span-5">
-                  <Select
-                    placeholder="Select Doctor"
-                    onChange={(value: string) => setDoctorFilter(value)}
-                    className="border-none"
-                  >
-                    {fakeDoctors.map(({ name }, index) => {
-                      return (
-                        <Select.Option value={name} key={index}>
-                          {name}
-                        </Select.Option>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="text-sm text-gray-500 font-medium col-span-12 xs:col-span-5">
-                  <Select
-                    placeholder="Select Branch"
-                    onChange={(value: string) => setBranchFilter(value)}
-                    className="border-none"
-                  >
-                    {fakeBranches.map(({ name }, index) => {
-                      return (
-                        <Select.Option value={name} key={index}>
-                          {name}
-                        </Select.Option>
-                      );
-                    })}
-                  </Select>
-                </div>
-              </div>
-              <div className="flex flex-col flex-auto relative min-h-[70vh] xl:min-h-0">
-                <div className="absolute top-0 inset-x-0 h-full w-full pt-4">
-                  <div className="overflow-auto space-y-4 h-full w-full box-content p-4 -m-4">
-                    {filteredPatients.length > 0 ? (
-                      filteredPatients.map(
-                        (
-                          {
-                            name,
-                            email,
-                            mobile_number,
-                            doctor,
-                            issue,
-                            branch,
-                            unit,
-                            schedule,
-                          },
-                          index
-                        ) => {
-                          return (
-                            <AnimateContainer key={name} variants={fadeIn}>
-                              <Card className="text-base rounded-2xl overflow-hidden hover:[&_.card-overlay]:opacity-100">
-                                <div>
-                                  <div className="flex items-center flex-wrap gap-6 xs:text-left xs:flex-nowrap text-center">
-                                    <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex basis-full xs:basis-auto justify-center items-center leading-[normal]">
-                                      {name.charAt(0)}
-                                    </div>
-                                    <div className="space-y-0 basis-full xs:basis-auto">
-                                      <div className="font-bold text-xl">
-                                        {name}
-                                      </div>
-                                      <div>{email}</div>
-                                      <div>{mobile_number}</div>
-                                      <div className="flex items-center xs:justify-start justify-center gap-4">
-                                        <div className="align-middle text-sm whitespace-nowrap">
-                                          <AiOutlineCalendar className="inline-block align-middle" />{" "}
-                                          <span>
-                                            {format(schedule, "MM/dd/yyyy")}
-                                          </span>
-                                        </div>
-                                        <div className="align-middle text-sm whitespace-nowrap">
-                                          <AiOutlineClockCircle className="inline-block align-middle" />{" "}
-                                          <span>15.00hs</span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="space-y-0 font-medium basis-full xs:basis-auto">
-                                      <div>{issue}</div>
-                                      <div>Dr. {doctor}</div>
-                                      <div>
-                                        {branch} - {unit}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
-                                    <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsPencilSquare className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsTrash className="align-middle cursor-pointer hover:text-secondary transition" />
-                                  </div>
-                                </div>
-                              </Card>
-                            </AnimateContainer>
-                          );
+        <PageContainer
+          className="!p-0 text-base bg-white text-default-secondary"
+          onScroll={(e: any) => {
+            if (
+              e.target.scrollHeight - e.target.scrollTop <
+              e.target.scrollHeight - 200
+            ) {
+              setIsHeaderActive(true);
+            } else {
+              setIsHeaderActive(false);
+            }
+          }}
+        >
+          <div
+            className="relative flex flex-col md:min-h-screen flex-none mt-[5rem] lg:mt-0 mb-8 shadow-[inset_0_-200px_150px_0_rgba(88,88,88,0.1)]"
+            id="hero"
+          >
+            <div className=" justify-center h-auto lg:h-full w-full lg:max-w-[45rem] flex flex-col items-center lg:items-start lg:text-left text-center space-y-4 xs:space-y-8 p-[2%] xs:p-[5%]">
+              <div className="flex flex-col lg:flex-auto justify-center">
+                <AnimateContainer variants={fadeIn} className="space-y-8">
+                  <div className="space-y-2">
+                    {/* <div className="relative h-14 w-full">
+                    <Image
+                      src="/images/logo.png"
+                      alt="random pics"
+                      fill
+                      sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                      className="object-left object-contain"
+                    />
+                  </div> */}
+                    <h2 className="font-bold text-4xl xs:text-5xl">
+                      Your Digital
+                      <span className="text-primary font-semibold">
+                        {" "}
+                        Index Card
+                      </span>
+                    </h2>
+                    <AnimatePresence mode="wait">
+                      <AnimateContainer
+                        variants={
+                          textArray.length === heroTextId + 3
+                            ? fadeIn
+                            : countdownTimer
                         }
-                      )
-                    ) : (
-                      <AnimateContainer key="empty-patient" variants={fadeIn}>
-                        <div className="text-4xl text-gray-400 text-center">
-                          No Records
+                        key={heroText}
+                      >
+                        <div className="xs:text-2xl text-blumine font-medium">
+                          {heroText}
                         </div>
                       </AnimateContainer>
-                    )}
+                    </AnimatePresence>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      Start running your dental clinic the simplest way. Easily
+                      manage patient details, organize dental appointments, and
+                      secure dental records with a smart clinic platform.
+                    </div>
+                    <div className="lg:m-0">
+                      <Button
+                        appearance="blumine"
+                        className="w-full max-w-xs py-4"
+                        onClick={() => router.push("/registration")}
+                      >
+                        Register Now
+                      </Button>
+                    </div>
+                  </div>
+                </AnimateContainer>
+              </div>
+            </div>
+            <AnimateContainer
+              variants={zoomIn}
+              rootMargin="-200px 0px"
+              className="relative lg:absolute lg:top-0 lg:right-0 h-[100vw] lg:h-full lg:w-1/2 w-full"
+            >
+              <Image
+                src="/images/hero.png"
+                alt="hero"
+                fill
+                sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                className="object-center lg:object-right object-contain lg:pr-2 px-4"
+              />
+            </AnimateContainer>
+          </div>
+          <div className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12">
+            <AnimateContainer variants={fadeIn}>
+              <div className="text-center space-y-2">
+                <h2 className="font-semibold text-blumine">
+                  We Understand Your Inconvenience
+                </h2>
+                <div>
+                  Clinic management is a difficult task. Aside from usual
+                  day-to-day patient struggles, dentists and clinic managers
+                  also experience the following issues:
+                </div>
+              </div>
+            </AnimateContainer>
+            <AnimateContainer variants={fadeIn}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 text-center">
+                <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
+                  <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
+                    <MdBrokenImage />
+                  </Avatar>
+                  <h4 className="font-medium text-blumine">
+                    Index cards are unreliable
+                  </h4>
+                  <div>
+                    Dentists have been using index cards or paper records for
+                    decades. However, these physical documents may get lost or
+                    damaged which may lead to delays in treatment, misdiagnosis
+                    and even time wastage for doing the entire recording process
+                    all over again.
+                  </div>
+                </div>
+                <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
+                  <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
+                    <AiOutlineUnlock />
+                  </Avatar>
+                  <h4 className="font-medium text-blumine">
+                    Unsecured paper records
+                  </h4>
+                  <div>
+                    You might lose a lot of money and credibility if you do not
+                    keep your patient records safe. Worse is that you might face
+                    legal actions for leaking their data accidentally.
+                  </div>
+                </div>
+                <div className="space-y-4 flex flex-col justify-center items-center max-w-sm m-auto">
+                  <Avatar className="bg-geraldine bg-opacity-40 h-24 w-24 text-4xl text-geraldine">
+                    <MdRunningWithErrors />
+                  </Avatar>
+                  <h4 className="font-medium text-blumine">
+                    Paper records slow clinic operations
+                  </h4>
+                  <div>
+                    {`Dental clinic is a fast-paced environment. You can't afford to lose valuable seconds and potential patients just because you're processing patient records manually.`}
                   </div>
                 </div>
               </div>
+            </AnimateContainer>
+            {/* <AnimateContainer variants={fadeIn}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
+                <div className="items-center h-48 w-full relative">
+                  <Image
+                    src="https://picsum.photos/seed/98/1000/500"
+                    alt="random pics"
+                    fill
+                    sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                    className="object-center object-cover"
+                  />
+                </div>
+                <div className="p-[5%]">
+                  {`Running a dental practice is tough enough. You can't afford to
+                lose your patients, or the time and money spent processing paper
+                records.`}
+                </div>
+              </div>
+              <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
+                <div className="items-center h-48 w-full relative">
+                  <Image
+                    src="https://picsum.photos/seed/99/1000/500"
+                    alt="random pics"
+                    fill
+                    sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                    className="object-center object-cover"
+                  />
+                </div>
+                <div className="p-[5%]">
+                  {`But it happens all too often. You are losing patients and your productivity is down.`}
+                </div>
+              </div>
+              <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
+                <div className="items-center h-48 w-full relative">
+                  <Image
+                    src="https://picsum.photos/seed/100/1000/500"
+                    alt="random pics"
+                    fill
+                    sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                    className="object-center object-cover"
+                  />
+                </div>
+                <div className="p-[5%]">
+                  {`INDX software is a complete dental management system that integrates with your billing, scheduling and inventory – giving you visibility into all aspects of your business. A smarter, more seamless way to run your practice.`}
+                </div>
+              </div>
+            </div>
+          </AnimateContainer> */}
+          </div>
+          <div
+            className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12"
+            id="about"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-dense gap-8 items-center">
+              <AnimateContainer
+                variants={zoomIn}
+                className="h-[60vw] md:h-[30rem] w-full relative"
+              >
+                <Image
+                  src="/images/xray.png"
+                  alt="random pics"
+                  fill
+                  sizes="(max-width: 500px) 100px"
+                  className="object-center object-contain pr-2"
+                />
+              </AnimateContainer>
+              <AnimateContainer variants={fadeIn}>
+                <div className="space-y-4 text-center lg:text-left">
+                  <h2 className="text-blumine font-semibold">
+                    INDX Takes Care of Your Clinic Activities
+                  </h2>
+                  <div>
+                    INDX is a clinic management software that allows dentists to
+                    run their clinics efficiently. It secures your records in
+                    one place and lets you manage them easily. You can even
+                    schedule appointments, access patient data, and track your
+                    finances wherever you are! Let INDX help you take care of
+                    your patients, clinic and practice. Focus on growing your
+                    craft and maximize your profits while we take care of your
+                    clinic activities with this simple, secured and easy-to-use
+                    platform.
+                  </div>
+                  <Button
+                    appearance="blumine"
+                    className="md:w-auto py-4"
+                    onClick={() => router.push("/registration")}
+                  >
+                    Get Started
+                  </Button>
+                </div>
+              </AnimateContainer>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-[35%_1fr] gap-8 items-center text-center lg:text-left">
+              <AnimateContainer variants={fadeIn}>
+                <div className="space-y-4">
+                  <h2 className="text-blumine font-semibold">
+                    It’s time to choose INDX
+                  </h2>
+                  <div>
+                    <div className="font-medium">Simple. Secured. Smart</div>
+                    Our software gives you the simplest yet smartest tools for
+                    your seamless dental clinic management experience.
+                    <br />
+                    <br />
+                    <div className="font-medium text-blumine">
+                      For Dental Clinic Managers
+                    </div>
+                    <br />
+                    Running a dental clinic is never easy - from taking patient
+                    records, managing day-to-day operations, to meeting business
+                    targets. Most managers might even do all these tasks
+                    manually leading to slower and inefficient clinic
+                    operations.
+                    <br />
+                    <br />
+                    If you’re guilty with the above practice, then you need a
+                    partner to help you manage your clinic efficiently - like
+                    INDX. <br />
+                    <br />
+                    With INDX, your dental clinic management duties are now
+                    simpler while giving you more for your business. Track
+                    patient records, book appointments, and manage your entire
+                    clinic in one dashboard.
+                    <br />
+                    <br />
+                    <div className="font-medium text-blumine">
+                      For Dental Practitioners
+                    </div>
+                    <br />
+                    Dentists also do a lot while inside their clinics. Aside
+                    from providing the best dental care for your patients, you
+                    must also do other tasks to fulfill your clinic duties.
+                    That’s quite overwhelming for any practitioner doing
+                    everything manually.
+                    <br />
+                    <br />
+                    That’s why INDX Clinic Management software was uniquely
+                    designed for dental practitioners who want to complete
+                    multiple tasks without compromising their patients’ health
+                    and safety.
+                    <br />
+                    <br />
+                    Not only does INDX streamline your practice workflow, our
+                    intuitive system increases your administrative efficiency,
+                    saves you from time-consuming tasks, and helps you focus
+                    more on what matters most - provide the best dental care
+                    your patient needs.
+                    <br />
+                    <br />
+                    Focus on your dental practice while we securely manage your
+                    clinic activities for you.
+                  </div>
+                  <Button
+                    appearance="blumine"
+                    className="md:w-auto py-4"
+                    onClick={() => router.push("/registration")}
+                  >
+                    Get Started
+                  </Button>
+                </div>
+              </AnimateContainer>
+              <AnimateContainer
+                variants={zoomIn}
+                className="h-[70vw] md:h-[40rem] w-full relative"
+              >
+                <Image
+                  src="/images/mac.png"
+                  alt="random pics"
+                  fill
+                  sizes="(max-width: 500px) 100px"
+                  className="object-center object-contain pr-2"
+                />
+              </AnimateContainer>
             </div>
           </div>
-        </div>
-      </PageContainer>
-      <Modal
-        show={showScheduleModal}
-        onClose={() => setShowScheduleModal(false)}
-        className="w-[60rem]"
-        id="schedule-modal"
-      >
-        <div className="space-y-8">
-          <div className="font-semibold text-3xl">Add New Schedule</div>
-          <Form
-            form={RegistrationForm}
-            layout="vertical"
-            onFinish={(values) => {
-              console.log(values);
-            }}
-            onFinishFailed={(data) => {
-              scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
-                smooth: true,
-                offset: -50,
-                containerId: "schedule-modal",
-              });
-            }}
-          >
-            <Form.Item
-              label="Type of Schedule"
-              name="type_of_schedule"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
+          <div className="flex flex-col flex-none px-[5%] relative space-y-12">
+            <AnimateContainer variants={fadeIn}>
+              <div className="text-center space-y-2 max-w-[45rem] m-auto">
+                <h2 className="font-semibold text-blumine">
+                  3 Smart Benefits of INDX for Your Clinic Needs
+                </h2>
+              </div>
+            </AnimateContainer>
+            <AnimateContainer
+              variants={fadeIn}
+              className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-left"
             >
-              <Select placeholder="Patient Schedule" id="type_of_schedule">
-                {fakeBranches.map(({ name }, index) => {
-                  return (
-                    <Select.Option value={name} key={index}>
-                      {name}
-                    </Select.Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="First Name"
-              name="first_name"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Input id="first_name" placeholder="Juan" />
-            </Form.Item>
-            <Form.Item
-              label="Last Name"
-              name="last_name"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Input id="last_name" placeholder="Dela Cruz" />
-            </Form.Item>
-            <Form.Item
-              label="Email Address"
-              name="email"
-              rules={[
-                { required: true, message: "This is required!" },
-                { type: "email", message: "Must be a valid email" },
-              ]}
-              required={false}
-            >
-              <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
-            </Form.Item>
-            <Form.Item
-              label="Mobile Number"
-              name="mobile_number"
-              rules={[
-                { required: true, message: "This is required!" },
-                {
-                  pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
-                  message: "Please use correct format!",
-                },
-              ]}
-              required={false}
-            >
-              <PatternFormat
-                customInput={Input}
-                placeholder="09XX-XXX-XXXXX"
-                mask="X"
-                format="####-###-####"
-                allowEmptyFormatting={false}
-                id="mobile_number"
-              />
-            </Form.Item>
-            <Form.Item
-              label="Reason for Visit"
-              name="reason_for_visit"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Select
-                placeholder="Select Reason for Visit"
-                id="reason_for_visit"
+              <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
+                <div>
+                  <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-5xl text-blumine">
+                    <BsShieldLock />
+                  </Avatar>
+                </div>
+                <div>
+                  <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
+                    Security Guaranteed
+                  </h4>
+                  <div>
+                    INDX is the first fully-secured clinic management software
+                    in the country with patient data security as one of our
+                    utmost priorities. With INDX, you are assured that your
+                    patient records are safely stored in our high-security
+                    platform in accordance with data healthcare compliance
+                    regulations.
+                  </div>
+                </div>
+              </div>
+              <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
+                <div>
+                  <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-5xl text-blumine">
+                    <BsHandThumbsUp />
+                  </Avatar>
+                </div>
+                <div>
+                  <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
+                    User-Friendly and Simplified System
+                  </h4>
+                  <div>
+                    Our goal is to provide you an easy-to-use clinic management
+                    system. Our team of designers and engineers developed a
+                    simple yet functional design to ensure your hassle-free
+                    experience within the platform.
+                  </div>
+                </div>
+              </div>
+              <div className="border-2 border-solid border-primary rounded-2xl flex items-start p-[5%] gap-x-4">
+                <div>
+                  <Avatar className="bg-primary bg-opacity-40 h-20 w-20 xs:h-24 xs:w-24 xs:text-5xl text-blumine">
+                    <AiOutlineArrowDown />
+                  </Avatar>
+                </div>
+                <div>
+                  <h4 className="font-medium text-blumine max-xs:text-xl mb-4">
+                    Easy Importing and migration
+                  </h4>
+                  <div>
+                    Start transforming your paper records to digital ones. We
+                    understand that manual patient data recording has been used
+                    for ages. That’s why we developed a feature to help you
+                    easily migrate your paper records digitally.
+                  </div>
+                </div>
+              </div>
+            </AnimateContainer>
+            <div className="relative !mt-[30vw] lg:!mt-40 !mb-20 grid grid-cols-1 lg:grid-cols-2 lg:text-left text-center">
+              <AnimateContainer
+                variants={fadeIn}
+                rootMargin="0px 0px"
+                className="w-full bg-primary text-white rounded-2xl px-[5%] py-[10%]"
               >
-                {fakeBranches.map(({ name }, index) => {
-                  return (
-                    <Select.Option value={name} key={index}>
-                      {name}
-                    </Select.Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Doctor"
-              name="doctor"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Select placeholder="Select Doctor" id="doctor">
-                {fakeBranches.map(({ name }, index) => {
-                  return (
-                    <Select.Option value={name} key={index}>
-                      {name}
-                    </Select.Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Branch"
-              name="branch"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Select placeholder="Select Branch" id="branch">
-                {fakeBranches.map(({ name }, index) => {
-                  return (
-                    <Select.Option value={name} key={index}>
-                      {name}
-                    </Select.Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Room"
-              name="room"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Select placeholder="Select Room" id="room">
-                {fakeBranches.map(({ name }, index) => {
-                  return (
-                    <Select.Option value={name} key={index}>
-                      {name}
-                    </Select.Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            <div className="flex justify-end items-center gap-4">
+                <div className="relative w-full pointer-events-none lg:hidden block h-[50vw] -mt-[30vw] mb-4">
+                  <Image
+                    src="/images/macbook.png"
+                    alt="random pics"
+                    fill
+                    sizes="(max-width: 500px) 100px"
+                    className="object-right object-fill"
+                  />
+                </div>
+                <h2 className="text-inherit">Get INDX for Your Clinic Now</h2>
+                <div className="font-light">
+                  Reserve a slot today, and get a free 3-month subscription from
+                  us!
+                </div>
+                <Button
+                  appearance="primary"
+                  className="bg-white text-primary md:w-auto mt-8 p-4 px-8 hover:bg-white hover:scale-105 font-medium"
+                  onClick={() => router.push("/registration")}
+                >
+                  Register Now
+                </Button>
+              </AnimateContainer>
+              <AnimateContainer
+                variants={zoomIn}
+                className="relative lg:-ml-20 lg:block hidden"
+              >
+                <div className="absolute top-[50%] -translate-y-[50%] right-0 h-[30vw] w-full pointer-events-none">
+                  <Image
+                    src="/images/macbook.png"
+                    alt="random pics"
+                    fill
+                    sizes="(max-width: 500px) 100px"
+                    className="object-right object-fill"
+                  />
+                </div>
+              </AnimateContainer>
+            </div>
+            <AnimateContainer variants={fadeIn}>
+              <Card
+                className="space-y-12 text-lg rounded-2xl shadow-[0px_0px_.3rem_0px_rgba(0,0,0,.25)] p-4"
+                id="contact-us"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-[40%_1fr] relative grid-flow-row-dense gap-4">
+                  <div className="row-start-2 md:row-start-1">
+                    <div className="space-y-2">
+                      <h2 className="text-blumine mb-8">
+                        Reach Us for Questions
+                      </h2>
+                    </div>
+                    <Form
+                      form={ContactForm}
+                      layout="vertical"
+                      onFinish={(values) => {
+                        contact(values);
+                      }}
+                      className="w-full text-left"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item
+                          label="First Name"
+                          name="first_name"
+                          rules={[
+                            {
+                              required: true,
+                              message: "First Name is required",
+                            },
+                          ]}
+                          required={false}
+                        >
+                          <Input
+                            id="first_name"
+                            placeholder="First Name"
+                            className="shadow-none border-2"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Last Name"
+                          name="last_name"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Last Name is required",
+                            },
+                          ]}
+                          required={false}
+                        >
+                          <Input
+                            id="last_name"
+                            placeholder="Last Name"
+                            className="shadow-none border-2"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Email Address"
+                          name="email_address"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Email Address is required",
+                            },
+                            { type: "email", message: "Must be a valid email" },
+                          ]}
+                          required={false}
+                        >
+                          <Input
+                            id="email_address"
+                            placeholder="Email Address"
+                            className="shadow-none border-2"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Mobile Number"
+                          name="mobile_number"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Mobile Number is required",
+                            },
+                            {
+                              pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                              message: "Please use correct format!",
+                            },
+                          ]}
+                          required={false}
+                        >
+                          <PatternFormat
+                            customInput={Input}
+                            placeholder="Mobile Number"
+                            mask="X"
+                            format="####-###-####"
+                            allowEmptyFormatting={false}
+                            id="mobile_number"
+                            className="shadow-none border-2"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="message"
+                          rules={[
+                            { required: true, message: "Message is required" },
+                          ]}
+                          required={false}
+                          className="md:col-span-2"
+                        >
+                          <TextArea
+                            id="message"
+                            placeholder="Your message here"
+                            rows={8}
+                            className="!border-2"
+                          />
+                        </Form.Item>
+                      </div>
+                      <div className="flex justify-center items-center mt-8">
+                        <Button
+                          type="submit"
+                          appearance="blumine"
+                          className="md:max-w-[15rem] p-4 hover:scale-105 font-medium"
+                        >
+                          Submit
+                        </Button>
+                      </div>
+                    </Form>
+                  </div>
+                  <div className="h-full min-h-[20rem] pointer-events-none relative">
+                    <Image
+                      src="/images/macbook-cms.png"
+                      alt="random pics"
+                      fill
+                      sizes="(max-width: 500px) 100px"
+                      className="object-right object-fill"
+                    />
+                  </div>
+                </div>
+              </Card>
+            </AnimateContainer>
+          </div>
+          <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
+            <div className="p-8 pt-0 flex justify-center items-center gap-8 flex-none !mt-4 !m-0">
               <Button
                 appearance="link"
-                className="p-4 bg-transparent border-none text-gray-500 font-semibold"
-                onClick={() => setShowScheduleModal(false)}
+                className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                onClick={() =>
+                  window.open("https://www.facebook.com/indxhealth", "_blank")
+                }
               >
-                Cancel
+                <FaFacebookF />
               </Button>
               <Button
-                appearance="primary"
-                className="max-w-[10rem]"
-                type="submit"
+                appearance="link"
+                className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                onClick={() =>
+                  window.open(
+                    "https://www.linkedin.com/company/indx-health/?viewAsMember=true&original_referer=",
+                    "_blank"
+                  )
+                }
               >
-                Save
+                <BsLinkedin />
+              </Button>
+              <Button
+                appearance="link"
+                className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                onClick={() =>
+                  window.open("https://www.instagram.com/indxhealth/", "_blank")
+                }
+              >
+                <BsInstagram />
               </Button>
             </div>
-          </Form>
+          </AnimateContainer>
+          <AnimateContainer
+            variants={fadeIn}
+            rootMargin="0px 0px"
+            className="!m-0"
+          >
+            <div className="text-white bg-primary p-4 text-center !m-0">
+              ©2023 Copyright | INDX Dental
+            </div>
+          </AnimateContainer>
+        </PageContainer>
+      </Layout>
+      <Modal
+        show={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        className="w-[70rem]"
+      >
+        <div className="space-y-12 text-center text-base max-w-[50rem] m-auto">
+          <BsCheckCircle className="text-primary text-9xl m-auto" />
+          <div>
+            <h2 className="font-normal mb-2">Thank you!</h2>
+            <div className="text-default-secondary">
+              {`We've`} received your message and will respond within 24 hours.
+              <br />
+              In the meantime, make sure to follow us on social!
+            </div>
+            <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
+              <div className="p-8 pt-0 flex justify-center items-center gap-8 flex-none !mt-4 !m-0">
+                <Button
+                  appearance="link"
+                  className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                  onClick={() =>
+                    window.open("https://www.facebook.com/indxhealth", "_blank")
+                  }
+                >
+                  <FaFacebookF />
+                </Button>
+                <Button
+                  appearance="link"
+                  className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                  onClick={() =>
+                    window.open(
+                      "https://www.linkedin.com/company/indx-health/?viewAsMember=true&original_referer=",
+                      "_blank"
+                    )
+                  }
+                >
+                  <BsLinkedin />
+                </Button>
+                <Button
+                  appearance="link"
+                  className="text-3xl bg-primary p-4 rounded-full text-white hover:text-primary-300"
+                  onClick={() =>
+                    window.open(
+                      "https://www.instagram.com/indxhealth/",
+                      "_blank"
+                    )
+                  }
+                >
+                  <BsInstagram />
+                </Button>
+              </div>
+            </AnimateContainer>
+          </div>
+          <Button
+            appearance="primary"
+            className="max-w-[20rem] p-4"
+            onClick={() => {
+              setIsSuccessModalOpen(false);
+            }}
+          >
+            Confirm
+          </Button>
         </div>
       </Modal>
     </>
   );
 }
 
-export const getServerSideProps = VerifyAuth((ctx, serverSideProps) => {
-  return { props: { ...serverSideProps } };
-});
+export const getServerSideProps = ({ req }: any) => {
+  let subdomain =
+    req.headers.host.split(".").length > 1
+      ? req.headers.host.split(".")[0]
+      : null;
 
-export default PrivateRoute(Dashboard);
+  if (subdomain && subdomain === "lws-dentist") {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/admin",
+      },
+    };
+  }
+
+  return { props: {} };
+};
+
+export default Website;

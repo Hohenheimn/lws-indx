@@ -9,6 +9,7 @@ import { fadeIn } from "../components/animation/animation";
 import { AnimatePresence } from "framer-motion";
 import SideMenu from "./SideMenu";
 import { scroller } from "react-scroll";
+import { twMerge } from "tailwind-merge";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ interface LayoutProps {
   openMenus?: string;
   router?: any;
   subdomain?: string;
+  className?: string;
 }
 
 export const Layout = ({
@@ -24,14 +26,14 @@ export const Layout = ({
   openMenus,
   router,
   subdomain,
+  className,
 }: LayoutProps) => {
-  const { setOpenDrawer, showLoading, setShowLoading } =
-    React.useContext(Context);
+  const { setIsDrawerOpen, isAppLoading } = React.useContext(Context);
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {showLoading && (
+        {isAppLoading && (
           <AnimateContainer
             variants={fadeIn}
             rootMargin="0px"
@@ -41,9 +43,16 @@ export const Layout = ({
           </AnimateContainer>
         )}
       </AnimatePresence>
-      <div className="flex flex-col overflow-hidden flex-auto">
+      <div
+        className={twMerge(
+          "flex flex-col overflow-hidden flex-auto",
+          className
+        )}
+      >
         <div className="flex flex-auto">
-          {profile && subdomain && <SideMenu openMenus={openMenus} />}
+          {profile && subdomain && (
+            <SideMenu openMenus={openMenus} profile={profile} />
+          )}
           <div className="w-[100%] mx-auto flex flex-col flex-auto bg-default-page relative">
             <div className="absolute top-0 left-0 h-full w-full flex flex-auto">
               {children}
@@ -54,7 +63,7 @@ export const Layout = ({
           <div className="w-full bg-white border border-solid border-default z-50 flex justify-evenly items-center gap-8 py-2 px-4 md:hidden">
             <Button
               appearance="link"
-              className="text-gray-500 text-[.6rem] rounded-none"
+              className="text-casper-500 text-[.6rem] rounded-none"
               onClick={() => router.push("/")}
             >
               <div className="flex flex-col justify-center items-center gap-2 uppercase">
@@ -64,7 +73,7 @@ export const Layout = ({
             </Button>
             <Button
               appearance="link"
-              className="text-gray-500 text-[.6rem] rounded-none"
+              className="text-casper-500 text-[.6rem] rounded-none"
             >
               <div className="flex flex-col justify-center items-center gap-2 uppercase">
                 <FaUser className="text-2xl" />
@@ -73,8 +82,8 @@ export const Layout = ({
             </Button>
             <Button
               appearance="link"
-              className="text-gray-500 text-[.6rem] rounded-none"
-              onClick={() => setOpenDrawer(true)}
+              className="text-casper-500 text-[.6rem] rounded-none"
+              onClick={() => setIsDrawerOpen(true)}
             >
               <div className="flex flex-col justify-center items-center gap-2 uppercase">
                 <FiMoreHorizontal className="text-2xl" />

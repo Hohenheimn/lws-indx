@@ -8,6 +8,7 @@ import Input from "../../components/Input";
 import { Select } from "../../components/Select";
 import { fadeIn } from "../../components/animation/animation";
 import { AnimatePresence } from "framer-motion";
+import { NumericFormat } from "react-number-format";
 
 let medications = [
   { label: "Aspirin, Tylenol, Motrin", name: "category_1" },
@@ -72,7 +73,7 @@ let healthProblem = [
   { label: "Heart Murmur", value: "32" },
 ];
 
-export function MedicalHistory() {
+export function MedicalHistory({ patientRecord }: any) {
   const [MedicalHistoryForm] = Form.useForm();
   return (
     <Card className="flex-auto md:p-12 p-6">
@@ -172,7 +173,12 @@ export function MedicalHistory() {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="clinic_zip_code" placeholder="Zip Code" />
+                <NumericFormat
+                  customInput={Input}
+                  id="clinic_zip_code"
+                  allowNegative={false}
+                  placeholder="Zip Code"
+                />
               </Form.Item>
             </div>
           </div>

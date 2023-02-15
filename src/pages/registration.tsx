@@ -26,8 +26,8 @@ import { BsCheckCircle } from "react-icons/bs";
 
 export default function Registration({ router }: any) {
   const [RegistrationForm] = Form.useForm();
-  const { setShowLoading } = React.useContext(Context);
-  let [showSuccessModal, setShowSuccessModal] = React.useState(false);
+  const { setIsAppLoading } = React.useContext(Context);
+  let [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
 
   const { mutate: register } = useMutation(
     (payload: {}) =>
@@ -35,12 +35,12 @@ export default function Registration({ router }: any) {
         url: "/api/pre-registration",
         payload,
         options: {
-          isLoading: (show: boolean) => setShowLoading(show),
+          isLoading: (show: boolean) => setIsAppLoading(show),
         },
       }),
     {
       onSuccess: () => {
-        setShowSuccessModal(true);
+        setIsSuccessModalOpen(true);
         RegistrationForm.resetFields();
       },
       // onError: (err: { [key: string]: string }) => {
@@ -211,8 +211,8 @@ export default function Registration({ router }: any) {
         </div>
       </PageContainer>
       <Modal
-        show={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        show={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
         className="w-[70rem]"
       >
         <div className="space-y-12 text-center text-base max-w-[50rem] m-auto">
@@ -228,7 +228,7 @@ export default function Registration({ router }: any) {
             className="max-w-[20rem] p-4"
             onClick={() => {
               router.push("/");
-              setShowSuccessModal(false);
+              setIsSuccessModalOpen(false);
             }}
           >
             Confirm

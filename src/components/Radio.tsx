@@ -51,7 +51,7 @@ export const Radio: RadioProps = ({ label, value, className }) => {
           />
           <label
             htmlFor={value}
-            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            className="ml-2 text-sm font-medium text-gray-900 dark:text-casper-500"
           >
             {label}
           </label>
