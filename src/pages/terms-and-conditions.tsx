@@ -124,13 +124,13 @@ const termsAndConditionsSecond = `<ol style="list-style-type: decimal; list-styl
 </ol>`;
 
 export default function TermsAndConditions({ router }: any) {
-  let [openDrawer, setOpenDrawer] = React.useState(false);
-  let [activeHeader, setActiveHeader] = React.useState(false);
+  let [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  let [isHeaderActive, setIsHeaderActive] = React.useState(false);
 
   return (
     <>
       <Drawer
-        open={openDrawer}
+        open={isDrawerOpen}
         closable={false}
         className="[&>.ant-drawer-content-wrapper]:max-xs:!w-full md:hidden"
       >
@@ -154,7 +154,7 @@ export default function TermsAndConditions({ router }: any) {
                     key={index}
                     onClick={() => {
                       router.push(link);
-                      setOpenDrawer(false);
+                      setIsDrawerOpen(false);
                     }}
                     className={appearance !== "link" ? "p-4" : ""}
                   >
@@ -170,7 +170,7 @@ export default function TermsAndConditions({ router }: any) {
         <div
           className={twMerge(
             "fixed top-0 left-0 flex justify-between items-center py-4 px-[5%] w-full z-50 transition mr-6 duration-300",
-            activeHeader ? "bg-white shadow-md" : "bg-transparent"
+            isHeaderActive ? "bg-white shadow-md" : "bg-transparent"
           )}
         >
           <div className="items-center h-16 w-32 relative">
@@ -205,7 +205,7 @@ export default function TermsAndConditions({ router }: any) {
             <Button
               appearance="link"
               className="text-2xl"
-              onClick={() => setOpenDrawer(true)}
+              onClick={() => setIsDrawerOpen(true)}
             >
               <GrMenu />
             </Button>
@@ -218,9 +218,9 @@ export default function TermsAndConditions({ router }: any) {
               e.target.scrollHeight - e.target.scrollTop <
               e.target.scrollHeight - 200
             ) {
-              setActiveHeader(true);
+              setIsHeaderActive(true);
             } else {
-              setActiveHeader(false);
+              setIsHeaderActive(false);
             }
           }}
         >

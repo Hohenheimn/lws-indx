@@ -5,21 +5,21 @@ export const Context = createContext<any>(null);
 function reducer(state: any, action: { type: any; value: any }) {
   switch (action.type) {
     case "SET_OPEN_DRAWER":
-      return { ...state, openDrawer: action.value };
+      return { ...state, isDrawerOpen: action.value };
     default:
       return state;
   }
 }
 
 const initialState = {
-  openDrawer: false,
+  isDrawerOpen: false,
 };
 
 export default function AppProvider({ children, ...rest }: any) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialDispatch = {
-    setOpenDrawer: (value: boolean) => {
+    setIsDrawerOpen: (value: boolean) => {
       dispatch({ type: "SET_OPEN_DRAWER", value });
     },
   };

@@ -53,17 +53,19 @@ export const Input: React.ForwardRefRenderFunction<
   prefix,
   suffix,
   type = "text",
-  value,
+  value = "",
+  onChange,
   ...rest
 }) => {
-  let [showPassword, setShowPassword] = React.useState(false);
+  let [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+  let [inputValue, setInputValue] = React.useState("");
 
   return (
     <div className="w-full">
       {label && (
         <label
           htmlFor={name}
-          className="block text-base font-normal text-gray-500"
+          className="block text-base font-normal text-casper-500"
         >
           {label}
         </label>
@@ -75,31 +77,38 @@ export const Input: React.ForwardRefRenderFunction<
           </div>
         )}
         <input
-          type={showPassword && type === "password" ? "text" : type}
+          type={isPasswordVisible && type === "password" ? "text" : type}
           name={name}
           id={name}
           className={twMerge(
-            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-default shadow rounded-md transition block w-full text-sm leading-[normal]",
+            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-default shadow rounded-md transition block w-full text-sm leading-[normal] disabled:bg-gray-300",
             `${prefix ? "pl-8" : ""} ${suffix ? "pr-12" : ""}`,
             className
           )}
-          defaultValue=""
+          disabled={disabled}
+          value={value ? value : inputValue}
+          onChange={(e) =>
+            onChange ? onChange(e) : setInputValue(e.target.value)
+          }
           {...rest}
         />
         {(type === "password" || suffix) && (
           <div className="absolute inset-y-0 right-0 flex items-center px-4 gap-4 text-base [&>svg]:transition [&>*]:cursor-pointer [&>svg]:text-default-text hover:[&>svg]:opacity-70">
             {suffix}
             {type === "password" && (
-              <AnimateContainer variants={fadeIn} key={showPassword.toString()}>
-                {showPassword ? (
+              <AnimateContainer
+                variants={fadeIn}
+                key={isPasswordVisible.toString()}
+              >
+                {isPasswordVisible ? (
                   <BsEyeFill
-                    onClick={() => setShowPassword(false)}
+                    onClick={() => setIsPasswordVisible(false)}
                     data-ping="link"
                     data-ping-type={"link"}
                   />
                 ) : (
                   <BsEyeSlashFill
-                    onClick={() => setShowPassword(true)}
+                    onClick={() => setIsPasswordVisible(true)}
                     data-ping="link"
                     data-ping-type={"link"}
                   />

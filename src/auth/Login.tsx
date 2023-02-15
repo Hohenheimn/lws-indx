@@ -18,45 +18,50 @@ import Image from "next/image";
 import Input from "../components/Input";
 import { Button } from "../components/Button";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "../../utils/api";
 // import { Media } from "../../../context/Media";
+import { useRouter } from "next/router";
 
-export default function Login({ router }: any) {
+export default function Login() {
+  const router = useRouter();
   const [LoginForm] = Form.useForm();
-  const { setShowLoading } = React.useContext(Context);
-  const [showSome, setShowSome] = React.useState("0");
+  const { setIsAppLoading } = React.useContext(Context);
 
-  // const { mutate: login } = useMutation((payload: any) =>
-  //   postData({
-  //     url: "/rest-auth/login/",
-  //     payload,
-  //     options: {
-  //       noAuth: true,
-  //       isLoading: (show: boolean) => setShowLoading(show),
-  //     },
-  //   })
-  // );
-
-  // function handleLogin() {
-  //   LoginForm.validateFields().then((values) => {
-  //     values.api_key = process.env.MY_API_KEY;
-
-  //     login(values, {
-  //       onSuccess: async (res) => {
-  //         setCookie(null, "a_t", res?.token);
-  //         router.push(router.route);
-  //         notification.success({
-  //           key: "login",
-  //           message: "Login Successfull",
-  //           description: `It's nice to see you`,
-  //         });
-  //       },
-  //     });
-  //   });
-  // }
+  const { mutate: login } = useMutation(
+    (payload: any) =>
+      postData({
+        url: "/api/auth/login",
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      }),
+    {
+      onSuccess: async (res) => {
+        setCookie(null, "a_t", res?.token, {
+          path: "/",
+        });
+        router.reload();
+        notification.success({
+          key: "login",
+          message: "Login Successful",
+          description: `It's nice to see you`,
+        });
+      },
+      onError: () => {
+        notification.warning({
+          key: "login",
+          message: `Incorrect Username or Password`,
+          description: `Kindly check your credentials`,
+        });
+      },
+    }
+  );
 
   return (
     <PageContainer className="md:p-0">
-      <div className="flex items-center justify-center flex-auto overflow-hidden">
+      <div className="flex items-center justify-center flex-auto h-full">
         <motion.div
           initial={{ x: "-100%" }}
           animate={{
@@ -67,12 +72,23 @@ export default function Login({ router }: any) {
           className="hidden md:flex relative h-screen basis-full md:basis-[45%]"
         >
           <Image
-            src="https://picsum.photos/1500/1500"
+            src="/images/login-bg.png"
             alt="random pics"
             fill
             sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
             className="object-center"
           />
+          <div className="w-full h-full relative flex justify-center items-center">
+            <div className="h-28 w-full relative">
+              <Image
+                src="/images/white-logo.png"
+                alt="random pics"
+                fill
+                sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                className="object-center object-contain"
+              />
+            </div>
+          </div>
         </motion.div>
         <motion.div
           initial={{ x: "100%" }}
@@ -100,31 +116,14 @@ export default function Login({ router }: any) {
               form={LoginForm}
               layout="vertical"
               onFinish={(values) => {
-                if (
-                  values.username === "kelscey90" &&
-                  values.password === "password123"
-                ) {
-                  setCookie(null, "a_t", "1");
-                  notification.success({
-                    key: "login",
-                    message: `Welcome ${values.username}`,
-                    description: `It's nice to see you!`,
-                  });
-                  router.push(router.route);
-                } else {
-                  notification.warning({
-                    key: "login",
-                    message: `Incorrect Username or Password`,
-                    description: `Kindly check your credentials`,
-                  });
-                }
+                login(values);
               }}
               className="w-full"
             >
               <div className="grid grid-cols-1 gap-y-4">
                 <Form.Item
-                  name="username"
-                  rules={[{ required: true, message: "Username is required" }]}
+                  name="email"
+                  rules={[{ required: true, message: "Email is required" }]}
                   required={false}
                 >
                   <Input id="username" placeholder="Username" />

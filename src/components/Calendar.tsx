@@ -121,10 +121,10 @@ export default function Calendar({ onChange }: CalendarProps) {
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <BsArrowLeft
-              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
               onClick={() => calendarNavigation(-1, "months")}
             />
-            <div className="text-gray-500 text-center uppercase text-base font-medium">
+            <div className="text-casper-500 text-center uppercase text-base font-medium">
               <div
                 onClick={() => setMonthModalIsOpen(true)}
                 className="cursor-pointer transition hover:text-primary-500"
@@ -139,7 +139,7 @@ export default function Calendar({ onChange }: CalendarProps) {
               </div>
             </div>
             <BsArrowRight
-              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
               onClick={() => calendarNavigation(1, "months")}
             />
           </div>
@@ -265,12 +265,12 @@ export default function Calendar({ onChange }: CalendarProps) {
         <div className="bg-white py-[5%] space-y-6 text-center">
           <div className="grid grid-cols-3 gap-5 border-b border-b-slate-300 pb-4 justify-items-center items-center">
             <BsArrowLeft
-              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
               onClick={() => calendarNavigation(-1, "months")}
             />
             <div className="font-bold">2020 - 2030</div>
             <BsArrowRight
-              className="transition text-4xl p-2 rounded-lg bg-transparent text-gray-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
+              className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
               onClick={() => calendarNavigation(1, "months")}
             />
           </div>

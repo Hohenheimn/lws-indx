@@ -5,7 +5,6 @@ import Restricted from "../Restricted";
 import Login from "../Login";
 import Layout from "../../layout";
 import Router from "next/router";
-import Website from "../Website";
 
 type AuthProps = {
   profile: any;
@@ -47,14 +46,10 @@ export default function PrivateRoute(Component: any) {
     }
 
     if (allowedSubDomain.includes(subdomain) && !profile) {
-      return <Login {...rest} router={router} />;
+      return <Login {...rest} />;
     }
 
-    return (
-      <Layout>
-        <Website router={router} />
-      </Layout>
-    );
+    return <div>Sample Message</div>;
   };
 
   return Auth;

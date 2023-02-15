@@ -27,13 +27,13 @@ interface MobileDrawerProps extends React.HTMLAttributes<HTMLDivElement> {
   openedSubMenu: string[];
   menu: Array<sideMenuProps>;
   onClose: any;
-  setOpenDrawer: any;
+  setIsDrawerOpen: any;
 }
 
 export const MobileDrawer = ({
   menu,
   openedSubMenu,
-  setOpenDrawer,
+  setIsDrawerOpen,
   ...rest
 }: MobileDrawerProps) => {
   const router = useRouter();
@@ -61,7 +61,7 @@ export const MobileDrawer = ({
                   path: "/",
                 })
               }
-              onSelect={() => setOpenDrawer(false)}
+              onSelect={() => setIsDrawerOpen(false)}
             >
               {menu.map(({ show, subMenu, link, label, disabled, key }) => {
                 if (!show) {
@@ -127,8 +127,8 @@ export const MobileDrawer = ({
                 {
                   label: "Logout",
                   onClick: () => {
-                    destroyCookie(null, "a_t");
-                    router.push(router.route);
+                    destroyCookie(null, "a_t", { path: "/" });
+                    router.reload();
                     notification.success({
                       message: "Logout Succesful",
                       description: "All done! Have a nice day!",

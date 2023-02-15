@@ -12,21 +12,39 @@ import "../../styles/globals.scss";
 import { AnimateContainer } from "../components/animation";
 import { fadeIn, stagger } from "../components/animation/animation";
 import Script from "next/script";
+import { twMerge } from "tailwind-merge";
 
 const AppProvider = dynamic(() => import("../../utils/context/Provider"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      keepPreviousData: false,
+      refetchOnWindowFocus: false,
+      staleTime: 10000,
+    },
+  },
+});
 
 export default function App({ Component, pageProps, router }: AppProps) {
-  const [showLoading, setShowLoading] = React.useState(false);
+  const [isAppLoading, setIsAppLoading] = React.useState(false);
 
   Router.events.on("routeChangeStart", (url) => {
     if (Router?.router?.route !== url) {
-      setShowLoading(true);
+      setIsAppLoading(true);
     }
   });
-  Router.events.on("routeChangeComplete", () => setShowLoading(false));
-  Router.events.on("routeChangeError", () => setShowLoading(false));
+  Router.events.on("routeChangeComplete", () => setIsAppLoading(false));
+  Router.events.on("routeChangeError", () => setIsAppLoading(false));
+
+  if (typeof window !== "undefined") {
+    if (router.route === "/") {
+      document?.querySelector("body")?.classList.add('font-["Roboto"]');
+    } else {
+      document?.querySelector("body")?.classList.add('font-["Hind"]');
+    }
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
@@ -53,11 +71,11 @@ export default function App({ Component, pageProps, router }: AppProps) {
               `}
       </Script>
       <AppProvider
-        showLoading={showLoading}
-        setShowLoading={(show: boolean) => setShowLoading(show)}
+        isAppLoading={isAppLoading}
+        setIsAppLoading={(show: boolean) => setIsAppLoading(show)}
       >
         <AnimatePresence mode="wait">
-          <div key={router.route} className="flex flex-col flex-auto">
+          <div key={router.route} className={"flex flex-col flex-auto"}>
             <Component {...pageProps} router={router} />
           </div>
         </AnimatePresence>

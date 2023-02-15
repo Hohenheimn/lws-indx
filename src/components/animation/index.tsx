@@ -46,7 +46,7 @@ export function AnimateContainer({
   rootMargin,
   ...rest
 }: AnimateContainerProps) {
-  const [ref, inView] = useInView({
+  const { ref, inView } = useInView({
     triggerOnce: triggerOnce ?? false,
     rootMargin: rootMargin ?? "-40px 0px",
   });

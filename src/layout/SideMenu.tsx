@@ -10,6 +10,7 @@ import { Context } from "../../utils/context/Provider";
 
 interface SideMenuProps extends React.HTMLAttributes<HTMLDivElement> {
   openMenus?: string;
+  profile: any;
 }
 
 type sideMenuProps = {
@@ -29,17 +30,17 @@ type sideMenuProps = {
 const sideMenu: Array<sideMenuProps> = [
   {
     label: "Dashboard",
-    link: "/",
+    link: "/admin",
     show: true,
   },
   {
     label: "Patient List",
-    link: "/patient-list",
+    link: "/admin/patient-list",
     show: true,
   },
   {
     label: "Clinic Management",
-    link: "/clinic-management",
+    link: "/admin/clinic-management",
     key: "1",
     subMenu: [
       {
@@ -62,7 +63,7 @@ const sideMenu: Array<sideMenuProps> = [
   },
   {
     label: "Settings",
-    link: "/settings",
+    link: "/admin/settings",
     key: "2",
     subMenu: [
       {
@@ -100,17 +101,17 @@ const sideMenu: Array<sideMenuProps> = [
   },
 ];
 
-export const SideMenu = ({ openMenus, ...rest }: SideMenuProps) => {
+export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
   const router = useRouter();
-  const { openDrawer, setOpenDrawer } = React.useContext(Context);
+  const { isDrawerOpen, setIsDrawerOpen } = React.useContext(Context);
   let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
 
   return (
     <>
       <MobileDrawer
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        setOpenDrawer={(value: boolean) => setOpenDrawer(value)}
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        setIsDrawerOpen={(value: boolean) => setIsDrawerOpen(value)}
         openedSubMenu={openedSubMenu}
         menu={sideMenu}
         closable={false}
@@ -130,7 +131,12 @@ export const SideMenu = ({ openMenus, ...rest }: SideMenuProps) => {
             <div className="flex flex-col flex-auto overflow-auto relative ">
               <Menu
                 mode="inline"
-                selectedKeys={[`/${router.route.split("/")[1]}`, router.route]}
+                selectedKeys={[
+                  `/${router.route.split("/")[1]}/${
+                    router.route.split("/")[2]
+                  }`,
+                  router.route,
+                ]}
                 defaultOpenKeys={openedSubMenu}
                 className="styled-menu"
                 onOpenChange={(e) =>
@@ -205,8 +211,8 @@ export const SideMenu = ({ openMenus, ...rest }: SideMenuProps) => {
                   {
                     label: "Logout",
                     onClick: () => {
-                      destroyCookie(null, "a_t");
-                      router.push(router.route);
+                      destroyCookie(undefined, "a_t", { path: "/" });
+                      router.reload();
                       notification.success({
                         message: "Logout Succesful",
                         description: "All done! Have a nice day!",
@@ -227,7 +233,7 @@ export const SideMenu = ({ openMenus, ...rest }: SideMenuProps) => {
                     />
                   </div>
                   <div className="truncate font-semibold max-w-[70%]">
-                    Kelscey Ortiz
+                    {profile.account.email}
                   </div>
                   <div>
                     <AiFillCaretDown className="text-gray-400" />

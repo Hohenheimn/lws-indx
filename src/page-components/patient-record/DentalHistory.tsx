@@ -6,7 +6,7 @@ import Card from "../../components/Card";
 import Input from "../../components/Input";
 import { Select } from "../../components/Select";
 
-export function DentalHistory() {
+export function DentalHistory({ patientRecord }: any) {
   const [DentalHistoryForm] = Form.useForm();
   return (
     <Card className="flex-auto md:p-12 p-6">
