@@ -37,13 +37,13 @@ const columns: any = [
   {
     title: "First Name",
     dataIndex: "first_name",
-    width: "10rem",
+    width: "15rem",
     align: "center",
   },
   {
     title: "Last Name",
     dataIndex: "last_name",
-    width: "10rem",
+    width: "15rem",
     align: "center",
   },
   {
@@ -62,7 +62,7 @@ const columns: any = [
   {
     title: "Mobile Number",
     dataIndex: "mobile_no",
-    width: "10rem",
+    width: "15rem",
     align: "center",
   },
 ];

@@ -169,7 +169,6 @@ export function PrescriptionTemplate() {
                           onClick={() => {
                             PrescriptionForm.setFieldsValue({
                               ...selectedRow,
-                              medicines: medicines,
                               _id: selectedRow._id,
                             });
 

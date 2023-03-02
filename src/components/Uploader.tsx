@@ -58,6 +58,7 @@ export default function Uploader({
         //   maxCount={1}
         multiple={false}
         className={className}
+        onChange={(e) => console.log(e, "asdf")}
         {...rest}
       >
         {children}

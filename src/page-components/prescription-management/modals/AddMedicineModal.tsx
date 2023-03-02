@@ -63,7 +63,7 @@ export default function AddPrescriptionManagementModal({
   const { mutate: editMedicine } = useMutation(
     (payload: any) => {
       return postData({
-        url: `/api/medicine/${payload.id}`,
+        url: `/api/medicine/${payload.id}?_method=PUT`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),

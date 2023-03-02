@@ -10,7 +10,8 @@ interface InfiniteAutoCompleteProps
   queryKey: [string];
   onChange?: (e: any) => void;
   customRender?: React.ReactElement;
-  displayValueKey?: string;
+  displayValueKey: string;
+  returnValueKey: string;
   noData?: string;
 }
 export function InfiniteAutoComplete({
@@ -19,9 +20,11 @@ export function InfiniteAutoComplete({
   queryKey,
   api,
   displayValueKey,
+  returnValueKey,
   ...rest
 }: InfiniteAutoCompleteProps) {
   let [search, setSearch] = React.useState("");
+  let [initialFetch, setInitialFetch] = React.useState(true);
   let searchParameterAPI =
     api.split("?").length <= 1
       ? `${api}?search=${search}`
@@ -59,21 +62,26 @@ export function InfiniteAutoComplete({
     }
   }, [listRefInView, listFetchNextPage, listHasNextPage, listData]);
 
-  return (
+  React.useEffect(() => {
+    let dataLength = listData?.pages?.length ?? 0;
+    if (dataLength > 0 && initialFetch) setInitialFetch(false);
+  }, [initialFetch, listData?.pages]);
+
+  return !initialFetch ? (
     <AutoComplete
       loading={isListLoading}
       lastChildRef={listRef}
       noFilter={true}
       onSearch={(e: any) => setSearch(e)}
-      displayValueKey={displayValueKey}
       {...rest}
     >
       {listData?.pages?.map(({ data }) => {
-        return data?.map((props: any) => {
+        return data?.map((props: any, index: number) => {
           return (
             <AutoComplete.Option
-              value={displayValueKey ? props : props.name}
-              key={props._id}
+              displayValue={props[displayValueKey]}
+              value={props[returnValueKey]}
+              key={index}
             >
               {props.name}
             </AutoComplete.Option>
@@ -89,6 +97,10 @@ export function InfiniteAutoComplete({
           Loading...
         </AutoComplete.Option>
       )}
+    </AutoComplete>
+  ) : (
+    <AutoComplete disabled={true}>
+      <AutoComplete.Option value="">Loading</AutoComplete.Option>
     </AutoComplete>
   );
 }

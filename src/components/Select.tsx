@@ -11,6 +11,7 @@ type SelectOptionProps = {
   className?: string;
   active?: boolean;
   lastChildRef?: any;
+  displayValue?: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 };
 
@@ -24,7 +25,8 @@ interface SelectProps extends React.HTMLAttributes<HTMLDivElement> {
   lastChildRef?: any;
   noFilter?: boolean;
   onSearch?: any;
-  displayValueKey?: any;
+  disabled?: boolean;
+  noData?: string;
 }
 
 const Option: React.FC<SelectOptionProps> = ({
@@ -33,11 +35,11 @@ const Option: React.FC<SelectOptionProps> = ({
   active,
   lastChildRef,
   onClick,
+  displayValue,
   ...rest
 }) => {
   return (
     <Combobox.Option
-      key={value}
       value={value}
       className={twMerge(
         "transition bg-white p-4 hover:bg-primary-500 hover:text-white cursor-pointer text-sm",
@@ -62,12 +64,13 @@ export function Select({
   noFilter = false,
   lastChildRef,
   onSearch,
-  displayValueKey,
+  disabled,
+  noData,
   ...rest
 }: SelectProps) {
-  const [selectedValue, setSelectedValue] = React.useState("");
-  const [query, setQuery] = React.useState("");
-  const [isActive, setIsActive] = React.useState(false);
+  let [selectedValue, setSelectedValue] = React.useState("");
+  let [query, setQuery] = React.useState("");
+  let [isActive, setIsActive] = React.useState(false);
 
   let filteredTypeChildren = Array.isArray(children)
     ? children.filter((child: any) => {
@@ -111,6 +114,7 @@ export function Select({
         setSelectedValue(value);
         setQuery("");
       }}
+      disabled={disabled}
     >
       {({ open, value }) => {
         return (
@@ -162,18 +166,23 @@ export function Select({
                   setIsActive(false);
                 }}
                 displayValue={(value: string) => {
+                  let displayValue = flattenChildren.find(
+                    (val: any) => val.props.value === value
+                  )?.props?.displayValue;
+
                   if (open) {
                     return "";
                   }
+                  if (displayValue) {
+                    return (
+                      displayValue?.charAt(0).toUpperCase() +
+                      displayValue?.slice(1)
+                    );
+                  }
+
                   if (value) {
-                    if (displayValueKey) {
-                      return (
-                        value[displayValueKey]?.charAt(0).toUpperCase() +
-                        value[displayValueKey]?.slice(1)
-                      );
-                    } else {
-                      return value?.charAt(0).toUpperCase() + value?.slice(1);
-                    }
+                    return value;
+                    // return value?.charAt(0).toUpperCase() + value?.slice(1);
                   }
 
                   return "";
@@ -183,14 +192,25 @@ export function Select({
                   setQuery(event.target.value);
                 }}
                 className={twMerge(
-                  "transition focus:ring-0 focus:border-primary-500 hover:border-primary-500 bg-white border border-default w-full rounded-[inherit] text-sm leading-[normal] p-4",
+                  "transition focus:ring-0 focus:border-primary-500 hover:border-primary-500 disabled:bg-gray-300 disabled:pointer-events-none bg-white border border-default w-full rounded-[inherit] text-sm leading-[normal] p-4",
                   className
                 )}
                 {...rest}
               />
             </Combobox.Button>
             <Combobox.Options className="max-h-60 overflow-auto shadow-lg border border-default bg-white rounded-md">
-              {childrenWithProps}
+              {childrenWithProps.length > 0 ? (
+                childrenWithProps
+              ) : (
+                <div
+                  className="p-4 text-casper text-center"
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  {noData ? noData : "No Data Found"}
+                </div>
+              )}
             </Combobox.Options>
           </Float>
         );

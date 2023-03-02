@@ -36,10 +36,22 @@ export default function AddClinicAccountModal({
     error: false,
     file: null,
     loading: false,
+    edit: false,
   });
   const { setIsAppLoading } = React.useContext(Context);
 
   React.useEffect(() => {
+    let profPic = form.getFieldValue(["profile_picture"])
+      ? form.getFieldValue(["profile_picture"]).toString()
+      : "";
+
+    if (show && profPic)
+      setImage({
+        ...image,
+        edit: true,
+        imageUrl: profPic,
+      });
+
     if (!show) {
       form.resetFields();
       setImage({
@@ -47,8 +59,10 @@ export default function AddClinicAccountModal({
         error: false,
         file: null,
         loading: false,
+        edit: false,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, show]);
 
   const { mutate: addAccount } = useMutation(
@@ -96,8 +110,8 @@ export default function AddClinicAccountModal({
 
   const { mutate: editAccount } = useMutation(
     (payload: any) => {
-      return updateData({
-        url: `/api/account/${payload.id}`,
+      return postData({
+        url: `/api/account/${payload.id}?_method=PUT`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -139,11 +153,11 @@ export default function AddClinicAccountModal({
 
   function handleChange(info: any) {
     if (info.file.status === "uploading") {
-      return setImage({ ...image, loading: true, file: null });
+      return setImage({ ...image, loading: true, file: null, edit: false });
     }
 
     if (info.file.status === "error") {
-      return setImage({ ...image, loading: false, error: true });
+      return setImage({ ...image, loading: false, error: true, edit: false });
     }
 
     if (info.file.status === "done") {
@@ -153,6 +167,7 @@ export default function AddClinicAccountModal({
           imageUrl,
           loading: false,
           file: info.file,
+          edit: false,
         });
       });
       return info.file.originFileObj;
@@ -180,25 +195,13 @@ export default function AddClinicAccountModal({
           layout="vertical"
           onFinish={(values) => {
             let id = form.getFieldsValue(["_id"])._id;
-
+            values.permissions = JSON.stringify(values.permissions);
             values.civil_status = "";
-            // values.clinic_analytics = true;
-            // values.financials = false;
-            // values.inventory = false;
-            // values.sms_management = false;
-            // values.procedure_management = true;
-            // values.prescription_management = false;
-            // values.clinic_accounts = true;
-            // values.branch_management = false;
-            // values.application_settings = false;
-            // values.personal_info = false;
-            // values.dental_history = false;
-            // values.medical_history = false;
-            // values.treatment_plan = false;
-            // values.charting = false;
-            // values.treatment_records = false;
-            // values.medical_gallery = false;
-            // values.prescription = false;
+
+            if (image.edit) {
+              delete values.profile_picture;
+            }
+
             if (!id) {
               addAccount(values);
             } else {
@@ -237,7 +240,7 @@ export default function AddClinicAccountModal({
               >
                 <div className="space-y-2 text-center">
                   <Avatar className="h-40 w-40 p-8 overflow-hidden relative border border-gray-300 avatar transition">
-                    {image.imageUrl && image.file ? (
+                    {image.imageUrl ? (
                       <Image
                         src={image.imageUrl}
                         alt="random pics"
@@ -249,7 +252,9 @@ export default function AddClinicAccountModal({
                       <IoPersonOutline className="h-full w-full text-white" />
                     )}
                   </Avatar>
-                  <div className="text-casper-500">Upload Profile Picture</div>
+                  <div className="text-casper-500">
+                    {image.imageUrl ? "Change" : "Upload"} Profile Picture
+                  </div>
                 </div>
               </Uploader>
             </Form.Item>
@@ -489,16 +494,15 @@ export default function AddClinicAccountModal({
           </div>
           <div className="space-y-4">
             <h4>Account Access</h4>
-            <div className="grid grid-cols-3 gap-4" id="account_access">
+            <div className="grid grid-cols-3 gap-4" id="permissions">
               <Form.Item
-                name="account_access"
-                valuePropName="checked"
+                name="permissions"
                 required={false}
                 className="col-span-full text-base"
               >
                 <Checkbox.Group className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4 text-base">
                   <Checkbox value="clinic_analytics">Clinic Analytic</Checkbox>
-                  <Checkbox value="sms-manager">SMS Manager</Checkbox>
+                  <Checkbox value="sms_manager">SMS Manager</Checkbox>
                   <Checkbox value="clinic_accounts">Clinic Accounts</Checkbox>
                   <Checkbox value="financials">Financials</Checkbox>
                   <Checkbox value="procedure_management">

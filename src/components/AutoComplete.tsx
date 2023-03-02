@@ -10,6 +10,7 @@ type AutoCompleteOptionProps = {
   className?: string;
   active?: boolean;
   lastChildRef?: any;
+  displayValue?: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 };
 
@@ -23,8 +24,8 @@ interface AutoCompleteProps extends React.HTMLAttributes<HTMLDivElement> {
   lastChildRef?: any;
   customRender?: React.ReactElement;
   noFilter?: boolean;
+  disabled?: boolean;
   onSearch?: any;
-  displayValueKey?: any;
   noData?: string;
 }
 
@@ -34,6 +35,7 @@ const Option: React.FC<AutoCompleteOptionProps> = ({
   active,
   lastChildRef,
   onClick,
+  displayValue,
   ...rest
 }) => {
   return (
@@ -64,8 +66,8 @@ export function AutoComplete({
   noFilter = false,
   lastChildRef,
   customRender,
-  displayValueKey,
   noData,
+  disabled,
   ...rest
 }: AutoCompleteProps) {
   const [selectedValue, setSelectedValue] = React.useState("");
@@ -113,6 +115,7 @@ export function AutoComplete({
         onChange(value);
         setSelectedValue(value);
       }}
+      disabled={disabled}
     >
       {({ open, value }) => {
         return (
@@ -133,25 +136,29 @@ export function AutoComplete({
             <Combobox.Input
               key={open.toString()}
               onFocus={() =>
-                selectedValue ? setIsActive(true) : setIsActive(false)
+                selectedValue || value ? setIsActive(true) : setIsActive(false)
               }
               onBlur={() => {
                 setIsActive(false);
               }}
               displayValue={(value: string) => {
+                let displayValue = flattenChildren.find(
+                  (val: any) => val.props.value === value
+                )?.props?.displayValue;
+
                 if (open) {
                   return "";
                 }
+                if (displayValue) {
+                  return (
+                    displayValue?.charAt(0).toUpperCase() +
+                    displayValue?.slice(1)
+                  );
+                }
 
                 if (value) {
-                  if (displayValueKey) {
-                    return (
-                      value[displayValueKey]?.charAt(0).toUpperCase() +
-                      value[displayValueKey]?.slice(1)
-                    );
-                  } else {
-                    return value?.charAt(0).toUpperCase() + value?.slice(1);
-                  }
+                  return value;
+                  // return value?.charAt(0).toUpperCase() + value?.slice(1);
                 }
 
                 return "";

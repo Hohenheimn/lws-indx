@@ -71,8 +71,8 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
 
   const { mutate: editBranch } = useMutation(
     (payload: any) => {
-      return updateData({
-        url: `/api/branch/${payload.id}`,
+      return postData({
+        url: `/api/branch/${payload.id}?_method=PUT`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -318,34 +318,12 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                       <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
                         <div className="blur-sm grid grid-cols-1 lg:grid-cols-3 gap-4">
                           <Form.Item
-                            label="Days"
+                            label="Room Name"
                             required={false}
                             {...rest}
                             className="col-span-3 lg:col-span-1"
                           >
-                            <Select placeholder="Days">
-                              {days.map((day, index) => {
-                                return (
-                                  <Select.Option value={day} key={index}>
-                                    {day}
-                                  </Select.Option>
-                                );
-                              })}
-                            </Select>
-                          </Form.Item>
-                          <Form.Item
-                            label="Opening Time"
-                            required={false}
-                            className="col-span-3 lg:col-span-1"
-                          >
-                            <TimePicker format="HH:mm" minuteStep={15} />
-                          </Form.Item>
-                          <Form.Item label="Closing Time" required={false}>
-                            <TimePicker
-                              format="HH:mm"
-                              minuteStep={15}
-                              className="col-span-3 lg:col-span-1"
-                            />
+                            <Input placeholder="Room Name" />
                           </Form.Item>
                         </div>
                         <div

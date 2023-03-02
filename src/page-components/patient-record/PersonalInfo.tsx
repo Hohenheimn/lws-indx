@@ -33,7 +33,7 @@ export function PersonalInfo({ patientRecord }: any) {
           scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
             smooth: true,
             offset: -50,
-            containerId: "patient-record-container",
+            containerId: "main-container",
           });
         }}
         className="w-full !text-sm"

@@ -199,9 +199,10 @@ export default function AddPrescriptionManagementModal({
                                   id={["medicines", name, "medicine_id"].join(
                                     "-"
                                   )}
-                                  displayValueKey="name"
                                   api={`${process.env.REACT_APP_API_BASE_URL}/api/medicine?limit=3&for_dropdown=true&page=1`}
                                   queryKey={["medicineList"]}
+                                  displayValueKey="name"
+                                  returnValueKey="_id"
                                 />
                               </Form.Item>
                               <Form.Item
@@ -257,6 +258,8 @@ export default function AddPrescriptionManagementModal({
                               id="reason_for_visit"
                               api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
                               queryKey={["procedureList"]}
+                              displayValueKey="name"
+                              returnValueKey="_id"
                             />
                           </Form.Item>
                           <Form.Item

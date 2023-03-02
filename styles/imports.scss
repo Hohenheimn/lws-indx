@@ -40,7 +40,7 @@
 
 @layer components {
   ul.styled-menu {
-    @apply bg-transparent text-primary border-none list-none p-0 text-base absolute h-full px-4;
+    @apply bg-transparent text-primary border-none list-none p-0 text-base h-0 px-4;
     li.ant-menu-item {
       @apply transition p-6 rounded-md w-auto bg-transparent text-default-text text-[1em] before:bg-primary-500;
 

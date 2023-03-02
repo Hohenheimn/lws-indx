@@ -26,12 +26,22 @@ import VerifyAuth from "../../auth/HOC/VerifyAuth";
 import { NextPageProps } from "../../../utils/types/NextPageProps";
 import AddScheduleModal from "../../page-components/dashboard/modals/AddScheduleModal";
 import AddPatientModal from "../../page-components/dashboard/modals/AddPatientModal";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { fetchData } from "../../../utils/api";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { deleteData, fetchData, postData } from "../../../utils/api";
 import { useInView } from "react-intersection-observer";
 import { InfiniteSelect } from "../../components/InfiniteSelect";
+import { notification } from "antd";
+import { Context } from "../../../utils/context/Provider";
+import scheduleType from "../../../utils/global-data/scheduleType";
+import moment from "moment";
 
 export function Dashboard({}: NextPageProps) {
+  const { setIsAppLoading } = React.useContext(Context);
+  const queryClient = useQueryClient();
   let [selectedDate, setSelectedDate] = React.useState({
     dateStart: new Date(),
     dateEnd: new Date(),
@@ -48,61 +58,13 @@ export function Dashboard({}: NextPageProps) {
     rootMargin: "0px",
   });
 
-  // const {
-  //   data: branchList,
-  //   isFetching: isBranchListLoading,
-  //   hasNextPage: branchListHasNextPage,
-  //   fetchNextPage: branchListFetchNextPage,
-  // } = useInfiniteQuery({
-  //   queryKey: ["branchList"],
-  //   queryFn: ({
-  //     pageParam = `${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`,
-  //   }) => {
-  //     return fetchData({
-  //       url: pageParam,
-  //       options: {
-  //         noBaseURL: true,
-  //       },
-  //     });
-  //   },
-  //   getNextPageParam: (lastPage, pages) => {
-  //     if (pages.slice(-1).pop().links.next) {
-  //       return pages.slice(-1).pop().links.next;
-  //     }
-  //   },
-  // });
-
-  // const {
-  //   data: doctorsList,
-  //   isFetching: isDoctorsListLoading,
-  //   hasNextPage: doctorsListHasNextPage,
-  //   fetchNextPage: doctorsListFetchNextPage,
-  // } = useInfiniteQuery({
-  //   queryKey: ["doctorsList"],
-  //   queryFn: ({
-  //     pageParam = `${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`,
-  //   }) => {
-  //     return fetchData({
-  //       url: pageParam,
-  //       options: {
-  //         noBaseURL: true,
-  //       },
-  //     });
-  //   },
-  //   getNextPageParam: (lastPage, pages) => {
-  //     if (pages.slice(-1).pop().links.next) {
-  //       return pages.slice(-1).pop().links.next;
-  //     }
-  //   },
-  // });
-
   const {
     data: scheduleList,
     isFetching: isScheduleListLoading,
     hasNextPage: scheduleListHasNextPage,
     fetchNextPage: scheduleListFetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ["scheduleList"],
+    queryKey: ["schedule"],
     queryFn: ({
       pageParam = `${process.env.REACT_APP_API_BASE_URL}/api/schedule?limit=3`,
     }) => {
@@ -119,6 +81,42 @@ export function Dashboard({}: NextPageProps) {
       }
     },
   });
+
+  const { mutate: deleteSchedule }: any = useMutation(
+    (id: number) =>
+      deleteData({
+        url: `/api/schedule/${id}`,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      }),
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Schedule Deleted",
+          description: "Schedule has been deleted",
+        });
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: ["schedule"] });
+        const previousValues = queryClient.getQueryData(["schedule"]);
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["schedule"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["schedule"] });
+      },
+    }
+  );
 
   const flattenScheduleList = scheduleList?.pages
     ? scheduleList?.pages?.flatMap((page) => [...page.data])
@@ -212,6 +210,8 @@ export function Dashboard({}: NextPageProps) {
                     className="border-none"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
                     queryKey={["doctorList"]}
+                    displayValueKey="name"
+                    returnValueKey="_id"
                   />
                 </div>
                 <div className="text-sm font-medium col-span-12 xs:col-span-5">
@@ -221,6 +221,8 @@ export function Dashboard({}: NextPageProps) {
                     className="border-none"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
                     queryKey={["branchList"]}
+                    displayValueKey="name"
+                    returnValueKey="_id"
                   />
                 </div>
               </div>
@@ -233,13 +235,13 @@ export function Dashboard({}: NextPageProps) {
                           {
                             branch_id,
                             branch_name,
+                            clinic_room_name,
                             clinic_room,
                             created_at,
                             date,
                             doctor_id,
                             doctor_name,
                             doctor_schedule_type,
-                            end_time,
                             patient_id,
                             patient_name,
                             email,
@@ -247,8 +249,10 @@ export function Dashboard({}: NextPageProps) {
                             reason_for_visit,
                             schedule_type,
                             start_time,
+                            end_time,
                             updated_at,
                             _id,
+                            ...rest
                           },
                           index
                         ) => {
@@ -261,11 +265,15 @@ export function Dashboard({}: NextPageProps) {
                                 <div>
                                   <div className="flex items-center flex-wrap gap-6 xs:text-left xs:flex-nowrap text-center">
                                     <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
-                                      {patient_name.charAt(0)}
+                                      {patient_name
+                                        ? patient_name.charAt(0)
+                                        : doctor_name.charAt(0)}
                                     </div>
                                     <div className="space-y-0 basis-full xs:basis-auto">
                                       <div className="font-bold text-xl">
-                                        {patient_name}
+                                        {patient_name
+                                          ? patient_name
+                                          : doctor_name}
                                       </div>
                                       <div>{email}</div>
                                       <div>{mobile_number}</div>
@@ -294,16 +302,53 @@ export function Dashboard({}: NextPageProps) {
                                       <div>{reason_for_visit}</div>
                                       <div>Dr. {doctor_name}</div>
                                       <div>
-                                        {branch_name} - {clinic_room}
+                                        {branch_name}{" "}
+                                        {clinic_room_name &&
+                                          `- ${clinic_room_name}`}
                                       </div>
                                     </div>
                                   </div>
                                   <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
-                                    <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsPencilSquare className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsTrash className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    {/* <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" /> */}
+                                    {/* <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" /> */}
+                                    <BsPencilSquare
+                                      className="align-middle cursor-pointer hover:text-secondary transition"
+                                      onClick={() => {
+                                        ScheduleForm.setFieldsValue({
+                                          branch_id,
+                                          branch_name,
+                                          clinic_room,
+                                          created_at,
+                                          doctor_id,
+                                          doctor_name,
+                                          doctor_schedule_type,
+                                          end_time,
+                                          patient_id,
+                                          patient_name,
+                                          email,
+                                          mobile_number,
+                                          reason_for_visit,
+                                          schedule_type,
+                                          start_time,
+                                          updated_at,
+                                          _id,
+                                          time: [
+                                            moment(start_time, "HH:mm"),
+                                            moment(end_time, "HH:mm"),
+                                          ],
+                                          date: moment(date),
+                                        });
+
+                                        setIsScheduleModalOpen(true);
+                                      }}
+                                    />
+                                    <BsTrash
+                                      className="align-middle cursor-pointer hover:text-secondary transition"
+                                      onClick={() => {
+                                        deleteSchedule(_id);
+                                      }}
+                                    />
                                   </div>
                                 </div>
                               </Card>

@@ -33,7 +33,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
     data: patient,
     isFetching: loadingPatient,
     isError,
-  } = useQuery(["patient"], () =>
+  } = useQuery(["patient", selectedPatientID], () =>
     fetchData({
       url: `/api/patient/${selectedPatientID}`,
     })
@@ -41,10 +41,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
 
   if (isError) {
     return (
-      <PageContainer
-        id="patient-record-container"
-        className="flex justify-center items-center"
-      >
+      <PageContainer className="flex justify-center items-center">
         <h3>No Patient Record</h3>
       </PageContainer>
     );
@@ -52,7 +49,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
 
   return (
     <>
-      <PageContainer id="patient-record-container">
+      <PageContainer>
         {!loadingPatient ? (
           <>
             <h3>Patient Record</h3>
@@ -60,7 +57,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
               <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                 <div className="flex flex-col justify-center items-center gap-4">
                   <Avatar className="h-28 w-28 p-4 overflow-hidden relative border border-gray-300 avatar transition">
-                    {isImageError ? (
+                    {!patient?.profile_picture || isImageError ? (
                       <IoPersonOutline className="h-full w-full text-white" />
                     ) : (
                       <Image

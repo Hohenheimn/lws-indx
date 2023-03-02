@@ -12,6 +12,9 @@ module.exports = {
       transitionDuration: {
         DEFAULT: "150ms",
       },
+      transitionProperty: {
+        width: "width",
+      },
       boxShadow: {
         DEFAULT: `0 .1rem .2rem 0 ${colors.gray[300]}`,
         input: `0 0 .2rem 0 ${colors.primary.DEFAULT}`,

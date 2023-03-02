@@ -13,9 +13,9 @@ import { DatePicker, TimePicker, notification } from "antd";
 import { Context } from "../../../../utils/context/Provider";
 import { InfiniteSelect } from "../../../components/InfiniteSelect";
 import scheduleType from "../../../../utils/global-data/scheduleType";
-import { AutoComplete } from "../../../components/AutoComplete";
 import { InfiniteAutoComplete } from "../../../components/InfiniteAutoComplete";
 import leaveReasons from "../../../../utils/global-data/leaveReasons";
+import moment from "moment";
 
 export default function AddScheduleModal({
   show,
@@ -25,6 +25,7 @@ export default function AddScheduleModal({
   ...rest
 }: any) {
   let [schedType, setSchedType] = React.useState("");
+  let [selectedBranch, setSelectedBranch] = React.useState("");
 
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
@@ -44,13 +45,12 @@ export default function AddScheduleModal({
           message: "Schedule Added",
           description: `Schedule Added`,
         });
+        onClose();
+        form.resetFields();
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: ["schedule"] });
         const previousValues = queryClient.getQueryData(["schedule"]);
-        queryClient.setQueryData(["schedule"], (oldData: any) =>
-          oldData ? [...oldData, newData] : undefined
-        );
 
         return { previousValues };
       },
@@ -69,6 +69,63 @@ export default function AddScheduleModal({
     }
   );
 
+  const { mutate: editSchedule } = useMutation(
+    (payload: any) => {
+      return postData({
+        url: `/api/schedule/${payload.id}?_method=PUT`,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Editing Schedule Success",
+          description: `Editing Schedule Success`,
+        });
+        onClose();
+        form.resetFields();
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: ["schedule"] });
+        const previousValues = queryClient.getQueryData(["schedule"]);
+        // queryClient.setQueryData(["schedule"], (oldData: any) =>
+        //   oldData ? [...oldData, newData] : undefined
+        // );
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["schedule"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["schedule"] });
+      },
+    }
+  );
+
+  React.useEffect(() => {
+    if (show) {
+      setSchedType(form.getFieldValue(["schedule_type"]));
+      setSelectedBranch(form.getFieldValue(["branch_id"]));
+    }
+
+    if (!show) {
+      form.resetFields();
+      setSchedType("");
+      setSelectedBranch("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
   return (
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
@@ -77,20 +134,18 @@ export default function AddScheduleModal({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            values.patient_id = values.patient._id;
-            values.doctor_id = values.doctor._id;
-            values.branch_id = values.branch._id;
-            values.schedule_type = values.schedule_type.key;
-            values.room = values.room.name;
-            if (!values.doctor_schedule_type) {
-              values.doctor_schedule_type = "";
+            let id = form.getFieldsValue(["_id"])._id;
+
+            values.start_time = moment(values.time[0]).format("HH:mm");
+            values.end_time = moment(values.time[1]).format("HH:mm");
+            values.date = moment(values.date).format("YYYY-MM-DD");
+
+            if (!id) {
+              addSchedule(values);
+            } else {
+              values.id = id;
+              editSchedule(values);
             }
-
-            delete values.patient;
-            delete values.doctor;
-            delete values.branch;
-
-            addSchedule(values);
           }}
           onFinishFailed={(data) => {
             scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
@@ -112,12 +167,15 @@ export default function AddScheduleModal({
               <Select
                 placeholder="Patient Schedule"
                 id="schedule_type"
-                displayValueKey="name"
-                onChange={(e: any) => setSchedType(e?.key)}
+                onChange={(e: any) => setSchedType(e)}
               >
                 {scheduleType.map((props, index) => {
                   return (
-                    <Select.Option value={props} key={index}>
+                    <Select.Option
+                      displayValue={props.name}
+                      value={props.key}
+                      key={index}
+                    >
                       {props.name}
                     </Select.Option>
                   );
@@ -128,17 +186,18 @@ export default function AddScheduleModal({
               <>
                 <Form.Item
                   label="Patient Name / Email"
-                  name="patient"
+                  name="patient_id"
                   rules={[{ required: true, message: "This is required!" }]}
                   required={false}
                   className="col-span-4"
                 >
                   <InfiniteAutoComplete
                     placeholder="Patient"
-                    id="patient"
+                    id="patient_id"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/patient?limit=3&for_dropdown=true&page=1`}
                     queryKey={["patient"]}
                     displayValueKey="name"
+                    returnValueKey="_id"
                     noData="No Patient Found"
                     customRender={
                       <div
@@ -171,36 +230,43 @@ export default function AddScheduleModal({
                     id="reason_for_visit"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
                     queryKey={["procedure"]}
+                    displayValueKey="name"
+                    returnValueKey="_id"
                   />
                 </Form.Item>
                 <Form.Item
                   label="Doctor"
-                  name="doctor"
+                  name="doctor_id"
                   rules={[{ required: true, message: "This is required!" }]}
                   required={false}
                   className="col-span-4"
                 >
                   <InfiniteSelect
                     placeholder="Select Doctor"
-                    id="doctor"
+                    id="doctor_id"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
                     queryKey={["doctor"]}
                     displayValueKey="name"
+                    returnValueKey="_id"
                   />
                 </Form.Item>
                 <Form.Item
                   label="Branch"
-                  name="branch"
+                  name="branch_id"
                   rules={[{ required: true, message: "This is required!" }]}
                   required={false}
                   className="col-span-4"
                 >
                   <InfiniteSelect
                     placeholder="Select Branch"
-                    id="branch"
+                    id="branch_id"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
                     queryKey={["branch"]}
                     displayValueKey="name"
+                    returnValueKey="_id"
+                    onChange={(e) => {
+                      setSelectedBranch(e);
+                    }}
                   />
                 </Form.Item>
                 <Form.Item
@@ -231,17 +297,19 @@ export default function AddScheduleModal({
                 </Form.Item>
                 <Form.Item
                   label="Room"
-                  name="room"
+                  name="clinic_room"
                   rules={[{ required: true, message: "This is required!" }]}
                   required={false}
                   className="col-span-4"
                 >
                   <InfiniteSelect
-                    placeholder="Select Branch"
-                    id="branch"
-                    api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
-                    queryKey={["branch"]}
+                    placeholder="Select Room"
+                    id="clinic_room"
+                    api={`${process.env.REACT_APP_API_BASE_URL}/api/room?branch_id=${selectedBranch}&limit=3&for_dropdown=true&page=1`}
+                    queryKey={["clinic_room", selectedBranch]}
                     displayValueKey="name"
+                    returnValueKey="_id"
+                    disabled={!selectedBranch}
                     CustomizedOption={({ data }: any) => {
                       return (
                         <div className="space-y-2">
@@ -263,17 +331,18 @@ export default function AddScheduleModal({
               <>
                 <Form.Item
                   label="Doctor Name / Email"
-                  name="doctor"
+                  name="doctor_id"
                   rules={[{ required: true, message: "This is required!" }]}
                   required={false}
                   className="col-span-4"
                 >
                   <InfiniteAutoComplete
                     placeholder="Doctor"
-                    id="doctor"
+                    id="doctor_id"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
                     queryKey={["doctor"]}
                     displayValueKey="name"
+                    returnValueKey="_id"
                     noData="No Doctor Found"
                   />
                 </Form.Item>
@@ -299,17 +368,18 @@ export default function AddScheduleModal({
                 </Form.Item>
                 <Form.Item
                   label="Branch"
-                  name="branch"
+                  name="branch_id"
                   rules={[{ required: true, message: "This is required!" }]}
                   required={false}
                   className="col-span-4"
                 >
                   <InfiniteSelect
                     placeholder="Select Branch"
-                    id="branch"
+                    id="branch_id"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
                     queryKey={["branch"]}
                     displayValueKey="name"
+                    returnValueKey="_id"
                   />
                 </Form.Item>
                 <Form.Item

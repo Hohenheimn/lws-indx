@@ -5,9 +5,26 @@ import { Button } from "../../components/Button";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import { Select } from "../../components/Select";
+import { fetchData } from "../../../utils/api";
+import { useQuery } from "@tanstack/react-query";
+import { InfiniteSelect } from "../../components/InfiniteSelect";
 
 export function DentalHistory({ patientRecord }: any) {
   const [DentalHistoryForm] = Form.useForm();
+
+  const { data: dentalHistory, isFetching: isDentalHistoryLoading } = useQuery(
+    ["patient", patientRecord],
+    () =>
+      fetchData({
+        url: `/api/patient/dental-history/${patientRecord._id}`,
+      }),
+    {
+      onSuccess: (res) => {
+        DentalHistoryForm.setFieldsValue(res);
+      },
+    }
+  );
+
   return (
     <Card className="flex-auto md:p-12 p-6">
       <Form
@@ -17,10 +34,11 @@ export function DentalHistory({ patientRecord }: any) {
           console.log(values);
         }}
         onFinishFailed={(data) => {
+          console.log(data?.errorFields[0]);
           scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
             smooth: true,
             offset: -50,
-            containerId: "patient-record-container",
+            containerId: "main-container",
           });
         }}
         className="w-full !text-sm"
@@ -58,7 +76,7 @@ export function DentalHistory({ patientRecord }: any) {
               </Form.Item>
               <Form.Item
                 label="Reason for Last Visit"
-                name="reason_last_visit"
+                name="reason_for_visit"
                 rules={[
                   {
                     required: true,
@@ -68,9 +86,13 @@ export function DentalHistory({ patientRecord }: any) {
                 required={false}
                 className="col-span-12"
               >
-                <Input
-                  id="reason_last_visit"
-                  placeholder="Reason for Last Visit"
+                <InfiniteSelect
+                  placeholder="Select Reason for Visit"
+                  id="reason_for_visit"
+                  api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
+                  queryKey={["procedure"]}
+                  displayValueKey="name"
+                  returnValueKey="_id"
                 />
               </Form.Item>
               <Form.Item

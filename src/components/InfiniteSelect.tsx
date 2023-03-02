@@ -6,10 +6,13 @@ import { fetchData } from "../../utils/api";
 
 interface InfiniteSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   api: string;
-  queryKey: [string];
+  queryKey: string[];
   onChange?: (e: any) => void;
-  displayValueKey?: string;
+  displayValueKey: string;
+  returnValueKey: string;
   CustomizedOption?: any;
+  disabled?: boolean;
+  noData?: string;
 }
 
 export function InfiniteSelect({
@@ -17,11 +20,13 @@ export function InfiniteSelect({
   className,
   queryKey,
   displayValueKey,
+  returnValueKey,
   api,
   CustomizedOption,
   ...rest
 }: InfiniteSelectProps) {
   let [search, setSearch] = React.useState("");
+  let [initialFetch, setInitialFetch] = React.useState(true);
   let searchParameterAPI =
     api.split("?").length <= 1
       ? `${api}?search=${search}`
@@ -54,26 +59,31 @@ export function InfiniteSelect({
   });
 
   React.useEffect(() => {
+    let dataLength = listData?.pages?.length ?? 0;
+    if (dataLength > 0 && initialFetch) setInitialFetch(false);
+  }, [initialFetch, listData?.pages]);
+
+  React.useEffect(() => {
     if (listHasNextPage && listRefInView) {
       listFetchNextPage();
     }
   }, [listRefInView, listFetchNextPage, listHasNextPage, listData]);
 
-  return (
+  return !initialFetch ? (
     <Select
       loading={isListLoading}
       lastChildRef={listRef}
       noFilter={true}
       onSearch={(e: any) => setSearch(e)}
-      displayValueKey={displayValueKey}
       {...rest}
     >
       {listData?.pages?.map(({ data }) => {
-        return data?.map((props: any) => {
+        return data?.map((props: any, index: number) => {
           return (
             <Select.Option
-              value={displayValueKey ? props : props.name}
-              key={props._id}
+              displayValue={props[displayValueKey]}
+              value={props[returnValueKey]}
+              key={index}
             >
               {CustomizedOption ? (
                 <CustomizedOption data={props} />
@@ -93,6 +103,10 @@ export function InfiniteSelect({
           Loading...
         </Select.Option>
       )}
+    </Select>
+  ) : (
+    <Select disabled={true}>
+      <Select.Option value="">Loading</Select.Option>
     </Select>
   );
 }
