@@ -268,6 +268,8 @@ export default function AddTreatmentPlanModal({
                   id="cost"
                   prefix="₱"
                   onValueChange={({ floatValue }) => {
+                    // if (floatValue < 0) floatValue = 0;
+                    // if (floatValue > 100) floatValue = 100;
                     let cost = floatValue ?? 0;
                     let discount = form.getFieldValue("discount")
                       ? removeNumberFormatting(form.getFieldValue("discount")) /
@@ -292,7 +294,14 @@ export default function AddTreatmentPlanModal({
                   placeholder="Add Discount"
                   id="discount"
                   suffix="%"
-                  onValueChange={({ floatValue }) => {
+                  isAllowed={({ floatValue }: any) => {
+                    return (
+                      (floatValue >= 0 && floatValue <= 100) ||
+                      floatValue === undefined
+                    );
+                  }}
+                  onValueChange={({ floatValue, ...rest }) => {
+                    console.log(rest);
                     let cost = removeNumberFormatting(
                       form.getFieldValue("cost") ?? 0
                     );
