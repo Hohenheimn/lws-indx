@@ -12,20 +12,21 @@ import { Form, Popover, notification } from "antd";
 import { Context } from "../../../utils/context/Provider";
 import AddMedicineManagementModal from "./modals/AddMedicineModal";
 import { fadeIn } from "../../components/animation/animation";
+import moment from "moment";
 
 export function MedicineList() {
   const [MedicineForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);
   const queryClient = useQueryClient();
-
+  let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
   let [isMedicineModalOpen, setIsMedicineModalOpen] = React.useState(false);
 
   const { data: medicine, isFetching: isProceduresLoading } = useQuery(
-    ["medicine", page],
+    ["medicine", page, search],
     () =>
       fetchData({
-        url: `/api/medicine?limit=5&page=${page}`,
+        url: `/api/medicine?limit=5&page=${page}&search=${search}`,
       })
   );
 
@@ -101,7 +102,8 @@ export function MedicineList() {
             <Input
               placeholder="Search"
               prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-              className="rounded-full border-none text-lg"
+              className="rounded-full text-base shadow-none"
+              onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
           <div className="basis-full lg:basis-auto flex gap-4">
@@ -135,7 +137,12 @@ export function MedicineList() {
             table: ({ ...rest }: any) => {
               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               return (
-                <table {...rest} style={{ flex: `${tableFlexGrow} 1 auto` }} />
+                <table
+                  {...rest}
+                  style={{
+                    flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                  }}
+                />
               );
             },
             body: {

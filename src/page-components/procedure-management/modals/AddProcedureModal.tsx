@@ -115,7 +115,7 @@ export default function AddProcedureModal({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            let id = form.getFieldsValue(["_id"])._id;
+            let id = form.getFieldValue("_id");
             values.cost = removeNumberFormatting(values.cost);
             if (!id) {
               addProcedure(values);

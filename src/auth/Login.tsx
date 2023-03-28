@@ -29,7 +29,7 @@ export default function Login() {
   const { setIsAppLoading } = React.useContext(Context);
 
   const { mutate: login } = useMutation(
-    (payload: any) =>
+    (payload) =>
       postData({
         url: "/api/auth/login",
         payload,

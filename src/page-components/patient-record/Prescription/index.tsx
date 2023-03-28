@@ -1,49 +1,58 @@
+import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
 import React from "react";
-import { AnimateContainer, PageContainer } from "../../components/animation";
-import { Button } from "../../components/Button";
-import Table from "antd/lib/table/Table";
+import { scroller } from "react-scroll";
+import { Button } from "../../../components/Button";
+import Card from "../../../components/Card";
+import Input from "../../../components/Input";
+import { Select } from "../../../components/Select";
 import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { IoIosAdd } from "react-icons/io";
-import { NextPageProps } from "../../../utils/types/NextPageProps";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "../../../utils/api";
-import { Form, Popover, notification } from "antd";
-import { Context } from "../../../utils/context/Provider";
-import { format, parseISO } from "date-fns";
-import AddPrescriptionManagementModal from "./modals/AddPrescriptionModal";
-import { fadeIn } from "../../components/animation/animation";
-import { useRouter } from "next/router";
+import { numberSeparator } from "../../../../utils/helpers";
+import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteData, fetchData } from "../../../../utils/api";
+import AddPrescriptionModal from "./AddPrescriptionModal";
+import moment from "moment";
 
-export function PrescriptionTemplate() {
-  const router = useRouter();
+const columns: any = [
+  {
+    title: "Prescription",
+    dataIndex: "name",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Date Created",
+    dataIndex: "created_at",
+    width: "10rem",
+    align: "center",
+    render: (created_at: Date) => moment(created_at).format("MMMM DD, YYYY"),
+  },
+];
+
+export function Prescription({ patientRecord }: any) {
   const [PrescriptionForm] = Form.useForm();
-  const { setIsAppLoading } = React.useContext(Context);
   const queryClient = useQueryClient();
-
-  let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
+  let [search, setSearch] = React.useState("");
+
   let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] =
     React.useState(false);
 
-  const { data: prescription, isFetching: isProceduresLoading } = useQuery(
+  let { data: prescription, isLoading: prescriptionIsLoading } = useQuery(
     ["prescription", page, search],
     () =>
       fetchData({
-        url: `/api/prescription?limit=5&page=${page}&search=${search}`,
+        url: `/api/patient/prescription/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
       })
   );
 
-  //   console.log(prescription);
+  console.log(prescription);
 
   const { mutate: deletePrescription }: any = useMutation(
-    (id: number) =>
+    (treatment_plan_id: number) =>
       deleteData({
-        url: `/api/prescription/${id}`,
-        options: {
-          isLoading: (show: boolean) => setIsAppLoading(show),
-        },
+        url: `/api/patient/prescription/${treatment_plan_id}`,
       }),
     {
       onSuccess: async (res) => {
@@ -76,59 +85,44 @@ export function PrescriptionTemplate() {
     }
   );
 
-  const columns: any = [
-    {
-      title: "Prescription Name",
-      dataIndex: "name",
-      width: "15rem",
-      align: "center",
-    },
-    // {
-    //   title: "Date Created",
-    //   dataIndex: "created_at",
-    //   width: "15rem",
-    //   align: "center",
-    //   render: (created_at: string) =>
-    //     format(parseISO(created_at), "MMM dd, yyyy"),
-    // },
-  ];
-
   return (
     <>
-      <AnimateContainer
-        variants={fadeIn}
-        key="prescription-template"
-        className="flex flex-col flex-auto space-y-4"
-      >
-        <div className="flex justify-between items-center gap-4 flex-wrap">
-          <div className="basis-full lg:basis-1/2">
-            <Input
-              placeholder="Search"
-              prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-              className="rounded-full text-base shadow-none"
-              onChange={(e: any) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="basis-full lg:basis-auto flex gap-4">
-            <Button
-              className="p-3 min-w-[15rem]"
-              appearance="primary"
-              onClick={() => setIsPrescriptionModalOpen(true)}
-            >
-              <div className="flex justify-center items-center">
-                <IoIosAdd className="inline-block text-2xl" />{" "}
-                <span>Create Prescription</span>
-              </div>
-            </Button>
-          </div>
-        </div>
+      <div className="flex flex-auto">
         <Table
           rowKey="_id"
           columns={columns}
           dataSource={prescription?.data}
           showHeader={true}
           tableLayout="fixed"
-          loading={isProceduresLoading}
+          loading={prescriptionIsLoading}
+          title={() => (
+            <div className="space-y-4 md:p-12 p-6 !pb-0">
+              <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
+                <h4 className="basis-full md:basis-auto">Prescription</h4>
+              </div>
+              <div className="flex justify-between align-middle gap-4">
+                <div className="basis-1/2">
+                  <Input
+                    placeholder="Search"
+                    prefix={
+                      <AiOutlineSearch className="text-lg text-casper-500" />
+                    }
+                    className="rounded-full text-base shadow-none"
+                    onChange={(e: any) => setSearch(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Button
+                    className="p-3 max-w-xs"
+                    appearance="primary"
+                    onClick={() => setIsPrescriptionModalOpen(true)}
+                  >
+                    Create Prescription
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
           pagination={{
             pageSize: 5,
             hideOnSinglePage: true,
@@ -154,16 +148,6 @@ export function PrescriptionTemplate() {
                   ({ _id }: any) => _id === rest["data-row-key"]
                 );
 
-                let medicines = selectedRow?.medicines?.map(
-                  ({ medicine_id, name, ...rest }: any) => ({
-                    medicine_id: {
-                      _id: medicine_id,
-                      name,
-                    },
-                    ...rest,
-                  })
-                );
-
                 return (
                   <Popover
                     placement="bottom"
@@ -176,6 +160,7 @@ export function PrescriptionTemplate() {
                           onClick={() => {
                             PrescriptionForm.setFieldsValue({
                               ...selectedRow,
+                              created_at: moment(selectedRow.created_at),
                               _id: selectedRow._id,
                             });
 
@@ -209,9 +194,10 @@ export function PrescriptionTemplate() {
               },
             },
           }}
+          className="[&.ant-table]:!rounded-none"
         />
-      </AnimateContainer>
-      <AddPrescriptionManagementModal
+      </div>
+      <AddPrescriptionModal
         show={isPrescriptionModalOpen}
         onClose={() => {
           setIsPrescriptionModalOpen(false);
@@ -219,10 +205,11 @@ export function PrescriptionTemplate() {
         }}
         className="w-[80rem]"
         id="prescription-modal"
+        patientRecord={patientRecord}
         form={PrescriptionForm}
       />
     </>
   );
 }
 
-export default PrescriptionTemplate;
+export default Prescription;

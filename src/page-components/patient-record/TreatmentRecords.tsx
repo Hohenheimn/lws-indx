@@ -98,6 +98,7 @@ const columns: any = [
 ];
 
 export function TreatmentRecords({ patientRecord }: any) {
+  let [search, setSearch] = React.useState("");
   return (
     <Card className="flex-auto p-0">
       <div className="space-y-8 h-full flex flex-col">
@@ -111,6 +112,7 @@ export function TreatmentRecords({ patientRecord }: any) {
                 placeholder="Search"
                 prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
                 className="rounded-full text-base shadow-none"
+                onChange={(e: any) => setSearch(e.target.value)}
               />
             </div>
             <div className="grid grid-cols-[1fr_40%] gap-4 basis-1/2">
@@ -145,7 +147,9 @@ export function TreatmentRecords({ patientRecord }: any) {
                 return (
                   <table
                     {...rest}
-                    style={{ flex: `${tableFlexGrow} 1 auto` }}
+                    style={{
+                      flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                    }}
                   />
                 );
               },

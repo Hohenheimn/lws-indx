@@ -1,26 +1,68 @@
-import { Checkbox, DatePicker, Form } from "antd";
+import { Checkbox, DatePicker, Form, notification } from "antd";
 import React from "react";
 import { scroller } from "react-scroll";
 import { Button } from "../../components/Button";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import { Select } from "../../components/Select";
-import { fetchData } from "../../../utils/api";
-import { useQuery } from "@tanstack/react-query";
+import { fetchData, postData } from "../../../utils/api";
 import { InfiniteSelect } from "../../components/InfiniteSelect";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Context } from "../../../utils/context/Provider";
+import moment from "moment";
 
-export function DentalHistory({ patientRecord }: any) {
+export function DentalHistory({ patientRecord, tab }: any) {
+  const queryClient = useQueryClient();
   const [DentalHistoryForm] = Form.useForm();
 
-  const { data: dentalHistory, isFetching: isDentalHistoryLoading } = useQuery(
-    ["patient", patientRecord],
+  useQuery(
+    ["dental-history"],
     () =>
       fetchData({
         url: `/api/patient/dental-history/${patientRecord._id}`,
       }),
     {
       onSuccess: (res) => {
+        res.last_visit_date = moment(res.last_visit_date, "MMMM DD, YYYY");
         DentalHistoryForm.setFieldsValue(res);
+      },
+    }
+  );
+
+  const { mutate: addDentalHistory, isLoading } = useMutation(
+    (payload: any) => {
+      return postData({
+        url: `/api/patient/dental-history/${patientRecord._id}`,
+        payload,
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Updated Dental History",
+          description: `Updated Dental History`,
+        });
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: ["dental-history"] });
+        const previousValues = queryClient.getQueryData(["dental-history"]);
+        queryClient.setQueryData(["dental-history"], (oldData: any) => {
+          return oldData ? [oldData, newData] : [];
+        });
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["dental-history"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["dental-history"] });
       },
     }
   );
@@ -31,7 +73,12 @@ export function DentalHistory({ patientRecord }: any) {
         form={DentalHistoryForm}
         layout="vertical"
         onFinish={(values) => {
-          console.log(values);
+          values.last_visit_date = moment(values.last_visit_date).format(
+            "MMMM DD, YYYY"
+          );
+          values.dental_issues = JSON.stringify(values.dental_issues);
+
+          addDentalHistory(values);
         }}
         onFinishFailed={(data) => {
           console.log(data?.errorFields[0]);
@@ -62,7 +109,7 @@ export function DentalHistory({ patientRecord }: any) {
               </Form.Item>
               <Form.Item
                 label="Last Dentist Visit"
-                name="last_dentist_visit"
+                name="last_visit_date"
                 rules={[
                   { required: true, message: "Last Dentist Visit is required" },
                 ]}
@@ -70,13 +117,14 @@ export function DentalHistory({ patientRecord }: any) {
                 className="col-span-12 md:col-span-6"
               >
                 <DatePicker
-                  id="last_dentist_visit"
+                  id="last_visit_date"
                   placeholder="Last Dentist Visit"
+                  format="MMMM DD, YYYY"
                 />
               </Form.Item>
               <Form.Item
                 label="Reason for Last Visit"
-                name="reason_for_visit"
+                name="last_visit_reason"
                 rules={[
                   {
                     required: true,
@@ -88,7 +136,7 @@ export function DentalHistory({ patientRecord }: any) {
               >
                 <InfiniteSelect
                   placeholder="Select Reason for Visit"
-                  id="reason_for_visit"
+                  id="last_visit_reason"
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
                   queryKey={["procedure"]}
                   displayValueKey="name"
@@ -111,34 +159,51 @@ export function DentalHistory({ patientRecord }: any) {
               </Form.Item>
             </div>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4" id="dental_issues">
             <div className="flex justify-between items-center">
               <h4>Do you have any of the following?</h4>
             </div>
             <Form.Item
-              name="concern"
-              valuePropName="checked"
+              name="dental_issues"
               required={false}
               className="col-span-full text-base"
             >
               <Checkbox.Group className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center py-4 lg:px-[10%] text-lg">
-                <Checkbox value="1">Bad Breath</Checkbox>
-                <Checkbox value="2">Food Collection between Teeth</Checkbox>
-                <Checkbox value="3">Clicking or Lock Jaw</Checkbox>
-                <Checkbox value="4">Loose Teeth or Broken Fillings</Checkbox>
-                <Checkbox value="5">Grinding Teeth</Checkbox>
-                <Checkbox value="6">Sensitivity to Hot Water</Checkbox>
-                <Checkbox value="7">Periodental Treatment</Checkbox>
-                <Checkbox value="8">Sensitivity to Sweets</Checkbox>
-                <Checkbox value="9">Sensitivity to Cold Water</Checkbox>
-                <Checkbox value="10">Sores Or Growth In Your Mouth</Checkbox>
-                <Checkbox value="11">Sensitivity when Biting</Checkbox>
+                <Checkbox value="bad_breath">Bad Breath</Checkbox>
+                <Checkbox value="food_collection_between_teeth">
+                  Food Collection between Teeth
+                </Checkbox>
+                <Checkbox value="clicking_or_lock_jaw">
+                  Clicking or Lock Jaw
+                </Checkbox>
+                <Checkbox value="loose_teeth_or_broken_fillings">
+                  Loose Teeth or Broken Fillings
+                </Checkbox>
+                <Checkbox value="grinding_teeth">Grinding Teeth</Checkbox>
+                <Checkbox value="sensitivity_to_hot_water">
+                  Sensitivity to Hot Water
+                </Checkbox>
+                <Checkbox value="periodental_treatment">
+                  Periodental Treatment
+                </Checkbox>
+                <Checkbox value="sensitivity_to_sweets">
+                  Sensitivity to Sweets
+                </Checkbox>
+                <Checkbox value="sensitivity_to_cold_water">
+                  Sensitivity to Cold Water
+                </Checkbox>
+                <Checkbox value="sores_or_growth_in_your_mouth">
+                  Sores Or Growth In Your Mouth
+                </Checkbox>
+                <Checkbox value="sensitivity_when_biting">
+                  Sensitivity when Biting
+                </Checkbox>
               </Checkbox.Group>
             </Form.Item>
           </div>
           <div className="flex justify-center items-center">
             <Button
-              appearance="primary"
+              appearance={!isLoading ? "primary" : "disabled"}
               type="submit"
               className="max-w-md py-4"
             >

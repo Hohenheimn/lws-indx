@@ -81,15 +81,16 @@ export const Input: React.ForwardRefRenderFunction<
           name={name}
           id={name}
           className={twMerge(
-            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-default shadow rounded-md transition block w-full text-sm leading-[normal] disabled:bg-gray-300",
+            "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-default shadow rounded-md transition block w-full text-sm leading-[normal] disabled:bg-[#f5f5f5]",
             `${prefix ? "pl-8" : ""} ${suffix ? "pr-12" : ""}`,
             className
           )}
           disabled={disabled}
           value={value ? value : inputValue}
-          onChange={(e) =>
-            onChange ? onChange(e) : setInputValue(e.target.value)
-          }
+          onChange={(e) => {
+            onChange && onChange(e);
+            setInputValue(e.target.value);
+          }}
           {...rest}
         />
         {(type === "password" || suffix) && (

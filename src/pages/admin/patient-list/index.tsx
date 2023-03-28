@@ -14,23 +14,30 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "../../../../utils/api";
 import { Popover, notification } from "antd";
 import { Context } from "../../../../utils/context/Provider";
+import { IoPersonOutline } from "react-icons/io5";
+import Avatar from "../../../components/Avatar";
 
 const columns: any = [
   {
     title: "",
     width: "5rem",
     align: "center",
-    render: () => {
+    render: ({ profile_picture }: any) => {
       return (
-        <div className="relative w-10 h-10 m-auto">
-          <Image
-            src="https://picsum.photos/500/500"
-            alt="random pics"
-            fill
-            sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-            className="object-center rounded-full"
-          />
-        </div>
+        <Avatar className="h-14 w-14 p-2 overflow-hidden relative border border-gray-300 avatar transition">
+          {!profile_picture ? (
+            <IoPersonOutline className="h-full w-full text-white" />
+          ) : (
+            <Image
+              src={profile_picture}
+              alt="Patient's Picture"
+              fill
+              sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+              className="object-center h-full w-full"
+              objectFit="cover"
+            />
+          )}
+        </Avatar>
       );
     },
   },
@@ -68,14 +75,15 @@ const columns: any = [
 ];
 
 export function PatientList({ router }: NextPageProps) {
+  let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
   const { setIsAppLoading } = React.useContext(Context);
   const queryClient = useQueryClient();
   const { data: patients, isFetching: isPatientsLoading } = useQuery(
-    ["patient", page],
+    ["patient", page, search],
     () =>
       fetchData({
-        url: `/api/patient?limit=5&page=${page}`,
+        url: `/api/patient?limit=5&page=${page}&search=${search}`,
       })
   );
 
@@ -127,7 +135,8 @@ export function PatientList({ router }: NextPageProps) {
             <Input
               placeholder="Search"
               prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-              className="rounded-full border-none text-lg"
+              className="rounded-full text-base shadow-none"
+              onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
           <div className="basis-full lg:basis-auto flex gap-4">
@@ -153,7 +162,9 @@ export function PatientList({ router }: NextPageProps) {
                 return (
                   <table
                     {...rest}
-                    style={{ flex: `${tableFlexGrow} 1 auto` }}
+                    style={{
+                      flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                    }}
                   />
                 );
               },

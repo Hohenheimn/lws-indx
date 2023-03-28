@@ -61,11 +61,12 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
                       <IoPersonOutline className="h-full w-full text-white" />
                     ) : (
                       <Image
-                        src={`${process.env.REACT_APP_API_BASE_URL}/${patient?.profile_picture}`}
+                        src={`${patient?.profile_picture}`}
                         alt="Patient's Picture"
                         fill
                         sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        className="object-center contain h-full w-full"
+                        className="object-center  h-full w-full"
+                        objectFit="cover"
                         onError={() => {
                           setIsImageError(true);
                         }}
@@ -75,7 +76,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
                   <h5>
                     {patient?.first_name} {patient?.last_name}
                   </h5>
-                  <div className="flex justify-center items-center gap-3">
+                  {/* <div className="flex justify-center items-center gap-3">
                     <Button appearance="link" className="text-lg">
                       <AiOutlineCalendar />
                     </Button>
@@ -91,7 +92,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
                     <Button appearance="link" className="text-lg">
                       <BsTrash />
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] xs:gap-4">
                   <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-[auto_1fr] xs:gap-4">
@@ -147,13 +148,16 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
               </div>
             </Card>
             <Tabs
-              activeKey={`${router.query.tab ?? "1"}`}
+              activeKey={`${router.query.tab ?? patientRecord("")[0]?.key}`}
               onChange={(e) =>
                 router.replace({
                   query: { ...router.query, tab: e },
                 })
               }
-              items={patientRecord(patient)}
+              items={patientRecord({
+                patientRecord: patient,
+                tab: router.query.tab ?? "2",
+              })}
             />
           </>
         ) : (

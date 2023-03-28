@@ -21,14 +21,15 @@ export function ProcedureManagement({ router }: NextPageProps) {
   const { setIsAppLoading } = React.useContext(Context);
   const queryClient = useQueryClient();
 
+  let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
   let [isProcedureModalOpen, setIsProcedureModalOpen] = React.useState(false);
 
   const { data: procedure, isFetching: isProceduresLoading } = useQuery(
-    ["procedure", page],
+    ["procedure", page, search],
     () =>
       fetchData({
-        url: `/api/procedure?limit=5&page=${page}`,
+        url: `/api/procedure?limit=5&page=${page}&search=${search}`,
       })
   );
 
@@ -110,7 +111,8 @@ export function ProcedureManagement({ router }: NextPageProps) {
             <Input
               placeholder="Search"
               prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-              className="rounded-full border-none text-lg"
+              className="rounded-full text-base shadow-none"
+              onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
           <div className="basis-full lg:basis-auto flex gap-4">
@@ -144,7 +146,12 @@ export function ProcedureManagement({ router }: NextPageProps) {
             table: ({ ...rest }: any) => {
               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               return (
-                <table {...rest} style={{ flex: `${tableFlexGrow} 1 auto` }} />
+                <table
+                  {...rest}
+                  style={{
+                    flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                  }}
+                />
               );
             },
             body: {

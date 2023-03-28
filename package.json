@@ -35,9 +35,12 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.39.4",
     "react-icons": "^4.6.0",
+    "react-image-annotate": "^1.8.0",
+    "react-image-annotation": "^0.9.10",
     "react-intersection-observer": "^9.4.0",
     "react-number-format": "^5.1.1",
     "react-scroll": "^1.8.8",
+    "react-signature-canvas": "^1.0.6",
     "sass": "^1.55.0",
     "sharp": "^0.31.1",
     "tailwind-merge": "^1.8.0",
@@ -47,6 +50,7 @@
   "devDependencies": {
     "@types/chart.js": "^2.9.37",
     "@types/react-scroll": "^1.8.5",
+    "@types/react-signature-canvas": "^1.0.2",
     "eslint": "^8.29.0",
     "eslint-config-next": "^13.0.6",
     "postcss-import": "^15.0.0"

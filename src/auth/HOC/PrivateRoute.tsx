@@ -21,7 +21,7 @@ export default function PrivateRoute(Component: any) {
     subdomain,
     ...rest
   }: AuthProps) => {
-    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
     const restrictedPages = ["/", "raffle-pick"];
     const allowedSubDomain = ["lws-dentist", "ampong-clinic"];
@@ -38,7 +38,7 @@ export default function PrivateRoute(Component: any) {
             profile={profile}
             router={router}
             selectedDate={selectedDate}
-            setSelectedDate={(date: any) => setSelectedDate(date)}
+            setSelectedDate={(date: Date) => setSelectedDate(date)}
             {...rest}
           />
         </Layout>

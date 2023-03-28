@@ -44,7 +44,7 @@ export function classNameMerge(
 }
 
 export function removeNumberFormatting(number: string) {
-  return Number(number.toString().replace(/[^0-9\.-]+/g, ""));
+  return Number(number?.toString()?.replace(/[^0-9\.-]+/g, ""));
 }
 
 export function numberSeparator(currency: string | number, decimal?: number) {
@@ -67,8 +67,7 @@ export function contactNumberFormatter(number: string) {
 }
 
 export function getYoutubeId(url: string) {
-  const regex =
-    /^.*(youtu.be|v|embed|watch\?|youtube.comuser[^#]*#([^]*?)*)\??v?=?([^#]*).*/g;
+  const regex = /^.*(youtu.be|v|embed|watch\?|youtube.comuser[^#]*#([^]*?)*)\??v?=?([^#]*).*/g;
   const match = regex.exec(url);
   if (match === null) {
     return match;
@@ -119,4 +118,34 @@ export function capitalizeTitle(title: string, route: any) {
 
 export function stripTags(text: string) {
   return text?.replace(/(<([^>]+)>)/gi, "");
+}
+
+export function getInitialValue(form: any, name?: string, initial?: boolean) {
+  if (!name) {
+    return "";
+  }
+
+  let initialValue = form.getFieldValue([name]);
+  if (!initialValue) {
+    return "";
+  }
+
+  return `${initial ? "?" : "&"}initial_value=${initialValue}`;
+}
+
+export function slugify(str: string) {
+  str = str.replace(/^\s+|\s+$/g, ""); // trim leading/trailing white space
+  str = str.toLowerCase(); // convert to lower case
+  str = str
+    .replace(/[^a-z0-9 -]/g, "") // remove any non-alphanumeric characters except spaces and hyphens
+    .replace(/\s+/g, "-") // replace spaces with hyphens
+    .replace(/-+/g, "-"); // remove consecutive hyphens
+
+  return str;
+}
+
+export function getBase64(img: any, callback: any) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
 }

@@ -113,7 +113,7 @@ export default function AddPrescriptionManagementModal({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            let id = form.getFieldsValue(["_id"])._id;
+            let id = form.getFieldValue("_id");
             if (!id) {
               addMedicine(values);
             } else {

@@ -72,8 +72,10 @@ export function Select({
   let [query, setQuery] = React.useState("");
   let [isActive, setIsActive] = React.useState(false);
 
-  let filteredTypeChildren = Array.isArray(children)
-    ? children.filter((child: any) => {
+  let childrenArray = React.Children.toArray(children);
+
+  let filteredTypeChildren = Array.isArray(childrenArray)
+    ? childrenArray.filter((child: any) => {
         return child;
       })
     : [];
@@ -135,9 +137,9 @@ export function Select({
             <Combobox.Button
               className="w-full transition focus-within:border-primary-500 focus-within:shadow-input focus-within:ring-0 shadow rounded-md"
               id={id}
-              onClick={(e: React.MouseEvent<HTMLElement>) =>
-                open && e.preventDefault()
-              }
+              onClick={(e: React.MouseEvent<HTMLElement>) => {
+                open && e.preventDefault();
+              }}
             >
               <div
                 className={`transition absolute inset-y-0 right-0 px-4 flex items-center text-casper-500 text-lg h-full`}
@@ -160,7 +162,9 @@ export function Select({
               </div>
               <Combobox.Input
                 key={open.toString()}
-                onFocus={() => setIsActive(true)}
+                onFocus={() => {
+                  setIsActive(true);
+                }}
                 onBlur={() => {
                   setQuery("");
                   setIsActive(false);
@@ -182,7 +186,6 @@ export function Select({
 
                   if (value) {
                     return value;
-                    // return value?.charAt(0).toUpperCase() + value?.slice(1);
                   }
 
                   return "";
@@ -192,14 +195,14 @@ export function Select({
                   setQuery(event.target.value);
                 }}
                 className={twMerge(
-                  "transition focus:ring-0 focus:border-primary-500 hover:border-primary-500 disabled:bg-gray-300 disabled:pointer-events-none bg-white border border-default w-full rounded-[inherit] text-sm leading-[normal] p-4",
+                  "transition focus:ring-0 focus:border-primary-500 hover:border-primary-500 disabled:bg-[#f5f5f5] disabled:pointer-events-none bg-white border border-default w-full rounded-[inherit] text-sm leading-[normal] p-4",
                   className
                 )}
                 {...rest}
               />
             </Combobox.Button>
             <Combobox.Options className="max-h-60 overflow-auto shadow-lg border border-default bg-white rounded-md">
-              {childrenWithProps.length > 0 ? (
+              {childrenWithProps.length >= 1 ? (
                 childrenWithProps
               ) : (
                 <div

@@ -3,11 +3,16 @@ import { Select } from "./Select";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchData } from "../../utils/api";
+import { getInitialValue as getFieldInitialValue } from "../../utils/helpers";
 
 interface InfiniteSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   api: string;
   queryKey: string[];
   onChange?: (e: any) => void;
+  getInitialValue?: {
+    form: any;
+    initialValue: string;
+  };
   displayValueKey: string;
   returnValueKey: string;
   CustomizedOption?: any;
@@ -23,14 +28,25 @@ export function InfiniteSelect({
   returnValueKey,
   api,
   CustomizedOption,
+  getInitialValue,
   ...rest
 }: InfiniteSelectProps) {
   let [search, setSearch] = React.useState("");
   let [initialFetch, setInitialFetch] = React.useState(true);
+  let [isOpen, setIsOpen] = React.useState(false);
   let searchParameterAPI =
     api.split("?").length <= 1
       ? `${api}?search=${search}`
       : `${api}&search=${search}`;
+  let initialValueParameterAPI =
+    searchParameterAPI +
+    (getFieldInitialValue
+      ? getFieldInitialValue(
+          getInitialValue?.form,
+          getInitialValue?.initialValue
+        )
+      : "");
+
   const { ref: listRef, inView: listRefInView } = useInView({
     triggerOnce: false,
     rootMargin: "0px",
@@ -43,7 +59,7 @@ export function InfiniteSelect({
     fetchNextPage: listFetchNextPage,
   } = useInfiniteQuery({
     queryKey: [...queryKey, search],
-    queryFn: ({ pageParam = searchParameterAPI }) => {
+    queryFn: ({ pageParam = initialValueParameterAPI }) => {
       return fetchData({
         url: pageParam,
         options: {
@@ -56,6 +72,14 @@ export function InfiniteSelect({
         return pages.slice(-1).pop().links.next;
       }
     },
+    enabled: getInitialValue
+      ? Boolean(
+          getFieldInitialValue(
+            getInitialValue?.form,
+            getInitialValue?.initialValue
+          )
+        )
+      : true,
   });
 
   React.useEffect(() => {
@@ -64,10 +88,28 @@ export function InfiniteSelect({
   }, [initialFetch, listData?.pages]);
 
   React.useEffect(() => {
-    if (listHasNextPage && listRefInView) {
-      listFetchNextPage();
+    if (
+      getInitialValue &&
+      getFieldInitialValue(getInitialValue?.form, getInitialValue?.initialValue)
+    ) {
+      if (listHasNextPage && listRefInView && !isListLoading) {
+        listFetchNextPage();
+      }
+    } else {
+      if (listHasNextPage && listRefInView && !isListLoading) {
+        listFetchNextPage();
+      }
     }
-  }, [listRefInView, listFetchNextPage, listHasNextPage, listData]);
+  }, [
+    listRefInView,
+    listFetchNextPage,
+    listHasNextPage,
+    listData,
+    getInitialValue?.form,
+    getInitialValue?.initialValue,
+    getInitialValue,
+    isListLoading,
+  ]);
 
   return !initialFetch ? (
     <Select

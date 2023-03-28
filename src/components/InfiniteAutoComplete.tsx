@@ -7,7 +7,7 @@ import { fetchData } from "../../utils/api";
 interface InfiniteAutoCompleteProps
   extends React.HTMLAttributes<HTMLDivElement> {
   api: string;
-  queryKey: [string];
+  queryKey: string[];
   onChange?: (e: any) => void;
   customRender?: React.ReactElement;
   displayValueKey: string;

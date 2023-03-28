@@ -59,6 +59,7 @@ const columns: any = [
 ];
 
 export function Charting({ patientRecord }: any) {
+  let [search, setSearch] = React.useState("");
   return (
     <Card className="flex-auto p-0">
       <div className="space-y-8 h-full flex flex-col">
@@ -72,6 +73,7 @@ export function Charting({ patientRecord }: any) {
                 placeholder="Search"
                 prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
                 className="rounded-full text-base shadow-none"
+                onChange={(e: any) => setSearch(e.target.value)}
               />
             </div>
             <div>
@@ -99,7 +101,9 @@ export function Charting({ patientRecord }: any) {
                 return (
                   <table
                     {...rest}
-                    style={{ flex: `${tableFlexGrow} 1 auto` }}
+                    style={{
+                      flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                    }}
                   />
                 );
               },

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, notification } from "antd";
+import { DatePicker, Form, notification } from "antd";
 import Input from "../../../components/Input";
 import { Button } from "../../../components/Button";
 import Modal from "../../../components/Modal";
@@ -14,11 +14,14 @@ import { AiFillMinusCircle } from "react-icons/ai";
 import { AnimateContainer } from "../../../components/animation";
 import { fadeIn } from "../../../components/animation/animation";
 import { InfiniteSelect } from "../../../components/InfiniteSelect";
+import { getInitialValue } from "../../../../utils/helpers";
+import moment from "moment";
 
-export default function AddPrescriptionManagementModal({
+export default function AddPrescriptionModal({
   show,
   onClose,
   form,
+  patientRecord,
   ...rest
 }: any) {
   const queryClient = useQueryClient();
@@ -27,7 +30,7 @@ export default function AddPrescriptionManagementModal({
   const { mutate: addPrescription } = useMutation(
     (payload: any) => {
       return postData({
-        url: "/api/prescription",
+        url: `/api/patient/prescription/${patientRecord?._id}`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -70,7 +73,7 @@ export default function AddPrescriptionManagementModal({
   const { mutate: editPrescription } = useMutation(
     (payload: any) => {
       return postData({
-        url: `/api/prescription/${payload.id}?_method=PUT`,
+        url: `/api/patient/prescription/${payload.id}?_method=PUT`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -80,8 +83,8 @@ export default function AddPrescriptionManagementModal({
     {
       onSuccess: async (res) => {
         notification.success({
-          message: "Editing Prescription Success",
-          description: `Editing Prescription Success`,
+          message: "Prescription Updated!",
+          description: `Prescription Updated!`,
         });
         form.resetFields();
         onClose();
@@ -156,6 +159,38 @@ export default function AddPrescriptionManagementModal({
               required={false}
             >
               <Input id="name" placeholder="Prescription Name" />
+            </Form.Item>
+            <Form.Item
+              label="Prescription Template"
+              name="prescription_id"
+              required={false}
+            >
+              <InfiniteSelect
+                placeholder="Prescription Template"
+                id="prescription_id"
+                api={`${
+                  process.env.REACT_APP_API_BASE_URL
+                }/api/prescription?limit=3&for_dropdown=true&page=1${getInitialValue(
+                  form,
+                  "prescription_id"
+                )}`}
+                queryKey={["prescription_id"]}
+                displayValueKey="name"
+                returnValueKey="_id"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Date Created"
+              name="created_at"
+              required={false}
+              initialValue={moment()}
+            >
+              <DatePicker
+                placeholder="Date Created"
+                id="created_at"
+                format="MMMM DD, YYYY"
+                disabled={true}
+              />
             </Form.Item>
           </div>
           <div className="space-y-4">

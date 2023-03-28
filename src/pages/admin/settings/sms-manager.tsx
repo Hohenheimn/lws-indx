@@ -61,6 +61,7 @@ const columns: any = [
 ];
 
 export function SMSManager({ router }: NextPageProps) {
+  let [search, setSearch] = React.useState("");
   return (
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
@@ -83,7 +84,8 @@ export function SMSManager({ router }: NextPageProps) {
           <Input
             placeholder="Search"
             prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-            className="rounded-full border-none text-lg"
+            className="rounded-full text-base shadow-none"
+            onChange={(e: any) => setSearch(e.target.value)}
           />
         </div>
         <div className="basis-full lg:basis-auto flex gap-4 flex-auto">
@@ -113,7 +115,12 @@ export function SMSManager({ router }: NextPageProps) {
           table: ({ ...rest }: any) => {
             let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
             return (
-              <table {...rest} style={{ flex: `${tableFlexGrow} 1 auto` }} />
+              <table
+                {...rest}
+                style={{
+                  flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                }}
+              />
             );
           },
           body: {

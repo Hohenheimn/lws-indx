@@ -20,7 +20,7 @@ module.exports = {
     defaultLocale: "en-US",
   },
   images: {
-    domains: ["picsum.photos", "staging-api.indxhealth.com"],
+    domains: ["picsum.photos", "staging-api.indxhealth.com", "192.168.68.119"],
   },
   env: {
     REACT_APP_API_BASE_URL: process.env.REACT_APP_API_BASE_URL,

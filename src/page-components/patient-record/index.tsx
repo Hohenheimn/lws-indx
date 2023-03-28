@@ -11,20 +11,20 @@ import Prescription from "./Prescription";
 import TreatmentPlan from "./TreatmentPlan";
 import TreatmentRecords from "./TreatmentRecords";
 
-export const patientRecord = (patientRecord: any) => [
-  {
-    label: `Personal Record`,
-    key: "1",
-    children: (
-      <AnimateContainer
-        variants={fadeIn}
-        key={1}
-        className="flex flex-col flex-auto"
-      >
-        <PersonalRecord patientRecord={patientRecord} />
-      </AnimateContainer>
-    ),
-  },
+export const patientRecord = (props: any) => [
+  // {
+  //   label: `Personal Record`,
+  //   key: "1",
+  //   children: (
+  //     <AnimateContainer
+  //       variants={fadeIn}
+  //       key={1}
+  //       className="flex flex-col flex-auto"
+  //     >
+  //       <PersonalRecord {...props} />
+  //     </AnimateContainer>
+  //   ),
+  // },
   {
     label: `Personal Info`,
     key: "2",
@@ -34,7 +34,7 @@ export const patientRecord = (patientRecord: any) => [
         key={2}
         className="flex flex-col flex-auto"
       >
-        <PersonalInfo patientRecord={patientRecord} />
+        <PersonalInfo {...props} />
       </AnimateContainer>
     ),
   },
@@ -47,7 +47,7 @@ export const patientRecord = (patientRecord: any) => [
         key={3}
         className="flex flex-col flex-auto"
       >
-        <DentalHistory patientRecord={patientRecord} />
+        <DentalHistory {...props} />
       </AnimateContainer>
     ),
   },
@@ -60,7 +60,7 @@ export const patientRecord = (patientRecord: any) => [
         key={4}
         className="flex flex-col flex-auto"
       >
-        <MedicalHistory patientRecord={patientRecord} />
+        <MedicalHistory {...props} />
       </AnimateContainer>
     ),
   },
@@ -73,7 +73,7 @@ export const patientRecord = (patientRecord: any) => [
         key={5}
         className="flex flex-col flex-auto"
       >
-        <TreatmentPlan patientRecord={patientRecord} />
+        <TreatmentPlan {...props} />
       </AnimateContainer>
     ),
   },
@@ -86,7 +86,7 @@ export const patientRecord = (patientRecord: any) => [
         key={6}
         className="flex flex-col flex-auto"
       >
-        <Charting patientRecord={patientRecord} />
+        <Charting {...props} />
       </AnimateContainer>
     ),
   },
@@ -99,7 +99,7 @@ export const patientRecord = (patientRecord: any) => [
         key={7}
         className="flex flex-col flex-auto"
       >
-        <TreatmentRecords patientRecord={patientRecord} />
+        <TreatmentRecords {...props} />
       </AnimateContainer>
     ),
   },
@@ -112,7 +112,7 @@ export const patientRecord = (patientRecord: any) => [
         key={8}
         className="flex flex-col flex-auto"
       >
-        <MedicalGallery patientRecord={patientRecord} />
+        <MedicalGallery {...props} />
       </AnimateContainer>
     ),
   },
@@ -125,7 +125,7 @@ export const patientRecord = (patientRecord: any) => [
         key={9}
         className="flex flex-col flex-auto"
       >
-        <Prescription patientRecord={patientRecord} />
+        <Prescription {...props} />
       </AnimateContainer>
     ),
   },
@@ -138,7 +138,7 @@ export const patientRecord = (patientRecord: any) => [
         key={10}
         className="flex flex-col flex-auto"
       >
-        <ChangeHistory patientRecord={patientRecord} />
+        <ChangeHistory {...props} />
       </AnimateContainer>
     ),
   },

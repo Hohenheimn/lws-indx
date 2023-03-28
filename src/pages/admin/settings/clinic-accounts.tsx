@@ -6,7 +6,7 @@ import VerifyAuth from "../../../auth/HOC/VerifyAuth";
 import Table from "antd/lib/table/Table";
 import { AiOutlineSearch } from "react-icons/ai";
 import Input from "../../../components/Input";
-import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
+import { BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
 import { NextPageProps } from "../../../../utils/types/NextPageProps";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -22,14 +22,15 @@ export function ProcedureManagement({ router }: NextPageProps) {
   const { setIsAppLoading } = React.useContext(Context);
   const queryClient = useQueryClient();
 
+  let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
   let [isAccountModalOpen, setIsAccountModalOpen] = React.useState(false);
 
   const { data: account, isFetching: isAccountLoading } = useQuery(
-    ["account", page],
+    ["account", page, search],
     () =>
       fetchData({
-        url: `/api/account?limit=5&page=${page}`,
+        url: `/api/account?limit=5&page=${page}&search=${search}`,
       })
   );
 
@@ -98,7 +99,8 @@ export function ProcedureManagement({ router }: NextPageProps) {
             <Input
               placeholder="Search"
               prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-              className="rounded-full border-none text-lg"
+              className="rounded-full text-base shadow-none"
+              onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
           <div className="basis-full lg:basis-auto flex gap-4">
@@ -132,7 +134,12 @@ export function ProcedureManagement({ router }: NextPageProps) {
             table: ({ ...rest }: any) => {
               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               return (
-                <table {...rest} style={{ flex: `${tableFlexGrow} 1 auto` }} />
+                <table
+                  {...rest}
+                  style={{
+                    flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                  }}
+                />
               );
             },
             body: {

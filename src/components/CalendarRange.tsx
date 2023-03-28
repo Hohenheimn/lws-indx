@@ -26,11 +26,11 @@ function getMonth(date: number | Date) {
   return format(date, "MMMM");
 }
 
-interface CalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CalendarRangeProps extends React.HTMLAttributes<HTMLDivElement> {
   onChange?: any;
 }
 
-export default function Calendar({ onChange }: CalendarProps) {
+export default function CalendarRange({ onChange }: CalendarRangeProps) {
   let today = new Date();
   let [monthModalIsOpen, setMonthModalIsOpen] = React.useState(false);
   let [yearModalIsOpen, setYearModalIsOpen] = React.useState(false);
@@ -38,6 +38,12 @@ export default function Calendar({ onChange }: CalendarProps) {
   let [selectedMonth, setSelectedMonth] = React.useState(getMonth(today));
   let [selectedYear, setSelectedYear] = React.useState(getYear(today));
   let [selectedDate, setSelectedDate] = React.useState(today);
+  let [selectedDateStart, setSelectedDateStart] = React.useState(today);
+  let [selectedDateEnd, setSelectedDateEnd] = React.useState(today);
+  let [hoveredDate, setHoveredDate] = React.useState<Date | undefined | null>(
+    null
+  );
+
   useEffect(() => {
     let parsedDate = parse(
       `${selectedMonth} ${selectedDay} ${selectedYear}`,
@@ -47,6 +53,14 @@ export default function Calendar({ onChange }: CalendarProps) {
 
     setSelectedDate(parsedDate);
   }, [selectedDay, selectedMonth, selectedYear]);
+
+  useEffect(() => {
+    onChange({
+      dateStart: selectedDateStart,
+      dateEnd: selectedDateEnd,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDateStart, selectedDateEnd]);
 
   let days = eachDayOfInterval({
     start: startOfMonth(selectedDate),
@@ -62,6 +76,36 @@ export default function Calendar({ onChange }: CalendarProps) {
     start: add(startOfMonth(selectedDate), { years: -4 }),
     end: add(startOfMonth(selectedDate), { years: 4 }),
   });
+
+  function getBetweenDates(start: Date, end: Date) {
+    if (start && end && !isEqual(start, end)) {
+      return eachDayOfInterval({
+        start,
+        end,
+      });
+    }
+
+    return [];
+  }
+
+  function dateExists(dateArray: Date[], dateSelected: Date) {
+    return dateArray.find((date) => isEqual(date, dateSelected));
+  }
+
+  function dateHover(date: Date) {
+    if (hoveredDate) {
+      if (isBefore(hoveredDate, selectedDateStart)) {
+        return dateExists(
+          getBetweenDates(hoveredDate, selectedDateStart),
+          date
+        );
+      }
+
+      if (isAfter(hoveredDate, selectedDateEnd)) {
+        return dateExists(getBetweenDates(selectedDateEnd, hoveredDate), date);
+      }
+    }
+  }
 
   function calendarNavigation(
     nav: number,
@@ -114,12 +158,25 @@ export default function Calendar({ onChange }: CalendarProps) {
                 <div
                   key={day.toString()}
                   className={twMerge(
-                    "bg-transparent border border-transparent rounded-full hover:bg-primary-50 transition flex justify-center items-center h-14 w-14 font-medium",
+                    "bg-transparent border border-transparent rounded-none transition flex justify-center items-center h-14 w-14 font-medium",
                     dayIdx === 0 && colStartClasses[getDay(day)],
-                    isToday(day) &&
-                      "[&>.date-wrapper]:text-secondary-500 font-bold",
-                    isToday(day) && !selectedDate && "date-today",
-                    isEqual(selectedDate, day) && "date-in-range-first"
+                    isToday(day) && "date-today",
+                    dateExists(
+                      getBetweenDates(selectedDateStart, selectedDateEnd),
+                      day
+                    ) && "date-in-range",
+                    dateHover(day) && "date-hovered",
+                    isEqual(
+                      getBetweenDates(selectedDateStart, selectedDateEnd)[0],
+                      day
+                    ) && "date-in-range-first",
+                    isEqual(
+                      getBetweenDates(selectedDateStart, selectedDateEnd)[
+                        getBetweenDates(selectedDateStart, selectedDateEnd)
+                          .length - 1
+                      ],
+                      day
+                    ) && "date-in-range-last"
                   )}
                 >
                   <div
@@ -129,13 +186,32 @@ export default function Calendar({ onChange }: CalendarProps) {
                   >
                     <button
                       type="button"
+                      onMouseEnter={() => {
+                        if (!isEqual(hoveredDate ?? 0, day)) {
+                          setHoveredDate(day);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        setHoveredDate(null);
+                      }}
+                      onClick={() => {
+                        if (!selectedDateStart) {
+                          setSelectedDateStart(day);
+                        }
+                        if (selectedDateStart) {
+                          setSelectedDateEnd(day);
+                        }
+
+                        if (isBefore(day, selectedDateStart)) {
+                          setSelectedDateStart(day);
+                          setSelectedDateEnd(selectedDateEnd);
+                        }
+
+                        setSelectedDate(day);
+                      }}
                       className={twMerge(
                         "mx-auto flex h-full w-full items-center justify-center rounded-full transition"
                       )}
-                      onClick={() => {
-                        setSelectedDate(day);
-                        onChange(day);
-                      }}
                     >
                       <time
                         dateTime={format(day, "yyyy-MM-dd")}

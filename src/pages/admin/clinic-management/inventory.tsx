@@ -11,60 +11,11 @@ import Input from "../../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
 import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import { Popover } from "antd";
-
-let fakeData = [
-  {
-    id: 1,
-    item_name: "Toothpaste",
-    serial_number: "39571938231",
-    remaining_quantity: 20,
-    branch_assigned: "Branch 1",
-    cost_per_item: 49,
-    supplier_name: "Colgate",
-    supplier_number: "09xx xxx xxxx",
-  },
-  {
-    id: 2,
-    item_name: "Cotton",
-    serial_number: "39571938232",
-    remaining_quantity: 315,
-    branch_assigned: "Branch 2",
-    cost_per_item: 500,
-    supplier_name: "Puregold",
-    supplier_number: "09xx xxx xxxx",
-  },
-  {
-    id: 3,
-    item_name: "Plaster",
-    serial_number: "39571938233",
-    remaining_quantity: 1000,
-    branch_assigned: "Branch 3",
-    cost_per_item: 253,
-    supplier_name: "Suy Sing",
-    supplier_number: "09xx xxx xxxx",
-  },
-  {
-    id: 4,
-    item_name: "Mouth Wash",
-    serial_number: "39571938234",
-    remaining_quantity: 20,
-    branch_assigned: "Branch 4",
-    cost_per_item: 49,
-    supplier_name: "Happy",
-    supplier_number: "0995 xxx xxxx",
-  },
-  {
-    id: 5,
-    item_name: "Betadine",
-    serial_number: "39571938231",
-    remaining_quantity: 1504,
-    branch_assigned: "Branch 5",
-    cost_per_item: 264,
-    supplier_name: "Betadine",
-    supplier_number: "09xx xxx xxxx",
-  },
-];
+import { Form, Popover, notification } from "antd";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteData, fetchData } from "../../../../utils/api";
+import AddInventoryModal from "../../../page-components/inventory/modals/AddInventoryModal";
+import { Context } from "../../../../utils/context/Provider";
 
 const columns: any = [
   {
@@ -73,12 +24,12 @@ const columns: any = [
     width: "10rem",
     align: "center",
   },
-  {
-    title: "Serial Number",
-    dataIndex: "serial_number",
-    width: "10rem",
-    align: "center",
-  },
+  // {
+  //   title: "Serial Number",
+  //   dataIndex: "serial_number",
+  //   width: "10rem",
+  //   align: "center",
+  // },
   {
     title: "Remaining Quantity",
     dataIndex: "remaining_quantity",
@@ -114,6 +65,60 @@ const columns: any = [
 ];
 
 export function Inventory({ router }: NextPageProps) {
+  const [InventoryForm] = Form.useForm();
+  let [page, setPage] = React.useState(1);
+  let [search, setSearch] = React.useState("");
+  let [isInventoryModalOpen, setIsInventoryModalOpen] = React.useState(false);
+  let { setIsAppLoading } = React.useContext(Context);
+  let queryClient = useQueryClient();
+
+  const { mutate: deleteInventory }: any = useMutation(
+    (id: number) =>
+      deleteData({
+        url: `/api/inventory/${id}`,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      }),
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Inventory Item Deleted",
+          description: "Inventory Item has been deleted",
+        });
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: ["inventory"] });
+        const previousValues = queryClient.getQueryData(["inventory"]);
+        queryClient.setQueryData(["inventory"], (oldData: any) =>
+          oldData ? [...oldData, newData] : undefined
+        );
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["inventory"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["inventory"] });
+      },
+    }
+  );
+
+  const { data: inventory, isFetching: isInventoryLoading } = useQuery(
+    ["inventory", page, search],
+    () =>
+      fetchData({
+        url: `/api/inventory?limit=5&page=${page}&search=${search}`,
+      })
+  );
+
   return (
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
@@ -132,11 +137,18 @@ export function Inventory({ router }: NextPageProps) {
           <Input
             placeholder="Search"
             prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-            className="rounded-full border-none text-lg"
+            className="rounded-full text-base shadow-none"
+            onChange={(e: any) => setSearch(e.target.value)}
           />
         </div>
         <div className="basis-full lg:basis-auto flex gap-4">
-          <Button className="p-3 min-w-[15rem]" appearance="primary">
+          <Button
+            className="p-3 min-w-[15rem]"
+            appearance="primary"
+            onClick={() => {
+              setIsInventoryModalOpen(true);
+            }}
+          >
             <div className="flex justify-center items-center">
               <IoIosAdd className="inline-block text-2xl" />{" "}
               <span>Add Item</span>
@@ -145,25 +157,37 @@ export function Inventory({ router }: NextPageProps) {
         </div>
       </div>
       <Table
-        rowKey="id"
+        rowKey="_id"
         columns={columns}
-        dataSource={fakeData}
+        dataSource={inventory?.data}
         showHeader={true}
         tableLayout="fixed"
         pagination={{
           pageSize: 5,
           hideOnSinglePage: true,
           showSizeChanger: false,
+          total: inventory?.meta?.total,
+          onChange: (page) => setPage(page),
         }}
+        loading={isInventoryLoading}
         components={{
           table: ({ ...rest }: any) => {
             let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
             return (
-              <table {...rest} style={{ flex: `${tableFlexGrow} 1 auto` }} />
+              <table
+                {...rest}
+                style={{
+                  flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                }}
+              />
             );
           },
           body: {
             row: ({ ...rest }: any) => {
+              let selectedRow = inventory?.data?.find(
+                ({ _id }: any) => _id === rest["data-row-key"]
+              );
+
               return (
                 <Popover
                   placement="bottom"
@@ -173,16 +197,15 @@ export function Inventory({ router }: NextPageProps) {
                       <Button
                         appearance="link"
                         className="text-casper-500 p-2"
-                        // onClick={() =>
-                        //   router.push(`/admin/patient-list/${rest["data-row-key"]}`)
-                        // }
+                        onClick={() => {
+                          InventoryForm.setFieldsValue({
+                            ...selectedRow,
+                            _id: selectedRow._id,
+                          });
+
+                          setIsInventoryModalOpen(true);
+                        }}
                       >
-                        <div className="flex items-center gap-2">
-                          <BsEyeFill className="text-base" />
-                          <div>View</div>
-                        </div>
-                      </Button>
-                      <Button appearance="link" className="text-casper-500 p-2">
                         <div className="flex items-center gap-2">
                           <BsPencilSquare className="text-base" />
                           <div>Edit</div>
@@ -191,7 +214,7 @@ export function Inventory({ router }: NextPageProps) {
                       <Button
                         appearance="link"
                         className="text-casper-500 p-2"
-                        // onClick={() => deletePatient(rest["data-row-key"])}
+                        onClick={() => deleteInventory(rest["data-row-key"])}
                       >
                         <div className="flex items-center gap-2">
                           <BsTrashFill className="text-base" />
@@ -208,6 +231,16 @@ export function Inventory({ router }: NextPageProps) {
             },
           },
         }}
+      />
+      <AddInventoryModal
+        show={isInventoryModalOpen}
+        onClose={() => {
+          setIsInventoryModalOpen(false);
+          InventoryForm.resetFields();
+        }}
+        className="w-[80rem]"
+        id="inventory-modal"
+        form={InventoryForm}
       />
     </PageContainer>
   );

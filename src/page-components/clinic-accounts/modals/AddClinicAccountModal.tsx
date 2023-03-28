@@ -17,12 +17,8 @@ import { format } from "date-fns";
 import { Context } from "../../../../utils/context/Provider";
 import { differenceInYears, parse } from "date-fns";
 import accountRole from "../../../../utils/global-data/accountRole";
-
-function getBase64(img: any, callback: any) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
+import { InfiniteSelect } from "../../../components/InfiniteSelect";
+import { getBase64, getInitialValue } from "../../../../utils/helpers";
 
 export default function AddClinicAccountModal({
   show,
@@ -194,7 +190,7 @@ export default function AddClinicAccountModal({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            let id = form.getFieldsValue(["_id"])._id;
+            let id = form.getFieldValue("_id");
             values.permissions = JSON.stringify(values.permissions);
             values.civil_status = "";
 
@@ -423,8 +419,8 @@ export default function AddClinicAccountModal({
                 <PatternFormat
                   customInput={Input}
                   placeholder="09XX-XXX-XXXXX"
-                  mask="X"
-                  format="####-###-####"
+                  patternChar="*"
+                  format="****-***-****"
                   allowEmptyFormatting={false}
                   id="mobile_no"
                 />
@@ -435,53 +431,204 @@ export default function AddClinicAccountModal({
             <h4>Address</h4>
             <div className="grid grid-cols-3 gap-4">
               <Form.Item
-                label="Street"
-                name="street"
-                rules={[{ required: true, message: "Street is required" }]}
-                required={false}
-                className="col-span-3 lg:col-span-2"
-              >
-                <Input id="street" placeholder="Add street name" />
-              </Form.Item>
-              <Form.Item
-                label="Barangay"
-                name="barangay"
-                rules={[{ required: true, message: "Barangay is required" }]}
-                required={false}
-                className="col-span-3 lg:col-span-1"
-              >
-                <Input id="barangay" placeholder="Barangay" />
-              </Form.Item>
-              <Form.Item
-                label="City"
-                name="city"
-                rules={[{ required: true, message: "City is required" }]}
-                required={false}
-                className="col-span-3 lg:col-span-1"
-              >
-                <Select placeholder="Select City">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
                 label="Country"
                 name="country"
                 rules={[{ required: true, message: "Country is required" }]}
                 required={false}
-                className="col-span-3 lg:col-span-1"
+                className="col-span-full lg:col-span-1"
               >
-                <Select placeholder="Select Country">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
+                <Select placeholder="Select Country" id="country">
+                  <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
+              </Form.Item>
+              <Form.Item
+                label="Region"
+                required={false}
+                className="col-span-full lg:col-span-1"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.country !== curr.country) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="region"
+                      rules={[
+                        { required: true, message: "Region is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Region"
+                        id="region"
+                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/region?limit=3&for_dropdown=true&page=1`}
+                        getInitialValue={{
+                          form,
+                          initialValue: "region",
+                        }}
+                        queryKey={["region", getFieldValue("country")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(!getFieldValue("country"))}
+                        onChange={() => {
+                          resetFields(["province", "city", "barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Province"
+                required={false}
+                className="col-span-full lg:col-span-1"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.region !== curr.region) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="province"
+                      rules={[
+                        { required: true, message: "Province is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Province"
+                        id="province"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}`}
+                        getInitialValue={{
+                          form,
+                          initialValue: "province",
+                        }}
+                        queryKey={["province", getFieldValue("region")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(!getFieldValue("region"))}
+                        onChange={() => {
+                          resetFields(["city", "barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="City"
+                required={false}
+                className="col-span-full lg:col-span-1"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.province !== curr.province) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="city"
+                      rules={[{ required: true, message: "City is required" }]}
+                    >
+                      <InfiniteSelect
+                        placeholder="City"
+                        id="city"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}&province_code=${getFieldValue("province")}`}
+                        getInitialValue={{
+                          form,
+                          initialValue: "province",
+                        }}
+                        queryKey={["city", getFieldValue("province")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(
+                          !getFieldValue("region") || !getFieldValue("province")
+                        )}
+                        onChange={() => {
+                          resetFields(["barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Barangay"
+                required={false}
+                className="col-span-full lg:col-span-1"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.city !== curr.city) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="barangay"
+                      rules={[{ required: true, message: "City is required" }]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Barangay"
+                        id="barangay"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}&province_code=${getFieldValue(
+                          "province"
+                        )}&city_code=${getFieldValue("city")}`}
+                        getInitialValue={{
+                          form,
+                          initialValue: "barangay",
+                        }}
+                        queryKey={["barangay", getFieldValue("city")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(
+                          !getFieldValue("region") ||
+                            !getFieldValue("province") ||
+                            !getFieldValue("city")
+                        )}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Street"
+                name="street"
+                rules={[{ required: true, message: "Street is required" }]}
+                required={false}
+                className="col-span-full lg:col-span-1"
+              >
+                <Input id="street" placeholder="Add street name" />
               </Form.Item>
               <Form.Item
                 label="Zip Code"
                 name="zip_code"
                 rules={[{ required: true, message: "Zip Code is required" }]}
                 required={false}
-                className="col-span-3 lg:col-span-1"
+                className="col-span-full lg:col-span-1"
               >
                 <NumericFormat
                   customInput={Input}

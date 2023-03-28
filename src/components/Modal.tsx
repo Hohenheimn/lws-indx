@@ -1,29 +1,11 @@
-import React, { useEffect } from "react";
-import {
-  add,
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  getDay,
-  getDate,
-  getYear,
-  isEqual,
-  isSameMonth,
-  isToday,
-  isBefore,
-  isAfter,
-  parse,
-  parseISO,
-  startOfMonth,
-} from "date-fns";
-import { PageContainer } from "../components/animation";
+import React from "react";
 import { twMerge } from "tailwind-merge";
-import { Button } from "../components/Button";
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { Dialog, Transition } from "@headlessui/react";
+
 interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   show: boolean;
   onClose: (value: boolean) => void;
+  destroyOnClose?: boolean;
 }
 
 export default function Modal({

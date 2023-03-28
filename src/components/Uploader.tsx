@@ -18,6 +18,7 @@ export default function Uploader({
   setImage,
   children,
   className,
+  wrapperClassName,
   id,
   ...rest
 }: any) {
@@ -50,7 +51,7 @@ export default function Uploader({
     return allowedFile && isLt2M;
   };
   return (
-    <div id={id}>
+    <div id={id} className={wrapperClassName}>
       <Upload
         showUploadList={false}
         beforeUpload={beforeUpload}

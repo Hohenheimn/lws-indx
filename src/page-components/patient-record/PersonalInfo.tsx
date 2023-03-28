@@ -1,4 +1,4 @@
-import { Checkbox, DatePicker, Form } from "antd";
+import { Checkbox, DatePicker, Form, notification } from "antd";
 import React from "react";
 import { scroller } from "react-scroll";
 import { Button } from "../../components/Button";
@@ -8,18 +8,98 @@ import { Select } from "../../components/Select";
 import { differenceInYears, parse } from "date-fns";
 import gender from "../../../utils/global-data/gender";
 import moment from "moment";
-import { NumericFormat } from "react-number-format";
+import { NumericFormat, PatternFormat } from "react-number-format";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Context } from "../../../utils/context/Provider";
+import { postData } from "../../../utils/api";
+import SignatureCanvas from "react-signature-canvas";
+import Image from "next/image";
+import { InfiniteSelect } from "../../components/InfiniteSelect";
+import { getInitialValue } from "../../../utils/helpers";
 
-export function PersonalInfo({ patientRecord }: any) {
+function dataURLtoFile(dataurl: any, filename: any) {
+  var arr = dataurl.split(","),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mime });
+}
+
+export function PersonalInfo({ patientRecord, tab }: any) {
+  const queryClient = useQueryClient();
+  const { setIsAppLoading } = React.useContext(Context);
   const [PersonalInfoForm] = Form.useForm();
 
+  let signatureCanvasRef = React.useRef<any>(null);
+  let [isSignatureCleared, setIsSignatureCleared] = React.useState(false);
+
   React.useEffect(() => {
-    PersonalInfoForm.setFieldsValue({
-      ...patientRecord,
-      birthdate: moment(patientRecord?.birthdate, "MM-DD-YYYY"),
-      age: differenceInYears(new Date(), new Date(patientRecord?.birthdate)),
-    });
-  });
+    if (tab === "2") {
+      PersonalInfoForm.setFieldsValue({
+        ...patientRecord,
+        entry_date: moment(patientRecord?.created_at),
+        insurance_effective_date: moment(
+          patientRecord?.insurance_effective_date,
+          "MMMM DD, YYYY"
+        ),
+        birthdate: moment(patientRecord?.birthdate, "MMMM DD, YYYY"),
+        age: moment().diff(
+          moment(patientRecord?.birthdate, "MMMM DD, YYYY"),
+          "years"
+        ),
+        patient_consent: Boolean(patientRecord?.patient_signature_path),
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  const { mutate: editPatient } = useMutation(
+    (payload: any) => {
+      return postData({
+        url: `/api/patient/${patientRecord._id}?_method=PUT`,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Personal Information Updated",
+          description: `Personal Information Updated`,
+        });
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({ queryKey: ["patient"] });
+        const previousValues = queryClient.getQueryData(["patient"]);
+        queryClient.setQueryData(["patient"], (oldData: any) =>
+          oldData ? [...oldData, newData] : undefined
+        );
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["patient"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["patient"] });
+      },
+    }
+  );
 
   return (
     <Card className="flex-auto">
@@ -27,7 +107,19 @@ export function PersonalInfo({ patientRecord }: any) {
         form={PersonalInfoForm}
         layout="vertical"
         onFinish={(values) => {
-          console.log(values);
+          delete values.entry_date;
+          if (
+            typeof values.patient_signature_path === "string" &&
+            values.patient_signature_path.includes("https")
+          ) {
+            delete values.patient_signature_path;
+          }
+          values.insurance_effective_date = moment(
+            values.insurance_effective_date
+          ).format("MMMM DD, YYYY");
+          values.birthdate = moment(values.birthdate).format("MMMM DD, YYYY");
+
+          editPatient(values);
         }}
         onFinishFailed={(data) => {
           scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {
@@ -45,11 +137,14 @@ export function PersonalInfo({ patientRecord }: any) {
               <Form.Item
                 label="Entry Date"
                 name="entry_date"
-                rules={[{ required: true, message: "Entry Date is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <DatePicker id="entry_date" placeholder="Entry Date" />
+                <DatePicker
+                  placeholder="Entry Date"
+                  disabled={true}
+                  format="MMMM DD, YYYY"
+                />
               </Form.Item>
             </div>
             <div className="grid grid-cols-12 gap-4">
@@ -93,7 +188,7 @@ export function PersonalInfo({ patientRecord }: any) {
                     const date = parse(dobString, "MMMM dd, yyyy", new Date());
 
                     PersonalInfoForm.setFieldsValue({
-                      age: differenceInYears(new Date(), date),
+                      age: moment().diff(moment(dob), "years"),
                     });
                   }}
                 />
@@ -133,10 +228,18 @@ export function PersonalInfo({ patientRecord }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Select placeholder="Select Civil Status">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
+                <InfiniteSelect
+                  placeholder="Civil Status"
+                  id="civil_status"
+                  api={`${process.env.REACT_APP_API_BASE_URL}/api/civil-status?limit=3&for_dropdown=true&page=1`}
+                  getInitialValue={{
+                    form: PersonalInfoForm,
+                    initialValue: "civil_status",
+                  }}
+                  queryKey={["civil_status"]}
+                  displayValueKey="name"
+                  returnValueKey="_id"
+                />
               </Form.Item>
               <Form.Item
                 label="Religion"
@@ -145,10 +248,7 @@ export function PersonalInfo({ patientRecord }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Select placeholder="Select Religion">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
+                <Input id="religion" placeholder="Religion" />
               </Form.Item>
               <Form.Item
                 label="Nationality"
@@ -157,10 +257,18 @@ export function PersonalInfo({ patientRecord }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Select placeholder="Select Nationality">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
+                <InfiniteSelect
+                  placeholder="Nationality"
+                  id="nationality"
+                  api={`${process.env.REACT_APP_API_BASE_URL}/api/nationality?limit=3&for_dropdown=true&page=1`}
+                  getInitialValue={{
+                    form: PersonalInfoForm,
+                    initialValue: "nationality",
+                  }}
+                  queryKey={["nationality"]}
+                  displayValueKey="name"
+                  returnValueKey="_id"
+                />
               </Form.Item>
             </div>
           </div>
@@ -190,18 +298,35 @@ export function PersonalInfo({ patientRecord }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="landline_no" placeholder="Landline Number" />
+                <NumericFormat
+                  customInput={Input}
+                  id="landline_no"
+                  allowNegative={false}
+                  placeholder="Landline Number"
+                />
               </Form.Item>
               <Form.Item
                 label="Mobile Number"
                 name="mobile_no"
                 rules={[
                   { required: true, message: "Mobile Number is required" },
+                  {
+                    pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                    message:
+                      "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
+                  },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="mobile_no" placeholder="Mobile Number" />
+                <PatternFormat
+                  customInput={Input}
+                  placeholder="09XX-XXX-XXXXX"
+                  patternChar="*"
+                  format="****-***-****"
+                  allowEmptyFormatting={false}
+                  id="mobile_no"
+                />
               </Form.Item>
             </div>
           </div>
@@ -211,6 +336,190 @@ export function PersonalInfo({ patientRecord }: any) {
             </div>
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
+                label="Country"
+                name="country"
+                rules={[{ required: true, message: "Country is required" }]}
+                required={false}
+                className="col-span-12 lg:col-span-6"
+              >
+                <Select placeholder="Select Country" id="country">
+                  <Select.Option value="Philippines">Philippines</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Region"
+                required={false}
+                className="col-span-12 lg:col-span-6"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.country !== curr.country) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="region"
+                      rules={[
+                        { required: true, message: "Region is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Region"
+                        id="region"
+                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/region?limit=3&for_dropdown=true&page=1`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "region",
+                        }}
+                        queryKey={["region", getFieldValue("country")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(!getFieldValue("country"))}
+                        onChange={() => {
+                          resetFields(["province", "city", "barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Province"
+                required={false}
+                className="col-span-12 lg:col-span-4"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.region !== curr.region) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="province"
+                      rules={[
+                        { required: true, message: "Province is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Province"
+                        id="province"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "province",
+                        }}
+                        queryKey={["province", getFieldValue("region")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(!getFieldValue("region"))}
+                        onChange={() => {
+                          resetFields(["city", "barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="City"
+                required={false}
+                className="col-span-12 lg:col-span-4"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.province !== curr.province) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="city"
+                      rules={[{ required: true, message: "City is required" }]}
+                    >
+                      <InfiniteSelect
+                        placeholder="City"
+                        id="city"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}&province_code=${getFieldValue("province")}`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "city",
+                        }}
+                        queryKey={["city", getFieldValue("province")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(
+                          !getFieldValue("region") || !getFieldValue("province")
+                        )}
+                        onChange={() => {
+                          resetFields(["barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Barangay"
+                required={false}
+                className="col-span-12 lg:col-span-4"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.city !== curr.city) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="barangay"
+                      rules={[{ required: true, message: "City is required" }]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Barangay"
+                        id="barangay"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}&province_code=${getFieldValue(
+                          "province"
+                        )}&city_code=${getFieldValue("city")}`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "barangay",
+                        }}
+                        queryKey={["barangay", getFieldValue("city")]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(
+                          !getFieldValue("region") ||
+                            !getFieldValue("province") ||
+                            !getFieldValue("city")
+                        )}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
                 label="Street"
                 name="street"
                 rules={[{ required: true, message: "Street is required" }]}
@@ -218,39 +527,6 @@ export function PersonalInfo({ patientRecord }: any) {
                 className="col-span-12 lg:col-span-8"
               >
                 <Input id="street" placeholder="Add street name" />
-              </Form.Item>
-              <Form.Item
-                label="Barangay"
-                name="barangay"
-                rules={[{ required: true, message: "Barangay is required" }]}
-                required={false}
-                className="col-span-12 lg:col-span-4"
-              >
-                <Input id="barangay" placeholder="Barangay" />
-              </Form.Item>
-              <Form.Item
-                label="City"
-                name="city"
-                rules={[{ required: true, message: "City is required" }]}
-                required={false}
-                className="col-span-12 lg:col-span-4"
-              >
-                <Select placeholder="Select City">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
-                label="Country"
-                name="country"
-                rules={[{ required: true, message: "Country is required" }]}
-                required={false}
-                className="col-span-12 lg:col-span-4"
-              >
-                <Select placeholder="Select Country">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
               </Form.Item>
               <Form.Item
                 label="Zip Code"
@@ -275,12 +551,12 @@ export function PersonalInfo({ patientRecord }: any) {
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Position"
-                name="position"
+                name="occupation_position"
                 rules={[{ required: true, message: "Position is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="position" placeholder="Position" />
+                <Input id="occupation_position" placeholder="Position" />
               </Form.Item>
               <Form.Item
                 label="Company Name"
@@ -289,31 +565,60 @@ export function PersonalInfo({ patientRecord }: any) {
                   { required: true, message: "Company Name is required" },
                 ]}
                 required={false}
-                className="col-span-12 lg:col-span-8"
+                className="col-span-12 lg:col-span-4"
               >
                 <Input id="company_name" placeholder="Company Name" />
               </Form.Item>
               <Form.Item
+                label="Email Address"
+                name="occupation_email"
+                rules={[
+                  { type: "email", message: "Must be a valid email" },
+                  { required: true, message: "Email Address is required" },
+                ]}
+                required={false}
+                className="col-span-12 lg:col-span-4"
+              >
+                <Input id="occupation_email" placeholder="Email Address" />
+              </Form.Item>
+              <Form.Item
                 label="Landline Number"
-                name="landline_number"
+                name="occupation_landline_no"
                 rules={[
                   { required: true, message: "Landline Number is required" },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="landline_number" placeholder="Landline Number" />
+                <NumericFormat
+                  customInput={Input}
+                  id="occupation_landline_no"
+                  allowNegative={false}
+                  placeholder="Landline Number"
+                />
               </Form.Item>
               <Form.Item
                 label="Mobile Number"
-                name="mobile_number"
+                name="occupation_mobile_no"
                 rules={[
                   { required: true, message: "Mobile Number is required" },
+                  {
+                    pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                    message:
+                      "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
+                  },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="mobile_number" placeholder="Mobile Number" />
+                <PatternFormat
+                  customInput={Input}
+                  placeholder="09XX-XXX-XXXXX"
+                  patternChar="*"
+                  format="****-***-****"
+                  allowEmptyFormatting={false}
+                  id="occupation_mobile_no"
+                />
               </Form.Item>
               <Form.Item
                 label="Zip Code"
@@ -337,6 +642,209 @@ export function PersonalInfo({ patientRecord }: any) {
             </div>
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
+                label="Country"
+                name="office_country"
+                rules={[{ required: true, message: "Country is required" }]}
+                required={false}
+                className="col-span-12 lg:col-span-6"
+              >
+                <Select placeholder="Select Country" id="office_country">
+                  <Select.Option value="Philippines">Philippines</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Region"
+                required={false}
+                className="col-span-12 lg:col-span-6"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.office_country !== curr.office_country) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="office_region"
+                      rules={[
+                        { required: true, message: "Region is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Region"
+                        id="office_region"
+                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/region?limit=3&for_dropdown=true&page=1`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "office_region",
+                        }}
+                        queryKey={[
+                          "office_region",
+                          getFieldValue("office_country"),
+                        ]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(!getFieldValue("office_country"))}
+                        onChange={() => {
+                          resetFields([
+                            "office_province",
+                            "office_city",
+                            "office_barangay",
+                          ]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Province"
+                required={false}
+                className="col-span-12 lg:col-span-4"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.office_region !== curr.office_region) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="office_province"
+                      rules={[
+                        { required: true, message: "Province is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Province"
+                        id="office_province"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "office_region"
+                        )}`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "office_province",
+                        }}
+                        queryKey={[
+                          "office_province",
+                          getFieldValue("office_region"),
+                        ]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(!getFieldValue("office_region"))}
+                        onChange={() => {
+                          resetFields(["office_city", "office_barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="City"
+                required={false}
+                className="col-span-12 lg:col-span-4"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.office_province !== curr.office_province) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="office_city"
+                      rules={[{ required: true, message: "City is required" }]}
+                    >
+                      <InfiniteSelect
+                        placeholder="City"
+                        id="office_city"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "office_region"
+                        )}&province_code=${getFieldValue("office_province")}`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "office_city",
+                        }}
+                        queryKey={[
+                          "office_city",
+                          getFieldValue("office_province"),
+                        ]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(
+                          !getFieldValue("office_region") ||
+                            !getFieldValue("office_province")
+                        )}
+                        onChange={() => {
+                          resetFields(["office_barangay"]);
+                        }}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
+                label="Barangay"
+                required={false}
+                className="col-span-12 lg:col-span-4"
+                shouldUpdate={(prev, curr) => {
+                  if (prev.office_city !== curr.office_city) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+              >
+                {({ getFieldValue, resetFields }) => {
+                  return (
+                    <Form.Item
+                      name="office_barangay"
+                      rules={[
+                        { required: true, message: "Barangay is required" },
+                      ]}
+                    >
+                      <InfiniteSelect
+                        placeholder="Barangay"
+                        id="office_barangay"
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "office_region"
+                        )}&province_code=${getFieldValue(
+                          "office_province"
+                        )}&city_code=${getFieldValue("office_city")}`}
+                        getInitialValue={{
+                          form: PersonalInfoForm,
+                          initialValue: "office_barangay",
+                        }}
+                        queryKey={[
+                          "office_barangay",
+                          getFieldValue("office_city"),
+                        ]}
+                        displayValueKey="name"
+                        returnValueKey="_id"
+                        disabled={Boolean(
+                          !getFieldValue("office_region") ||
+                            !getFieldValue("office_province") ||
+                            !getFieldValue("office_city")
+                        )}
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Form.Item>
+              <Form.Item
                 label="Street"
                 name="office_street"
                 rules={[{ required: true, message: "Street is required" }]}
@@ -344,39 +852,6 @@ export function PersonalInfo({ patientRecord }: any) {
                 className="col-span-12 lg:col-span-8"
               >
                 <Input id="office_street" placeholder="Add street name" />
-              </Form.Item>
-              <Form.Item
-                label="Barangay"
-                name="office_barangay"
-                rules={[{ required: true, message: "Barangay is required" }]}
-                required={false}
-                className="col-span-12 lg:col-span-4"
-              >
-                <Input id="office_barangay" placeholder="Barangay" />
-              </Form.Item>
-              <Form.Item
-                label="City"
-                name="office_city"
-                rules={[{ required: true, message: "City is required" }]}
-                required={false}
-                className="col-span-12 lg:col-span-4"
-              >
-                <Select placeholder="Select City" id="office_city">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
-                label="Country"
-                name="office_country"
-                rules={[{ required: true, message: "Country is required" }]}
-                required={false}
-                className="col-span-12 lg:col-span-4"
-              >
-                <Select placeholder="Select Country" id="office_country">
-                  <Select.Option value="1">1</Select.Option>
-                  <Select.Option value="2">2</Select.Option>
-                </Select>
               </Form.Item>
               <Form.Item
                 label="Zip Code"
@@ -428,7 +903,7 @@ export function PersonalInfo({ patientRecord }: any) {
               </Form.Item>
               <Form.Item
                 label="Email Address"
-                name="email"
+                name="emergency_email"
                 rules={[
                   { type: "email", message: "Must be a valid email" },
                   { required: true, message: "Email Address is required" },
@@ -436,29 +911,46 @@ export function PersonalInfo({ patientRecord }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="email" placeholder="Email Address" />
+                <Input id="emergency_email" placeholder="Email Address" />
               </Form.Item>
               <Form.Item
                 label="Landline Number"
-                name="landline_number"
+                name="emergency_landline_no"
                 rules={[
                   { required: true, message: "Landline Number is required" },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="landline_number" placeholder="Landline Number" />
+                <NumericFormat
+                  customInput={Input}
+                  id="emergency_landline_no"
+                  allowNegative={false}
+                  placeholder="Landline Number"
+                />
               </Form.Item>
               <Form.Item
                 label="Mobile Number"
-                name="mobile_number"
+                name="emergency_mobile_no"
                 rules={[
                   { required: true, message: "Mobile Number is required" },
+                  {
+                    pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                    message:
+                      "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
+                  },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="mobile_number" placeholder="Mobile Number" />
+                <PatternFormat
+                  customInput={Input}
+                  placeholder="09XX-XXX-XXXXX"
+                  patternChar="*"
+                  format="****-***-****"
+                  allowEmptyFormatting={false}
+                  id="emergency_mobile_no"
+                />
               </Form.Item>
             </div>
           </div>
@@ -469,34 +961,38 @@ export function PersonalInfo({ patientRecord }: any) {
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Dental Insurance"
-                name="dental_insurance"
+                name="insurance_name"
                 rules={[
                   { required: true, message: "Dental Insurance is required" },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="dental_insurance" placeholder="Dental Insurance" />
+                <Input id="insurance_name" placeholder="Dental Insurance" />
               </Form.Item>
               <Form.Item
                 label="Effective Date"
-                name="effective_date"
+                name="insurance_effective_date"
                 rules={[
                   { required: true, message: "Effective Date is required" },
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <DatePicker id="effective_date" placeholder="Effective Date" />
+                <DatePicker
+                  id="insurance_effective_date"
+                  placeholder="Effective Date"
+                  format="MMMM DD, YYYY"
+                />
               </Form.Item>
               <Form.Item
                 label="Note"
-                name="note"
-                rules={[{ required: true, message: "Note is required" }]}
+                name="insurance_note"
+                // rules={[{ required: true, message: "Note is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="note" placeholder="Note" />
+                <Input id="insurance_note" placeholder="Note" />
               </Form.Item>
             </div>
           </div>
@@ -507,13 +1003,13 @@ export function PersonalInfo({ patientRecord }: any) {
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Whom may we thank for referring you?"
-                name="referral"
-                rules={[{ required: true, message: "Referral is required" }]}
+                name="referral_name"
+                // rules={[{ required: true, message: "Referral is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-6"
               >
                 <Input
-                  id="referral"
+                  id="referral_name"
                   placeholder="Whom may we thank for referring you?"
                 />
               </Form.Item>
@@ -521,28 +1017,39 @@ export function PersonalInfo({ patientRecord }: any) {
                 label="Contact of Referral"
                 name="referral_contact"
                 rules={[
-                  {
-                    required: true,
-                    message: "Contact of Referral is required",
-                  },
+                  ({ getFieldValue }: any) => ({
+                    validator(_: any, value: any) {
+                      if (value && !value.match(/^(09)\d{2}-\d{3}-\d{4}$/)) {
+                        return Promise.reject(
+                          "Please use correct format!\n\nFormat:09XX-XXX-XXXXX"
+                        );
+                      }
+
+                      return Promise.resolve();
+                    },
+                  }),
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-6"
               >
-                <DatePicker
+                <PatternFormat
+                  customInput={Input}
+                  placeholder="09XX-XXX-XXXXX"
+                  patternChar="*"
+                  format="****-***-****"
+                  allowEmptyFormatting={false}
                   id="referral_contact"
-                  placeholder="Contact of Referral"
                 />
               </Form.Item>
               <Form.Item
                 label="What is your reason for dental consultation?"
-                name="reason"
-                rules={[{ required: true, message: "Reason is required" }]}
+                name="reason_for_consultation"
+                // rules={[{ required: true, message: "Reason is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-6"
               >
                 <Input
-                  id="reason"
+                  id="reason_for_consultation"
                   placeholder="What is your reason for dental consultation?"
                 />
               </Form.Item>
@@ -581,6 +1088,79 @@ export function PersonalInfo({ patientRecord }: any) {
                   {`Patient's Consent`}
                 </Checkbox>
               </Form.Item>
+              {isSignatureCleared || !patientRecord?.patient_signature_path ? (
+                <Form.Item
+                  label="Patient Signature"
+                  name="patient_signature_path"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Patient Signature is required",
+                    },
+                  ]}
+                  className="col-span-full text-base"
+                >
+                  <SignatureCanvas
+                    penColor="#000"
+                    canvasProps={{
+                      style: {
+                        width: "100%",
+                        height: "20rem",
+                        border: "1px solid #ccc",
+                        userSelect: "none",
+                      },
+                    }}
+                    ref={signatureCanvasRef}
+                    onEnd={() => {
+                      PersonalInfoForm.setFieldsValue({
+                        patient_signature_path: dataURLtoFile(
+                          signatureCanvasRef.current
+                            ?.getTrimmedCanvas()
+                            .toDataURL("image/png"),
+                          `${patientRecord?._id}-signature.png`
+                        ),
+                      });
+                    }}
+                    key="canvas"
+                  />
+                </Form.Item>
+              ) : (
+                <Form.Item
+                  label="Patient Signature"
+                  name="patient_signature_path"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Patient Signature is required",
+                    },
+                  ]}
+                  className="col-span-full text-base"
+                >
+                  <div className="relative h-80 col-span-full">
+                    <Image
+                      src={patientRecord?.patient_signature_path}
+                      alt="Patient Signature"
+                      fill
+                      sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                      className="object-center"
+                      objectFit="contain"
+                    />
+                  </div>
+                </Form.Item>
+              )}
+              <div className="col-span-full flex justify-center items-center mb-4 mt-8">
+                <Button
+                  appearance="ghost"
+                  onClick={() => {
+                    signatureCanvasRef?.current?.clear();
+                    PersonalInfoForm.resetFields(["patient_signature_path"]);
+                    setIsSignatureCleared(true);
+                  }}
+                  className="max-w-xs p-4"
+                >
+                  Clear Signature
+                </Button>
+              </div>
             </div>
           </div>
           <div className="flex justify-center items-center">

@@ -159,8 +159,8 @@ export default function Registration({ router }: any) {
                     <PatternFormat
                       customInput={Input}
                       placeholder="09XX-XXX-XXXXX"
-                      mask="X"
-                      format="####-###-####"
+                      patternChar="*"
+                      format="****-***-****"
                       allowEmptyFormatting={false}
                       id="mobile_number"
                     />

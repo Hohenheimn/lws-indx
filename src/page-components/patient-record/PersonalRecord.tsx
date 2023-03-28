@@ -10,6 +10,7 @@ import { BsTrash } from "react-icons/bs";
 import { Button } from "../../components/Button";
 
 export function PersonalRecord({ patientRecord }: any) {
+  let [search, setSearch] = React.useState("");
   return (
     <div className="space-y-8">
       <div className="space-y-4 pt-4">
@@ -17,7 +18,8 @@ export function PersonalRecord({ patientRecord }: any) {
         <Input
           placeholder="Search"
           prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-          className="rounded-full border-none text-lg max-w-md py-4 shadow-md"
+          className="rounded-full text-base shadow-none"
+          onChange={(e: any) => setSearch(e.target.value)}
         />
       </div>
       <div className="space-y-4">

@@ -735,9 +735,9 @@ export function Website({ router }: any) {
                         >
                           <PatternFormat
                             customInput={Input}
-                            placeholder="Mobile Number"
-                            mask="X"
-                            format="####-###-####"
+                            placeholder="09XX-XXX-XXXXX"
+                            patternChar="*"
+                            format="****-***-****"
                             allowEmptyFormatting={false}
                             id="mobile_number"
                             className="shadow-none border-2"
