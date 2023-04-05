@@ -236,11 +236,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 lg:col-span-6"
                   shouldUpdate={(prev, curr) => {
-                    if (prev.clinic_country !== curr.clinic_country) {
-                      return true;
-                    }
-
-                    return false;
+                    return true;
                   }}
                 >
                   {({ getFieldValue, resetFields }) => {
@@ -283,11 +279,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 lg:col-span-4"
                   shouldUpdate={(prev, curr) => {
-                    if (prev.clinic_region !== curr.clinic_region) {
-                      return true;
-                    }
-
-                    return false;
+                    return true;
                   }}
                 >
                   {({ getFieldValue, resetFields }) => {
@@ -330,11 +322,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 lg:col-span-4"
                   shouldUpdate={(prev, curr) => {
-                    if (prev.clinic_province !== curr.clinic_province) {
-                      return true;
-                    }
-
-                    return false;
+                    return true;
                   }}
                 >
                   {({ getFieldValue, resetFields }) => {
@@ -380,11 +368,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 lg:col-span-4"
                   shouldUpdate={(prev, curr) => {
-                    if (prev.clinic_city !== curr.clinic_city) {
-                      return true;
-                    }
-
-                    return false;
+                    return true;
                   }}
                 >
                   {({ getFieldValue, resetFields }) => {
@@ -490,6 +474,9 @@ export function MedicalHistory({ patientRecord }: any) {
                   className="col-span-12 lg:col-span-6"
                 >
                   <DatePicker
+                    getPopupContainer={(triggerNode: any) => {
+                      return triggerNode.parentNode;
+                    }}
                     id="last_medical_exam_date"
                     placeholder="Date of the Last Medical Exam"
                     format="MMMM DD, YYYY"

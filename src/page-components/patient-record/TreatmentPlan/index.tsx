@@ -47,8 +47,9 @@ export function TreatmentPlan({ patientRecord }: any) {
   let [page, setPage] = React.useState(1);
   let [search, setSearch] = React.useState("");
 
-  let [isTreatmentPlanModalOpen, setIsTreatmentPlanModalOpen] =
-    React.useState(false);
+  let [isTreatmentPlanModalOpen, setIsTreatmentPlanModalOpen] = React.useState(
+    false
+  );
 
   let { data: treatmentPlan, isLoading: treatmentPlanIsLoading } = useQuery(
     ["treatment-plan", page, search],
@@ -141,7 +142,8 @@ export function TreatmentPlan({ patientRecord }: any) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}

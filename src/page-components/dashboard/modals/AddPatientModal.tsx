@@ -18,6 +18,7 @@ import { Context } from "../../../../utils/context/Provider";
 import { differenceInYears, parse } from "date-fns";
 import { InfiniteSelect } from "../../../components/InfiniteSelect";
 import { getBase64, getInitialValue } from "../../../../utils/helpers";
+import moment from "moment";
 
 export default function AddPatientModal({
   show,
@@ -129,7 +130,7 @@ export default function AddPatientModal({
     >
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-semibold text-3xl">Add New Patient</div>
+          <div className="font-bold text-3xl">Add New Patient</div>
           <div className="text-base">
             <div className="text-casper-500">Entry Date</div>
             <div>{format(new Date(), "MM/dd/yyyy")}</div>
@@ -225,9 +226,16 @@ export default function AddPatientModal({
                 required={false}
               >
                 <DatePicker
+                  getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}
                   placeholder="Birthdate"
                   id="birthdate"
                   format="MMMM DD, YYYY"
+                  defaultPickerValue={moment().subtract(3, "year")}
+                  disabledDate={(current) => {
+                    return current && current >= moment().subtract(3, "year");
+                  }}
                   onChange={(dob, dobString) => {
                     const date = parse(dobString, "MMMM dd, yyyy", new Date());
 
@@ -336,15 +344,11 @@ export default function AddPatientModal({
                 label="Region"
                 required={false}
                 shouldUpdate={(prev, curr) => {
-                  if (prev.country !== curr.country) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
                 className="col-span-full lg:col-span-1"
               >
-                {({ getFieldValue, resetFields }) => {
+                {({ getFieldValue, resetFields, setFieldsValue }) => {
                   return (
                     <Form.Item
                       name="region"
@@ -377,11 +381,7 @@ export default function AddPatientModal({
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.region !== curr.region) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -421,11 +421,7 @@ export default function AddPatientModal({
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.province !== curr.province) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -465,11 +461,7 @@ export default function AddPatientModal({
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.city !== curr.city) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {

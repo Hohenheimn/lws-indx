@@ -120,12 +120,13 @@ export function stripTags(text: string) {
   return text?.replace(/(<([^>]+)>)/gi, "");
 }
 
-export function getInitialValue(form: any, name?: string, initial?: boolean) {
+export function getInitialValue(form: any, name: string, initial?: boolean) {
   if (!name) {
     return "";
   }
 
-  let initialValue = form.getFieldValue([name]);
+  let initialValue = form.getFieldValue(name);
+
   if (!initialValue) {
     return "";
   }

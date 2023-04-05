@@ -141,6 +141,9 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 className="col-span-12 lg:col-span-4"
               >
                 <DatePicker
+                  getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}
                   placeholder="Entry Date"
                   disabled={true}
                   format="MMMM DD, YYYY"
@@ -160,7 +163,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Middle Name"
                 name="middle_name"
-                rules={[{ required: true, message: "Middle Name is required" }]}
+                // rules={[{ required: true, message: "Middle Name is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -181,9 +184,16 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 className="col-span-12 lg:col-span-8"
               >
                 <DatePicker
+                  getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}
                   placeholder="Birthdate"
                   id="birthdate"
                   format="MMMM DD, YYYY"
+                  defaultPickerValue={moment().subtract(3, "year")}
+                  disabledDate={(current) => {
+                    return current && current >= moment().subtract(3, "year");
+                  }}
                   onChange={(dob, dobString) => {
                     const date = parse(dobString, "MMMM dd, yyyy", new Date());
 
@@ -351,11 +361,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-6"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.country !== curr.country) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -391,11 +397,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.region !== curr.region) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -435,11 +437,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.province !== curr.province) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -479,11 +477,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.city !== curr.city) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -657,11 +651,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-6"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.office_country !== curr.office_country) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -704,11 +694,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.office_region !== curr.office_region) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -751,11 +737,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.office_province !== curr.office_province) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -799,11 +781,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.office_city !== curr.office_city) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -886,7 +864,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Middle Name"
                 name="emergency_middle_name"
-                rules={[{ required: true, message: "Middle Name is required" }]}
+                // rules={[{ required: true, message: "Middle Name is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -980,6 +958,9 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 className="col-span-12 lg:col-span-4"
               >
                 <DatePicker
+                  getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}
                   id="insurance_effective_date"
                   placeholder="Effective Date"
                   format="MMMM DD, YYYY"

@@ -36,8 +36,9 @@ export function Prescription({ patientRecord }: any) {
   let [page, setPage] = React.useState(1);
   let [search, setSearch] = React.useState("");
 
-  let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] =
-    React.useState(false);
+  let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = React.useState(
+    false
+  );
 
   let { data: prescription, isLoading: prescriptionIsLoading } = useQuery(
     ["prescription", page, search],
@@ -132,7 +133,8 @@ export function Prescription({ patientRecord }: any) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}

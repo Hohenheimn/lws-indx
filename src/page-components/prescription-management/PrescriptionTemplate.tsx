@@ -24,8 +24,9 @@ export function PrescriptionTemplate() {
 
   let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
-  let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] =
-    React.useState(false);
+  let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = React.useState(
+    false
+  );
 
   const { data: prescription, isFetching: isProceduresLoading } = useQuery(
     ["prescription", page, search],
@@ -138,7 +139,8 @@ export function PrescriptionTemplate() {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}

@@ -287,7 +287,9 @@ export function ClinicAnalytics({}: NextPageProps) {
               );
             })}
           </Select>
-          <DatePicker.RangePicker className="[&.ant-picker]:border-transparent" />
+          <DatePicker getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}.RangePicker className="[&.ant-picker]:border-transparent" />
         </div> */}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

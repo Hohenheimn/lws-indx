@@ -16,7 +16,7 @@ export const LoadingScreen = () => {
           objectFit="contain"
         />
       </div>
-      <div className="animate-pulse">PLEASE WAIT...</div>
+      <div className="animate-pulse">Please wait...</div>
     </div>
   );
 };

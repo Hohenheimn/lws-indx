@@ -114,9 +114,7 @@ export default function AddPrescriptionManagementModal({
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-semibold text-3xl">
-            Create Prescription Template
-          </div>
+          <div className="font-bold text-3xl">Create Prescription Template</div>
         </div>
         <Form
           form={form}

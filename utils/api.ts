@@ -38,6 +38,7 @@ export const fetchData = async ({ url, options }: any) => {
       }`,
       {
         headers: {
+          // api_key: !token ? process.env.REACT_APP_API_KEY : "",
           Authorization: `Bearer ${token}`,
         },
       }
@@ -89,6 +90,7 @@ export const postData = async ({ url, payload, options }: any) => {
       formDataPayload,
       {
         headers: {
+          api_key: !token ? process.env.REACT_APP_API_KEY : "",
           Authorization: `Bearer ${token}`,
         },
       }

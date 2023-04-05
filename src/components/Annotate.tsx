@@ -1,11 +1,16 @@
 import React from "react";
-import PrivateRoute from "../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../auth/HOC/VerifyAuth";
 import Annotation from "react-image-annotation";
-import { Button } from "../../components/Button";
-import { PageContainer } from "../../components/animation";
+import { Button } from "../components/Button";
+import { PageContainer } from "../components/animation";
 import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
 import { FaTooth } from "react-icons/fa";
+import { twMerge } from "tailwind-merge";
+
+interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
+  disabled?: boolean;
+  image: string;
+  defaultValue?: any;
+}
 
 const Shape = ({ children, geometry, style }: any) => {
   return (
@@ -14,14 +19,14 @@ const Shape = ({ children, geometry, style }: any) => {
         ...style,
         // height: `${geometry.height}%`,
         // width: `${geometry.width}%`,
-        height: `1.5rem`,
-        width: `1.5rem`,
+        height: `1rem`,
+        width: `1rem`,
         borderRadius: geometry.type === "POINT" ? "100%" : 0,
         overflow: "hidden",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "1rem",
+        // padding: "1rem",
       }}
     >
       {children}
@@ -33,25 +38,9 @@ function renderHighlight({ annotation, active }: any) {
   const { geometry } = annotation;
 
   if (!geometry) return null;
-
-  let sample = (id: number) => {
-    switch (id) {
-      case 0:
-        return "blue";
-      case 1:
-        return "yellow";
-      case 2:
-        return "red";
-      case 3:
-        return "black";
-      default:
-        return "green";
-    }
-  };
-
   return (
     <Shape
-      key={annotation.data.id}
+      key={annotation.key}
       geometry={geometry}
       style={{
         border: "solid 1px transparent",
@@ -62,16 +51,17 @@ function renderHighlight({ annotation, active }: any) {
         top: `calc(${geometry.y}% - .7rem)`,
         color: "#333",
         fontWeight: 700,
-        fontSize: "1rem",
-        padding: "1rem",
+        // padding: "1rem",
+        padding: ".6rem",
+        // zIndex: 10000000000
       }}
     >
-      <div>{annotation.data.icon}</div>
+      <div className="text-[.6rem]">{annotation.data.icon}</div>
     </Shape>
   );
 }
 
-function RenderContent({ annotation, active }: any) {
+function RenderContent({ annotation, key }: any) {
   const { geometry } = annotation;
 
   if (!geometry) return null;
@@ -79,41 +69,36 @@ function RenderContent({ annotation, active }: any) {
   return (
     <div
       style={{
-        left: `${geometry.x}%`,
-        top: `${geometry.y}%`,
-        height: `1.5rem`,
-        width: `1.5rem`,
-        borderRadius: geometry.type === "POINT" ? "100%" : 0,
         position: "absolute",
+        left: `calc(${geometry.x}% - .7rem)`,
+        top: `calc(${geometry.y}% - .7rem + 50%)`,
+        transform: "translateX(-50%)",
+        width: "10rem",
+        background: "#fff",
+        padding: "1rem",
+        borderRadius: "1rem",
+        boxShadow: "0 0 10px #ccc",
+        zIndex: 100000000,
       }}
+      key={key}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: "120%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "10rem",
-          background: "#fff",
-          padding: "1rem",
-          borderRadius: "1rem",
-          boxShadow: "0 0 10px #ccc",
-        }}
-      >
-        <div className="space-y-4">
-          <h5>{annotation.data.title}</h5>
-          <div>{annotation.data.description}</div>
-        </div>
+      <div className="space-y-4">
+        <h5>{annotation.data.title}</h5>
+        <div>{annotation.data.description}</div>
       </div>
     </div>
   );
 }
 
-export function Sample({ router }: any) {
-  let [annotations, setAnnotations] = React.useState<any>([]);
+export function Annotate({
+  disabled,
+  className,
+  image,
+  defaultValue = [],
+  ...rest
+}: AnnotateProps) {
+  let [annotations, setAnnotations] = React.useState<any>(defaultValue);
   let [annotation, setAnnotation] = React.useState({});
-  let [description, setDescription] = React.useState("");
-  let [title, setTitle] = React.useState("");
 
   function onChange(annotation: any) {
     setAnnotation(annotation);
@@ -125,6 +110,7 @@ export function Sample({ router }: any) {
     setAnnotation({});
     setAnnotations(
       annotations.concat({
+        key: annotations.length + 1,
         geometry,
         data: {
           ...data,
@@ -132,13 +118,12 @@ export function Sample({ router }: any) {
           description,
           color,
           icon,
-          id: annotations.length + 1,
         },
       })
     );
   }
 
-  function renderEditor({ annotation, active }: any) {
+  function renderEditor({ annotation }: any) {
     const { geometry } = annotation;
 
     if (!geometry) return null;
@@ -148,10 +133,12 @@ export function Sample({ router }: any) {
         style={{
           left: `calc(${geometry.x}% - .7rem)`,
           top: `calc(${geometry.y}% - .7rem)`,
-          height: `1.5rem`,
-          width: `1.5rem`,
+          height: `.5rem`,
+          width: `.5rem`,
           borderRadius: geometry.type === "POINT" ? "100%" : 0,
           position: "absolute",
+          zIndex: 10000,
+          background: "#fff",
         }}
       >
         <div
@@ -172,7 +159,7 @@ export function Sample({ router }: any) {
                     title: "Procedure 1",
                     description: "Description 1",
                     color: "green",
-                    icon: <GiToothbrush />,
+                    icon: <GiToothbrush className="text-[inherit]" />,
                   });
                 }}
               >
@@ -187,7 +174,7 @@ export function Sample({ router }: any) {
                     title: "Procedure 2",
                     description: "Description 2",
                     color: "blue",
-                    icon: <FaTooth />,
+                    icon: <FaTooth className="text-[inherit]" />,
                   });
                 }}
               >
@@ -202,7 +189,7 @@ export function Sample({ router }: any) {
                     title: "Procedure 3",
                     description: "Description 3",
                     color: "yellow",
-                    icon: <GiTooth />,
+                    icon: <GiTooth className="text-[inherit]" />,
                   });
                 }}
               >
@@ -217,7 +204,7 @@ export function Sample({ router }: any) {
                     title: "Procedure 4",
                     description: "Description 4",
                     color: "red",
-                    icon: <GiSkullSabertooth />,
+                    icon: <GiSkullSabertooth className="text-[inherit]" />,
                   });
                 }}
               >
@@ -247,32 +234,29 @@ export function Sample({ router }: any) {
   }
 
   return (
-    <PageContainer>
-      <div className=" h-80 w-80 m-auto [&>div]:h-full [&>div]:w-full">
-        <Annotation
-          src="/images/tooth-periodontal.png"
-          alt="Two pebbles anthropomorphized holding hands"
-          annotations={annotations}
-          type={"POINT"}
-          value={annotation}
-          onChange={onChange}
-          //   onSubmit={onSubmit}
-          activeAnnotations={[true, true]}
-          renderEditor={renderEditor}
-          renderContent={RenderContent}
-          renderOverlay={() => <div></div>}
-          renderHighlight={renderHighlight}
-          //   renderSelector={(e) => <div style={{}}>asdf</div>}
-          className="h-full"
-          //   disableAnnotation={true}
-        />
-      </div>
-    </PageContainer>
+    <div
+      className={twMerge(
+        "h-full w-full [&>div]:h-full [&>div]:w-full",
+        className
+      )}
+      {...rest}
+    >
+      <Annotation
+        src={image}
+        alt="Two pebbles anthropomorphized holding hands"
+        annotations={annotations}
+        type={"POINT"}
+        value={annotation}
+        onChange={onChange}
+        renderEditor={renderEditor}
+        renderContent={RenderContent}
+        renderOverlay={() => <div></div>}
+        renderHighlight={renderHighlight}
+        className="h-full"
+        disableAnnotation={false}
+      />
+    </div>
   );
 }
 
-export const getServerSideProps = VerifyAuth((ctx, serverSideProps) => {
-  return { props: { ...serverSideProps } };
-});
-
-export default PrivateRoute(Sample);
+export default Annotate;

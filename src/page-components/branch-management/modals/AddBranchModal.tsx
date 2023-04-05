@@ -118,7 +118,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-semibold text-3xl">Add Clinic Branch</div>
+          <div className="font-bold text-3xl">Add Clinic Branch</div>
         </div>
         <Form
           form={form}
@@ -223,11 +223,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.country !== curr.country) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -263,11 +259,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.region !== curr.region) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -307,11 +299,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.province !== curr.province) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {
@@ -351,11 +339,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
-                  if (prev.city !== curr.city) {
-                    return true;
-                  }
-
-                  return false;
+                  return true;
                 }}
               >
                 {({ getFieldValue, resetFields }) => {

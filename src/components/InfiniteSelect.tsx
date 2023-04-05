@@ -43,7 +43,7 @@ export function InfiniteSelect({
     (getFieldInitialValue
       ? getFieldInitialValue(
           getInitialValue?.form,
-          getInitialValue?.initialValue
+          getInitialValue?.initialValue ?? ""
         )
       : "");
 
@@ -72,14 +72,14 @@ export function InfiniteSelect({
         return pages.slice(-1).pop().links.next;
       }
     },
-    enabled: getInitialValue
-      ? Boolean(
-          getFieldInitialValue(
-            getInitialValue?.form,
-            getInitialValue?.initialValue
-          )
-        )
-      : true,
+    // enabled: getInitialValue
+    //   ? Boolean(
+    //       getFieldInitialValue(
+    //         getInitialValue?.form,
+    //         getInitialValue?.initialValue
+    //       )
+    //     )
+    //   : true,
   });
 
   React.useEffect(() => {

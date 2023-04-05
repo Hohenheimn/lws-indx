@@ -347,7 +347,7 @@ export default function AddScheduleModal({
   return (
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
-        <div className="font-semibold text-3xl">Add New Schedule</div>
+        <div className="font-bold text-3xl">Add New Schedule</div>
         <Form
           form={form}
           layout="vertical"
@@ -515,6 +515,9 @@ export default function AddScheduleModal({
                   className="col-span-4 md:col-span-2"
                 >
                   <DatePicker
+                    getPopupContainer={(triggerNode: any) => {
+                      return triggerNode.parentNode;
+                    }}
                     placeholder="Date"
                     id="date"
                     format="MMMM DD, YYYY"
@@ -683,6 +686,9 @@ export default function AddScheduleModal({
                   className="col-span-4 md:col-span-2"
                 >
                   <DatePicker
+                    getPopupContainer={(triggerNode: any) => {
+                      return triggerNode.parentNode;
+                    }}
                     placeholder="Date"
                     id="date"
                     format="MMMM DD, YYYY"

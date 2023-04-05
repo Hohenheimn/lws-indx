@@ -70,7 +70,7 @@ const menu: Array<sideMenuProps> = [
 ];
 
 const textArray = [
-  "The first fully secured EMR in the country",
+  "Fully secured EMR",
   "Keep your clinic records simple",
   "Easily import paper records to digital",
 ];
@@ -556,12 +556,11 @@ export function Website({ router }: any) {
                     Security Guaranteed
                   </h4>
                   <div>
-                    INDX is the first fully-secured clinic management software
-                    in the country with patient data security as one of our
-                    utmost priorities. With INDX, you are assured that your
-                    patient records are safely stored in our high-security
-                    platform in accordance with data healthcare compliance
-                    regulations.
+                    INDX is a fully-secured clinic management software with
+                    patient data security as one of our utmost priorities. With
+                    INDX, you are assured that your patient records are safely
+                    stored in our high-security platform in accordance with data
+                    healthcare compliance regulations.
                   </div>
                 </div>
               </div>

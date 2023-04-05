@@ -117,6 +117,9 @@ export function DentalHistory({ patientRecord, tab }: any) {
                 className="col-span-12 md:col-span-6"
               >
                 <DatePicker
+                  getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}
                   id="last_visit_date"
                   placeholder="Last Dentist Visit"
                   format="MMMM DD, YYYY"
