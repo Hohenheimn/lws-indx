@@ -31,7 +31,7 @@ export default function Login() {
   const { mutate: login } = useMutation(
     (payload) =>
       postData({
-        url: `/api/auth/login?api_key=${process.env.REACT_APP_API_KEY}`,
+        url: `/api/auth/login`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
