@@ -19,6 +19,7 @@ import { differenceInYears, parse } from "date-fns";
 import accountRole from "../../../../utils/global-data/accountRole";
 import { InfiniteSelect } from "../../../components/InfiniteSelect";
 import { getBase64, getInitialValue } from "../../../../utils/helpers";
+import moment from "moment";
 
 export default function AddClinicAccountModal({
   show,
@@ -313,6 +314,10 @@ export default function AddClinicAccountModal({
                   placeholder="Birthdate"
                   id="birthdate"
                   format="MMMM DD, YYYY"
+                  defaultPickerValue={moment().subtract(3, "year")}
+                  disabledDate={(current) => {
+                    return current && current >= moment().subtract(3, "year");
+                  }}
                   onChange={(dob, dobString) => {
                     const date = parse(dobString, "MMMM dd, yyyy", new Date());
 

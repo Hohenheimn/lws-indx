@@ -75,6 +75,12 @@ export function ProcedureManagement({ router }: NextPageProps) {
 
   const columns: any = [
     {
+      title: "Full Name",
+      dataIndex: "name",
+      width: "15rem",
+      align: "center",
+    },
+    {
       title: "Email",
       dataIndex: "email",
       width: "15rem",
