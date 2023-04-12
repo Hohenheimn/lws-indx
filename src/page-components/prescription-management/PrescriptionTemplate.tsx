@@ -139,8 +139,8 @@ export function PrescriptionTemplate() {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
-              let tableFlexGrow = 1;
+               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              // let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}

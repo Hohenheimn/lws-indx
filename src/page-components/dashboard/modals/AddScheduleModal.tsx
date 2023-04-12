@@ -99,9 +99,10 @@ export default function AddScheduleModal({
       ...doctorSchedule,
       {
         start: null,
-        end: moment(selectedStartTime).format("HH:mm"),
+        end: selectedStartTime ? moment(selectedStartTime, 'HH:mm') : null,
       },
     ];
+
 
     if (type === "start") {
       let startDisabledDates = doctorSchedule
@@ -236,13 +237,14 @@ export default function AddScheduleModal({
               60,
               true
             );
-          }
+          } 
 
           return [];
         },
       };
     }
   }
+
 
   const { mutate: addSchedule } = useMutation(
     (payload: any) =>

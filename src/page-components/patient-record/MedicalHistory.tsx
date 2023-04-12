@@ -113,7 +113,7 @@ export function MedicalHistory({ patientRecord }: any) {
       onSuccess: (e) => {
         MedicalHistoryForm.setFieldsValue({
           ...e,
-          last_medical_exam_date: moment(e.last_medical_exam_date),
+          last_medical_exam_date: moment(e.last_medical_exam_date).isValid() ? moment(e.last_medical_exam_date) : undefined,
         });
       },
     }

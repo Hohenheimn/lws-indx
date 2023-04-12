@@ -291,6 +291,7 @@ export default function AddTreatmentPlanModal({
                 name="discount"
                 rules={[{ required: true, message: "This is required!" }]}
                 required={false}
+                initialValue={0}
               >
                 <NumericFormat
                   customInput={Input}
@@ -304,7 +305,6 @@ export default function AddTreatmentPlanModal({
                     );
                   }}
                   onValueChange={({ floatValue, ...rest }) => {
-                    console.log(rest);
                     let cost = removeNumberFormatting(
                       form.getFieldValue("cost") ?? 0
                     );
