@@ -113,7 +113,9 @@ export function MedicalHistory({ patientRecord }: any) {
       onSuccess: (e) => {
         MedicalHistoryForm.setFieldsValue({
           ...e,
-          last_medical_exam_date: moment(e.last_medical_exam_date).isValid() ? moment(e.last_medical_exam_date) : undefined,
+          last_medical_exam_date: moment(e.last_medical_exam_date).isValid()
+            ? moment(e.last_medical_exam_date)
+            : undefined,
         });
       },
     }
@@ -476,6 +478,9 @@ export function MedicalHistory({ patientRecord }: any) {
                   <DatePicker
                     getPopupContainer={(triggerNode: any) => {
                       return triggerNode.parentNode;
+                    }}
+                    disabledDate={(current) => {
+                      return current > moment();
                     }}
                     id="last_medical_exam_date"
                     placeholder="Date of the Last Medical Exam"

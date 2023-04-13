@@ -23,7 +23,9 @@ export function DentalHistory({ patientRecord, tab }: any) {
       }),
     {
       onSuccess: (res) => {
-        res.last_visit_date = moment(res.last_visit_date).isValid() ? moment(res.last_visit_date, "MMMM DD, YYYY") : undefined;
+        res.last_visit_date = moment(res.last_visit_date).isValid()
+          ? moment(res.last_visit_date, "MMMM DD, YYYY")
+          : undefined;
         DentalHistoryForm.setFieldsValue(res);
       },
     }
@@ -119,6 +121,9 @@ export function DentalHistory({ patientRecord, tab }: any) {
                 <DatePicker
                   getPopupContainer={(triggerNode: any) => {
                     return triggerNode.parentNode;
+                  }}
+                  disabledDate={(current) => {
+                    return current > moment();
                   }}
                   id="last_visit_date"
                   placeholder="Last Dentist Visit"
