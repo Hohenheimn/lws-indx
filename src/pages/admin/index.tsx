@@ -344,10 +344,16 @@ export function Dashboard({}: NextPageProps) {
                                             _id,
                                             remarks,
                                             time: [
-                                              moment(start_time, "HH:mm"),
-                                              moment(end_time, "HH:mm"),
+                                              moment(start_time).isValid()
+                                                ? moment(start_time, "HH:mm")
+                                                : undefined,
+                                              moment(end_time).isValid()
+                                                ? moment(end_time, "HH:mm")
+                                                : undefined,
                                             ],
-                                            date: moment(date),
+                                            date: moment(date).isValid()
+                                              ? moment(date)
+                                              : undefined,
                                           });
 
                                           setIsScheduleModalOpen(true);

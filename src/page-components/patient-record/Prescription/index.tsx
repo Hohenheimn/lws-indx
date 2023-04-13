@@ -133,7 +133,7 @@ export function Prescription({ patientRecord }: any) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               // let tableFlexGrow = 1;
               return (
                 <table
@@ -162,7 +162,11 @@ export function Prescription({ patientRecord }: any) {
                           onClick={() => {
                             PrescriptionForm.setFieldsValue({
                               ...selectedRow,
-                              created_at: moment(selectedRow.created_at),
+                              created_at: moment(
+                                selectedRow.created_at
+                              ).isValid()
+                                ? moment(selectedRow.created_at)
+                                : undefined,
                               _id: selectedRow._id,
                             });
 

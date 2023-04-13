@@ -43,16 +43,23 @@ export function PersonalInfo({ patientRecord, tab }: any) {
     if (tab === "2") {
       PersonalInfoForm.setFieldsValue({
         ...patientRecord,
-        entry_date: moment(patientRecord?.created_at),
+        entry_date: moment(patientRecord?.created_at).isValid()
+          ? moment(patientRecord?.created_at)
+          : undefined,
         insurance_effective_date: moment(
-          patientRecord?.insurance_effective_date,
-          "MMMM DD, YYYY"
-        ),
-        birthdate: moment(patientRecord?.birthdate, "MMMM DD, YYYY"),
-        age: moment().diff(
-          moment(patientRecord?.birthdate, "MMMM DD, YYYY"),
-          "years"
-        ),
+          patientRecord?.insurance_effective_date
+        ).isValid()
+          ? moment(patientRecord?.insurance_effective_date, "MMMM DD, YYYY")
+          : undefined,
+        birthdate: moment(patientRecord?.birthdate).isValid()
+          ? moment(patientRecord?.birthdate, "MMMM DD, YYYY")
+          : undefined,
+        age: moment(patientRecord?.birthdate).isValid()
+          ? moment().diff(
+              moment(patientRecord?.birthdate, "MMMM DD, YYYY"),
+              "years"
+            )
+          : undefined,
         patient_consent: Boolean(patientRecord?.patient_signature_path),
       });
     }

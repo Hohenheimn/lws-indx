@@ -138,7 +138,7 @@ export function ProcedureManagement({ router }: NextPageProps) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               // let tableFlexGrow = 1;
               return (
                 <table
@@ -167,11 +167,15 @@ export function ProcedureManagement({ router }: NextPageProps) {
                           onClick={() => {
                             AccountForm.setFieldsValue({
                               ...selectedRow,
-                              birthdate: moment(selectedRow.birthdate),
-                              age: differenceInYears(
-                                new Date(),
-                                new Date(selectedRow.birthdate)
-                              ).toString(),
+                              birthdate: moment(selectedRow.birthdate).isValid()
+                                ? moment(selectedRow.birthdate)
+                                : undefined,
+                              age: moment(selectedRow.birthdate).isValid()
+                                ? differenceInYears(
+                                    new Date(),
+                                    new Date(selectedRow.birthdate)
+                                  ).toString()
+                                : undefined,
                               _id: selectedRow._id,
                             });
 
