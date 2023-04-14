@@ -298,11 +298,9 @@ export default function AddTreatmentPlanModal({
                   placeholder="Add Discount"
                   id="discount"
                   suffix="%"
+                  allowLeadingZeros={false}
                   isAllowed={({ floatValue }: any) => {
-                    return (
-                      (floatValue >= 0 && floatValue <= 100) ||
-                      floatValue === undefined
-                    );
+                    return floatValue >= 0 && floatValue <= 100;
                   }}
                   onValueChange={({ floatValue, ...rest }) => {
                     let cost = removeNumberFormatting(

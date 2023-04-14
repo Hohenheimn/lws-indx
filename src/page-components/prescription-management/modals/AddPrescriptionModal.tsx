@@ -121,9 +121,6 @@ export default function AddPrescriptionManagementModal({
           layout="vertical"
           onFinish={(values) => {
             let id = form.getFieldValue("_id");
-            values.medicines.map((row: any, index: number) => {
-              values.medicines[index].medicine_id = row.medicine_id._id;
-            });
 
             values.medicines = JSON.stringify(values.medicines);
 
