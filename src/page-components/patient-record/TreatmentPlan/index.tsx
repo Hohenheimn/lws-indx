@@ -142,7 +142,7 @@ export function TreatmentPlan({ patientRecord }: any) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               // let tableFlexGrow = 1;
               return (
                 <table
@@ -213,7 +213,7 @@ export function TreatmentPlan({ patientRecord }: any) {
           setIsTreatmentPlanModalOpen(false);
           TreatmentPlanForm.resetFields();
         }}
-        className="w-[50rem]"
+        className="w-[75rem]"
         id="treatment-plan-modal"
         patientRecord={patientRecord}
         form={TreatmentPlanForm}

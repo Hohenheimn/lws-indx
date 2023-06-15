@@ -17,6 +17,10 @@ import {
 } from "../../../../utils/helpers";
 import TextArea from "antd/lib/input/TextArea";
 import { NumericFormat } from "react-number-format";
+import { IoMdAddCircle } from "react-icons/io";
+import { AnimateContainer } from "../../../components/animation";
+import { fadeIn } from "../../../components/animation/animation";
+import { AiFillMinusCircle } from "react-icons/ai";
 
 export default function AddTreatmentPlanModal({
   show,
@@ -148,22 +152,7 @@ export default function AddTreatmentPlanModal({
           className="space-y-12"
         >
           <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              <Form.Item
-                label="Date Created"
-                name="date_created"
-                required={false}
-                initialValue={moment()}
-              >
-                <DatePicker
-                  getPopupContainer={(triggerNode: any) => {
-                    return triggerNode.parentNode;
-                  }}
-                  placeholder="Date Created"
-                  disabled={true}
-                  format="MMMM DD, YYYY"
-                />
-              </Form.Item>
+            <div className="grid grid-cols-3 gap-4">
               <Form.Item
                 label="Treatment Plan Name"
                 name="treatment_plan_name"
@@ -180,186 +169,410 @@ export default function AddTreatmentPlanModal({
                   placeholder="Add Treatment Plan Name"
                 />
               </Form.Item>
+              <Form.Item
+                label="Date Created"
+                name="date_created"
+                required={false}
+                initialValue={moment()}
+              >
+                <DatePicker
+                  getPopupContainer={(triggerNode: any) => {
+                    return triggerNode.parentNode;
+                  }}
+                  placeholder="Date Created"
+                  disabled={true}
+                  format="MMMM DD, YYYY"
+                />
+              </Form.Item>
             </div>
           </div>
           <div className="space-y-4">
             <h4>Treatment List</h4>
             <div className="grid grid-cols-1 gap-4">
-              <Form.Item
-                label="Procedure"
-                name="procedure_id"
-                rules={[{ required: true, message: "This is required!" }]}
-                required={false}
-              >
-                <InfiniteSelect
-                  placeholder="Select Procedure"
-                  id="procedure_id"
-                  api={`${
-                    process.env.REACT_APP_API_BASE_URL
-                  }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
-                    form,
-                    "procedure"
-                  )}`}
-                  queryKey={["procedure"]}
-                  displayValueKey="name"
-                  returnValueKey="_id"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Tooth"
-                name="tooth"
-                rules={[
+              <Form.List
+                name="treatment_list"
+                initialValue={[
                   {
-                    required: true,
-                    message: "Tooth is required",
+                    procedure_id: "",
+                    tooth: [],
+                    cost: "",
+                    total_amount: "",
                   },
                 ]}
-                required={false}
               >
-                <Select
-                  mode="multiple"
-                  allowClear
-                  placeholder="Tooth"
-                  getPopupContainer={(triggerNode: any) => {
-                    return triggerNode.parentNode;
-                  }}
-                  onChange={(e) => {
-                    let cost = removeNumberFormatting(
-                      form.getFieldValue("cost") ?? 0
-                    );
-                    let discount = form.getFieldValue("discount")
-                      ? removeNumberFormatting(form.getFieldValue("discount")) /
-                        100
-                      : 0;
-                    let toothTotal = e?.length ?? 0;
-                    let discountedCost = cost * discount;
-                    let total = (cost - discountedCost) * toothTotal;
-
-                    form.setFieldValue("total_amount", total);
-                  }}
-                >
-                  <Select.Option value={1}>Toothache</Select.Option>
-                  <Select.Option value={2}>2</Select.Option>
-                  <Select.Option value={3}>3</Select.Option>
-                  <Select.Option value={4}>4</Select.Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
-                label="Notes"
-                name="notes"
-                // rules={[{ required: true, message: "Notes is required" }]}
-                required={false}
-              >
-                <TextArea
-                  id="notes"
-                  placeholder="Notes"
-                  rows={8}
-                  className="!border-2"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Cost"
-                name="cost"
-                rules={[{ required: true, message: "This is required!" }]}
-                required={false}
-              >
-                <NumericFormat
-                  customInput={Input}
-                  placeholder="Cost"
-                  thousandSeparator=","
-                  thousandsGroupStyle="thousand"
-                  id="cost"
-                  prefix="₱"
-                  onValueChange={({ floatValue }) => {
-                    // if (floatValue < 0) floatValue = 0;
-                    // if (floatValue > 100) floatValue = 100;
-                    let cost = floatValue ?? 0;
-                    let discount = form.getFieldValue("discount")
-                      ? removeNumberFormatting(form.getFieldValue("discount")) /
-                        100
-                      : 0;
-                    let toothTotal = form.getFieldValue("tooth")?.length ?? 0;
-                    let discountedCost = cost * discount;
-                    let total = (cost - discountedCost) * toothTotal;
-
-                    form.setFieldValue("total_amount", total);
-                  }}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Add Discount (Optional)"
-                name="discount"
-                rules={[{ required: true, message: "This is required!" }]}
-                required={false}
-                initialValue={0}
-              >
-                <NumericFormat
-                  customInput={Input}
-                  placeholder="Add Discount"
-                  id="discount"
-                  suffix="%"
-                  allowLeadingZeros={false}
-                  isAllowed={({ floatValue }: any) => {
-                    return floatValue >= 0 && floatValue <= 100;
-                  }}
-                  onValueChange={({ floatValue, ...rest }) => {
-                    let cost = removeNumberFormatting(
-                      form.getFieldValue("cost") ?? 0
-                    );
-                    let discount = floatValue ? floatValue / 100 : 0;
-                    let toothTotal = form.getFieldValue("tooth")?.length ?? 0;
-                    let discountedCost = cost * discount;
-                    let total = (cost - discountedCost) * toothTotal;
-
-                    form.setFieldValue("total_amount", total);
-                  }}
-                />
-              </Form.Item>
-              <hr className="my-4 mx-0 border-t-2" />
-              <Form.Item
-                label="Total Amount"
-                required={false}
-                shouldUpdate={(prev, curr) => {
-                  if (
-                    prev.cost !== curr.cost ||
-                    prev.discount !== curr.discount ||
-                    prev.tooth !== curr.tooth
-                  ) {
-                    return true;
-                  }
-
-                  return false;
-                }}
-              >
-                {({ getFieldValue, resetFields }) => {
-                  //   let cost = removeNumberFormatting(getFieldValue("cost") ?? 0);
-                  //   let discount = getFieldValue("discount")
-                  //     ? removeNumberFormatting(getFieldValue("discount" ?? 0)) /
-                  //       100
-                  //     : 0;
-                  //   let toothTotal = getFieldValue("tooth")?.length ?? 0;
-
-                  //   console.log(cost, discount, toothTotal);
-
-                  //   let discountedCost = cost * discount;
-                  //   let total = (cost - discountedCost) * toothTotal;
-
+                {(fields, { add, remove }) => {
                   return (
-                    <Form.Item
-                      name="total_amount"
-                      rules={[{ required: true, message: "This is required!" }]}
-                    >
-                      <NumericFormat
-                        customInput={Input}
-                        placeholder="Total Amount"
-                        id="total_amount"
-                        prefix="₱"
-                        readOnly
-                      />
-                    </Form.Item>
+                    <>
+                      {fields.map(({ name, key }) => {
+                        return (
+                          <AnimateContainer
+                            variants={fadeIn}
+                            key={key}
+                            triggerOnce={true}
+                          >
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                              {fields.length > 1 ? (
+                                <AiFillMinusCircle
+                                  className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
+                                  onClick={() => remove(name)}
+                                />
+                              ) : null}
+                              <Form.Item
+                                label="Procedure"
+                                name={[name, "procedure_id"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "This is required!",
+                                  },
+                                ]}
+                                required={false}
+                              >
+                                <InfiniteSelect
+                                  placeholder="Select Procedure"
+                                  id={[
+                                    "treatment_list",
+                                    name,
+                                    "procedure_id",
+                                  ].join("-")}
+                                  api={`${
+                                    process.env.REACT_APP_API_BASE_URL
+                                  }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
+                                    form,
+                                    "procedure"
+                                  )}`}
+                                  queryKey={["procedure"]}
+                                  displayValueKey="name"
+                                  returnValueKey="_id"
+                                />
+                              </Form.Item>
+                              <Form.Item
+                                label="Tooth"
+                                name={[name, "tooth"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Tooth is required",
+                                  },
+                                ]}
+                                required={false}
+                              >
+                                <Select
+                                  mode="multiple"
+                                  allowClear
+                                  placeholder="Tooth"
+                                  id={["treatment_list", name, "tooth"].join(
+                                    "-"
+                                  )}
+                                  getPopupContainer={(triggerNode: any) => {
+                                    return triggerNode.parentNode;
+                                  }}
+                                  onChange={(e) => {
+                                    let treatmentList = form.getFieldValue(
+                                      "treatment_list"
+                                    );
+                                    let cost = removeNumberFormatting(
+                                      treatmentList[key].cost ?? 0
+                                    );
+                                    let toothTotal = e.length ?? 0;
+                                    const { ...rest } = treatmentList;
+
+                                    let total_amount = Number(
+                                      cost * toothTotal
+                                    );
+
+                                    Object.assign(rest[key], { total_amount });
+
+                                    let estimated_cost = treatmentList.reduce(
+                                      (a: any, b: any) =>
+                                        Number(a + b.total_amount),
+                                      0
+                                    );
+                                    let discount =
+                                      removeNumberFormatting(
+                                        form.getFieldValue("discount")
+                                      ) ?? 0;
+                                    let discountVal = discount
+                                      ? discount / 100
+                                      : 0;
+                                    let discountedCost =
+                                      estimated_cost * discountVal;
+                                    let overall_total_amount =
+                                      estimated_cost - discountedCost;
+
+                                    form.setFieldsValue({
+                                      rest,
+                                      estimated_cost,
+                                      overall_total_amount,
+                                    });
+                                  }}
+                                >
+                                  <Select.Option value={1}>
+                                    Toothache
+                                  </Select.Option>
+                                  <Select.Option value={2}>2</Select.Option>
+                                  <Select.Option value={3}>3</Select.Option>
+                                  <Select.Option value={4}>4</Select.Option>
+                                </Select>
+                              </Form.Item>
+                              <Form.Item
+                                label="Cost"
+                                name={[name, "cost"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "This is required!",
+                                  },
+                                ]}
+                                required={false}
+                              >
+                                <NumericFormat
+                                  customInput={Input}
+                                  placeholder="Cost"
+                                  thousandSeparator=","
+                                  thousandsGroupStyle="thousand"
+                                  id={["treatment_list", name, "cost"].join(
+                                    "-"
+                                  )}
+                                  prefix="₱"
+                                  onValueChange={({ floatValue }) => {
+                                    let treatmentList = form.getFieldValue(
+                                      "treatment_list"
+                                    );
+                                    let cost = floatValue ?? 0;
+                                    let toothTotal =
+                                      treatmentList[key]?.tooth?.length ?? 0;
+                                    const { ...rest } = treatmentList;
+
+                                    let total_amount = Number(
+                                      cost * toothTotal
+                                    );
+                                    Object.assign(rest[key], { total_amount });
+
+                                    let estimated_cost = treatmentList.reduce(
+                                      (a: any, b: any) =>
+                                        Number(a + b.total_amount),
+                                      0
+                                    );
+
+                                    let discount =
+                                      removeNumberFormatting(
+                                        form.getFieldValue("discount")
+                                      ) ?? 0;
+                                    let discountVal = discount
+                                      ? discount / 100
+                                      : 0;
+                                    let discountedCost =
+                                      estimated_cost * discountVal;
+                                    let overall_total_amount =
+                                      estimated_cost - discountedCost;
+
+                                    form.setFieldsValue({
+                                      rest,
+                                      estimated_cost,
+                                      overall_total_amount,
+                                    });
+                                  }}
+                                />
+                              </Form.Item>
+                              <Form.Item
+                                label="Total Amount"
+                                name={[name, "total_amount"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "This is required!",
+                                  },
+                                ]}
+                                required={false}
+                              >
+                                <NumericFormat
+                                  customInput={Input}
+                                  placeholder="Total Amount"
+                                  thousandSeparator
+                                  id={[
+                                    "treatment_list",
+                                    name,
+                                    "total_amount",
+                                  ].join("-")}
+                                  prefix="₱"
+                                  readOnly
+                                />
+                              </Form.Item>
+                            </div>
+                          </AnimateContainer>
+                        );
+                      })}
+                      <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
+                        <div className="blur-sm grid grid-cols-1 lg:grid-cols-4 gap-4">
+                          <Form.Item
+                            label="Procedure"
+                            rules={[
+                              {
+                                required: true,
+                                message: "This is required!",
+                              },
+                            ]}
+                            required={false}
+                          >
+                            <InfiniteSelect
+                              placeholder="Select Procedure"
+                              api={`${
+                                process.env.REACT_APP_API_BASE_URL
+                              }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
+                                form,
+                                "procedure"
+                              )}`}
+                              queryKey={["procedure"]}
+                              displayValueKey="name"
+                              returnValueKey="_id"
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            label="Tooth"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Tooth is required",
+                              },
+                            ]}
+                            required={false}
+                          >
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              placeholder="Tooth"
+                              getPopupContainer={(triggerNode: any) => {
+                                return triggerNode.parentNode;
+                              }}
+                            ></Select>
+                          </Form.Item>
+                          <Form.Item label="Cost" required={false}>
+                            <NumericFormat
+                              customInput={Input}
+                              placeholder="Cost"
+                              thousandSeparator=","
+                              thousandsGroupStyle="thousand"
+                              prefix="₱"
+                            />
+                          </Form.Item>
+                          <Form.Item label="Total Amount" required={false}>
+                            <NumericFormat
+                              customInput={Input}
+                              placeholder="Total Amount"
+                              prefix="₱"
+                              readOnly
+                            />
+                          </Form.Item>
+                        </div>
+                        <div
+                          className="absolute top-0 left-0 h-full w-full flex justify-center items-center cursor-pointer"
+                          onClick={() =>
+                            add({
+                              procedure_id: "",
+                              tooth: [],
+                              cost: "",
+                              total_amount: "",
+                            })
+                          }
+                        >
+                          <IoMdAddCircle className="text-7xl text-primary" />
+                        </div>
+                      </div>
+                    </>
                   );
                 }}
-              </Form.Item>
+              </Form.List>
+            </div>
+            <div className="flex items-end flex-col">
+              <div className="w-1/2">
+                <div className="space-y-4">
+                  <Form.Item
+                    label="Notes"
+                    name="notes"
+                    // rules={[{ required: true, message: "Notes is required" }]}
+                    required={false}
+                    className="basis-1/2"
+                  >
+                    <TextArea
+                      id="notes"
+                      placeholder="Notes"
+                      // rows={8}
+                      className="!border-2"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label="Estimated Cost"
+                    name="estimated_cost"
+                    rules={[
+                      {
+                        required: true,
+                        message: "This is required!",
+                      },
+                    ]}
+                    required={false}
+                  >
+                    <NumericFormat
+                      customInput={Input}
+                      placeholder="Estimated Cost"
+                      id="estimated_cost"
+                      prefix="₱"
+                      readOnly
+                      thousandSeparator
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label="Add Discount (Optional)"
+                    name="discount"
+                    rules={[{ required: true, message: "This is required!" }]}
+                    required={false}
+                    initialValue={0}
+                    className="basis-1/2"
+                  >
+                    <NumericFormat
+                      customInput={Input}
+                      placeholder="Add Discount"
+                      id="discount"
+                      suffix="%"
+                      allowLeadingZeros={false}
+                      isAllowed={({ floatValue }: any) => {
+                        return floatValue >= 0 && floatValue <= 100;
+                      }}
+                      onValueChange={({ floatValue, ...rest }) => {
+                        let estimated_cost = removeNumberFormatting(
+                          form.getFieldValue("estimated_cost") ?? 0
+                        );
+                        let discount = floatValue ? floatValue / 100 : 0;
+                        let discountedCost = estimated_cost * discount;
+                        let total = estimated_cost - discountedCost;
+
+                        form.setFieldValue("overall_total_amount", total);
+                      }}
+                    />
+                  </Form.Item>
+                </div>
+                <hr className="my-4 mx-0 border-t-2" />
+                <Form.Item
+                  label="Total Amount"
+                  required={false}
+                  name="overall_total_amount"
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is required!",
+                    },
+                  ]}
+                >
+                  <NumericFormat
+                    customInput={Input}
+                    placeholder="Total Amount"
+                    id="overall_total_amount"
+                    thousandSeparator
+                    prefix="₱"
+                    readOnly
+                  />
+                </Form.Item>
+              </div>
             </div>
           </div>
           <div className="flex justify-end items-center gap-4">

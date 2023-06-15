@@ -52,7 +52,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
           ? moment(patientRecord?.insurance_effective_date, "MMMM DD, YYYY")
           : undefined,
         birthdate: moment(patientRecord?.birthdate).isValid()
-          ? moment(patientRecord?.birthdate, "MMMM DD, YYYY")
+          ? moment(patientRecord?.birthdate)
           : undefined,
         age: moment(patientRecord?.birthdate).isValid()
           ? moment().diff(

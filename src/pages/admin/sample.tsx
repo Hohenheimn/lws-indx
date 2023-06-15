@@ -6,6 +6,7 @@ import { Button } from "../../components/Button";
 import { PageContainer } from "../../components/animation";
 import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
 import { FaTooth } from "react-icons/fa";
+import Annotate from "../../components/Annotate";
 
 const Shape = ({ children, geometry, style }: any) => {
   return (
@@ -249,22 +250,9 @@ export function Sample({ router }: any) {
   return (
     <PageContainer>
       <div className=" h-80 w-80 m-auto [&>div]:h-full [&>div]:w-full">
-        <Annotation
-          src="/images/tooth-periodontal.png"
-          alt="Two pebbles anthropomorphized holding hands"
-          annotations={annotations}
-          type={"POINT"}
-          value={annotation}
-          onChange={onChange}
-          //   onSubmit={onSubmit}
-          activeAnnotations={[true, true]}
-          renderEditor={renderEditor}
-          renderContent={RenderContent}
-          renderOverlay={() => <div></div>}
-          renderHighlight={renderHighlight}
-          //   renderSelector={(e) => <div style={{}}>asdf</div>}
-          className="h-full"
-          //   disableAnnotation={true}
+        <Annotate
+          // disabled={true}
+          image={`/images/tooth-periodontal.png`}
         />
       </div>
     </PageContainer>

@@ -142,7 +142,7 @@ export function PatientList({ router }: NextPageProps) {
           <div className="basis-full lg:basis-auto flex gap-4">
             <Radio.Group defaultValue="my_patients">
               <Radio.Button value="my_patients" label="My Patients" />
-              <Radio.Button value="shared_patients" label="Shared Patients" />
+              {/* <Radio.Button value="shared_patients" label="Shared Patients" /> */}
             </Radio.Group>
           </div>
         </div>

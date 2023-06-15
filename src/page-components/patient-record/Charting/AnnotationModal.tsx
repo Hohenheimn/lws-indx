@@ -11,20 +11,18 @@ export default function AnnotationModal({ show, onClose, form, ...rest }: any) {
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-4">
         <h1 className="text-center">1</h1>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="h-[25rem]">
-            <Annotate
-              // disabled={true}
-              image={`/images/tooth-periodontal.png`}
-            />
-          </div>
-          <div className="h-[25rem]">
+        <div className="h-full w-full max-h-[20rem] max-w-[20rem] m-auto">
+          <Annotate
+            // disabled={true}
+            image={`/images/tooth-periodontal.png`}
+          />
+        </div>
+        {/* <div className="h-[25rem]">
             <Annotate
               // disabled={true}
               image={`/images/tooth-standard.png`}
             />
-          </div>
-        </div>
+          </div> */}
       </div>
     </Modal>
   );

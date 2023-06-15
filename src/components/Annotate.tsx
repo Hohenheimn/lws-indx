@@ -17,16 +17,16 @@ const Shape = ({ children, geometry, style }: any) => {
     <div
       style={{
         ...style,
-        // height: `${geometry.height}%`,
-        // width: `${geometry.width}%`,
-        height: `1rem`,
-        width: `1rem`,
+        height: `10%`,
+        width: `10%`,
+        minHeight: ".6rem",
+        minWidth: ".6rem",
         borderRadius: geometry.type === "POINT" ? "100%" : 0,
         overflow: "hidden",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        // padding: "1rem",
+        // padding: "7.5%",
       }}
     >
       {children}
@@ -47,17 +47,41 @@ function renderHighlight({ annotation, active }: any) {
         boxShadow: active && "0 0 20px 20px rgba(255, 255, 255, 0.3) inset",
         background: annotation.data.color,
         position: "absolute",
-        left: `calc(${geometry.x}% - .7rem)`,
-        top: `calc(${geometry.y}% - .7rem)`,
+        left: `${geometry.x}%`,
+        top: `${geometry.y}%`,
+        transform: `translate(-50%, -50%)`,
+        color: "#333",
+        fontWeight: 700,
+      }}
+    >
+      <div className="text-[100%]">{annotation.data.icon}</div>
+    </Shape>
+  );
+}
+
+function renderSelector({ annotation, active }: any) {
+  const { geometry } = annotation;
+
+  if (!geometry) return null;
+  return (
+    <Shape
+      key={annotation.key}
+      geometry={geometry}
+      style={{
+        border: "solid 5px #12C8CE",
+        boxShadow: "0 0 10px 0 #12C8CE",
+        position: "absolute",
+        left: `${geometry.x}%`,
+        top: `${geometry.y}%`,
+        transform: `translate(-50%, -50%)`,
+        // height: "10%",
+        // width: "10%",
         color: "#333",
         fontWeight: 700,
         // padding: "1rem",
-        padding: ".6rem",
         // zIndex: 10000000000
       }}
-    >
-      <div className="text-[.6rem]">{annotation.data.icon}</div>
-    </Shape>
+    ></Shape>
   );
 }
 
@@ -70,9 +94,9 @@ function RenderContent({ annotation, key }: any) {
     <div
       style={{
         position: "absolute",
-        left: `calc(${geometry.x}% - .7rem)`,
-        top: `calc(${geometry.y}% - .7rem + 50%)`,
-        transform: "translateX(-50%)",
+        left: `${geometry.x}%`,
+        top: `${geometry.y}%`,
+        transform: `translate(-50%, 30%)`,
         width: "10rem",
         background: "#fff",
         padding: "1rem",
@@ -99,6 +123,8 @@ export function Annotate({
 }: AnnotateProps) {
   let [annotations, setAnnotations] = React.useState<any>(defaultValue);
   let [annotation, setAnnotation] = React.useState({});
+
+  console.log(annotations, "anos", annotation, "ano");
 
   function onChange(annotation: any) {
     setAnnotation(annotation);
@@ -131,14 +157,15 @@ export function Annotate({
     return (
       <div
         style={{
-          left: `calc(${geometry.x}% - .7rem)`,
-          top: `calc(${geometry.y}% - .7rem)`,
-          height: `.5rem`,
-          width: `.5rem`,
+          left: `${geometry.x}%`,
+          top: `${geometry.y}%`,
+          // transform: `translate(-${geometry.x}%, -${geometry.y}%)`,
+          height: `10%`,
+          width: `10%`,
+          // padding: "7.5%",
           borderRadius: geometry.type === "POINT" ? "100%" : 0,
           position: "absolute",
           zIndex: 10000,
-          background: "#fff",
         }}
       >
         <div
@@ -243,17 +270,19 @@ export function Annotate({
     >
       <Annotation
         src={image}
-        alt="Two pebbles anthropomorphized holding hands"
+        alt="Tooth"
         annotations={annotations}
         type={"POINT"}
         value={annotation}
         onChange={onChange}
         renderEditor={renderEditor}
         renderContent={RenderContent}
-        renderOverlay={() => <div></div>}
+        disableOverlay
         renderHighlight={renderHighlight}
+        renderSelector={renderSelector}
         className="h-full"
-        disableAnnotation={false}
+        disableAnnotation={disabled}
+        activeAnnotation={[1]}
       />
     </div>
   );

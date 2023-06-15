@@ -28,6 +28,7 @@ export default function ChartingModal({
 }: any) {
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
+  const [showAnnotationModal, setShowAnnotationModal] = React.useState(false);
 
   const { mutate: addPrescription } = useMutation(
     (payload: any) => {
@@ -208,19 +209,20 @@ export default function ChartingModal({
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((row, index) => {
                     return (
                       <div
-                        className="space-y-2 hover:scale-110 transition cursor-pointer z-10"
+                        onClick={() => setShowAnnotationModal(true)}
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10"
                         key={index}
                       >
                         <h5 className="text-center">{row}</h5>
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-standard.png`}
                           />
                         </div>
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-periodontal.png`}
                           />
                         </div>
@@ -235,19 +237,20 @@ export default function ChartingModal({
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((row, index) => {
                     return (
                       <div
-                        className="space-y-2 hover:scale-110 hover:z-10 transition cursor-pointer"
+                        onClick={() => setShowAnnotationModal(true)}
+                        className="space-y-2 md:hover:scale-110 hover:z-10 transition cursor-pointer"
                         key={index}
                       >
                         <h5 className="text-center">{row}</h5>
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-standard.png`}
                           />
                         </div>
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-periodontal.png`}
                           />
                         </div>
@@ -265,18 +268,19 @@ export default function ChartingModal({
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((row, index) => {
                     return (
                       <div
-                        className="space-y-2 hover:scale-110 focus:z-[1000000000000000000000] transition cursor-pointer"
+                        onClick={() => setShowAnnotationModal(true)}
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer"
                         key={index}
                       >
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-standard.png`}
                           />
                         </div>
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-periodontal.png`}
                           />
                         </div>
@@ -292,44 +296,23 @@ export default function ChartingModal({
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((row, index) => {
                     return (
                       <div
-                        className="space-y-2 hover:scale-110 transition cursor-pointer z-10"
+                        onClick={() => setShowAnnotationModal(true)}
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10"
                         key={index}
                       >
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-standard.png`}
-                            defaultValue={[
-                              {
-                                key: 1,
-                                data: {
-                                  color: "blue",
-                                  description: "Description 2",
-                                  title: "Procedure 2",
-                                  icon: <div>A</div>,
-                                  id: 1,
-                                },
-                                geometry: {
-                                  height: 0,
-                                  type: "POINT",
-                                  width: 0,
-                                  x: 80.03328055283504,
-                                  y: 67.72089306950318,
-                                },
-                              },
-                            ]}
                           />
                         </div>
-                        <div className="h-14 w-full">
+                        <div className="w-full">
                           <Annotate
-                            // disabled={true}
+                            disabled={true}
                             image={`/images/tooth-periodontal.png`}
                           />
                         </div>
                         <h5 className="text-center">{row}</h5>
-                        {/* <div className="flex justify-center items-center">
-                        {row}
-                      </div> */}
                       </div>
                     );
                   })}
@@ -390,8 +373,9 @@ export default function ChartingModal({
         </div>
       </Modal>
       <AnnotationModal
-        show={true}
+        show={showAnnotationModal}
         onClose={() => {
+          setShowAnnotationModal(false);
           console.log("zxcv");
           // setIsChartingModalOpen(false);
           // ChartingForm.resetFields();
