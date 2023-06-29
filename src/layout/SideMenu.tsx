@@ -220,6 +220,9 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                   overlayMenu={[
                     {
                       label: "My Profile",
+                      onClick: () => {
+                        router.push("/admin/profile");
+                      },
                     },
                     {
                       label: "Logout",

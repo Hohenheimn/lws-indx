@@ -1,13 +1,5 @@
 import React from "react";
 import { PageContainer } from "../../../components/animation";
-import { Button } from "../../../components/Button";
-import {
-  BsCameraVideo,
-  BsBoxArrowUpRight,
-  BsPrinter,
-  BsTrash,
-} from "react-icons/bs";
-import { AiOutlineCalendar } from "react-icons/ai";
 import Image from "next/image";
 import PrivateRoute from "../../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../../auth/HOC/VerifyAuth";
@@ -29,14 +21,12 @@ interface PatientRecordProps extends NextPageProps {
 export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
   let [isImageError, setIsImageError] = React.useState(false);
   const router = useRouter();
-  const {
-    data: patient,
-    isFetching: loadingPatient,
-    isError,
-  } = useQuery(["patient", selectedPatientID], () =>
-    fetchData({
-      url: `/api/patient/${selectedPatientID}`,
-    })
+  const { data: patient, isFetching: loadingPatient, isError } = useQuery(
+    ["patient", selectedPatientID],
+    () =>
+      fetchData({
+        url: `/api/patient/${selectedPatientID}`,
+      })
   );
 
   if (isError) {
