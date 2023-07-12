@@ -1,25 +1,17 @@
-import { Space, Form, notification, Menu, Card } from "antd";
-import dynamic from "next/dynamic";
-
 import React from "react";
-import { AnimateContainer, PageContainer } from "../components/animation";
-import Image from "next/image";
-import Input from "../components/Input";
-import { Button } from "../components/Button";
-import { CiMedal } from "react-icons/ci";
-import Avatar from "../components/Avatar";
+import { Space, Form, notification, Menu, Card } from "antd";
+
 import { Input as Inp } from "antd";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
-import { GrLocal, GrMenu } from "react-icons/gr";
 import { Drawer } from "antd";
-import { twMerge } from "tailwind-merge";
-import { scroller } from "react-scroll";
+import { AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Script from "next/script";
 import {
-  fadeIn,
-  fadeInUp,
-  stagger,
-  zoomIn,
-} from "../components/animation/animation";
+  AiOutlineArrowDown,
+  AiOutlineIdcard,
+  AiOutlineUnlock,
+} from "react-icons/ai";
 import {
   BsCheckCircle,
   BsHandThumbsUp,
@@ -27,20 +19,29 @@ import {
   BsLinkedin,
   BsShieldLock,
 } from "react-icons/bs";
-import {
-  AiOutlineArrowDown,
-  AiOutlineIdcard,
-  AiOutlineUnlock,
-} from "react-icons/ai";
+import { CiMedal } from "react-icons/ci";
+import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { GrLocal, GrMenu } from "react-icons/gr";
 import { MdBrokenImage, MdRunningWithErrors } from "react-icons/md";
-import { useMutation } from "@tanstack/react-query";
-import { postData } from "../../utils/api";
-import { Context } from "../../utils/context/Provider";
-import Modal from "../components/Modal";
 import { PatternFormat } from "react-number-format";
-import { AnimatePresence } from "framer-motion";
-import { countdownTimer } from "../components/animation/animation";
-import Script from "next/script";
+import { scroller } from "react-scroll";
+import { twMerge } from "tailwind-merge";
+import { AnimateContainer, PageContainer } from "@components/animation";
+import {
+  fadeIn,
+  fadeInUp,
+  stagger,
+  zoomIn,
+} from "@components/animation/animation";
+import { countdownTimer } from "@components/animation/animation";
+import Avatar from "@components/Avatar";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
+import { useMutation } from "@tanstack/react-query";
+import { postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+
 import Layout from "../layout";
 
 const { TextArea } = Inp;

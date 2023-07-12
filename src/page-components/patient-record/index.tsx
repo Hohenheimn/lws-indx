@@ -1,5 +1,5 @@
-import { AnimateContainer } from "../../components/animation";
-import { fadeIn } from "../../components/animation/animation";
+import { AnimateContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
 import ChangeHistory from "./ChangeHistory";
 import Charting from "./Charting";
 import DentalHistory from "./DentalHistory";

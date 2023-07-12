@@ -1,21 +1,21 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
-import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { AiOutlineSearch } from "react-icons/ai";
-import { Radio } from "../../../components/Radio";
+import { Popover, notification } from "antd";
 import Table from "antd/lib/table";
 import Image from "next/image";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "../../../../utils/api";
-import { Popover, notification } from "antd";
-import { Context } from "../../../../utils/context/Provider";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoPersonOutline } from "react-icons/io5";
-import Avatar from "../../../components/Avatar";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import Avatar from "@components/Avatar";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import { Radio } from "@components/Radio";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteData, fetchData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 const columns: any = [
   {

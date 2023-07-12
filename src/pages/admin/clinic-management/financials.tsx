@@ -1,29 +1,26 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
 import DatePicker from "antd/lib/date-picker";
-// import Radio from "antd/lib/radio";
-import Card from "../../../components/Card";
-import "chart.js/auto";
-import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
-import { Button } from "../../../components/Button";
-import colors from "../../../../styles/theme";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Radio } from "../../../components/Radio";
-import { Select } from "../../../components/Select";
-import {
-  numberSeparator,
-  paymentStatusPalette,
-} from "../../../../utils/helpers";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
 import Table from "antd/lib/table/Table";
-import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../../components/Input";
-import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import Image from "next/image";
+// import Radio from "antd/lib/radio";
+import "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { format } from "date-fns";
+import Image from "next/image";
+import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
+import { Radio } from "@components/Radio";
+import { Select } from "@components/Select";
+import colors from "@styles/theme";
+import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 const randomNumber = () => {
   return Math.random() * (100 - 1);

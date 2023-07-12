@@ -1,22 +1,23 @@
 import React from "react";
 import { DatePicker, Form, notification } from "antd";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
-import Modal from "../../../components/Modal";
+import TextArea from "antd/lib/input/TextArea";
+import moment from "moment";
+import { AiFillMinusCircle } from "react-icons/ai";
+import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
+import { AnimateContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import Annotate from "@components/Annotate";
+import { Button } from "@components/Button";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData } from "../../../../utils/api";
-import { Context } from "../../../../utils/context/Provider";
-import TextArea from "antd/lib/input/TextArea";
-import { IoMdAddCircle } from "react-icons/io";
-import { AiFillMinusCircle } from "react-icons/ai";
-import { AnimateContainer } from "../../../components/animation";
-import { fadeIn } from "../../../components/animation/animation";
-import { InfiniteSelect } from "../../../components/InfiniteSelect";
-import { getInitialValue } from "../../../../utils/helpers";
-import moment from "moment";
-import Annotate from "../../../components/Annotate";
+import { postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import { getInitialValue } from "@utilities/helpers";
+
 import AnnotationModal from "./AnnotationModal";
 
 export default function ChartingModal({

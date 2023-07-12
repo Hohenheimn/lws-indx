@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-// import { fetchData } from "../../../utils/api";
+// import { fetchData } from "@utilities/api";
 // import { useQuery } from "react-query";
-import Restricted from "../Restricted";
-import Login from "../Login";
-import Layout from "../../layout";
 import Router from "next/router";
+
+import Layout from "../../layout";
+import Login from "../Login";
+import Restricted from "../Restricted";
 
 type AuthProps = {
   profile: any;

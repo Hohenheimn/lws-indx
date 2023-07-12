@@ -1,8 +1,8 @@
 import React from "react";
-import { AutoComplete } from "./AutoComplete";
 import { useInView } from "react-intersection-observer";
+import { AutoComplete } from "@components/AutoComplete";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchData } from "../../utils/api";
+import { fetchData } from "@utilities/api";
 
 interface InfiniteAutoCompleteProps
   extends React.HTMLAttributes<HTMLDivElement> {

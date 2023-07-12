@@ -1,21 +1,20 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
 import DatePicker from "antd/lib/date-picker";
-// import Radio from "antd/lib/radio";
-import Card from "../../../components/Card";
 import "chart.js/auto";
-import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
-import { Button } from "../../../components/Button";
-import colors from "../../../../styles/theme";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Radio } from "../../../components/Radio";
-import { Select } from "../../../components/Select";
-
-import { numberSeparator } from "../../../../utils/helpers";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
+// import Radio from "antd/lib/radio";
 import { ScriptableContext } from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import { Radio } from "@components/Radio";
+import { Select } from "@components/Select";
+import colors from "@styles/theme";
+import { numberSeparator } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 const randomNumber = () => {
   return Math.random() * (100 - 1);

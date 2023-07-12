@@ -16,11 +16,11 @@ import {
   parse,
   startOfMonth,
 } from "date-fns";
-import { PageContainer } from "../components/animation";
-import { twMerge } from "tailwind-merge";
-import { Button } from "../components/Button";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import Modal from "../components/Modal";
+import { twMerge } from "tailwind-merge";
+import { PageContainer } from "@components/animation";
+import { Button } from "@components/Button";
+import Modal from "@components/Modal";
 
 function getMonth(date: number | Date) {
   return format(date, "MMMM");

@@ -1,10 +1,10 @@
 import React from "react";
 import { DatePicker, Form, notification } from "antd";
-import Input from "../../../components/Input";
-import Modal from "../../../components/Modal";
-import { scroller } from "react-scroll";
 import moment from "moment";
-import Annotate from "../../../components/Annotate";
+import { scroller } from "react-scroll";
+import Annotate from "@components/Annotate";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
 
 export default function AnnotationModal({ show, onClose, form, ...rest }: any) {
   return (

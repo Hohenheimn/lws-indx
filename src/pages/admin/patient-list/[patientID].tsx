@@ -1,18 +1,18 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
-import Image from "next/image";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import Card from "../../../components/Card";
-import Avatar from "../../../components/Avatar";
 import { Tabs, message } from "antd";
-import patientRecord from "../../../page-components/patient-record";
-import { useQuery } from "@tanstack/react-query";
-import { fetchData } from "../../../../utils/api";
 import { format, parseISO, differenceInYears, parse } from "date-fns";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { IoPersonOutline } from "react-icons/io5";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import Avatar from "@components/Avatar";
+import Card from "@components/Card";
+import patientRecord from "@pagecomponents/patient-record";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 interface PatientRecordProps extends NextPageProps {
   selectedPatientID: number;

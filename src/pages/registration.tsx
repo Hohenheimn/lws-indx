@@ -1,27 +1,28 @@
-import { Space, Form, notification, Checkbox } from "antd";
-import dynamic from "next/dynamic";
-
-import { SwapRightOutlined } from "@ant-design/icons";
-// import { useMutation } from "react-query";
-import { postData } from "../../utils/api";
-import { setCookie } from "nookies";
-
 import React from "react";
-import { Context } from "../../utils/context/Provider";
-import { AnimateContainer, PageContainer } from "../components/animation";
+import { Space, Form, notification, Checkbox } from "antd";
+
+import { motion } from "framer-motion";
+// import { useMutation } from "react-query";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+
+import { setCookie } from "nookies";
+import { BsCheckCircle } from "react-icons/bs";
+import { PatternFormat } from "react-number-format";
+import { SwapRightOutlined } from "@ant-design/icons";
+import { AnimateContainer, PageContainer } from "@components/animation";
 import {
   fadeIn,
   fadeInLeft,
   fadeInRight,
-} from "../components/animation/animation";
-import Image from "next/image";
-import Input from "../components/Input";
-import { Button } from "../components/Button";
-import { motion } from "framer-motion";
+} from "@components/animation/animation";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
 import { useMutation } from "@tanstack/react-query";
-import { PatternFormat } from "react-number-format";
-import Modal from "../components/Modal";
-import { BsCheckCircle } from "react-icons/bs";
+import { postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+
 // import { Media } from "../../../context/Media";
 
 export default function Registration({ router }: any) {

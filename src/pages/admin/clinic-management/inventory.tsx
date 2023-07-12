@@ -1,21 +1,21 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
-import { Button } from "../../../components/Button";
-import { Radio } from "../../../components/Radio";
-import { numberSeparator } from "../../../../utils/helpers";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
+import { Form, Popover, notification } from "antd";
 import Table from "antd/lib/table/Table";
 import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import { Form, Popover, notification } from "antd";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import { Radio } from "@components/Radio";
+import AddInventoryModal from "@pagecomponents/inventory/modals/AddInventoryModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "../../../../utils/api";
-import AddInventoryModal from "../../../page-components/inventory/modals/AddInventoryModal";
-import { Context } from "../../../../utils/context/Provider";
+import { deleteData, fetchData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import { numberSeparator } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 const columns: any = [
   {

@@ -1,18 +1,19 @@
 import React from "react";
-import { AnimateContainer, PageContainer } from "../../components/animation";
-import { Button } from "../../components/Button";
+import { Form, Popover, notification } from "antd";
 import Table from "antd/lib/table/Table";
+import moment from "moment";
 import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
+import { AnimateContainer, PageContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "../../../utils/api";
-import { Form, Popover, notification } from "antd";
-import { Context } from "../../../utils/context/Provider";
+import { deleteData, fetchData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+
 import AddMedicineManagementModal from "./modals/AddMedicineModal";
-import { fadeIn } from "../../components/animation/animation";
-import moment from "moment";
 
 export function MedicineList() {
   const [MedicineForm] = Form.useForm();
@@ -135,7 +136,7 @@ export function MedicineList() {
           }}
           components={{
             table: ({ ...rest }: any) => {
-               let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               // let tableFlexGrow = 1;
               return (
                 <table

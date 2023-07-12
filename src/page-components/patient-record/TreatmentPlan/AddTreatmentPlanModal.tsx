@@ -1,26 +1,24 @@
 import React from "react";
 import { DatePicker, Form, TimePicker, notification } from "antd";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
 import { Select } from "antd";
-import Modal from "../../../components/Modal";
-import { scroller } from "react-scroll";
-import Image from "next/image";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteData, postData } from "../../../../utils/api";
-import { Context } from "../../../../utils/context/Provider";
-import moment from "moment";
-import { InfiniteSelect } from "../../../components/InfiniteSelect";
-import {
-  getInitialValue,
-  removeNumberFormatting,
-} from "../../../../utils/helpers";
 import TextArea from "antd/lib/input/TextArea";
-import { NumericFormat } from "react-number-format";
-import { IoMdAddCircle } from "react-icons/io";
-import { AnimateContainer } from "../../../components/animation";
-import { fadeIn } from "../../../components/animation/animation";
+import moment from "moment";
+import Image from "next/image";
 import { AiFillMinusCircle } from "react-icons/ai";
+import { IoMdAddCircle } from "react-icons/io";
+import { NumericFormat } from "react-number-format";
+import { scroller } from "react-scroll";
+import { AnimateContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import { Button } from "@components/Button";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteData, postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import { getInitialValue, removeNumberFormatting } from "@utilities/helpers";
+
 
 export default function AddTreatmentPlanModal({
   show,

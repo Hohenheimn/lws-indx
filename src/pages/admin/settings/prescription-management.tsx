@@ -1,12 +1,12 @@
 import React from "react";
-import { AnimateContainer, PageContainer } from "../../../components/animation";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import PrescriptionTemplate from "../../../page-components/prescription-management/PrescriptionTemplate";
-import { Radio } from "../../../components/Radio";
-import { fadeIn } from "../../../components/animation/animation";
-import MedicineList from "../../../page-components/prescription-management/MedicineList";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { AnimateContainer, PageContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import { Radio } from "@components/Radio";
+import MedicineList from "@pagecomponents/prescription-management/MedicineList";
+import PrescriptionTemplate from "@pagecomponents/prescription-management/PrescriptionTemplate";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 export function PrescriptionManagement({}: NextPageProps) {
   let [pageContent, setPageContent] = React.useState("1");

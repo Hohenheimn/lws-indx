@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextPageContext } from "next";
 import { parseCookies, destroyCookie } from "nookies";
+
 // import axios from "axios";
 
 type ggspTypes = {

@@ -1,9 +1,10 @@
 import React from "react";
-import { Select } from "./Select";
 import { useInView } from "react-intersection-observer";
+import { Select } from "@components/Select";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchData } from "../../utils/api";
-import { getInitialValue as getFieldInitialValue } from "../../utils/helpers";
+import { fetchData } from "@utilities/api";
+import { getInitialValue as getFieldInitialValue } from "@utilities/helpers";
+
 
 interface InfiniteSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   api: string;

@@ -1,7 +1,8 @@
-import { AnimateContainer } from "../../components/animation";
-import { fadeIn } from "../../components/animation/animation";
-import ProfileInfo from "./ProfileInfo";
+import { AnimateContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+
 import AccountDetails from "./AccountDetails";
+import ProfileInfo from "./ProfileInfo";
 
 export const Profile = (props: any) => [
   {

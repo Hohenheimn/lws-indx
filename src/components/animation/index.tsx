@@ -1,7 +1,8 @@
-import { useInView } from "react-intersection-observer";
-import { pageTransition } from "./animation";
 import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import { twMerge } from "tailwind-merge";
+
+import { pageTransition } from "./animation";
 
 interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};

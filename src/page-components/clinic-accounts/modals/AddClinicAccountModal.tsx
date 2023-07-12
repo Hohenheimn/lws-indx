@@ -1,25 +1,25 @@
 import React from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
-import { Select } from "../../../components/Select";
-import Modal from "../../../components/Modal";
+import { format } from "date-fns";
+import { differenceInYears, parse } from "date-fns";
+import moment from "moment";
+import Image from "next/image";
+import { IoPersonOutline } from "react-icons/io5";
 import { NumericFormat, PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
-import Uploader from "../../../components/Uploader";
-import Avatar from "../../../components/Avatar";
-import { IoPersonOutline } from "react-icons/io5";
-import Image from "next/image";
-import gender from "../../../../utils/global-data/gender";
+import Avatar from "@components/Avatar";
+import { Button } from "@components/Button";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
+import { Select } from "@components/Select";
+import Uploader from "@components/Uploader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData, updateData } from "../../../../utils/api";
-import { format } from "date-fns";
-import { Context } from "../../../../utils/context/Provider";
-import { differenceInYears, parse } from "date-fns";
-import accountRole from "../../../../utils/global-data/accountRole";
-import { InfiniteSelect } from "../../../components/InfiniteSelect";
-import { getBase64, getInitialValue } from "../../../../utils/helpers";
-import moment from "moment";
+import { postData, updateData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import accountRole from "@utilities/global-data/accountRole";
+import gender from "@utilities/global-data/gender";
+import { getBase64, getInitialValue } from "@utilities/helpers";
 
 export default function AddClinicAccountModal({
   show,

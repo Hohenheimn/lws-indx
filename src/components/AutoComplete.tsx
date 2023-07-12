@@ -1,8 +1,8 @@
 import React from "react";
-import { Combobox, Transition } from "@headlessui/react";
 import { twMerge } from "tailwind-merge";
+import { Button } from "@components/Button";
 import { Float } from "@headlessui-float/react";
-import { Button } from "./Button";
+import { Combobox, Transition } from "@headlessui/react";
 
 type AutoCompleteOptionProps = {
   value: string;

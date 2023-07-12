@@ -1,13 +1,14 @@
 import React from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import Avatar from "../../components/Avatar";
-import Card from "../../components/Card";
-import Input from "../../components/Input";
-import Image from "next/image";
-import { Select } from "../../components/Select";
 import { Checkbox } from "antd";
+import Image from "next/image";
+import { AiOutlineSearch } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
-import { Button } from "../../components/Button";
+import Avatar from "@components/Avatar";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
+
 
 export function PersonalRecord({ patientRecord }: any) {
   let [search, setSearch] = React.useState("");
@@ -30,9 +31,8 @@ export function PersonalRecord({ patientRecord }: any) {
                 <div className="flex justify-center items-center flex-wrap xs:flex-nowrap gap-4">
                   <Avatar className="h-20 w-20">
                     <Image
-                      src={`https://picsum.photos/${500 + index}/${
-                        500 + index
-                      }`}
+                      src={`https://picsum.photos/${500 + index}/${500 +
+                        index}`}
                       alt="random pics"
                       fill
                       sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"

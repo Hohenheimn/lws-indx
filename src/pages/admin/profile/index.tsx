@@ -1,18 +1,18 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
-import Image from "next/image";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import Card from "../../../components/Card";
-import Avatar from "../../../components/Avatar";
 import { Tabs, message } from "antd";
-import profile from "../../../page-components/profile";
-import { useQuery } from "@tanstack/react-query";
-import { fetchData } from "../../../../utils/api";
 import { format, parseISO, differenceInYears, parse } from "date-fns";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { IoPersonOutline } from "react-icons/io5";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import Avatar from "@components/Avatar";
+import Card from "@components/Card";
+import profile from "@pagecomponents/profile";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 export function ProfilePage({ profile: myProfile }: any) {
   let [isImageError, setIsImageError] = React.useState(false);

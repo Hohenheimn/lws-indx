@@ -1,10 +1,9 @@
 import React from "react";
-import { AnimateContainer, PageContainer } from "../../components/animation";
+import { notification } from "antd";
 import Form from "antd/lib/form";
-import Input from "../../components/Input";
-import { Button } from "../../components/Button";
 import "chart.js/auto";
-import { IoIosAdd } from "react-icons/io";
+import { format, parseISO } from "date-fns";
+import moment from "moment";
 import {
   AiOutlineSearch,
   AiOutlineCalendar,
@@ -17,27 +16,30 @@ import {
   BsPencilSquare,
   BsTrash,
 } from "react-icons/bs";
-import Calendar from "../../components/Calendar";
-import Card from "../../components/Card";
-import { format, parseISO } from "date-fns";
-import { fadeIn } from "../../components/animation/animation";
-import PrivateRoute from "../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../auth/HOC/VerifyAuth";
-import { NextPageProps } from "../../../utils/types/NextPageProps";
-import AddScheduleModal from "../../page-components/dashboard/modals/AddScheduleModal";
-import AddPatientModal from "../../page-components/dashboard/modals/AddPatientModal";
+import { IoIosAdd } from "react-icons/io";
+import { useInView } from "react-intersection-observer";
+import { AnimateContainer, PageContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import { Button } from "@components/Button";
+import Calendar from "@components/Calendar";
+import Card from "@components/Card";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
 import {
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deleteData, fetchData, postData } from "../../../utils/api";
-import { useInView } from "react-intersection-observer";
-import { InfiniteSelect } from "../../components/InfiniteSelect";
-import { notification } from "antd";
-import { Context } from "../../../utils/context/Provider";
-import scheduleType from "../../../utils/global-data/scheduleType";
-import moment from "moment";
+import { deleteData, fetchData, postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import scheduleType from "@utilities/global-data/scheduleType";
+import { NextPageProps } from "@utilities/types/NextPageProps";
+
+import PrivateRoute from "../../auth/HOC/PrivateRoute";
+import VerifyAuth from "../../auth/HOC/VerifyAuth";
+import AddPatientModal from "../../page-components/dashboard/modals/AddPatientModal";
+import AddScheduleModal from "../../page-components/dashboard/modals/AddScheduleModal";
+
 
 export function Dashboard({}: NextPageProps) {
   const { setIsAppLoading } = React.useContext(Context);

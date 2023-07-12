@@ -1,10 +1,10 @@
 import React from "react";
-import Annotation from "react-image-annotation";
-import { Button } from "../components/Button";
-import { PageContainer } from "../components/animation";
-import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
 import { FaTooth } from "react-icons/fa";
+import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
+import Annotation from "react-image-annotation";
 import { twMerge } from "tailwind-merge";
+import { PageContainer } from "@components/animation";
+import { Button } from "@components/Button";
 
 interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;

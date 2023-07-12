@@ -1,12 +1,13 @@
 import React from "react";
+import { FaTooth } from "react-icons/fa";
+import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
+import Annotation from "react-image-annotation";
+import { PageContainer } from "@components/animation";
+import Annotate from "@components/Annotate";
+import { Button } from "@components/Button";
+
 import PrivateRoute from "../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../auth/HOC/VerifyAuth";
-import Annotation from "react-image-annotation";
-import { Button } from "../../components/Button";
-import { PageContainer } from "../../components/animation";
-import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
-import { FaTooth } from "react-icons/fa";
-import Annotate from "../../components/Annotate";
 
 const Shape = ({ children, geometry, style }: any) => {
   return (

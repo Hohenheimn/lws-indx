@@ -1,6 +1,6 @@
-import { Menu } from "@headlessui/react";
-import { Float } from "@headlessui-float/react";
 import { twMerge } from "tailwind-merge";
+import { Float } from "@headlessui-float/react";
+import { Menu } from "@headlessui/react";
 
 interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   placement?:

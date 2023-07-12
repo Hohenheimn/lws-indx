@@ -1,15 +1,15 @@
-import { Checkbox, DatePicker, Form, Popover, Table } from "antd";
 import React from "react";
-import { scroller } from "react-scroll";
-import { Button } from "../../components/Button";
-import Card from "../../components/Card";
-import Input from "../../components/Input";
-import { Select } from "../../components/Select";
+import { Checkbox, DatePicker, Form, Popover, Table } from "antd";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { numberSeparator, paymentStatusPalette } from "../../../utils/helpers";
+import { scroller } from "react-scroll";
 import { twMerge } from "tailwind-merge";
-import { NextPageProps } from "../../../utils/types/NextPageProps";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
+import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
 
 let fakeData = [
   {

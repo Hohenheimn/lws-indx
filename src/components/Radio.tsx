@@ -1,8 +1,7 @@
 import React from "react";
-import { RadioGroup } from "@headlessui/react";
-import { Button as Btn } from "./Button";
 import { twMerge } from "tailwind-merge";
-import { Radio as Rad } from "antd";
+import { Button as Btn } from "@components/Button";
+import { RadioGroup } from "@headlessui/react";
 
 type RadioButtonProps = {
   label: string;

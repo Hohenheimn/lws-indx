@@ -1,27 +1,27 @@
+import React from "react";
 import { Space, Form, notification } from "antd";
+
+import { motion } from "framer-motion";
+// import { useMutation } from "react-query";
+// import { postData } from "@utilities/api";
 import dynamic from "next/dynamic";
 
-import { SwapRightOutlined } from "@ant-design/icons";
-// import { useMutation } from "react-query";
-// import { postData } from "../../../utils/api";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { setCookie } from "nookies";
-
-import React from "react";
-import { Context } from "../../utils/context/Provider";
-import { AnimateContainer, PageContainer } from "../components/animation";
+import { SwapRightOutlined } from "@ant-design/icons";
+import { AnimateContainer, PageContainer } from "@components/animation";
 import {
   fadeIn,
   fadeInLeft,
   fadeInRight,
-} from "../components/animation/animation";
-import Image from "next/image";
-import Input from "../components/Input";
-import { Button } from "../components/Button";
-import { motion } from "framer-motion";
+} from "@components/animation/animation";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
 import { useMutation } from "@tanstack/react-query";
-import { postData } from "../../utils/api";
+import { postData } from "@utilities/api";
 // import { Media } from "../../../context/Media";
-import { useRouter } from "next/router";
+import { Context } from "@utilities/context/Provider";
 
 export default function Login() {
   const router = useRouter();

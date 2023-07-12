@@ -1,14 +1,14 @@
 import React from "react";
 import { Form, notification } from "antd";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
-import Modal from "../../../components/Modal";
 import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData, updateData } from "../../../../utils/api";
-import { Context } from "../../../../utils/context/Provider";
-import { removeNumberFormatting } from "../../../../utils/helpers";
+import { postData, updateData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import { removeNumberFormatting } from "@utilities/helpers";
 
 export default function AddProcedureModal({
   show,

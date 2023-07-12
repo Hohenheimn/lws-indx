@@ -1,20 +1,22 @@
-import type { AppProps } from "next/app";
 import React from "react";
-import Head from "next/head";
-import Router from "next/router";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { capitalizeTitle } from "../../utils/helpers";
-import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
-import Layout from "../layout";
-import "../../styles/globals.scss";
-import { AnimateContainer } from "../components/animation";
-import { fadeIn, stagger } from "../components/animation/animation";
+import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
+import Head from "next/head";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Router from "next/router";
 import Script from "next/script";
 import { twMerge } from "tailwind-merge";
+import { AnimateContainer } from "@components/animation";
+import { fadeIn, stagger } from "@components/animation/animation";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { capitalizeTitle } from "@utilities/helpers";
 
-const AppProvider = dynamic(() => import("../../utils/context/Provider"));
+import "../../styles/globals.scss";
+import Layout from "../layout";
+
+
+const AppProvider = dynamic(() => import("@utilities/context/Provider"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

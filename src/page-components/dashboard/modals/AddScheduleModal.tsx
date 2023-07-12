@@ -1,23 +1,23 @@
 import React from "react";
+import { DatePicker, TimePicker, notification } from "antd";
 import Form from "antd/lib/form";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
+import TextArea from "antd/lib/input/TextArea";
 import "chart.js/auto";
-import { Select } from "../../../components/Select";
-import Modal from "../../../components/Modal";
+import moment from "moment";
 import { PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
+import { Button } from "@components/Button";
+import { InfiniteAutoComplete } from "@components/InfiniteAutoComplete";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
+import { Select } from "@components/Select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchData, postData } from "../../../../utils/api";
-import { DatePicker, TimePicker, notification } from "antd";
-import { Context } from "../../../../utils/context/Provider";
-import { InfiniteSelect } from "../../../components/InfiniteSelect";
-import scheduleType from "../../../../utils/global-data/scheduleType";
-import { InfiniteAutoComplete } from "../../../components/InfiniteAutoComplete";
-import leaveReasons from "../../../../utils/global-data/leaveReasons";
-import moment from "moment";
-import TextArea from "antd/lib/input/TextArea";
-import { getInitialValue } from "../../../../utils/helpers";
+import { fetchData, postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import leaveReasons from "@utilities/global-data/leaveReasons";
+import scheduleType from "@utilities/global-data/scheduleType";
+import { getInitialValue } from "@utilities/helpers";
 
 export default function AddScheduleModal({
   show,
@@ -99,10 +99,9 @@ export default function AddScheduleModal({
       ...doctorSchedule,
       {
         start: null,
-        end: selectedStartTime ? moment(selectedStartTime, 'HH:mm') : null,
+        end: selectedStartTime ? moment(selectedStartTime, "HH:mm") : null,
       },
     ];
-
 
     if (type === "start") {
       let startDisabledDates = doctorSchedule
@@ -237,14 +236,13 @@ export default function AddScheduleModal({
               60,
               true
             );
-          } 
+          }
 
           return [];
         },
       };
     }
   }
-
 
   const { mutate: addSchedule } = useMutation(
     (payload: any) =>

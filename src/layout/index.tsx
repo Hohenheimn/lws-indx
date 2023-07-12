@@ -1,15 +1,16 @@
 import React from "react";
-import { FiMoreHorizontal } from "react-icons/fi";
-import { FaHome, FaUser } from "react-icons/fa";
-import { Button } from "../components/Button";
-import { Context } from "../../utils/context/Provider";
-import LoadingScreen from "./LoadingScreen";
-import { AnimateContainer } from "../components/animation";
-import { fadeIn } from "../components/animation/animation";
 import { AnimatePresence } from "framer-motion";
-import SideMenu from "./SideMenu";
+import { FaHome, FaUser } from "react-icons/fa";
+import { FiMoreHorizontal } from "react-icons/fi";
 import { scroller } from "react-scroll";
 import { twMerge } from "tailwind-merge";
+import { AnimateContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import { Button } from "@components/Button";
+import { Context } from "@utilities/context/Provider";
+
+import LoadingScreen from "./LoadingScreen";
+import SideMenu from "./SideMenu";
 
 interface LayoutProps {
   children: React.ReactNode;

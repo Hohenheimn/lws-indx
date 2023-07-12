@@ -1,15 +1,16 @@
-import { Checkbox, DatePicker, Form, notification } from "antd";
 import React from "react";
-import { scroller } from "react-scroll";
-import { Button } from "../../components/Button";
-import Card from "../../components/Card";
-import Input from "../../components/Input";
-import { Select } from "../../components/Select";
-import { fetchData, postData } from "../../../utils/api";
-import { InfiniteSelect } from "../../components/InfiniteSelect";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Context } from "../../../utils/context/Provider";
+import { Checkbox, DatePicker, Form, notification } from "antd";
 import moment from "moment";
+import { scroller } from "react-scroll";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchData, postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+
 
 export function DentalHistory({ patientRecord, tab }: any) {
   const queryClient = useQueryClient();

@@ -1,9 +1,9 @@
 import React from "react";
-import { Combobox, Transition } from "@headlessui/react";
-import { twMerge } from "tailwind-merge";
-import { Float } from "@headlessui-float/react";
 import { AiOutlineStop } from "react-icons/ai";
 import { BiChevronUp } from "react-icons/bi";
+import { twMerge } from "tailwind-merge";
+import { Float } from "@headlessui-float/react";
+import { Combobox, Transition } from "@headlessui/react";
 
 type SelectOptionProps = {
   value: any;

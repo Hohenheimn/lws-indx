@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "../components/Button";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { AiFillCaretDown } from "react-icons/ai";
-import Dropdown from "../components/Dropdown";
-import { destroyCookie, setCookie } from "nookies";
 import { notification, Drawer, Menu } from "antd";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { destroyCookie, setCookie } from "nookies";
+import { AiFillCaretDown } from "react-icons/ai";
+import { Button } from "@components/Button";
+import Dropdown from "@components/Dropdown";
 
 type sideMenuProps = {
   label: string;

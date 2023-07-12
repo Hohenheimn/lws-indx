@@ -1,18 +1,20 @@
-import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
 import React from "react";
-import { scroller } from "react-scroll";
-import { Button } from "../../../components/Button";
-import Card from "../../../components/Card";
-import Input from "../../../components/Input";
-import { Select } from "../../../components/Select";
+import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
+import moment from "moment";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { numberSeparator } from "../../../../utils/helpers";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import { scroller } from "react-scroll";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "../../../../utils/api";
+import { deleteData, fetchData } from "@utilities/api";
+import { numberSeparator } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
+
 import AddTreatmentPlanModal from "./AddTreatmentPlanModal";
-import moment from "moment";
+
 
 const columns: any = [
   {

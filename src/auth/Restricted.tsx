@@ -1,9 +1,9 @@
 import { Space, Button } from "antd";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import dynamic from "next/dynamic";
-import { PageContainer } from "../components/animation";
-import { fadeInUp } from "../components/animation/animation";
+import Link from "next/link";
+import { PageContainer } from "@components/animation";
+import { fadeInUp } from "@components/animation/animation";
 
 function Restricted() {
   return (

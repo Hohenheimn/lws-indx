@@ -1,16 +1,17 @@
-import { Checkbox, DatePicker, Form, Popover, Table } from "antd";
 import React from "react";
-import { scroller } from "react-scroll";
-import { Button } from "../../../components/Button";
-import Card from "../../../components/Card";
-import Input from "../../../components/Input";
-import { Select } from "../../../components/Select";
+import { Checkbox, DatePicker, Form, Popover, Table } from "antd";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { numberSeparator } from "../../../../utils/helpers";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
-import ChartingModal from "./ChartingModal";
+import { scroller } from "react-scroll";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
 import { useQueryClient } from "@tanstack/react-query";
+import { numberSeparator } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
+
+import ChartingModal from "./ChartingModal";
 
 let fakeData = [
   {

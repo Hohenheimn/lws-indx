@@ -1,12 +1,12 @@
 import React from "react";
 import { Form, notification } from "antd";
-import Input from "../../../components/Input";
-import { Button } from "../../../components/Button";
-import Modal from "../../../components/Modal";
 import { scroller } from "react-scroll";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import Modal from "@components/Modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData } from "../../../../utils/api";
-import { Context } from "../../../../utils/context/Provider";
+import { postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
 
 export default function AddPrescriptionManagementModal({
   show,

@@ -1,20 +1,21 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
-import { Button } from "../../../components/Button";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
+import { Form, Popover, notification } from "antd";
 import Table from "antd/lib/table/Table";
 import { AiOutlineSearch } from "react-icons/ai";
-import Input from "../../../components/Input";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import { Button } from "@components/Button";
+import Input from "@components/Input";
+import AddProcedureModal from "@pagecomponents/procedure-management/modals/AddProcedureModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "../../../../utils/api";
-import { Form, Popover, notification } from "antd";
-import { Context } from "../../../../utils/context/Provider";
-import { numberSeparator } from "../../../../utils/helpers";
-import AddProcedureModal from "../../../page-components/procedure-management/modals/AddProcedureModal";
+import { deleteData, fetchData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import { numberSeparator } from "@utilities/helpers";
+import { NextPageProps } from "@utilities/types/NextPageProps";
+
 
 export function ProcedureManagement({ router }: NextPageProps) {
   const [ProcedureForm] = Form.useForm();

@@ -1,14 +1,15 @@
 import React from "react";
-import { AnimateContainer, PageContainer } from "../components/animation";
-import Image from "next/image";
-import { Button } from "../components/Button";
 import { Input as Inp } from "antd";
+import { Drawer } from "antd";
+import Image from "next/image";
+import { BsInstagram, BsLinkedin } from "react-icons/bs";
 import { FaFacebookF } from "react-icons/fa";
 import { GrMenu } from "react-icons/gr";
-import { Drawer } from "antd";
 import { twMerge } from "tailwind-merge";
-import { fadeIn } from "../components/animation/animation";
-import { BsInstagram, BsLinkedin } from "react-icons/bs";
+import { AnimateContainer, PageContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
+import { Button } from "@components/Button";
+
 import Layout from "../layout";
 
 type sideMenuProps = {

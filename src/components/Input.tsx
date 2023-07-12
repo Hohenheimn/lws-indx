@@ -1,8 +1,8 @@
 import React from "react";
-import { twMerge } from "tailwind-merge";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { AnimateContainer } from "./animation";
-import { fadeInUp, fadeIn } from "./animation/animation";
+import { twMerge } from "tailwind-merge";
+import { AnimateContainer } from "@components/animation";
+import { fadeInUp, fadeIn } from "@components/animation/animation";
 
 type A = React.HTMLAttributes<HTMLInputElement>;
 

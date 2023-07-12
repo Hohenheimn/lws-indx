@@ -1,10 +1,10 @@
-import { Table } from "antd";
 import React from "react";
-import { Button } from "../../components/Button";
-import Card from "../../components/Card";
-import Input from "../../components/Input";
+import { Table } from "antd";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
 
 let fakeData = [
   {

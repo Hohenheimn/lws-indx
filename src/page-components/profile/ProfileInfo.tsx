@@ -1,25 +1,25 @@
-import { Checkbox, DatePicker, Form, notification } from "antd";
 import React from "react";
-import { scroller } from "react-scroll";
-import { Button } from "../../components/Button";
-import Card from "../../components/Card";
-import Input from "../../components/Input";
-import { Select } from "../../components/Select";
+import { Checkbox, DatePicker, Form, notification } from "antd";
 import { differenceInYears, parse } from "date-fns";
-import gender from "../../../utils/global-data/gender";
 import moment from "moment";
-import { NumericFormat, PatternFormat } from "react-number-format";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Context } from "../../../utils/context/Provider";
-import { postData } from "../../../utils/api";
-import SignatureCanvas from "react-signature-canvas";
 import Image from "next/image";
-import { InfiniteSelect } from "../../components/InfiniteSelect";
-import { getBase64, getInitialValue } from "../../../utils/helpers";
-import Uploader from "../../components/Uploader";
-import Avatar from "../../components/Avatar";
-import { IoPersonOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
+import { IoPersonOutline } from "react-icons/io5";
+import { NumericFormat, PatternFormat } from "react-number-format";
+import { scroller } from "react-scroll";
+import SignatureCanvas from "react-signature-canvas";
+import Avatar from "@components/Avatar";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import { InfiniteSelect } from "@components/InfiniteSelect";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
+import Uploader from "@components/Uploader";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
+import gender from "@utilities/global-data/gender";
+import { getBase64, getInitialValue } from "@utilities/helpers";
 
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),

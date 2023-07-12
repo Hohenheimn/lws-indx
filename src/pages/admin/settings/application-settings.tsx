@@ -1,13 +1,14 @@
 import React from "react";
-import { PageContainer } from "../../../components/animation";
-import PrivateRoute from "../../../auth/HOC/PrivateRoute";
-import VerifyAuth from "../../../auth/HOC/VerifyAuth";
-import Card from "../../../components/Card";
-import Avatar from "../../../components/Avatar";
-import { Button } from "../../../components/Button";
-import Input from "../../../components/Input";
-import { Select } from "../../../components/Select";
-import { NextPageProps } from "../../../../utils/types/NextPageProps";
+import PrivateRoute from "@auth/HOC/PrivateRoute";
+import VerifyAuth from "@auth/HOC/VerifyAuth";
+import { PageContainer } from "@components/animation";
+import Avatar from "@components/Avatar";
+import { Button } from "@components/Button";
+import Card from "@components/Card";
+import Input from "@components/Input";
+import { Select } from "@components/Select";
+import { NextPageProps } from "@utilities/types/NextPageProps";
+
 
 export function ApplicationSettings({}: NextPageProps) {
   return (

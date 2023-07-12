@@ -1,6 +1,6 @@
+import { notification } from "antd";
 import axios from "axios";
 import { parseCookies } from "nookies";
-import { notification } from "antd";
 
 export const sample = {};
 
