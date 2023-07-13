@@ -14,6 +14,7 @@ import { capitalizeTitle } from "@utilities/helpers";
 
 import "../../styles/globals.scss";
 import Layout from "../layout";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 
 const AppProvider = dynamic(() => import("@utilities/context/Provider"));
@@ -82,7 +83,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
           </div>
         </AnimatePresence>
       </AppProvider>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
