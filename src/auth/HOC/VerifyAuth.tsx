@@ -5,59 +5,60 @@ import { parseCookies, destroyCookie } from "nookies";
 // import axios from "axios";
 
 type ggspTypes = {
-  profile: any;
-  openMenus: string;
-  subdomain: string;
+    profile: any;
+    openMenus: string;
+    subdomain: string;
 };
 
 export default function VerifyAuth(gssp: {
-  (ctx: NextPageContext, { profile, openMenus, subdomain }: ggspTypes): {};
+    (ctx: NextPageContext, { profile, openMenus, subdomain }: ggspTypes): {};
 }) {
-  return async (ctx: any) => {
-    const { req, res } = ctx;
+    return async (ctx: any) => {
+        const { req, res } = ctx;
 
-    let profile = req?.profile ?? null;
-    let openMenus = req?.cookies?.om ?? null;
-    let token = await parseCookies(ctx).a_t;
-    let subdomain =
-      req.headers.host.split(".").length > 1
-        ? req.headers.host.split(".")[0]
-        : null;
+        let profile = req?.profile ?? null;
 
-    // if (subdomain && subdomain === "lws-dentist") {
-    //   return {
-    //     notFound: true,
-    //   };
-    // }
+        let openMenus = req?.cookies?.om ?? null;
+        let token = await parseCookies(ctx).a_t;
+        let subdomain =
+            req.headers.host.split(".").length > 1
+                ? req.headers.host.split(".")[0]
+                : null;
 
-    if (!subdomain || subdomain !== "lws-dentist") {
-      return {
-        redirect: {
-          permanent: false,
-          destination: "/",
-        },
-      };
-    }
+        // if (subdomain && subdomain === "lws-dentist") {
+        //   return {
+        //     notFound: true,
+        //   };
+        // }
 
-    if (token) {
-      await axios
-        .get(`${process.env.REACT_APP_API_BASE_URL}/api/user/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          profile = res.data;
-        })
-        .catch((err) => {
-          profile = null;
-          destroyCookie(ctx, "a_t", {
-            path: "/",
-          });
-          throw err;
-        });
-    }
+        if (!subdomain || subdomain !== "lws-dentist") {
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: "/",
+                },
+            };
+        }
 
-    return await gssp(ctx, { profile, openMenus, subdomain });
-  };
+        if (token) {
+            await axios
+                .get(`${process.env.REACT_APP_API_BASE_URL}/api/user/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((res) => {
+                    profile = res.data;
+                })
+                .catch((err) => {
+                    profile = null;
+                    destroyCookie(ctx, "a_t", {
+                        path: "/",
+                    });
+                    throw err;
+                });
+        }
+
+        return await gssp(ctx, { profile, openMenus, subdomain });
+    };
 }
