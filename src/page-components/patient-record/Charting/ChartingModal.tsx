@@ -6,6 +6,7 @@ import { AiFillMinusCircle } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
+import { arrayBuffer } from "stream/consumers";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn } from "@components/animation/animation";
 import Annotate from "@components/Annotate";
@@ -15,8 +16,9 @@ import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData } from "@utilities/api";
+import { postData, updateData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
+
 import { getInitialValue, removeNumberFormatting } from "@utilities/helpers";
 
 import AnnotationModal from "./AnnotationModal";
@@ -27,6 +29,7 @@ export default function ChartingModal({
     onClose,
     form,
     patientRecord,
+    defaultAnnotation,
     ...rest
 }: any) {
     const queryClient = useQueryClient();
@@ -48,6 +51,24 @@ export default function ChartingModal({
         tooth_position: "",
         tooth_no: 1,
     });
+
+    useEffect(() => {
+        let cloneUpperRight = Teeth.UpperRight;
+        defaultAnnotation.map((itemMapPosition: any, index: number) => {
+            if (itemMapPosition.tooth_position === "upper_right") {
+                Teeth.UpperRight.map((itemMapNumber: any, index) => {
+                    if (itemMapPosition.tooth_no - 1 === index) {
+                        // console.log(itemMapPosition);
+                        // console.log(itemMapPosition.annotations);
+                        // cloneUpperRight[index].annotations =
+                        //     itemMapPosition.annotations;
+                        // cloneUpperRight[index] = itemMapPosition;
+                    }
+                });
+            }
+        });
+        console.log(cloneUpperRight);
+    }, [defaultAnnotation]);
 
     const ChartView = Form.useWatch("chart_view", form);
 
@@ -127,9 +148,13 @@ export default function ChartingModal({
                 setTeethUpperRight(Teeth.UpperRight);
             },
             onMutate: async (newData) => {
-                await queryClient.cancelQueries({ queryKey: ["chart"] });
-                const previousValues = queryClient.getQueryData(["chart"]);
-                queryClient.setQueryData(["chart"], (oldData: any) =>
+                await queryClient.cancelQueries({
+                    queryKey: ["charting-list"],
+                });
+                const previousValues = queryClient.getQueryData([
+                    "charting-list",
+                ]);
+                queryClient.setQueryData(["charting-list"], (oldData: any) =>
                     oldData ? [...oldData, newData] : undefined
                 );
 
@@ -142,19 +167,22 @@ export default function ChartingModal({
                         err.response.data[Object.keys(err.response.data)[0]]
                     }`,
                 });
-                queryClient.setQueryData(["chart"], context.previousValues);
+                queryClient.setQueryData(
+                    ["charting-list"],
+                    context.previousValues
+                );
             },
             onSettled: async () => {
-                queryClient.invalidateQueries({ queryKey: ["chart"] });
+                queryClient.invalidateQueries({ queryKey: ["charting-list"] });
             },
         }
     );
 
-    const { mutate: editPrescription } = useMutation(
+    const { mutate: editChart } = useMutation(
         (payload) => {
             let id = form.getFieldValue("_id");
             return postData({
-                url: `/api/patient/charting/update/${id}`,
+                url: `/api/patient/charting/update/${id}?_method=PUT`,
                 payload,
                 options: {
                     isLoading: (show: boolean) => setIsAppLoading(show),
@@ -175,9 +203,13 @@ export default function ChartingModal({
                 setTeethUpperRight(Teeth.UpperRight);
             },
             onMutate: async (newData) => {
-                await queryClient.cancelQueries({ queryKey: ["chart"] });
-                const previousValues = queryClient.getQueryData(["chart"]);
-                queryClient.setQueryData(["chart"], (oldData: any) =>
+                await queryClient.cancelQueries({
+                    queryKey: ["charting-list"],
+                });
+                const previousValues = queryClient.getQueryData([
+                    "charting-list",
+                ]);
+                queryClient.setQueryData(["charting-list"], (oldData: any) =>
                     oldData ? [...oldData, newData] : undefined
                 );
 
@@ -190,10 +222,13 @@ export default function ChartingModal({
                         err.response.data[Object.keys(err.response.data)[0]]
                     }`,
                 });
-                queryClient.setQueryData(["chart"], context.previousValues);
+                queryClient.setQueryData(
+                    ["charting-list"],
+                    context.previousValues
+                );
             },
             onSettled: async () => {
-                queryClient.invalidateQueries({ queryKey: ["chart"] });
+                queryClient.invalidateQueries({ queryKey: ["charting-list"] });
             },
         }
     );
@@ -247,11 +282,12 @@ export default function ChartingModal({
                             ]);
 
                             values.procedures = procedures;
+
                             if (!id) {
                                 addChart(values);
                             } else {
                                 values.id = id;
-                                editPrescription(values);
+                                editChart(values);
                             }
                         }}
                         onFinishFailed={(data) => {
@@ -286,11 +322,10 @@ export default function ChartingModal({
                                 />
                             </Form.Item>
 
-                            <Form.Item
+                            {/* <Form.Item
                                 label="Date Created"
                                 name="created_at"
                                 required={false}
-                                initialValue={moment()}
                             >
                                 <DatePicker
                                     getPopupContainer={(triggerNode: any) => {
@@ -301,7 +336,7 @@ export default function ChartingModal({
                                     format="MMMM DD, YYYY"
                                     disabled={true}
                                 />
-                            </Form.Item>
+                            </Form.Item> */}
 
                             <Form.Item
                                 label="Chart Type"
@@ -644,6 +679,7 @@ export default function ChartingModal({
                                     label=""
                                     name="legend_periodical_screening_others"
                                     required={false}
+                                    initialValue={""}
                                 >
                                     <Input
                                         id="legend_periodical_screening_others"
@@ -682,6 +718,7 @@ export default function ChartingModal({
                                     label=""
                                     name="legend_occlusions_others"
                                     required={false}
+                                    initialValue={""}
                                 >
                                     <Input
                                         id="legend_occlusions_others"
@@ -711,6 +748,7 @@ export default function ChartingModal({
                                     label=""
                                     name="legend_appliances_others"
                                     required={false}
+                                    initialValue={""}
                                 >
                                     <Input
                                         id="legend_appliances_others"
@@ -744,6 +782,7 @@ export default function ChartingModal({
                                     label=""
                                     name="legend_tmds_others"
                                     required={false}
+                                    initialValue={""}
                                 >
                                     <Input
                                         id="legend_tmds_others"
@@ -756,10 +795,10 @@ export default function ChartingModal({
                         <div className="grid grid-cols-1">
                             <Form.Item
                                 label="Remark"
-                                name="remark"
+                                name="remarks"
                                 required={false}
                             >
-                                <TextArea id="remark" placeholder="Remarks" />
+                                <TextArea id="remarks" placeholder="Remarks" />
                             </Form.Item>
                         </div>
 

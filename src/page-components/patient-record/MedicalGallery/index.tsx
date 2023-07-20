@@ -25,7 +25,15 @@ import { deleteData, fetchData } from "@utilities/api";
 import { getBase64, numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+
+
+
+
 import AddMedicalGalleryModal from "./AddMedicalGalleryModal";
+
+
+
+
 
 export function MedicalGallery({ patientRecord }: any) {
     const [MedicalGalleryForm] = Form.useForm();
@@ -151,8 +159,7 @@ export function MedicalGallery({ patientRecord }: any) {
                             <h4 className="basis-full md:basis-auto">
                                 Medical Gallery
                             </h4>
-                            {SelectedEdit !== undefined &&
-                                SelectedEdit !== null && (
+                            {SelectedEdit.id !== undefined && SelectedEdit.id !== null && (
                                     <Button
                                         className="p-3 inline-block w-auto"
                                         appearance="primary"

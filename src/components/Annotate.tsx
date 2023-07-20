@@ -173,7 +173,7 @@ export function Annotate({
                     description,
                     color,
                     icon,
-                    id: id,
+                    procedure_id: id,
                 },
             })
         );
@@ -190,7 +190,7 @@ export function Annotate({
                         description,
                         color,
                         icon,
-                        id: id,
+                        procedure_id: id,
                     },
                 })
             );
@@ -238,12 +238,12 @@ export function Annotate({
                                             annotation: annotation,
                                             id: itemMap._id,
                                             icon: (
-                                                <GiToothbrush className="text-[inherit]" />
+                                                <GiSkullSabertooth className="text-[inherit]" />
                                             ),
                                         });
                                     }}
                                 >
-                                    <GiToothbrush className="text-2xl" />
+                                    <GiSkullSabertooth className="text-[inherit]" />
                                 </Button>
                             </div>
                         ))}

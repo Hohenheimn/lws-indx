@@ -12,6 +12,7 @@ import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import Uploader from "@src/components/Uploader";
+import UploaderMultiple from "@src/components/UploaderMultiple";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -85,8 +86,8 @@ export default function AddMedicalGalleryModal({
         {
             onSuccess: async (res) => {
                 notification.success({
-                    message: "Adding Treatment Plan Success",
-                    description: `Adding Treatment Plan Success`,
+                    message: "Adding Gallery Success",
+                    description: `Adding gallery-list Success`,
                 });
                 form.resetFields();
                 onClose();
@@ -137,8 +138,8 @@ export default function AddMedicalGalleryModal({
         {
             onSuccess: async (res) => {
                 notification.success({
-                    message: "Treatment Plan Updated!",
-                    description: `Treatment Plan Updated!`,
+                    message: "Gallery Updated!",
+                    description: `Gallery Updated!`,
                 });
                 form.resetFields();
                 onClose();
@@ -179,26 +180,26 @@ export default function AddMedicalGalleryModal({
     return (
         <Modal show={show} onClose={onClose} {...rest}>
             <div>
-                <Uploader
+                <UploaderMultiple
                     image={image}
                     setImage={(value: any) => setImage(value)}
                     onChange={handleChange}
                     id="gallery_picture"
-                    className="[&_.ant-upload]:!border-0 h-full w-full"
+                    className="[&_.ant-upload]:!border-0 h-full w-full bg-none"
                     wrapperClassName="h-full w-full border flex justify-center items-center border-dashed p-4"
                 >
                     <div className=" w-full flex justify-center flex-col items-center">
                         <AiOutlineInbox className=" text-5xl text-primary-500 mb-2" />
                         <h3 className=" text-center mb-2 text-2xl">
-                            Click or drag -file to this area to upload
+                            Click or drag-file to this area to upload
                         </h3>
-                        <p className=" text-center text-lg">
+                        <p className=" text-center text-lg text-gray-400">
                             Support for a single or bulk upload. Stricktly
                             prohibit from uploading company data or other band
                             files
                         </p>
                     </div>
-                </Uploader>
+                </UploaderMultiple>
             </div>
         </Modal>
     );

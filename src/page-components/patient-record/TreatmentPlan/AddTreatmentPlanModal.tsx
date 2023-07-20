@@ -198,11 +198,14 @@ export default function AddTreatmentPlanModal({
                                     placeholder="Add Treatment Plan Name"
                                 />
                             </Form.Item>
+
                             <Form.Item
                                 label="Date Created"
                                 name="date_created"
                                 required={false}
-                                initialValue={moment()}
+                                initialValue={moment(
+                                    form.getFieldValue("created_at")
+                                ).format("MMMM DD, YYYY")}
                             >
                                 <DatePicker
                                     getPopupContainer={(triggerNode: any) => {
