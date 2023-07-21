@@ -29,6 +29,15 @@ export default function AddTreatmentPlanModal({
     const queryClient = useQueryClient();
     const { setIsAppLoading } = React.useContext(Context);
 
+    React.useEffect(() => {
+        form.setFieldsValue({
+            ...form,
+            created_at: moment(form?.getFieldValue("created_at")).isValid()
+                ? moment(form?.getFieldValue("created_at"))
+                : undefined,
+        });
+    }, [show]);
+
     const { mutate: addTreatmentPlan } = useMutation(
         (payload: any) => {
             return postData({
@@ -201,11 +210,8 @@ export default function AddTreatmentPlanModal({
 
                             <Form.Item
                                 label="Date Created"
-                                name="date_created"
+                                name="created_at"
                                 required={false}
-                                initialValue={moment(
-                                    form.getFieldValue("created_at")
-                                ).format("MMMM DD, YYYY")}
                             >
                                 <DatePicker
                                     getPopupContainer={(triggerNode: any) => {

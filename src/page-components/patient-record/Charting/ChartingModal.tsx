@@ -53,24 +53,86 @@ export default function ChartingModal({
     });
 
     useEffect(() => {
-        let cloneUpperRight = Teeth.UpperRight;
-        defaultAnnotation.map((itemMapPosition: any, index: number) => {
-            if (itemMapPosition.tooth_position === "upper_right") {
-                Teeth.UpperRight.map((itemMapNumber: any, index) => {
-                    if (itemMapPosition.tooth_no - 1 === index) {
-                        // console.log(itemMapPosition);
-                        // console.log(itemMapPosition.annotations);
-                        // cloneUpperRight[index].annotations =
-                        //     itemMapPosition.annotations;
-                        // cloneUpperRight[index] = itemMapPosition;
-                    }
-                });
+        let UpperLeft: any[] = [];
+        let UpperRight: any[] = [];
+        let LowerLeft: any[] = [];
+        let LowerRight: any[] = [];
+        defaultAnnotation.map((rowPosition: any) => {
+            if (rowPosition.tooth_position === "upper_left") {
+                const getFromFunc = AnnotationGetValues(
+                    rowPosition,
+                    TeethUpperLeft
+                );
+                UpperLeft = [...UpperLeft, getFromFunc];
+            }
+
+            if (rowPosition.tooth_position === "upper_right") {
+                const getFromFunc = AnnotationGetValues(
+                    rowPosition,
+                    TeethUpperRight
+                );
+                UpperRight = [...UpperRight, getFromFunc];
+            }
+
+            if (rowPosition.tooth_position === "lower_left") {
+                const getFromFunc = AnnotationGetValues(
+                    rowPosition,
+                    TeethLowerLeft
+                );
+                LowerLeft = [...LowerLeft, getFromFunc];
+            }
+
+            if (rowPosition.tooth_position === "lower_right") {
+                const getFromFunc = AnnotationGetValues(
+                    rowPosition,
+                    TeethLowerRight
+                );
+                LowerRight = [...LowerRight, getFromFunc];
             }
         });
-        console.log(cloneUpperRight);
+        ProcedureSetDefaultValue(UpperLeft, setTeethUpperLeft);
+        ProcedureSetDefaultValue(UpperRight, setTeethUpperRight);
+        ProcedureSetDefaultValue(LowerLeft, setTeethLowerLeft);
+        ProcedureSetDefaultValue(LowerRight, setTeethLowerRight);
     }, [defaultAnnotation]);
 
+    const AnnotationGetValues = (rowPosition: any, arrayToLoop: any) => {
+        let arrayWithValues: any[] = [];
+        arrayToLoop.map((rowNumber: any, index: number) => {
+            if (rowPosition.tooth_no - 1 === index) {
+                arrayWithValues = rowPosition;
+                return;
+            }
+        });
+        return arrayWithValues;
+    };
+
+    const ProcedureSetDefaultValue = (
+        arrayValues: any[],
+        setArrayValues: Function
+    ) => {
+        const Filter = TeethUpperRight.filter(
+            (filterItem) =>
+                !arrayValues.some(
+                    (someItem) => someItem.tooth_no === filterItem.tooth_no
+                )
+        );
+        const sorted = [...Filter, ...arrayValues].sort(
+            (a, b) => a.tooth_no - b.tooth_no
+        );
+        setArrayValues(sorted);
+    };
+
     const ChartView = Form.useWatch("chart_view", form);
+
+    React.useEffect(() => {
+        form.setFieldsValue({
+            ...form,
+            created_at: moment(form?.getFieldValue("created_at")).isValid()
+                ? moment(form?.getFieldValue("created_at"))
+                : undefined,
+        });
+    }, [show]);
 
     const UpdateTeeth = (array: any, tooth_no: number, annotations: any) => {
         const UpdatedTooth = array.map((itemMap: any) => {
@@ -141,11 +203,11 @@ export default function ChartingModal({
                     description: `Adding New Chart Success`,
                 });
                 form.resetFields();
-                onClose();
                 setTeethLowerLeft(Teeth.LowerLeft);
-                setTeethLowerRight(Teeth.UpperRight);
+                setTeethLowerRight(Teeth.LowerRight);
                 setTeethUpperLeft(Teeth.UpperLeft);
                 setTeethUpperRight(Teeth.UpperRight);
+                onClose();
             },
             onMutate: async (newData) => {
                 await queryClient.cancelQueries({
@@ -196,11 +258,11 @@ export default function ChartingModal({
                     description: `Chart Updated!`,
                 });
                 form.resetFields();
-                onClose();
                 setTeethLowerLeft(Teeth.LowerLeft);
-                setTeethLowerRight(Teeth.UpperRight);
+                setTeethLowerRight(Teeth.LowerRight);
                 setTeethUpperLeft(Teeth.UpperLeft);
                 setTeethUpperRight(Teeth.UpperRight);
+                onClose();
             },
             onMutate: async (newData) => {
                 await queryClient.cancelQueries({
@@ -283,6 +345,13 @@ export default function ChartingModal({
 
                             values.procedures = procedures;
 
+                            // console.log([
+                            //     ...upper_left,
+                            //     ...upper_right,
+                            //     ...lower_right,
+                            //     ...lower_left,
+                            // ]);
+
                             if (!id) {
                                 addChart(values);
                             } else {
@@ -322,7 +391,7 @@ export default function ChartingModal({
                                 />
                             </Form.Item>
 
-                            {/* <Form.Item
+                            <Form.Item
                                 label="Date Created"
                                 name="created_at"
                                 required={false}
@@ -336,7 +405,7 @@ export default function ChartingModal({
                                     format="MMMM DD, YYYY"
                                     disabled={true}
                                 />
-                            </Form.Item> */}
+                            </Form.Item>
 
                             <Form.Item
                                 label="Chart Type"
@@ -807,11 +876,12 @@ export default function ChartingModal({
                                 appearance="link"
                                 className="p-4 bg-transparent border-none text-casper-500 font-semibold"
                                 onClick={() => {
-                                    onClose();
                                     setTeethLowerLeft(Teeth.LowerLeft);
-                                    setTeethLowerRight(Teeth.UpperRight);
+                                    setTeethLowerRight(Teeth.LowerRight);
                                     setTeethUpperLeft(Teeth.UpperLeft);
                                     setTeethUpperRight(Teeth.UpperRight);
+
+                                    onClose();
                                 }}
                             >
                                 Cancel
@@ -835,6 +905,7 @@ export default function ChartingModal({
                     // setIsChartingModalOpen(false);
                     // ChartingForm.resetFields();
                 }}
+                ChartView={ChartView}
                 className="w-full"
                 SelectedAnnotate={SelectedAnnotate}
                 UpdateToothsHandler={UpdateToothsHandler}

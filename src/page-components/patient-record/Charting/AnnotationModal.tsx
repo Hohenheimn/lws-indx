@@ -15,6 +15,7 @@ export default function AnnotationModal({
     SelectedAnnotate,
     UpdateToothsHandler,
     form,
+    ChartView,
     ...rest
 }: any) {
     const [page, setPage] = useState(1);
@@ -36,7 +37,13 @@ export default function AnnotationModal({
                         // disabled={true}
                         defaultValue={SelectedAnnotate}
                         UpdateToothsHandler={UpdateToothsHandler}
-                        image={`/images/tooth-periodontal.png`}
+                        image={
+                            ChartView === "Standard" ||
+                            ChartView === undefined ||
+                            ChartView === "All"
+                                ? "/images/tooth-standard.png"
+                                : `/images/tooth-periodontal.png`
+                        }
                         ProceduresData={proceduresList?.data}
                     />
                 </div>

@@ -178,28 +178,104 @@ export default function AddMedicalGalleryModal({
     );
 
     return (
-        <Modal show={show} onClose={onClose} {...rest}>
-            <div>
-                <UploaderMultiple
-                    image={image}
-                    setImage={(value: any) => setImage(value)}
-                    onChange={handleChange}
-                    id="gallery_picture"
-                    className="[&_.ant-upload]:!border-0 h-full w-full bg-none"
-                    wrapperClassName="h-full w-full border flex justify-center items-center border-dashed p-4"
+        <Modal show={show} onClose={() => {}} {...rest}>
+            <div className="space-y-8">
+                <div className="flex items-center justify-between">
+                    <div className="font-bold text-3xl">New Gallery</div>
+                </div>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={(values) => {
+                        let id = form.getFieldValue("_id");
+                        values.legend_periodical_screening = JSON.stringify(
+                            values.legend_periodical_screening
+                        );
+
+                        // if (!id) {
+                        //     addChart(values);
+                        // } else {
+                        //     values.id = id;
+                        //     editChart(values);
+                        // }
+                    }}
+                    onFinishFailed={(data) => {
+                        scroller.scrollTo(
+                            data?.errorFields[0]?.name?.join("-")?.toString(),
+                            {
+                                smooth: true,
+                                offset: -50,
+                                containerId: rest?.id,
+                            }
+                        );
+                    }}
+                    className="space-y-12"
                 >
-                    <div className=" w-full flex justify-center flex-col items-center">
-                        <AiOutlineInbox className=" text-5xl text-primary-500 mb-2" />
-                        <h3 className=" text-center mb-2 text-2xl">
-                            Click or drag-file to this area to upload
-                        </h3>
-                        <p className=" text-center text-lg text-gray-400">
-                            Support for a single or bulk upload. Stricktly
-                            prohibit from uploading company data or other band
-                            files
-                        </p>
+                    <div className="grid grid-cols-1 gap-4">
+                        <Form.Item
+                            label="Category"
+                            name="category"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "This is required!",
+                                },
+                            ]}
+                            required={false}
+                        >
+                            <Select placeholder="Category" id="category">
+                                <Select.Option value={"Basic"}>
+                                    Sample category
+                                </Select.Option>
+
+                                <Select.Option value={"Initial"}>
+                                    Sample category 2
+                                </Select.Option>
+                            </Select>
+                        </Form.Item>
                     </div>
-                </UploaderMultiple>
+                    <div className="grid grid-cols-1 gap-4">
+                        <UploaderMultiple
+                            image={image}
+                            setImage={(value: any) => setImage(value)}
+                            onChange={handleChange}
+                            id="gallery_picture"
+                            className="[&_.ant-upload]:!border-0 h-full w-full bg-none"
+                            wrapperClassName="h-full w-full border flex justify-center items-center border-dashed p-4"
+                        >
+                            <div className=" w-full flex justify-center flex-col items-center">
+                                <AiOutlineInbox className=" text-5xl text-primary-500 mb-2" />
+                                <h3 className=" text-center mb-2 text-2xl">
+                                    Click or drag-file to this area to upload
+                                </h3>
+                                <p className=" text-center text-lg text-gray-400">
+                                    Support for a single or bulk upload.
+                                    Stricktly prohibit from uploading company
+                                    data or other band files
+                                </p>
+                            </div>
+                        </UploaderMultiple>
+                    </div>
+                    <div className="flex justify-end items-center gap-4">
+                        <Button
+                            appearance="link"
+                            className="p-4 bg-transparent border-none text-casper-500 font-semibold"
+                            onClick={() => {
+                                onClose();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            appearance="primary"
+                            className="max-w-[10rem]"
+                            type="submit"
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </Form>
+                <div></div>
             </div>
         </Modal>
     );

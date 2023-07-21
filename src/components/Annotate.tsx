@@ -66,7 +66,8 @@ function renderHighlight({ annotation, active }: any) {
                 fontWeight: 700,
             }}
         >
-            <div className="text-[100%]">{annotation.data.icon}</div>
+            {/* <div className="text-[100%]">{annotation.data.icon}</div> */}
+            <div className="text-[100%]"></div>
         </Shape>
     );
 }
@@ -156,7 +157,7 @@ export function Annotate({
         title,
         description,
         color,
-        icon,
+        // icon,
         annotation,
         id,
     }: any) {
@@ -172,7 +173,7 @@ export function Annotate({
                     title,
                     description,
                     color,
-                    icon,
+                    // icon,
                     procedure_id: id,
                 },
             })
@@ -189,7 +190,7 @@ export function Annotate({
                         title,
                         description,
                         color,
-                        icon,
+                        // icon,
                         procedure_id: id,
                     },
                 })
@@ -237,9 +238,9 @@ export function Annotate({
                                             color: itemMap.color_code,
                                             annotation: annotation,
                                             id: itemMap._id,
-                                            icon: (
-                                                <GiSkullSabertooth className="text-[inherit]" />
-                                            ),
+                                            // icon: (
+                                            //     <GiSkullSabertooth className="text-[inherit]" />
+                                            // ),
                                         });
                                     }}
                                 >
