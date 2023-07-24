@@ -255,7 +255,7 @@ export function MedicalGallery({ patientRecord }: any) {
                             </div>
                             {galleries.map((gallery, index) => {
                                 return (
-                                    <div>
+                                    <div key={index}>
                                         <div
                                             key={index}
                                             className=" aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300"
