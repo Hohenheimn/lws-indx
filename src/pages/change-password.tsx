@@ -26,6 +26,8 @@ import { Context } from "@utilities/context/Provider";
 // import { Media } from "../../../context/Media";
 
 export default function ChangePassword({ router }: any) {
+    const token = router.query.token;
+    const email = router.query.email;
     const [ChangePasswordForm] = Form.useForm();
     const { setIsAppLoading } = React.useContext(Context);
     let [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
@@ -33,7 +35,7 @@ export default function ChangePassword({ router }: any) {
     const { mutate: ChangePassword } = useMutation(
         (payload) =>
             postData({
-                url: `/api/auth/change-password`,
+                url: `/api/user/change-password`,
                 payload,
                 options: {
                     isLoading: (show: boolean) => setIsAppLoading(show),
@@ -41,10 +43,7 @@ export default function ChangePassword({ router }: any) {
             }),
         {
             onSuccess: async (res) => {
-                setCookie(null, "a_t", res?.token, {
-                    path: "/",
-                });
-                router.reload();
+                router.push("/");
                 notification.success({
                     key: "change password",
                     message: "Change Password Successful",
@@ -111,14 +110,17 @@ export default function ChangePassword({ router }: any) {
                                 form={ChangePasswordForm}
                                 layout="vertical"
                                 onFinish={(values) => {
-                                    console.log(values);
+                                    values.token = token;
+                                    values.email = email;
+
+                                    ChangePassword(values);
                                 }}
                                 className="w-full"
                             >
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                                     <Form.Item
                                         label="New Password"
-                                        name="new_password"
+                                        name="password"
                                         rules={[
                                             {
                                                 required: true,
@@ -130,7 +132,8 @@ export default function ChangePassword({ router }: any) {
                                         className="col-span-full"
                                     >
                                         <Input
-                                            id="new_password"
+                                            type="password"
+                                            id="password"
                                             placeholder="New Password"
                                         />
                                     </Form.Item>
@@ -152,7 +155,7 @@ export default function ChangePassword({ router }: any) {
                                                     if (
                                                         !value ||
                                                         getFieldValue(
-                                                            "new_password"
+                                                            "password"
                                                         ) === value
                                                     ) {
                                                         return Promise.resolve();
@@ -169,6 +172,7 @@ export default function ChangePassword({ router }: any) {
                                         className="col-span-full"
                                     >
                                         <Input
+                                            type="password"
                                             id="confirm_password"
                                             placeholder="Confirm Password"
                                         />

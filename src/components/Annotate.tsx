@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { FaTooth } from "react-icons/fa";
 import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
 import Annotation from "react-image-annotation";
@@ -15,6 +16,7 @@ interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
     UpdateToothsHandler?: Function;
     ProceduresData?: {
         abbreviation: string;
+        icon: string;
         color_code: string;
         cost: number;
         created_at: string;
@@ -66,8 +68,15 @@ function renderHighlight({ annotation, active }: any) {
                 fontWeight: 700,
             }}
         >
-            {/* <div className="text-[100%]">{annotation.data.icon}</div> */}
-            <div className="text-[100%]"></div>
+            <div className="text-[100%]">
+                <Image
+                    src={annotation.data.icon}
+                    alt="Icon"
+                    height={20}
+                    width={20}
+                    className=" rounded-full flex justify-center"
+                />
+            </div>
         </Shape>
     );
 }
@@ -157,7 +166,7 @@ export function Annotate({
         title,
         description,
         color,
-        // icon,
+        icon,
         annotation,
         id,
     }: any) {
@@ -173,7 +182,7 @@ export function Annotate({
                     title,
                     description,
                     color,
-                    // icon,
+                    icon,
                     procedure_id: id,
                 },
             })
@@ -190,7 +199,7 @@ export function Annotate({
                         title,
                         description,
                         color,
-                        // icon,
+                        icon,
                         procedure_id: id,
                     },
                 })
@@ -238,13 +247,18 @@ export function Annotate({
                                             color: itemMap.color_code,
                                             annotation: annotation,
                                             id: itemMap._id,
-                                            // icon: (
-                                            //     <GiSkullSabertooth className="text-[inherit]" />
-                                            // ),
+                                            icon: itemMap.icon,
                                         });
                                     }}
+                                    className=" border border-black"
                                 >
-                                    <GiSkullSabertooth className="text-[inherit]" />
+                                    <Image
+                                        src={itemMap.icon}
+                                        alt="Icon"
+                                        height={25}
+                                        width={25}
+                                        className=" rounded-full flex justify-center"
+                                    />
                                 </Button>
                             </div>
                         ))}

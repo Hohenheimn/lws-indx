@@ -63,7 +63,7 @@ export default function Login() {
     const { mutate: SendEmail } = useMutation(
         (payload) =>
             postData({
-                url: `/auth/forget-password`,
+                url: `/api/auth/forget-password`,
                 payload,
                 options: {
                     isLoading: (show: boolean) => setIsAppLoading(show),

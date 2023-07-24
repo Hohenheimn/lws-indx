@@ -25,15 +25,7 @@ import { deleteData, fetchData } from "@utilities/api";
 import { getBase64, numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-
-
-
-
 import AddMedicalGalleryModal from "./AddMedicalGalleryModal";
-
-
-
-
 
 export function MedicalGallery({ patientRecord }: any) {
     const [MedicalGalleryForm] = Form.useForm();
@@ -57,6 +49,10 @@ export function MedicalGallery({ patientRecord }: any) {
         isMedicalGalleryModalOpen,
         setIsMedicalGalleryModalOpen,
     ] = React.useState(false);
+
+    const tabs = ["All", "Before and After", "Xray", "Videos", "Others"];
+
+    const [isTabActive, setTabActive] = useState("All");
 
     // let { data: MedicalGallery } = useQuery(
     //   ["medical-gallery", page, search],
@@ -159,7 +155,8 @@ export function MedicalGallery({ patientRecord }: any) {
                             <h4 className="basis-full md:basis-auto">
                                 Medical Gallery
                             </h4>
-                            {SelectedEdit.id !== undefined && SelectedEdit.id !== null && (
+                            {SelectedEdit.id !== undefined &&
+                                SelectedEdit.id !== null && (
                                     <Button
                                         className="p-3 inline-block w-auto"
                                         appearance="primary"
@@ -169,7 +166,8 @@ export function MedicalGallery({ patientRecord }: any) {
                                     </Button>
                                 )}
                         </div>
-                        <div className="flex justify-between align-middle gap-4">
+
+                        <div className="flex justify-between align-middle gap-4 mb-5">
                             <div className="basis-1/2">
                                 <Input
                                     placeholder="Search"
@@ -183,6 +181,21 @@ export function MedicalGallery({ patientRecord }: any) {
                                 />
                             </div>
                         </div>
+
+                        <ul className="flex">
+                            {tabs.map((row, index) => (
+                                <li
+                                    key={index}
+                                    className={`cursor-pointer mr-5 ${row ===
+                                        isTabActive &&
+                                        " text-primary-500 border-b border-primary-500"}`}
+                                    onClick={() => setTabActive(row)}
+                                >
+                                    {row}
+                                </li>
+                            ))}
+                        </ul>
+
                         {SelectedEdit.id !== undefined &&
                             SelectedEdit.id !== null && (
                                 <div className="flex justify-between align-middle gap-4">
