@@ -10,7 +10,7 @@ import PersonalInfo from "./PersonalInfo";
 import PersonalRecord from "./PersonalRecord";
 import Prescription from "./Prescription";
 import TreatmentPlan from "./TreatmentPlan";
-import TreatmentRecords from "./TreatmentRecords/TreatmentRecords";
+import TreatmentRecords from "./TreatmentRecords";
 
 export const patientRecord = (props: any) => [
     // {

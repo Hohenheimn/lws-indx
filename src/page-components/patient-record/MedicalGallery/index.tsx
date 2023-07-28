@@ -21,28 +21,41 @@ import { fadeIn } from "@src/components/animation/animation";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { deleteData, fetchData } from "@utilities/api";
+import { deleteData, fetchData, postData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
 import { getBase64, numberSeparator } from "@utilities/helpers";
+
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
 import AddMedicalGalleryModal from "./AddMedicalGalleryModal";
+
+type gallery = {
+    _id: string;
+    patient_id: string;
+    filename: string;
+    category: string;
+    description: string;
+    user_id: string;
+    created_at: string;
+};
 
 export function MedicalGallery({ patientRecord }: any) {
     const [MedicalGalleryForm] = Form.useForm();
     const queryClient = useQueryClient();
     let [page, setPage] = React.useState(1);
+    const { setIsAppLoading } = React.useContext(Context);
     let [search, setSearch] = React.useState("");
 
     const [SelectedEdit, setSelectedEdit] = useState<{
-        id: number | null | undefined;
+        id: number | null | undefined | string;
         title: string;
-        date_uploaded: any;
-        note: string;
+        description: string;
+        created_at: any;
     }>({
         id: null,
         title: "",
-        date_uploaded: "",
-        note: "",
+        description: "",
+        created_at: "",
     });
 
     let [
@@ -54,95 +67,132 @@ export function MedicalGallery({ patientRecord }: any) {
 
     const [isTabActive, setTabActive] = useState("All");
 
-    // let { data: MedicalGallery } = useQuery(
-    //   ["medical-gallery", page, search],
-    //   () =>
-    //     fetchData({
-    //       url: `/api/patient/medical-gallery/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
-    //     })
-    // );
+    let { data: MedicalGallery } = useQuery(
+        [
+            "medical-gallery",
+            page,
+            search,
+            isTabActive === "All" ? "" : isTabActive,
+        ],
+        () =>
+            fetchData({
+                url: `/api/patient/gallery/${
+                    patientRecord._id
+                }?limit=7&page=${page}&search=${search}&category=${
+                    isTabActive === "All" ? "" : isTabActive
+                }`,
+            })
+    );
 
-    // const { mutate: deleteMedicalGallery }: any = useMutation(
-    //   (treatment_plan_id: number) =>
-    //     deleteData({
-    //       url: `/api/patient/medical-gallery/${treatment_plan_id}`,
-    //     }),
-    //   {
-    //     onSuccess: async (res) => {
-    //       notification.success({
-    //         message: "Treatment Plan Deleted",
-    //         description: "Treatment Plan has been deleted",
-    //       });
-    //     },
-    //     onMutate: async (newData) => {
-    //       await queryClient.cancelQueries({ queryKey: ["medical-gallery"] });
-    //       const previousValues = queryClient.getQueryData(["medical-gallery"]);
-    //       queryClient.setQueryData(["medical-gallery"], (oldData: any) =>
-    //         oldData ? [...oldData, newData] : undefined
-    //       );
+    const gallery_list: gallery[] = MedicalGallery?.data;
 
-    //       return { previousValues };
-    //     },
-    //     onError: (err: any, _, context: any) => {
-    //       notification.warning({
-    //         message: "Something Went Wrong",
-    //         description: `${
-    //           err.response.data[Object.keys(err.response.data)[0]]
-    //         }`,
-    //       });
-    //       queryClient.setQueryData(["medical-gallery"], context.previousValues);
-    //     },
-    //     onSettled: async () => {
-    //       queryClient.invalidateQueries({ queryKey: ["medical-gallery"] });
-    //     },
-    //   }
-    // );
+    const { mutate: deleteMedicalGallery }: any = useMutation(
+        (gallery_id: number) =>
+            deleteData({
+                url: `/api/patient/gallery/${gallery_id}`,
+            }),
+        {
+            onSuccess: async (res) => {
+                notification.success({
+                    message: "Gallery Deleted",
+                    description: "Gallery has been deleted",
+                });
+            },
+            onMutate: async (newData) => {
+                await queryClient.cancelQueries({
+                    queryKey: ["medical-gallery"],
+                });
+                const previousValues = queryClient.getQueryData([
+                    "medical-gallery",
+                ]);
+                queryClient.setQueryData(["medical-gallery"], (oldData: any) =>
+                    oldData ? [...oldData, newData] : undefined
+                );
 
-    let galleries = [
-        {
-            id: 1,
-            note: "sample note 1",
-            image: "",
-            title: "gallery 1",
-            date_uploaded: "",
+                return { previousValues };
+            },
+            onError: (err: any, _, context: any) => {
+                notification.warning({
+                    message: "Something Went Wrong",
+                    description: `${
+                        err.response.data[Object.keys(err.response.data)[0]]
+                    }`,
+                });
+                queryClient.setQueryData(
+                    ["medical-gallery"],
+                    context.previousValues
+                );
+            },
+            onSettled: async () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["medical-gallery"],
+                });
+            },
+        }
+    );
+
+    const { mutate: editMedicalGallery } = useMutation(
+        (payload: any) => {
+            return postData({
+                url: `/api/gallery/update/${payload.id}?_method=PUT`,
+                payload,
+                options: {
+                    isLoading: (show: boolean) => setIsAppLoading(show),
+                },
+            });
         },
         {
-            id: 2,
-            note: "sample note 2",
-            image: "",
-            title: "gallery 2",
-            date_uploaded: "",
-        },
-        {
-            id: 3,
-            note: "sample note",
-            image: "",
-            title: "gallery 3",
-            date_uploaded: "",
-        },
-        {
-            id: 4,
-            note: "sample note",
-            image: "",
-            title: "gallery 4",
-            date_uploaded: "",
-        },
-        {
-            id: 5,
-            note: "sample note",
-            image: "",
-            title: "gallery 5",
-            date_uploaded: "",
-        },
-    ];
+            onSuccess: async (res) => {
+                notification.success({
+                    message: "Gallery Updated!",
+                    description: `Gallery Updated!`,
+                });
+                setSelectedEdit({
+                    id: null,
+                    title: "",
+                    created_at: "",
+                    description: "",
+                });
+            },
+            onMutate: async (newData) => {
+                await queryClient.cancelQueries({
+                    queryKey: ["medical-gallery"],
+                });
+                const previousValues = queryClient.getQueryData([
+                    "medical-gallery",
+                ]);
+                queryClient.setQueryData(["medical-gallery"], (oldData: any) =>
+                    oldData ? [...oldData, newData] : undefined
+                );
+
+                return { previousValues };
+            },
+            onError: (err: any, _, context: any) => {
+                notification.warning({
+                    message: "Something Went Wrong",
+                    description: `${
+                        err.response.data[Object.keys(err.response.data)[0]]
+                    }`,
+                });
+                queryClient.setQueryData(
+                    ["medical-gallery"],
+                    context.previousValues
+                );
+            },
+            onSettled: async () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["medical-gallery"],
+                });
+            },
+        }
+    );
 
     const BackHandler = () => {
-        console.log(SelectedEdit);
         setSelectedEdit({
             id: null,
             title: "",
-            date_uploaded: "",
-            note: "",
+            description: "",
+            created_at: "",
         });
     };
 
@@ -226,7 +276,7 @@ export function MedicalGallery({ patientRecord }: any) {
                                                 onChange={(e) => {
                                                     setSelectedEdit({
                                                         ...SelectedEdit,
-                                                        date_uploaded: e
+                                                        created_at: e
                                                             ?.format(
                                                                 "YYYY/MM/DD"
                                                             )
@@ -253,7 +303,7 @@ export function MedicalGallery({ patientRecord }: any) {
                                     + Create Gallery
                                 </div>
                             </div>
-                            {galleries.map((gallery, index) => {
+                            {gallery_list?.map((gallery: gallery, index) => {
                                 return (
                                     <div key={index}>
                                         <div
@@ -271,13 +321,13 @@ export function MedicalGallery({ patientRecord }: any) {
                                                                 setSelectedEdit(
                                                                     {
                                                                         id:
-                                                                            gallery.id,
+                                                                            gallery._id,
                                                                         title:
-                                                                            gallery.title,
-                                                                        date_uploaded:
-                                                                            gallery.date_uploaded,
-                                                                        note:
-                                                                            gallery.note,
+                                                                            "gallery name",
+                                                                        created_at:
+                                                                            gallery?.created_at,
+                                                                        description:
+                                                                            gallery.description,
                                                                     }
                                                                 )
                                                             }
@@ -290,7 +340,11 @@ export function MedicalGallery({ patientRecord }: any) {
                                                         <Button
                                                             appearance="link"
                                                             className="text-casper-500 p-2"
-                                                            onClick={() => {}}
+                                                            onClick={() => {
+                                                                deleteMedicalGallery(
+                                                                    gallery._id
+                                                                );
+                                                            }}
                                                         >
                                                             <div className="flex items-center gap-2">
                                                                 <BsTrashFill className="text-base" />
@@ -303,11 +357,11 @@ export function MedicalGallery({ patientRecord }: any) {
                                                 }
                                                 trigger="click"
                                             >
-                                                <BiDotsHorizontalRounded className=" cursor-pointer absolute z-10 top-1 right-1 text-white text-4xl" />
+                                                <BiDotsHorizontalRounded className=" cursor-pointer absolute z-10 top-1 right-1 text-primary-500 text-4xl" />
                                             </Popover>
 
                                             <Image
-                                                src={`https://picsum.photos/seed/${gallery.id}/1000/500`}
+                                                src={gallery.filename}
                                                 alt="random pics"
                                                 fill
                                                 sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
@@ -316,18 +370,19 @@ export function MedicalGallery({ patientRecord }: any) {
                                             />
                                         </div>
                                         <AnimatePresence>
-                                            {SelectedEdit.id === gallery.id && (
+                                            {SelectedEdit.id ===
+                                                gallery._id && (
                                                 <motion.div variants={fadeIn}>
                                                     <TextArea
                                                         placeholder="Notes"
                                                         value={
-                                                            SelectedEdit.note
+                                                            SelectedEdit.description
                                                         }
                                                         className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
                                                         onChange={(e: any) => {
                                                             setSelectedEdit({
                                                                 ...SelectedEdit,
-                                                                note:
+                                                                description:
                                                                     e.target
                                                                         .value,
                                                             });

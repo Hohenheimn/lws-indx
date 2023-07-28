@@ -29,28 +29,17 @@ export default function UploaderMultiple({
         const allowedFile =
             file.type === "image/jpg" ||
             file.type === "image/jpeg" ||
-            file.type === "image/png";
+            file.type === "image/png" ||
+            file.type === "video/mp4" ||
+            file.type === "video/ogg";
         // ||applicationType === "pdf";
-        const isLt2M = file.size / 1024 / 1024 < 2;
 
         if (!allowedFile) {
-            message.error("You can only upload jpg | jpeg | png file");
+            message.error(
+                "You can only upload jpg | jpeg | png | mp4 | ogg file"
+            );
         }
-
-        if (!isLt2M) {
-            message.error("Image must be smaller than 2MB!");
-        }
-
-        if (!allowedFile || !isLt2M) {
-            setImage({
-                ...image,
-                imageUrl: null,
-                error: false,
-                file: null,
-            });
-        }
-
-        return allowedFile && isLt2M;
+        return allowedFile;
     };
 
     return (
@@ -62,6 +51,7 @@ export default function UploaderMultiple({
                 //   maxCount={1}
                 multiple={true}
                 className={className}
+                listType="picture"
                 onChange={(e) => console.log(e, "asdf")}
                 {...rest}
             >

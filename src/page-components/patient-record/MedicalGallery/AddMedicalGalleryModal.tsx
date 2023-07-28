@@ -1,6 +1,5 @@
 import React from "react";
 import { DatePicker, Form, TimePicker, notification } from "antd";
-import { Select } from "antd";
 import { Checkbox } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
@@ -18,19 +17,19 @@ import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
+import { Select } from "@components/Select";
 
 import Uploader from "@src/components/Uploader";
 import UploaderMultiple from "@src/components/UploaderMultiple";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteData, postData } from "@utilities/api";
+import { deleteData, postData, postDataMultipleFile } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import {
     getBase64,
     getInitialValue,
     removeNumberFormatting,
 } from "@utilities/helpers";
-
 
 export default function AddMedicalGalleryModal({
     show,
@@ -83,9 +82,9 @@ export default function AddMedicalGalleryModal({
     }
 
     const { mutate: addMedicalGallery } = useMutation(
-        (payload: any) => {
-            return postData({
-                url: `/api/patient/medical-gallery/${patientRecord?._id}`,
+        (payload: FormData) => {
+            return postDataMultipleFile({
+                url: `/api/patient/gallery/${patientRecord?._id}`,
                 payload,
                 options: {
                     isLoading: (show: boolean) => setIsAppLoading(show),
@@ -134,58 +133,6 @@ export default function AddMedicalGalleryModal({
         }
     );
 
-    const { mutate: editMedicalGallery } = useMutation(
-        (payload: any) => {
-            return postData({
-                url: `/api/medical-gallery/update/${payload.id}?_method=PUT`,
-                payload,
-                options: {
-                    isLoading: (show: boolean) => setIsAppLoading(show),
-                },
-            });
-        },
-        {
-            onSuccess: async (res) => {
-                notification.success({
-                    message: "Gallery Updated!",
-                    description: `Gallery Updated!`,
-                });
-                form.resetFields();
-                onClose();
-            },
-            onMutate: async (newData) => {
-                await queryClient.cancelQueries({
-                    queryKey: ["medical-gallery"],
-                });
-                const previousValues = queryClient.getQueryData([
-                    "medical-gallery",
-                ]);
-                queryClient.setQueryData(["medical-gallery"], (oldData: any) =>
-                    oldData ? [...oldData, newData] : undefined
-                );
-
-                return { previousValues };
-            },
-            onError: (err: any, _, context: any) => {
-                notification.warning({
-                    message: "Something Went Wrong",
-                    description: `${
-                        err.response.data[Object.keys(err.response.data)[0]]
-                    }`,
-                });
-                queryClient.setQueryData(
-                    ["medical-gallery"],
-                    context.previousValues
-                );
-            },
-            onSettled: async () => {
-                queryClient.invalidateQueries({
-                    queryKey: ["medical-gallery"],
-                });
-            },
-        }
-    );
-
     return (
         <Modal show={show} onClose={() => {}} {...rest}>
             <div className="space-y-8">
@@ -196,20 +143,7 @@ export default function AddMedicalGalleryModal({
                     form={form}
                     layout="vertical"
                     onFinish={(values) => {
-                        let id = form.getFieldValue("_id");
-                        values.legend_periodical_screening = JSON.stringify(
-                            values.legend_periodical_screening
-                        );
-                        values.images = values.images.fileList;
-
-                        console.log(values);
-
-                        // if (!id) {
-                        //     addChart(values);
-                        // } else {
-                        //     values.id = id;
-                        //     editChart(values);
-                        // }
+                        addMedicalGallery(values);
                     }}
                     onFinishFailed={(data) => {
                         scroller.scrollTo(
@@ -255,7 +189,12 @@ export default function AddMedicalGalleryModal({
                     <div className="grid grid-cols-1 gap-4">
                         <Form.Item
                             label=""
-                            name="images"
+                            name="galleries"
+                            getValueFromEvent={({ fileList }) =>
+                                fileList?.map(
+                                    (item: any) => item?.originFileObj
+                                )
+                            }
                             rules={[
                                 {
                                     required: true,
@@ -268,7 +207,7 @@ export default function AddMedicalGalleryModal({
                                 image={image}
                                 setImage={(value: any) => setImage(value)}
                                 onChange={handleChange}
-                                id="images"
+                                id="galleries"
                                 className="[&_.ant-upload]:!border-0 h-full w-full bg-none"
                                 wrapperClassName="h-full w-full border flex justify-center items-center border-dashed p-4"
                             >
