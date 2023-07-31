@@ -297,8 +297,7 @@ export default function ChartingModal({
 
     return (
         <>
-            {/* <Modal show={show} onClose={onClose} {...rest}> */}
-            <Modal show={show} onClose={() => {}} {...rest}>
+            <Modal show={show} onClose={onClose} {...rest}>
                 <div className="space-y-8">
                     <div className="flex items-center justify-between">
                         <div className="font-bold text-3xl">New Chart</div>
@@ -896,23 +895,23 @@ export default function ChartingModal({
                         </div>
                     </Form>
                 </div>
+                <AnnotationModal
+                    show={showAnnotationModal}
+                    onClose={() => {
+                        setShowAnnotationModal(false);
+                        // console.log("zxcv");
+                        // setIsChartingModalOpen(false);
+                        // ChartingForm.resetFields();
+                    }}
+                    ChartView={ChartView}
+                    className="w-full"
+                    SelectedAnnotate={SelectedAnnotate}
+                    UpdateToothsHandler={UpdateToothsHandler}
+                    id="annotation-modal"
+                    // patientRecord={patientRecord}
+                    // form={ChartingForm}
+                />
             </Modal>
-            <AnnotationModal
-                show={showAnnotationModal}
-                onClose={() => {
-                    setShowAnnotationModal(false);
-                    // console.log("zxcv");
-                    // setIsChartingModalOpen(false);
-                    // ChartingForm.resetFields();
-                }}
-                ChartView={ChartView}
-                className="w-full"
-                SelectedAnnotate={SelectedAnnotate}
-                UpdateToothsHandler={UpdateToothsHandler}
-                id="annotation-modal"
-                // patientRecord={patientRecord}
-                // form={ChartingForm}
-            />
         </>
     );
 }

@@ -23,6 +23,7 @@ export default function TreatmentRecordTable({
                 url: `/api/${Endpoint}/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
             })
     );
+
     return (
         <>
             <Table
@@ -36,7 +37,7 @@ export default function TreatmentRecordTable({
                     pageSize: 5,
                     hideOnSinglePage: true,
                     showSizeChanger: false,
-                    total: TableColumns?.meta?.total,
+                    total: TableData?.meta?.total,
                     onChange: (page) => setPage(page),
                 }}
                 components={{

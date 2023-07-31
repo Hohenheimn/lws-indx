@@ -18,12 +18,14 @@ import { deleteData, fetchData } from "@utilities/api";
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+
 import AddTreatmentRecordModal from "./AddTreatmentRecordModal";
 import { BillingColumns, PaymentColumns, RecordColumns } from "./Columns";
 import CreateBillingStatementModal from "./CreateBillingStatementModal";
 import PerCertainAmountModal from "./PayCertainAmountModal";
 import TreatmentRecordTable from "./Table";
 import { SelectedTreatment, SelectedBilling } from "./types";
+
 
 export function TreatmentRecords({ patientRecord }: any) {
     const [TreatmentRecordForm] = Form.useForm();
@@ -66,32 +68,6 @@ export function TreatmentRecords({ patientRecord }: any) {
     const tabs = ["Records", "Billings", "Payments"];
 
     const [isTabActive, setTabActive] = useState("Records");
-
-    const [isTableProps, setTableProps] = useState({
-        columns: TableRecordColumns,
-        endpoint: "patient/treatment",
-    });
-
-    useEffect(() => {
-        if (isTabActive === "Records") {
-            setTableProps({
-                columns: TableRecordColumns,
-                endpoint: "patient/treatment",
-            });
-        }
-        if (isTabActive === "Billings") {
-            setTableProps({
-                columns: TableBillingColumns,
-                endpoint: "patient/invoice",
-            });
-        }
-        if (isTabActive === "Payments") {
-            setTableProps({
-                columns: TablePaymentColumns,
-                endpoint: "patient/payment/show",
-            });
-        }
-    }, [isTabActive]);
 
     let [search, setSearch] = React.useState("");
 
@@ -161,12 +137,30 @@ export function TreatmentRecords({ patientRecord }: any) {
                     </ul>
 
                     <div className="flex flex-auto">
-                        <TreatmentRecordTable
-                            TableColumns={isTableProps.columns}
-                            Endpoint={isTableProps.endpoint}
-                            patientRecord={patientRecord}
-                            search={search}
-                        />
+                        {isTabActive === "Records" && (
+                            <TreatmentRecordTable
+                                TableColumns={TableRecordColumns}
+                                Endpoint={"patient/treatment"}
+                                patientRecord={patientRecord}
+                                search={search}
+                            />
+                        )}
+                        {isTabActive === "Billings" && (
+                            <TreatmentRecordTable
+                                TableColumns={TableBillingColumns}
+                                Endpoint="patient/invoice"
+                                patientRecord={patientRecord}
+                                search={search}
+                            />
+                        )}
+                        {isTabActive === "Payments" && (
+                            <TreatmentRecordTable
+                                TableColumns={TablePaymentColumns}
+                                Endpoint="patient/payment/show"
+                                patientRecord={patientRecord}
+                                search={search}
+                            />
+                        )}
                     </div>
                 </div>
             </Card>

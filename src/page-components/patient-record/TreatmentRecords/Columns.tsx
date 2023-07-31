@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Checkbox } from "antd";
 import moment from "moment";
 import { twMerge } from "tailwind-merge";
+
 import { paymentStatusPalette } from "@utilities/helpers";
 
 import {
@@ -36,7 +38,7 @@ export const RecordColumns = (
                             setSelectedTreatments([
                                 ...SelectedTreatments,
                                 {
-                                    amount: record.amount,
+                                    amount: Number(record.amount),
                                     procedure_name: record.procedure_name,
                                     procedure_id: record.procedure_id,
                                 },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Checkbox,
     DatePicker,
@@ -31,7 +31,7 @@ import {
     removeNumberFormatting,
 } from "@utilities/helpers";
 
-import { SelectedTreatment, treatmentRecord } from ".";
+import { SelectedTreatment } from "./types";
 
 const columns: any = [
     {
@@ -45,6 +45,11 @@ const columns: any = [
         dataIndex: "amount",
         width: "10rem",
         align: "center",
+        render: (amount: number) => {
+            if (amount) {
+                return `₱${numberSeparator(amount, 0)}`;
+            }
+        },
     },
 ];
 
@@ -56,17 +61,64 @@ export default function CreateBillingStatementModal({
     ...rest
 }: any) {
     const [form] = Form.useForm();
+
+    const [Treatments, setTreatments] = useState(SelectedTreatments);
+
+    const vat_and_discount = Form.useWatch("vat_and_discount", form);
+
+    const enter_discount = Form.useWatch("enter_discount", form);
+
+    const type_discount = Form.useWatch("type_of_discount", form);
+
     const queryClient = useQueryClient();
+
     const { setIsAppLoading } = React.useContext(Context);
 
     const [isProcedureTotal, setProcedureTotal] = useState(0);
 
+    const [vat_exclusive, setVat_exclusive] = useState(0);
+
+    const [senior_discount, setSenior_discount] = useState(0);
+
+    const [entered_discount, setEntered_discount] = useState(0);
+
+    React.useEffect(() => {
+        setTreatments(SelectedTreatments);
+    }, [SelectedTreatments]);
+
     React.useEffect(() => {
         setProcedureTotal(0);
-        SelectedTreatments.map((item: SelectedTreatment) => {
-            setProcedureTotal((prevVal) => prevVal + Number(item.amount));
+        setVat_exclusive(0);
+        setSenior_discount(0);
+        setEntered_discount(0);
+        let total = 0;
+        let vat_exclusive = 0;
+        let senior_discount = 0;
+        let discounted = 0;
+        Treatments.map((item: SelectedTreatment) => {
+            total = total + Number(item.amount);
         });
-    }, [SelectedTreatments]);
+        vat_exclusive = total * 0.12;
+        senior_discount = total * 0.2;
+        discounted = total * Number(removeNumberFormatting(enter_discount));
+        if (vat_and_discount?.includes("VAT Exclusive")) {
+            total = total + vat_exclusive;
+            setVat_exclusive(vat_exclusive);
+        }
+        if (vat_and_discount?.includes("Senior Citizen Discount")) {
+            total = total - senior_discount;
+            setSenior_discount(senior_discount);
+        }
+        if (type_discount === "Amount") {
+            total = total - Number(removeNumberFormatting(enter_discount));
+            setEntered_discount(Number(removeNumberFormatting(enter_discount)));
+        }
+        if (type_discount === "Percent") {
+            total = total - Number(discounted);
+            setEntered_discount(discounted);
+        }
+        setProcedureTotal(total);
+    }, [Treatments, vat_and_discount, enter_discount, type_discount]);
 
     React.useEffect(() => {
         form.setFieldsValue({
@@ -77,10 +129,10 @@ export default function CreateBillingStatementModal({
         });
     }, [show]);
 
-    const { mutate: addTreatmentPlan } = useMutation(
+    const { mutate: addInvoice } = useMutation(
         (payload: any) => {
             return postData({
-                url: `/api/patient/treatment-plan/${patientRecord?._id}`,
+                url: `/api/patient/invoice/${patientRecord?._id}`,
                 payload,
                 options: {
                     isLoading: (show: boolean) => setIsAppLoading(show),
@@ -90,63 +142,11 @@ export default function CreateBillingStatementModal({
         {
             onSuccess: async (res) => {
                 notification.success({
-                    message: "Adding Treatment Plan Success",
-                    description: `Adding Treatment Plan Success`,
+                    message: "Applied Billing Invoice Success",
+                    description: `Applied Billing Invoice Success`,
                 });
                 form.resetFields();
 
-                onClose();
-            },
-            onMutate: async (newData) => {
-                await queryClient.cancelQueries({
-                    queryKey: ["treatment-plan"],
-                });
-                const previousValues = queryClient.getQueryData([
-                    "treatment-plan",
-                ]);
-                queryClient.setQueryData(["treatment-plan"], (oldData: any) =>
-                    oldData ? [...oldData, newData] : undefined
-                );
-
-                return { previousValues };
-            },
-            onError: (err: any, _, context: any) => {
-                notification.warning({
-                    message: "Something Went Wrong",
-                    description: `${
-                        err.response.data[Object.keys(err.response.data)[0]]
-                    }`,
-                });
-                queryClient.setQueryData(
-                    ["treatment-plan"],
-                    context.previousValues
-                );
-            },
-            onSettled: async () => {
-                queryClient.invalidateQueries({
-                    queryKey: ["treatment-plan"],
-                });
-            },
-        }
-    );
-
-    const { mutate: editTreatmentPlan } = useMutation(
-        (payload: any) => {
-            return postData({
-                url: `/api/patient/treatment-plan/update/${payload.id}?_method=PUT`,
-                payload,
-                options: {
-                    isLoading: (show: boolean) => setIsAppLoading(show),
-                },
-            });
-        },
-        {
-            onSuccess: async (res) => {
-                notification.success({
-                    message: "Treatment Plan Updated!",
-                    description: `Treatment Plan Updated!`,
-                });
-                form.resetFields();
                 onClose();
             },
             onMutate: async (newData) => {
@@ -201,14 +201,15 @@ export default function CreateBillingStatementModal({
                     form={form}
                     layout="vertical"
                     onFinish={(values: any) => {
-                        values.cost = removeNumberFormatting(values.cost);
-                        values.discount = removeNumberFormatting(
-                            values.discount
+                        values.enter_discount = removeNumberFormatting(
+                            values.enter_discount
                         );
-
+                        values.total = isProcedureTotal.toFixed(2);
+                        values.vat_exclusive = vat_exclusive.toFixed(2);
+                        values.senior_discount = senior_discount.toFixed(2);
+                        values.procedures = Treatments;
+                        delete values.vat_and_discount;
                         console.log(values);
-
-                        let id = form.getFieldValue("_id");
 
                         // if (!id) {
                         //     addTreatmentPlan(values);
@@ -247,7 +248,7 @@ export default function CreateBillingStatementModal({
                     <Table
                         rowKey="id"
                         columns={columns}
-                        dataSource={SelectedTreatments}
+                        dataSource={Treatments}
                         showHeader={true}
                         tableLayout="fixed"
                         bordered
@@ -282,12 +283,13 @@ export default function CreateBillingStatementModal({
                     />
                     <div>
                         <Form.Item
-                            name="deductions"
+                            name="vat_and_discount"
                             required={false}
                             className="text-base"
+                            initialValue={[]}
                         >
                             <Checkbox.Group className="grid grid-cols-1 gap-1 justify-center text-lg">
-                                <Checkbox value="VAT Exemption">
+                                <Checkbox value="VAT Exclusive">
                                     VAT Exclusive
                                 </Checkbox>
                                 <Checkbox value="Senior Citizen Discount">
@@ -302,37 +304,63 @@ export default function CreateBillingStatementModal({
                             name="type_of_discount"
                             required={false}
                             className="text-base"
+                            initialValue={""}
                         >
                             <Radio.Group
                                 id="type_of_discount"
                                 className="grid grid-cols-1 gap-1 text-lg"
                             >
-                                <Radio value="Amount Discount">
-                                    Amoun Discount
-                                </Radio>
-                                <Radio value="Percent Discount">
-                                    Percent Discount
-                                </Radio>
+                                <Radio value="Amount">Amount Discount</Radio>
+                                <Radio value="Percent">Percent Discount</Radio>
                             </Radio.Group>
                         </Form.Item>
                     </div>
                     <Form.Item
-                        name="discount_amount"
+                        name="enter_discount"
                         required={false}
                         className="text-base"
                     >
                         <NumericFormat
                             customInput={Input}
                             placeholder="Enter Discount Amount"
-                            id="discount_amount"
-                            prefix="₱"
+                            id="enter_discount"
+                            prefix={type_discount === "Amount" ? "₱" : ""}
+                            suffix={type_discount === "Percent" ? "%" : ""}
                             thousandSeparator
                         />
                     </Form.Item>
-                    <div className=" border border-gray-300" />
-                    <div className="flex justify-end">
-                        <h4>Total: {numberSeparator(isProcedureTotal, 0)}</h4>
+                    <div className=" border-t-2 border-gray-300 space-y-2 pt-5">
+                        {vat_exclusive > 0 && (
+                            <div className="flex justify-end">
+                                <p className=" text-lg text-gray-400">
+                                    VAT Exclusive (12%): +
+                                    {numberSeparator(vat_exclusive, 0)}
+                                </p>
+                            </div>
+                        )}
+                        {senior_discount > 0 && (
+                            <div className="flex justify-end">
+                                <p className=" text-lg text-gray-400">
+                                    Senior Discount (20%): -
+                                    {numberSeparator(senior_discount, 0)}
+                                </p>
+                            </div>
+                        )}
+                        {entered_discount > 0 && (
+                            <div className="flex justify-end">
+                                <p className=" text-lg text-gray-400">
+                                    Entered Discount: -
+                                    {numberSeparator(entered_discount, 0)}
+                                </p>
+                            </div>
+                        )}
+                        <div className="flex justify-end">
+                            <h4>
+                                Total: {numberSeparator(isProcedureTotal, 0)}
+                            </h4>
+                        </div>
                     </div>
+
                     <div className="flex justify-end items-center gap-4">
                         <Button
                             appearance="link"
