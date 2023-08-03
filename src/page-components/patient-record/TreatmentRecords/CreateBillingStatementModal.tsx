@@ -23,7 +23,7 @@ import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteData, postData } from "@utilities/api";
+import { deleteData, postData, postDataNoFormData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import {
     getInitialValue,
@@ -58,6 +58,7 @@ export default function CreateBillingStatementModal({
     onClose,
     patientRecord,
     SelectedTreatments,
+    setSelectedTreatments,
     ...rest
 }: any) {
     const [form] = Form.useForm();
@@ -66,9 +67,9 @@ export default function CreateBillingStatementModal({
 
     const vat_and_discount = Form.useWatch("vat_and_discount", form);
 
-    const enter_discount = Form.useWatch("enter_discount", form);
+    const enter_discount = Form.useWatch("discount", form);
 
-    const type_discount = Form.useWatch("type_of_discount", form);
+    const type_discount = Form.useWatch("discount_type", form);
 
     const queryClient = useQueryClient();
 
@@ -131,7 +132,7 @@ export default function CreateBillingStatementModal({
 
     const { mutate: addInvoice } = useMutation(
         (payload: any) => {
-            return postData({
+            return postDataNoFormData({
                 url: `/api/patient/invoice/${patientRecord?._id}`,
                 payload,
                 options: {
@@ -145,18 +146,22 @@ export default function CreateBillingStatementModal({
                     message: "Applied Billing Invoice Success",
                     description: `Applied Billing Invoice Success`,
                 });
+                queryClient.invalidateQueries({
+                    queryKey: ["invoice"],
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["invoice-total"],
+                });
                 form.resetFields();
-
+                setSelectedTreatments([]);
                 onClose();
             },
             onMutate: async (newData) => {
                 await queryClient.cancelQueries({
-                    queryKey: ["treatment-plan"],
+                    queryKey: ["invoice"],
                 });
-                const previousValues = queryClient.getQueryData([
-                    "treatment-plan",
-                ]);
-                queryClient.setQueryData(["treatment-plan"], (oldData: any) =>
+                const previousValues = queryClient.getQueryData(["invoice"]);
+                queryClient.setQueryData(["invoice"], (oldData: any) =>
                     oldData ? [...oldData, newData] : undefined
                 );
 
@@ -169,14 +174,11 @@ export default function CreateBillingStatementModal({
                         err.response.data[Object.keys(err.response.data)[0]]
                     }`,
                 });
-                queryClient.setQueryData(
-                    ["treatment-plan"],
-                    context.previousValues
-                );
+                queryClient.setQueryData(["invoice"], context.previousValues);
             },
             onSettled: async () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["treatment-plan"],
+                    queryKey: ["invoice"],
                 });
             },
         }
@@ -201,22 +203,24 @@ export default function CreateBillingStatementModal({
                     form={form}
                     layout="vertical"
                     onFinish={(values: any) => {
-                        values.enter_discount = removeNumberFormatting(
-                            values.enter_discount
+                        values.discount = removeNumberFormatting(
+                            values.discount
                         );
                         values.total = isProcedureTotal.toFixed(2);
-                        values.vat_exclusive = vat_exclusive.toFixed(2);
-                        values.senior_discount = senior_discount.toFixed(2);
-                        values.procedures = Treatments;
+                        values.vat_exclusive = vat_exclusive > 0 ? true : false;
+                        values.vat = Number(vat_exclusive.toFixed(2));
+                        values.senior_discount =
+                            senior_discount > 0 ? true : false;
+                        values.treatments = Treatments.map(
+                            (item: SelectedTreatment) => {
+                                return {
+                                    treatment_id: item.treatment_id,
+                                };
+                            }
+                        );
                         delete values.vat_and_discount;
-                        console.log(values);
 
-                        // if (!id) {
-                        //     addTreatmentPlan(values);
-                        // } else {
-                        //     values.id = id;
-                        //     editTreatmentPlan(values);
-                        // }
+                        addInvoice(values);
                     }}
                     onFinishFailed={(data) => {
                         scroller.scrollTo(
@@ -301,13 +305,13 @@ export default function CreateBillingStatementModal({
                     <div>
                         <p className="mb-1">Choose Type of Discount</p>
                         <Form.Item
-                            name="type_of_discount"
+                            name="discount_type"
                             required={false}
                             className="text-base"
                             initialValue={""}
                         >
                             <Radio.Group
-                                id="type_of_discount"
+                                id="discount_type"
                                 className="grid grid-cols-1 gap-1 text-lg"
                             >
                                 <Radio value="Amount">Amount Discount</Radio>
@@ -316,14 +320,15 @@ export default function CreateBillingStatementModal({
                         </Form.Item>
                     </div>
                     <Form.Item
-                        name="enter_discount"
+                        name="discount"
                         required={false}
                         className="text-base"
+                        initialValue={0}
                     >
                         <NumericFormat
                             customInput={Input}
                             placeholder="Enter Discount Amount"
-                            id="enter_discount"
+                            id="discount"
                             prefix={type_discount === "Amount" ? "₱" : ""}
                             suffix={type_discount === "Percent" ? "%" : ""}
                             thousandSeparator

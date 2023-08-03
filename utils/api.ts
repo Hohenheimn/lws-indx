@@ -118,6 +118,47 @@ export const postData = async ({ url, payload, options }: any) => {
         });
 };
 
+export const postDataNoFormData = async ({ url, payload, options }: any) => {
+    const token = parseCookies().a_t;
+
+    if (options?.isLoading) {
+        options?.isLoading(true);
+    }
+
+    return await axios
+        .post(
+            `${process.env.REACT_APP_API_BASE_URL}${url}${
+                !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
+            }`,
+            payload,
+            {
+                headers: {
+                    api_key: !token ? process.env.REACT_APP_API_KEY : "",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        .then(async (res) => {
+            if (options?.isLoading) {
+                options?.isLoading(false);
+            }
+
+            return res.data;
+        })
+        .catch((err) => {
+            if (options?.isLoading) {
+                options?.isLoading(false);
+            }
+
+            notification[`${statusType(err.response.status)}`]({
+                message: err.response.data[0].title,
+                description: err.response.data[0].message,
+            });
+
+            throw "Something Went Wrong";
+        });
+};
+
 export const postDataMultipleFile = async ({ url, payload, options }: any) => {
     const token = parseCookies().a_t;
 

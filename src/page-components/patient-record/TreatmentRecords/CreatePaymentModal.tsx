@@ -32,24 +32,18 @@ import {
 } from "@utilities/helpers";
 
 import AddAndUseCredit from "./AddAndUseCredit";
+import { SelectedBilling } from "./types";
 
-export default function PerCertainAmountModal({
+export default function CreatePaymentModal({
     show,
     onClose,
     patientRecord,
-    CertainAmount,
+    SelectedBilling,
+    setSelectedBilling,
     ...rest
 }: any) {
     const [form] = Form.useForm();
-
-    const amount = Form.useWatch("amount", form);
-
-    const [isTotal, setTotal] = useState(0);
-
-    const [isBalance, setBalance] = useState(0);
-
     const queryClient = useQueryClient();
-
     const { setIsAppLoading } = React.useContext(Context);
 
     const [addorUseCreditModal, setAddorUseCreditModal] = useState({
@@ -59,6 +53,23 @@ export default function PerCertainAmountModal({
 
     const [useCreditAmount, setUseCreditAmount] = useState(0);
 
+    const [TotalBalance, setTotalBalance] = useState(0);
+
+    const amount = Form.useWatch("amount", form);
+
+    React.useEffect(() => {
+        setTotalBalance(0);
+        let totalBalance = 0;
+        SelectedBilling.map((item: SelectedBilling) => {
+            totalBalance = totalBalance + Number(item.balance);
+        });
+        totalBalance =
+            totalBalance -
+            useCreditAmount -
+            Number(removeNumberFormatting(amount));
+        setTotalBalance(totalBalance);
+    }, [SelectedBilling, useCreditAmount, amount]);
+
     React.useEffect(() => {
         form.setFieldsValue({
             ...form,
@@ -67,13 +78,6 @@ export default function PerCertainAmountModal({
                 : undefined,
         });
     }, [show]);
-
-    useEffect(() => {
-        let total = Number(removeNumberFormatting(amount));
-        let balance = CertainAmount - total - Number(useCreditAmount);
-        setTotal(total);
-        setBalance(balance);
-    }, [amount, useCreditAmount]);
 
     let { data: Credit, isLoading: CreditLoading } = useQuery(
         ["credit", patientRecord._id],
@@ -102,6 +106,7 @@ export default function PerCertainAmountModal({
                 form.resetFields();
                 onClose();
                 setUseCreditAmount(0);
+                setSelectedBilling([]);
                 queryClient.invalidateQueries({ queryKey: ["payment"] });
                 queryClient.invalidateQueries({ queryKey: ["invoice"] });
                 queryClient.invalidateQueries({ queryKey: ["invoice-total"] });
@@ -148,9 +153,7 @@ export default function PerCertainAmountModal({
             >
                 <div className="space-y-8">
                     <div className="flex items-center justify-between">
-                        <div className="font-bold text-3xl">
-                            Pay Certain Amount
-                        </div>
+                        <div className="font-bold text-3xl">Create Payment</div>
                         <div className="flex justify-end items-center gap-4">
                             <Button
                                 appearance=""
@@ -187,7 +190,11 @@ export default function PerCertainAmountModal({
                             values.amount = removeNumberFormatting(
                                 values.amount
                             );
+                            values.invoices = SelectedBilling.map(
+                                (item: SelectedBilling) => item.id
+                            );
                             values.credits = useCreditAmount;
+                            values.total = TotalBalance;
                             addPayment(values);
                         }}
                         onFinishFailed={(data) => {
@@ -268,12 +275,6 @@ export default function PerCertainAmountModal({
                                         id="amount"
                                         prefix="₱"
                                         thousandSeparator
-                                        isAllowed={({ floatValue }: any) => {
-                                            return (
-                                                floatValue <= CertainAmount ||
-                                                floatValue === undefined
-                                            );
-                                        }}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -296,48 +297,48 @@ export default function PerCertainAmountModal({
                                     {Credit?.amount !== undefined &&
                                         numberSeparator(Credit?.amount, 0)}
                                 </p>
-
+                                <p className=" text-end">
+                                    Use Credit Score:{" "}
+                                    {Credit?.amount !== undefined &&
+                                        numberSeparator(useCreditAmount, 0)}
+                                </p>
                                 <div className="p-8 border border-primary-500 rounded-md space-y-4">
-                                    <h4 className="text-lg">
-                                        Billing Statement
-                                    </h4>
                                     <ul className=" space-y-4">
                                         <li className=" pb-2 border-b border-primary-500 flex justify-between">
-                                            <p>Certain Amount Payment</p>
+                                            <p>Procedure:</p>
+                                            <p className="pr-4">Charge:</p>
+                                        </li>
+                                        {SelectedBilling?.map(
+                                            (
+                                                item: SelectedBilling,
+                                                index: number
+                                            ) => (
+                                                <li
+                                                    key={index}
+                                                    className=" pb-2 border-b border-primary-500 flex justify-between"
+                                                >
+                                                    <p>{item.procedure_name}</p>
+                                                    <p className="pr-4">
+                                                        Php{" "}
+                                                        {numberSeparator(
+                                                            item.balance,
+                                                            0
+                                                        )}
+                                                    </p>
+                                                </li>
+                                            )
+                                        )}
+
+                                        <li className=" pb-2 flex justify-between">
+                                            <p className=" font-bold">
+                                                Total Amount
+                                            </p>
                                             <p className="pr-4">
                                                 Php{" "}
                                                 {numberSeparator(
-                                                    CertainAmount,
+                                                    TotalBalance,
                                                     0
                                                 )}
-                                            </p>
-                                        </li>
-                                        <li className=" pb-2 border-b border-primary-500 flex justify-between">
-                                            <p>Total</p>
-                                            <p className="pr-4">
-                                                Php{" "}
-                                                {numberSeparator(isTotal, 0)}
-                                            </p>
-                                        </li>
-                                        {useCreditAmount > 0 && (
-                                            <li className=" pb-2 border-b border-primary-500 flex justify-between">
-                                                <p>Credit</p>
-                                                <p className="pr-4">
-                                                    Php{" "}
-                                                    {numberSeparator(
-                                                        useCreditAmount,
-                                                        0
-                                                    )}
-                                                </p>
-                                            </li>
-                                        )}
-                                        <li className=" pb-2 flex justify-between">
-                                            <p className=" font-bold">
-                                                Total Remaining Balance
-                                            </p>
-                                            <p className="pr-4">
-                                                Php{" "}
-                                                {numberSeparator(isBalance, 0)}
                                             </p>
                                         </li>
                                     </ul>
@@ -360,18 +361,20 @@ export default function PerCertainAmountModal({
                                         className="max-w-[10rem]"
                                         type="submit"
                                     >
-                                        Save
+                                        Pay Now
+                                    </Button>
+                                </div>
+                                <div className="flex justify-end items-center gap-4">
+                                    <Button
+                                        appearance="danger"
+                                        className="max-w-[15rem]"
+                                    >
+                                        Void Billing Statement
                                     </Button>
                                 </div>
                             </li>
                         </ul>
                     </Form>
-                    <div className="w-full flex justify-center">
-                        <h3 className=" text-center text-lg">
-                            Note: By paying a certain amount, take note that
-                            this will be deducted to the oldest Billing.
-                        </h3>
-                    </div>
                 </div>
                 <AddAndUseCredit
                     show={addorUseCreditModal.toggle}

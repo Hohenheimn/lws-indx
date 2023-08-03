@@ -59,6 +59,12 @@ export default function AddTreatmentRecordModal({
                     description: `Adding Treatment Record Success`,
                 });
                 form.resetFields();
+                queryClient.invalidateQueries({
+                    queryKey: ["invoice-total"],
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["treatment-record"],
+                });
                 onClose();
             },
             onMutate: async (newData) => {
@@ -140,13 +146,8 @@ export default function AddTreatmentRecordModal({
                         <Form.Item
                             label="Chart Name"
                             name="chart_id"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "This is required",
-                                },
-                            ]}
                             required={false}
+                            initialValue={""}
                             className="col-span-12"
                         >
                             <InfiniteSelect
@@ -313,12 +314,6 @@ export default function AddTreatmentRecordModal({
                         <Form.Item
                             label="Remarks"
                             name="remarks"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "This is required!",
-                                },
-                            ]}
                             required={false}
                         >
                             <TextArea id="remarks" placeholder="Remarks" />

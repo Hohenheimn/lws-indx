@@ -247,13 +247,21 @@ export function Annotate({
                                             color: itemMap.color_code,
                                             annotation: annotation,
                                             id: itemMap._id,
-                                            icon: itemMap.icon,
+                                            icon:
+                                                itemMap.icon === undefined ||
+                                                itemMap.icon === null
+                                                    ? "/images/default_tooth.png"
+                                                    : itemMap.icon,
                                         });
                                     }}
-                                    className=" border border-black"
                                 >
                                     <Image
-                                        src={itemMap.icon}
+                                        src={
+                                            itemMap.icon === undefined ||
+                                            itemMap.icon === null
+                                                ? "/images/default_tooth.png"
+                                                : itemMap.icon
+                                        }
                                         alt="Icon"
                                         height={25}
                                         width={25}

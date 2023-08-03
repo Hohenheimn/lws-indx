@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DatePicker, Form, TimePicker, notification } from "antd";
 import { Checkbox } from "antd";
 import TextArea from "antd/lib/input/TextArea";
@@ -18,10 +18,7 @@ import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
-
-import Uploader from "@src/components/Uploader";
-import UploaderMultiple from "@src/components/UploaderMultiple";
-
+import DragAndDropUpload from "@src/components/DragAndDropUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, postData, postDataMultipleFile } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -39,7 +36,17 @@ export default function AddMedicalGalleryModal({
     ...rest
 }: any) {
     const queryClient = useQueryClient();
+
     const { setIsAppLoading } = React.useContext(Context);
+
+    React.useEffect(() => {
+        form.setFieldsValue({
+            ...form,
+            created_at: moment(form?.getFieldValue("created_at")).isValid()
+                ? moment(form?.getFieldValue("created_at"))
+                : undefined,
+        });
+    }, [show]);
 
     let [image, setImage] = React.useState({
         imageUrl: "",
@@ -48,6 +55,7 @@ export default function AddMedicalGalleryModal({
         loading: false,
         edit: false,
     });
+
     function handleChange(info: any) {
         if (info.file.status === "uploading") {
             return setImage({
@@ -143,6 +151,7 @@ export default function AddMedicalGalleryModal({
                     form={form}
                     layout="vertical"
                     onFinish={(values) => {
+                        delete values.created_at;
                         addMedicalGallery(values);
                     }}
                     onFinishFailed={(data) => {
@@ -158,6 +167,50 @@ export default function AddMedicalGalleryModal({
                     className="space-y-12"
                 >
                     <div className="grid grid-cols-1 gap-4">
+                        <Form.Item
+                            label="Date Created"
+                            name="created_at"
+                            required={false}
+                        >
+                            <DatePicker
+                                getPopupContainer={(triggerNode: any) => {
+                                    return triggerNode.parentNode;
+                                }}
+                                placeholder="Date Created"
+                                id="created_at"
+                                format="MMMM DD, YYYY"
+                                disabled={true}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Name"
+                            name="name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "This is required!",
+                                },
+                            ]}
+                            required={false}
+                        >
+                            <Input id="name" placeholder="Name" />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Description"
+                            name="description"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "This is required!",
+                                },
+                            ]}
+                            required={false}
+                        >
+                            <Input id="description" placeholder="Description" />
+                        </Form.Item>
+
                         <Form.Item
                             label="Select Category"
                             name="category"
@@ -203,14 +256,7 @@ export default function AddMedicalGalleryModal({
                             ]}
                             required={false}
                         >
-                            <UploaderMultiple
-                                image={image}
-                                setImage={(value: any) => setImage(value)}
-                                onChange={handleChange}
-                                id="galleries"
-                                className="[&_.ant-upload]:!border-0 h-full w-full bg-none"
-                                wrapperClassName="h-full w-full border flex justify-center items-center border-dashed p-4"
-                            >
+                            <DragAndDropUpload id="galleries">
                                 <div className=" w-full flex justify-center flex-col items-center">
                                     <AiOutlineInbox className=" text-5xl text-primary-500 mb-2" />
                                     <h3 className=" text-center mb-2 text-2xl">
@@ -223,7 +269,7 @@ export default function AddMedicalGalleryModal({
                                         company data or other band files
                                     </p>
                                 </div>
-                            </UploaderMultiple>
+                            </DragAndDropUpload>
                         </Form.Item>
                     </div>
                     <div className="flex justify-end items-center gap-4">

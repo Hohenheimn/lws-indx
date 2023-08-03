@@ -344,13 +344,6 @@ export default function ChartingModal({
 
                             values.procedures = procedures;
 
-                            // console.log([
-                            //     ...upper_left,
-                            //     ...upper_right,
-                            //     ...lower_right,
-                            //     ...lower_left,
-                            // ]);
-
                             if (!id) {
                                 addChart(values);
                             } else {

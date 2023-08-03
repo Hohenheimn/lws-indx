@@ -28,9 +28,10 @@ export type Invoice = {
     notes: string;
     total: number;
     vat: number;
-    pending_balance: number;
+    balance: number;
     discount: number;
     total_amount: number;
+    procedure_name: string;
     updated_at: string;
     created_at: string;
 };
@@ -38,10 +39,11 @@ export type Invoice = {
 export type SelectedTreatment = {
     amount: number;
     procedure_name: string;
-    procedure_id: any;
+    treatment_id: any;
 };
 
 export type SelectedBilling = {
     id: string;
-    discount: number;
+    balance: number;
+    procedure_name: string;
 };

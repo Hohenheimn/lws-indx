@@ -299,13 +299,13 @@ export default function AddProcedureModal({
                                 id="icon"
                             >
                                 <div className="space-y-2 text-center">
-                                    <Avatar className="h-40 w-40 p-8 overflow-hidden relative border border-gray-300 avatar transition">
+                                    <Avatar className="h-40 w-40 p-8 overflow-hidden bg-white relative border border-gray-300 avatar transition">
                                         {image.imageUrl ? (
                                             <Image
                                                 src={
                                                     image.imageUrl
                                                         ? image.imageUrl
-                                                        : "/"
+                                                        : "/images/default_tooth.png"
                                                 }
                                                 alt="procedure icons"
                                                 fill
@@ -314,7 +314,16 @@ export default function AddProcedureModal({
                                                 className="object-center contain h-full w-full"
                                             />
                                         ) : (
-                                            <IoPersonOutline className="h-full w-full text-white" />
+                                            <Image
+                                                src={
+                                                    "/images/default_tooth.png"
+                                                }
+                                                alt="procedure icons"
+                                                fill
+                                                sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                                                objectFit="contain"
+                                                className="object-center contain h-full w-full"
+                                            />
                                         )}
                                     </Avatar>
                                     <div className="text-casper-500">

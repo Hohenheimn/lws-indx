@@ -23,16 +23,14 @@ export const RecordColumns = (
             render: (_: any, record: treatmentRecord) => (
                 <Checkbox
                     checked={SelectedTreatments.some(
-                        (someItem) =>
-                            someItem.procedure_id === record.procedure_id
+                        (someItem) => someItem.treatment_id === record._id
                     )}
                     onChange={(e) => {
                         // Handle checkbox change event here
                         if (
                             !SelectedTreatments.some(
                                 (someItem) =>
-                                    someItem.procedure_id ===
-                                    record.procedure_id
+                                    someItem.treatment_id === record._id
                             )
                         ) {
                             setSelectedTreatments([
@@ -40,20 +38,18 @@ export const RecordColumns = (
                                 {
                                     amount: Number(record.amount),
                                     procedure_name: record.procedure_name,
-                                    procedure_id: record.procedure_id,
+                                    treatment_id: record._id,
                                 },
                             ]);
                         }
                         if (
                             SelectedTreatments.some(
                                 (someItem) =>
-                                    someItem.procedure_id ===
-                                    record.procedure_id
+                                    someItem.treatment_id === record._id
                             )
                         ) {
                             const fitler = SelectedTreatments.filter(
-                                (filter) =>
-                                    filter.procedure_id !== record.procedure_id
+                                (filter) => filter.treatment_id !== record._id
                             );
                             setSelectedTreatments(fitler);
                         }
@@ -147,7 +143,8 @@ export const BillingColumns = (
                                 ...SelectedBilling,
                                 {
                                     id: record._id,
-                                    discount: record.discount,
+                                    balance: record.balance,
+                                    procedure_name: record.procedure_name,
                                 },
                             ]);
                         }
@@ -195,7 +192,7 @@ export const BillingColumns = (
         },
         {
             title: "Remaining Balance",
-            dataIndex: "pending_balance",
+            dataIndex: "balance",
             width: "10rem",
             align: "center",
         },
@@ -233,25 +230,25 @@ export const PaymentColumns = () => {
         },
         {
             title: "Branch",
-            dataIndex: "branch_name",
+            dataIndex: "branch",
             width: "10rem",
             align: "center",
         },
         {
             title: "Procedure",
-            dataIndex: "procedure_name",
+            dataIndex: "procedure",
             width: "10rem",
             align: "center",
         },
         {
             title: "Payment Method",
-            dataIndex: "payment_method",
+            dataIndex: "mode_of_payment",
             width: "10rem",
             align: "center",
         },
         {
             title: "Amount Paid",
-            dataIndex: "pending_balance",
+            dataIndex: "payment_amount",
             width: "10rem",
             align: "center",
         },

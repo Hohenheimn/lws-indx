@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { AnimatePresence } from "framer-motion";
@@ -34,9 +34,16 @@ type gallery = {
     patient_id: string;
     filename: string;
     category: string;
+    name: string;
     description: string;
     user_id: string;
     created_at: string;
+};
+
+type SelectedEdit = {
+    id: number | null | undefined | string;
+    name: string;
+    description: string;
 };
 
 export function MedicalGallery({ patientRecord }: any) {
@@ -46,16 +53,16 @@ export function MedicalGallery({ patientRecord }: any) {
     const { setIsAppLoading } = React.useContext(Context);
     let [search, setSearch] = React.useState("");
 
-    const [SelectedEdit, setSelectedEdit] = useState<{
-        id: number | null | undefined | string;
-        title: string;
-        description: string;
-        created_at: any;
-    }>({
+    const [SelectedEdit, setSelectedEdit] = useState<SelectedEdit>({
         id: null,
-        title: "",
+        name: "",
         description: "",
-        created_at: "",
+    });
+
+    const [prevSelectedEdit, setPrevSelectedEdit] = useState<SelectedEdit>({
+        id: null,
+        name: "",
+        description: "",
     });
 
     let [
@@ -132,9 +139,9 @@ export function MedicalGallery({ patientRecord }: any) {
     );
 
     const { mutate: editMedicalGallery } = useMutation(
-        (payload: any) => {
+        (payload: { name: string; description: string }) => {
             return postData({
-                url: `/api/gallery/update/${payload.id}?_method=PUT`,
+                url: `/api/patient/gallery/update/${SelectedEdit.id}?_method=PUT`,
                 payload,
                 options: {
                     isLoading: (show: boolean) => setIsAppLoading(show),
@@ -149,8 +156,12 @@ export function MedicalGallery({ patientRecord }: any) {
                 });
                 setSelectedEdit({
                     id: null,
-                    title: "",
-                    created_at: "",
+                    name: "",
+                    description: "",
+                });
+                setPrevSelectedEdit({
+                    id: null,
+                    name: "",
                     description: "",
                 });
             },
@@ -183,16 +194,40 @@ export function MedicalGallery({ patientRecord }: any) {
                 queryClient.invalidateQueries({
                     queryKey: ["medical-gallery"],
                 });
+                setSelectedEdit({
+                    id: null,
+                    name: "",
+                    description: "",
+                });
+                setPrevSelectedEdit({
+                    id: null,
+                    name: "",
+                    description: "",
+                });
             },
         }
     );
 
-    const BackHandler = () => {
-        setSelectedEdit({
-            id: null,
-            title: "",
-            description: "",
-            created_at: "",
+    const SaveHandler = () => {
+        if (
+            prevSelectedEdit.name === SelectedEdit.name &&
+            prevSelectedEdit.description === SelectedEdit.description
+        ) {
+            setSelectedEdit({
+                id: null,
+                name: "",
+                description: "",
+            });
+            setPrevSelectedEdit({
+                id: null,
+                name: "",
+                description: "",
+            });
+            return;
+        }
+        editMedicalGallery({
+            name: SelectedEdit.name,
+            description: SelectedEdit.description,
         });
     };
 
@@ -210,9 +245,14 @@ export function MedicalGallery({ patientRecord }: any) {
                                     <Button
                                         className="p-3 inline-block w-auto"
                                         appearance="primary"
-                                        onClick={BackHandler}
+                                        onClick={SaveHandler}
                                     >
-                                        BACK
+                                        {prevSelectedEdit.name ===
+                                            SelectedEdit.name &&
+                                        prevSelectedEdit.description ===
+                                            SelectedEdit.description
+                                            ? "BACK"
+                                            : "SAVE"}
                                     </Button>
                                 )}
                         </div>
@@ -246,52 +286,6 @@ export function MedicalGallery({ patientRecord }: any) {
                             ))}
                         </ul>
 
-                        {SelectedEdit.id !== undefined &&
-                            SelectedEdit.id !== null && (
-                                <div className="flex justify-between align-middle gap-4">
-                                    <div className="basis-1/2 grid grid-cols-2 gap-5">
-                                        <div>
-                                            <Input
-                                                placeholder="Gallery Title"
-                                                className=" text-base shadow-none"
-                                                value={SelectedEdit.title}
-                                                onChange={(e: any) => {
-                                                    setSelectedEdit({
-                                                        ...SelectedEdit,
-                                                        title: e.target.value,
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <DatePicker
-                                                // value={
-                                                //     SelectedEdit.date_uploaded
-                                                // }
-                                                getPopupContainer={(
-                                                    triggerNode: any
-                                                ) => {
-                                                    return triggerNode.parentNode;
-                                                }}
-                                                onChange={(e) => {
-                                                    setSelectedEdit({
-                                                        ...SelectedEdit,
-                                                        created_at: e
-                                                            ?.format(
-                                                                "YYYY/MM/DD"
-                                                            )
-                                                            .toString(),
-                                                    });
-                                                }}
-                                                placeholder="Date Uploaded"
-                                                format="MMMM DD, YYYY"
-                                                disabled={false}
-                                                style={{ boxShadow: "none" }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
                         <div className="grid grid-cols-4 gap-12 !mt-12">
                             <div className="aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300">
                                 <div
@@ -317,20 +311,28 @@ export function MedicalGallery({ patientRecord }: any) {
                                                         <Button
                                                             appearance="link"
                                                             className="text-casper-500 p-2"
-                                                            onClick={() =>
+                                                            onClick={() => {
                                                                 setSelectedEdit(
                                                                     {
                                                                         id:
                                                                             gallery._id,
-                                                                        title:
-                                                                            "gallery name",
-                                                                        created_at:
-                                                                            gallery?.created_at,
+                                                                        name:
+                                                                            gallery.name,
                                                                         description:
                                                                             gallery.description,
                                                                     }
-                                                                )
-                                                            }
+                                                                );
+                                                                setPrevSelectedEdit(
+                                                                    {
+                                                                        id:
+                                                                            gallery._id,
+                                                                        name:
+                                                                            gallery.name,
+                                                                        description:
+                                                                            gallery.description,
+                                                                    }
+                                                                );
+                                                            }}
                                                         >
                                                             <div className="flex items-center gap-2">
                                                                 <BsPencilSquare className="text-base" />
@@ -373,8 +375,23 @@ export function MedicalGallery({ patientRecord }: any) {
                                             {SelectedEdit.id ===
                                                 gallery._id && (
                                                 <motion.div variants={fadeIn}>
-                                                    <TextArea
-                                                        placeholder="Notes"
+                                                    <Input
+                                                        placeholder="Name"
+                                                        value={
+                                                            SelectedEdit.name
+                                                        }
+                                                        className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
+                                                        onChange={(e: any) => {
+                                                            setSelectedEdit({
+                                                                ...SelectedEdit,
+                                                                name:
+                                                                    e.target
+                                                                        .value,
+                                                            });
+                                                        }}
+                                                    />
+                                                    <Input
+                                                        placeholder="Description"
                                                         value={
                                                             SelectedEdit.description
                                                         }

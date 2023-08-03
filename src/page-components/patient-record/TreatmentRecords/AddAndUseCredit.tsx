@@ -80,7 +80,7 @@ export default function AddAndUseCredit({
                 </div>
                 <p>
                     Remaining Credit Score:{" "}
-                    {numberSeparator(remainingCredit, 0)}
+                    {numberSeparator(remainingCredit ? remainingCredit : 0, 0)}
                 </p>
                 <Form
                     form={form}
@@ -117,10 +117,13 @@ export default function AddAndUseCredit({
                             prefix={"₱"}
                             thousandSeparator
                             isAllowed={({ floatValue }: any) => {
-                                return (
-                                    floatValue <= remainingCredit ||
-                                    floatValue === undefined
-                                );
+                                if (actionType === "Add") {
+                                    return true;
+                                } else {
+                                    return floatValue <= remainingCredit
+                                        ? remainingCredit
+                                        : 0 || floatValue === undefined;
+                                }
                             }}
                         />
                     </Form.Item>

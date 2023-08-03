@@ -8,16 +8,18 @@ export default function TreatmentRecordTable({
     Endpoint,
     patientRecord,
     search,
+    queryName,
 }: {
     TableColumns: any;
     Endpoint: string;
     patientRecord: any;
+    queryName: string;
     search: string;
 }) {
     let [page, setPage] = React.useState(1);
 
     let { data: TableData, isLoading: TableLoading } = useQuery(
-        [Endpoint, page, search],
+        [queryName, page, search],
         () =>
             fetchData({
                 url: `/api/${Endpoint}/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
