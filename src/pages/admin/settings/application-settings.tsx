@@ -70,7 +70,9 @@ export function ApplicationSettings({}: NextPageProps) {
             <Form
                 form={applicationSettingsForm}
                 layout="vertical"
-                onFinish={(values) => {}}
+                onFinish={(values) => {
+                    console.log(values);
+                }}
                 onFinishFailed={(data) => {
                     scroller.scrollTo(
                         data?.errorFields[0]?.name?.join("-")?.toString(),

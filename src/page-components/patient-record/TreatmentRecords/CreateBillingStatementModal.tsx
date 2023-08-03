@@ -152,6 +152,9 @@ export default function CreateBillingStatementModal({
                 queryClient.invalidateQueries({
                     queryKey: ["invoice-total"],
                 });
+                queryClient.invalidateQueries({
+                    queryKey: ["treatment-record"],
+                });
                 form.resetFields();
                 setSelectedTreatments([]);
                 onClose();

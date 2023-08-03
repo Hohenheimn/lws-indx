@@ -16,6 +16,7 @@ export type treatmentRecord = {
     remarks: string;
     created_at: string;
     updated_at: string;
+    status: string;
 };
 
 export type Invoice = {
@@ -34,6 +35,7 @@ export type Invoice = {
     procedure_name: string;
     updated_at: string;
     created_at: string;
+    status: String;
 };
 
 export type SelectedTreatment = {

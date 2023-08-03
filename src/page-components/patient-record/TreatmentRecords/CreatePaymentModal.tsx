@@ -63,12 +63,8 @@ export default function CreatePaymentModal({
         SelectedBilling.map((item: SelectedBilling) => {
             totalBalance = totalBalance + Number(item.balance);
         });
-        totalBalance =
-            totalBalance -
-            useCreditAmount -
-            Number(removeNumberFormatting(amount));
         setTotalBalance(totalBalance);
-    }, [SelectedBilling, useCreditAmount, amount]);
+    }, [SelectedBilling]);
 
     React.useEffect(() => {
         form.setFieldsValue({
@@ -111,6 +107,9 @@ export default function CreatePaymentModal({
                 queryClient.invalidateQueries({ queryKey: ["invoice"] });
                 queryClient.invalidateQueries({ queryKey: ["invoice-total"] });
                 queryClient.invalidateQueries({ queryKey: ["credit"] });
+                queryClient.invalidateQueries({
+                    queryKey: ["treatment-record"],
+                });
             },
             onMutate: async (newData) => {
                 await queryClient.cancelQueries({
@@ -131,6 +130,65 @@ export default function CreatePaymentModal({
                     }`,
                 });
                 queryClient.setQueryData(["payment"], context.previousValues);
+            },
+            onSettled: async () => {
+                queryClient.invalidateQueries({ queryKey: ["payment"] });
+                queryClient.invalidateQueries({ queryKey: ["invoice"] });
+            },
+        }
+    );
+
+    const voidHandler = () => {
+        const Payload = {
+            billings: SelectedBilling.map((item: SelectedBilling) => item.id),
+        };
+        voidBilling(Payload);
+    };
+
+    const { mutate: voidBilling } = useMutation(
+        (payload: any) => {
+            return postDataNoFormData({
+                url: `/api/patient/invoice/void/${patientRecord?._id}`,
+                payload,
+                options: {
+                    isLoading: (show: boolean) => setIsAppLoading(show),
+                },
+            });
+        },
+        {
+            onSuccess: async (res) => {
+                notification.success({
+                    message: "Billing Statement has been voided",
+                    description: `Billing Deleted`,
+                });
+                form.resetFields();
+                onClose();
+                setUseCreditAmount(0);
+                setSelectedBilling([]);
+                queryClient.invalidateQueries({ queryKey: ["payment"] });
+                queryClient.invalidateQueries({ queryKey: ["invoice"] });
+                queryClient.invalidateQueries({ queryKey: ["invoice-total"] });
+                queryClient.invalidateQueries({ queryKey: ["credit"] });
+            },
+            onMutate: async (newData) => {
+                await queryClient.cancelQueries({
+                    queryKey: ["invoice"],
+                });
+                const previousValues = queryClient.getQueryData(["invoice"]);
+                queryClient.setQueryData(["invoice"], (oldData: any) =>
+                    oldData ? [...oldData, newData] : undefined
+                );
+
+                return { previousValues };
+            },
+            onError: (err: any, _, context: any) => {
+                notification.warning({
+                    message: "Something Went Wrong",
+                    description: `${
+                        err.response.data[Object.keys(err.response.data)[0]]
+                    }`,
+                });
+                queryClient.setQueryData(["invoice"], context.previousValues);
             },
             onSettled: async () => {
                 queryClient.invalidateQueries({ queryKey: ["payment"] });
@@ -368,6 +426,7 @@ export default function CreatePaymentModal({
                                     <Button
                                         appearance="danger"
                                         className="max-w-[15rem]"
+                                        onClick={voidHandler}
                                     >
                                         Void Billing Statement
                                     </Button>

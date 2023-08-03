@@ -3,7 +3,7 @@ import { Checkbox } from "antd";
 import moment from "moment";
 import { twMerge } from "tailwind-merge";
 
-import { paymentStatusPalette } from "@utilities/helpers";
+import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 
 import {
     treatmentRecord,
@@ -21,40 +21,47 @@ export const RecordColumns = (
             title: "",
             dataIndex: "checkbox",
             render: (_: any, record: treatmentRecord) => (
-                <Checkbox
-                    checked={SelectedTreatments.some(
-                        (someItem) => someItem.treatment_id === record._id
+                <>
+                    {record.status !== "billed" && (
+                        <Checkbox
+                            checked={SelectedTreatments.some(
+                                (someItem) =>
+                                    someItem.treatment_id === record._id
+                            )}
+                            onChange={(e) => {
+                                // Handle checkbox change event here
+                                if (
+                                    !SelectedTreatments.some(
+                                        (someItem) =>
+                                            someItem.treatment_id === record._id
+                                    )
+                                ) {
+                                    setSelectedTreatments([
+                                        ...SelectedTreatments,
+                                        {
+                                            amount: Number(record.amount),
+                                            procedure_name:
+                                                record.procedure_name,
+                                            treatment_id: record._id,
+                                        },
+                                    ]);
+                                }
+                                if (
+                                    SelectedTreatments.some(
+                                        (someItem) =>
+                                            someItem.treatment_id === record._id
+                                    )
+                                ) {
+                                    const fitler = SelectedTreatments.filter(
+                                        (filter) =>
+                                            filter.treatment_id !== record._id
+                                    );
+                                    setSelectedTreatments(fitler);
+                                }
+                            }}
+                        />
                     )}
-                    onChange={(e) => {
-                        // Handle checkbox change event here
-                        if (
-                            !SelectedTreatments.some(
-                                (someItem) =>
-                                    someItem.treatment_id === record._id
-                            )
-                        ) {
-                            setSelectedTreatments([
-                                ...SelectedTreatments,
-                                {
-                                    amount: Number(record.amount),
-                                    procedure_name: record.procedure_name,
-                                    treatment_id: record._id,
-                                },
-                            ]);
-                        }
-                        if (
-                            SelectedTreatments.some(
-                                (someItem) =>
-                                    someItem.treatment_id === record._id
-                            )
-                        ) {
-                            const fitler = SelectedTreatments.filter(
-                                (filter) => filter.treatment_id !== record._id
-                            );
-                            setSelectedTreatments(fitler);
-                        }
-                    }}
-                />
+                </>
             ),
             width: "10rem",
             align: "center",
@@ -128,38 +135,43 @@ export const BillingColumns = (
             title: "",
             dataIndex: "checkbox",
             render: (_: any, record: Invoice) => (
-                <Checkbox
-                    checked={SelectedBilling.some(
-                        (someItem) => someItem.id === record._id
+                <>
+                    {record.status !== "void" && record.status !== "paid" && (
+                        <Checkbox
+                            checked={SelectedBilling.some(
+                                (someItem) => someItem.id === record._id
+                            )}
+                            onChange={(e) => {
+                                // Handle checkbox change event here
+                                if (
+                                    !SelectedBilling.some(
+                                        (someItem) => someItem.id === record._id
+                                    )
+                                ) {
+                                    setSelectedBilling([
+                                        ...SelectedBilling,
+                                        {
+                                            id: record._id,
+                                            balance: record.balance,
+                                            procedure_name:
+                                                record.procedure_name,
+                                        },
+                                    ]);
+                                }
+                                if (
+                                    SelectedBilling.some(
+                                        (someItem) => someItem.id === record._id
+                                    )
+                                ) {
+                                    const fitler = SelectedBilling.filter(
+                                        (filter) => filter.id !== record._id
+                                    );
+                                    setSelectedBilling(fitler);
+                                }
+                            }}
+                        />
                     )}
-                    onChange={(e) => {
-                        // Handle checkbox change event here
-                        if (
-                            !SelectedBilling.some(
-                                (someItem) => someItem.id === record._id
-                            )
-                        ) {
-                            setSelectedBilling([
-                                ...SelectedBilling,
-                                {
-                                    id: record._id,
-                                    balance: record.balance,
-                                    procedure_name: record.procedure_name,
-                                },
-                            ]);
-                        }
-                        if (
-                            SelectedBilling.some(
-                                (someItem) => someItem.id === record._id
-                            )
-                        ) {
-                            const fitler = SelectedBilling.filter(
-                                (filter) => filter.id !== record._id
-                            );
-                            setSelectedBilling(fitler);
-                        }
-                    }}
-                />
+                </>
             ),
             width: "10rem",
             align: "center",
@@ -189,12 +201,22 @@ export const BillingColumns = (
             dataIndex: "total",
             width: "10rem",
             align: "center",
+            render: (amount: number) => {
+                if (amount) {
+                    return `₱${numberSeparator(amount, 0)}`;
+                }
+            },
         },
         {
             title: "Remaining Balance",
             dataIndex: "balance",
             width: "10rem",
             align: "center",
+            render: (amount: number) => {
+                if (amount) {
+                    return `₱${numberSeparator(amount, 0)}`;
+                }
+            },
         },
         {
             title: "Status",
@@ -251,6 +273,11 @@ export const PaymentColumns = () => {
             dataIndex: "payment_amount",
             width: "10rem",
             align: "center",
+            render: (amount: number) => {
+                if (amount) {
+                    return `₱${numberSeparator(amount, 0)}`;
+                }
+            },
         },
     ];
     return columns;

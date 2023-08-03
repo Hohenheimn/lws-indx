@@ -177,13 +177,13 @@ export function Annotate({
             annotations.concat({
                 key: annotations.length + 1,
                 geometry,
+                procedure_id: id,
                 data: {
                     ...data,
                     title,
                     description,
                     color,
                     icon,
-                    procedure_id: id,
                 },
             })
         );
@@ -194,13 +194,13 @@ export function Annotate({
                 annotations.concat({
                     key: annotations.length + 1,
                     geometry,
+                    procedure_id: id,
                     data: {
                         ...data,
                         title,
                         description,
                         color,
                         icon,
-                        procedure_id: id,
                     },
                 })
             );

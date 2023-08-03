@@ -106,6 +106,9 @@ export default function PerCertainAmountModal({
                 queryClient.invalidateQueries({ queryKey: ["invoice"] });
                 queryClient.invalidateQueries({ queryKey: ["invoice-total"] });
                 queryClient.invalidateQueries({ queryKey: ["credit"] });
+                queryClient.invalidateQueries({
+                    queryKey: ["treatment-record"],
+                });
             },
             onMutate: async (newData) => {
                 await queryClient.cancelQueries({

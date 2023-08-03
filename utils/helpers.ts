@@ -25,11 +25,15 @@ export function statusPalette(status: string) {
 }
 export function paymentStatusPalette(status: string) {
     switch (status.toLowerCase()) {
-        case "pending" && "no payment":
+        case "pending":
+        case "no payment":
             return "text-default-text bg-slate-300";
-        case "partial payment" && "for billing":
+        case "partial payment":
+        case "for billing":
+        case "void":
             return "text-white bg-danger-300";
-        case "paid" && "billed":
+        case "paid":
+        case "billed":
             return "text-white bg-green-400";
         default:
             return "text-default-text bg-transparent";

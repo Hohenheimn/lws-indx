@@ -207,6 +207,9 @@ export default function ChartingModal({
                 setTeethLowerRight(Teeth.LowerRight);
                 setTeethUpperLeft(Teeth.UpperLeft);
                 setTeethUpperRight(Teeth.UpperRight);
+                queryClient.invalidateQueries({
+                    queryKey: ["treatment-record"],
+                });
                 onClose();
             },
             onMutate: async (newData) => {
@@ -262,6 +265,9 @@ export default function ChartingModal({
                 setTeethLowerRight(Teeth.LowerRight);
                 setTeethUpperLeft(Teeth.UpperLeft);
                 setTeethUpperRight(Teeth.UpperRight);
+                queryClient.invalidateQueries({
+                    queryKey: ["treatment-record"],
+                });
                 onClose();
             },
             onMutate: async (newData) => {
@@ -451,6 +457,48 @@ export default function ChartingModal({
                                         Periodontal
                                     </Select.Option>
                                 </Select>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Branch"
+                                name="branch_id"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "This is required",
+                                    },
+                                ]}
+                                required={false}
+                            >
+                                <InfiniteSelect
+                                    placeholder="Select Clinic"
+                                    id="branch_id"
+                                    api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
+                                    queryKey={["branch"]}
+                                    displayValueKey="name"
+                                    returnValueKey="_id"
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Doctor"
+                                name="doctor_id"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "This is required",
+                                    },
+                                ]}
+                                required={false}
+                            >
+                                <InfiniteSelect
+                                    placeholder="Select Denstist"
+                                    id="doctor_id"
+                                    api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
+                                    queryKey={["doctor"]}
+                                    displayValueKey="name"
+                                    returnValueKey="_id"
+                                />
                             </Form.Item>
                         </div>
                         <hr className="border-t-2" />

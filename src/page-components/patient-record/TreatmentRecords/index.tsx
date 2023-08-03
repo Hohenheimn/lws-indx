@@ -9,14 +9,11 @@ import { twMerge } from "tailwind-merge";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
 import Input from "@components/Input";
-import { Select } from "@components/Select";
-import { fadeInUp } from "@src/components/animation/animation";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import { deleteData, fetchData } from "@utilities/api";
-import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
-import { NextPageProps } from "@utilities/types/NextPageProps";
+import { fetchData } from "@utilities/api";
+import { numberSeparator } from "@utilities/helpers";
 
 import AddTreatmentRecordModal from "./AddTreatmentRecordModal";
 import { BillingColumns, PaymentColumns, RecordColumns } from "./Columns";
