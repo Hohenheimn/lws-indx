@@ -90,10 +90,18 @@ export default function ChartingModal({
                 LowerRight = [...LowerRight, getFromFunc];
             }
         });
-        ProcedureSetDefaultValue(UpperLeft, setTeethUpperLeft);
-        ProcedureSetDefaultValue(UpperRight, setTeethUpperRight);
-        ProcedureSetDefaultValue(LowerLeft, setTeethLowerLeft);
-        ProcedureSetDefaultValue(LowerRight, setTeethLowerRight);
+        ProcedureSetDefaultValue(UpperLeft, setTeethUpperLeft, TeethUpperLeft);
+        ProcedureSetDefaultValue(
+            UpperRight,
+            setTeethUpperRight,
+            TeethUpperRight
+        );
+        ProcedureSetDefaultValue(LowerLeft, setTeethLowerLeft, TeethLowerLeft);
+        ProcedureSetDefaultValue(
+            LowerRight,
+            setTeethLowerRight,
+            TeethLowerRight
+        );
     }, [defaultAnnotation]);
 
     const AnnotationGetValues = (rowPosition: any, arrayToLoop: any) => {
@@ -109,10 +117,11 @@ export default function ChartingModal({
 
     const ProcedureSetDefaultValue = (
         arrayValues: any[],
-        setArrayValues: Function
+        setArrayValues: Function,
+        teeth: any
     ) => {
-        const Filter = TeethUpperRight.filter(
-            (filterItem) =>
+        const Filter = teeth.filter(
+            (filterItem: any) =>
                 !arrayValues.some(
                     (someItem) => someItem.tooth_no === filterItem.tooth_no
                 )
@@ -134,11 +143,17 @@ export default function ChartingModal({
         });
     }, [show]);
 
-    const UpdateTeeth = (array: any, tooth_no: number, annotations: any) => {
+    const UpdateTeeth = (
+        array: any,
+        tooth_no: number,
+        annotations: any,
+        position: string
+    ) => {
         const UpdatedTooth = array.map((itemMap: any) => {
             if (itemMap.tooth_no === tooth_no) {
                 return {
-                    ...itemMap,
+                    tooth_position: position,
+                    tooth_no: tooth_no,
                     annotations: annotations,
                 };
             }
@@ -156,7 +171,8 @@ export default function ChartingModal({
             const UpdatedTooth = UpdateTeeth(
                 TeethUpperLeft,
                 tooth_no,
-                annotations
+                annotations,
+                "upper_left"
             );
             setTeethUpperLeft(UpdatedTooth);
         }
@@ -164,7 +180,8 @@ export default function ChartingModal({
             const UpdatedTooth = UpdateTeeth(
                 TeethUpperRight,
                 tooth_no,
-                annotations
+                annotations,
+                "upper_right"
             );
             setTeethUpperRight(UpdatedTooth);
         }
@@ -172,7 +189,8 @@ export default function ChartingModal({
             const UpdatedTooth = UpdateTeeth(
                 TeethLowerLeft,
                 tooth_no,
-                annotations
+                annotations,
+                "lower_left"
             );
             setTeethLowerLeft(UpdatedTooth);
         }
@@ -180,7 +198,8 @@ export default function ChartingModal({
             const UpdatedTooth = UpdateTeeth(
                 TeethLowerRight,
                 tooth_no,
-                annotations
+                annotations,
+                "lower_right"
             );
             setTeethLowerRight(UpdatedTooth);
         }
@@ -303,7 +322,12 @@ export default function ChartingModal({
 
     return (
         <>
-            <Modal show={show} onClose={onClose} {...rest}>
+            <Modal
+                show={show}
+                onClose={() => {}}
+                //  onClose={onClose}
+                {...rest}
+            >
                 <div className="space-y-8">
                     <div className="flex items-center justify-between">
                         <div className="font-bold text-3xl">New Chart</div>
@@ -350,12 +374,12 @@ export default function ChartingModal({
 
                             values.procedures = procedures;
 
-                            if (!id) {
-                                addChart(values);
-                            } else {
-                                values.id = id;
-                                editChart(values);
-                            }
+                            // if (!id) {
+                            //     addChart(values);
+                            // } else {
+                            //     values.id = id;
+                            //     editChart(values);
+                            // }
                         }}
                         onFinishFailed={(data) => {
                             scroller.scrollTo(
@@ -936,23 +960,23 @@ export default function ChartingModal({
                         </div>
                     </Form>
                 </div>
-                <AnnotationModal
-                    show={showAnnotationModal}
-                    onClose={() => {
-                        setShowAnnotationModal(false);
-                        // console.log("zxcv");
-                        // setIsChartingModalOpen(false);
-                        // ChartingForm.resetFields();
-                    }}
-                    ChartView={ChartView}
-                    className="w-full"
-                    SelectedAnnotate={SelectedAnnotate}
-                    UpdateToothsHandler={UpdateToothsHandler}
-                    id="annotation-modal"
-                    // patientRecord={patientRecord}
-                    // form={ChartingForm}
-                />
             </Modal>
+            <AnnotationModal
+                show={showAnnotationModal}
+                onClose={() => {
+                    setShowAnnotationModal(false);
+                    // console.log("zxcv");
+                    // setIsChartingModalOpen(false);
+                    // ChartingForm.resetFields();
+                }}
+                ChartView={ChartView}
+                className="w-full"
+                SelectedAnnotate={SelectedAnnotate}
+                UpdateToothsHandler={UpdateToothsHandler}
+                id="annotation-modal"
+                // patientRecord={patientRecord}
+                // form={ChartingForm}
+            />
         </>
     );
 }

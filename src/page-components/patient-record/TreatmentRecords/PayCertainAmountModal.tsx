@@ -295,7 +295,7 @@ export default function PerCertainAmountModal({
                             </li>
                             <li className="  space-y-4">
                                 <p className=" text-end">
-                                    Remaining Credit Score:{" "}
+                                    Remaining Credit:{" "}
                                     {Credit?.amount !== undefined &&
                                         numberSeparator(Credit?.amount, 0)}
                                 </p>

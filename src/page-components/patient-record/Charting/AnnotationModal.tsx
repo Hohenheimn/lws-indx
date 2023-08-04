@@ -20,11 +20,13 @@ export default function AnnotationModal({
 }: any) {
     const [page, setPage] = useState(1);
 
+    const [search, setSearch] = useState("");
+
     let { data: proceduresList, isLoading: procedureListLoading } = useQuery(
-        ["procedure-list", page],
+        ["procedure-list", page, search],
         () =>
             fetchData({
-                url: `/api/procedure?limit=9&page=${page}`,
+                url: `/api/procedure?limit=9&page=${page}&search=${search}`,
             })
     );
 
@@ -45,14 +47,9 @@ export default function AnnotationModal({
                                 : `/images/tooth-periodontal.png`
                         }
                         ProceduresData={proceduresList?.data}
+                        setSearch={setSearch}
                     />
                 </div>
-                {/* <div className="h-[25rem]">
-            <Annotate
-              // disabled={true}
-              image={`/images/tooth-standard.png`}
-            />
-          </div> */}
             </div>
         </Modal>
     );

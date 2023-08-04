@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Input } from "antd";
 import Image from "next/image";
 import { FaTooth } from "react-icons/fa";
 import { GiToothbrush, GiTooth, GiSkullSabertooth } from "react-icons/gi";
@@ -23,6 +24,7 @@ interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
         procedure_name: string;
         _id: string;
     }[];
+    setSearch?: Function;
 }
 
 const Shape = ({ children, geometry, style }: any) => {
@@ -143,6 +145,7 @@ export function Annotate({
     defaultValue,
     UpdateToothsHandler,
     ProceduresData,
+    setSearch,
     ...rest
 }: AnnotateProps) {
     let [annotations, setAnnotations] = React.useState<any>([]);
@@ -235,10 +238,18 @@ export function Annotate({
                         // width: "10rem",
                     }}
                 >
+                    <Input
+                        placeholder="Search Procedure"
+                        onChange={(e) => {
+                            setSearch && setSearch(e.target.value);
+                        }}
+                        className=" w-full mb-5"
+                    />
                     <div className="grid grid-cols-3 gap-4 w-80">
                         {ProceduresData?.map((itemMap, index) => (
                             <div key={index}>
                                 <Button
+                                    key={index}
                                     appearance="primary"
                                     onClick={() => {
                                         onSubmit({

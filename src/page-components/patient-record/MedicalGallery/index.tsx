@@ -294,7 +294,7 @@ export function MedicalGallery({ patientRecord }: any) {
                                     }
                                     className=" cursor-pointer flex justify-center items-center w-full h-full text-base text-gray-400"
                                 >
-                                    + Create Gallery
+                                    + Add
                                 </div>
                             </div>
                             {gallery_list?.map((gallery: gallery, index) => {

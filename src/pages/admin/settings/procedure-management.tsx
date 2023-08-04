@@ -16,6 +16,7 @@ import { Context } from "@utilities/context/Provider";
 import { numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+
 export function ProcedureManagement({ router }: NextPageProps) {
     const [ProcedureForm] = Form.useForm();
     const { setIsAppLoading } = React.useContext(Context);
@@ -93,10 +94,18 @@ export function ProcedureManagement({ router }: NextPageProps) {
             render: (cost: number) => `₱ ${numberSeparator(cost)}`,
         },
         {
-            title: "Color Code",
+            title: "Color",
             dataIndex: "color_code",
             width: "10rem",
             align: "center",
+            render: (color_code: string) => (
+                <div className="w-full flex justify-center">
+                    <div
+                        style={{ backgroundColor: `${color_code}` }}
+                        className={`h-4 w-4 rounded-full`}
+                    ></div>
+                </div>
+            ),
         },
     ];
 

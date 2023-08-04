@@ -248,7 +248,7 @@ export default function CreatePaymentModal({
                             values.amount = removeNumberFormatting(
                                 values.amount
                             );
-                            values.invoices = SelectedBilling.map(
+                            values.billings = SelectedBilling.map(
                                 (item: SelectedBilling) => item.id
                             );
                             values.credits = useCreditAmount;
@@ -351,12 +351,12 @@ export default function CreatePaymentModal({
                             </li>
                             <li className="  space-y-4">
                                 <p className=" text-end">
-                                    Remaining Credit Score:{" "}
+                                    Remaining Credit:{" "}
                                     {Credit?.amount !== undefined &&
                                         numberSeparator(Credit?.amount, 0)}
                                 </p>
                                 <p className=" text-end">
-                                    Use Credit Score:{" "}
+                                    Use Credit:{" "}
                                     {Credit?.amount !== undefined &&
                                         numberSeparator(useCreditAmount, 0)}
                                 </p>

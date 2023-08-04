@@ -79,7 +79,7 @@ export default function AddAndUseCredit({
                     {actionType} Credit
                 </div>
                 <p>
-                    Remaining Credit Score:{" "}
+                    Remaining Credit:{" "}
                     {numberSeparator(remainingCredit ? remainingCredit : 0, 0)}
                 </p>
                 <Form
