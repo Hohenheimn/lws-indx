@@ -17,7 +17,6 @@ import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import { getInitialValue } from "@utilities/helpers";
 
-
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
@@ -189,7 +188,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Birthdate"
                 name="birthdate"
-                className="col-span-12 lg:col-span-8"
+                className="col-span-12 lg:col-span-4"
               >
                 <DatePicker
                   getPopupContainer={(triggerNode: any) => {
@@ -216,7 +215,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 name="age"
                 rules={[{ required: true, message: "Age is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-2"
+                className="col-span-12 lg:col-span-4"
               >
                 <Input id="age" placeholder="Age" disabled={true} />
               </Form.Item>
@@ -225,7 +224,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 name="gender"
                 rules={[{ required: true, message: "Gender is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-2"
+                className="col-span-12 lg:col-span-4"
               >
                 <Select placeholder="Gender" id="gender">
                   {gender.map((gender, index) => {

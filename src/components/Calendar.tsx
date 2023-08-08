@@ -28,9 +28,13 @@ function getMonth(date: number | Date) {
 
 interface CalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   onChange?: any;
+  ScheduledDates: string[];
 }
 
-export default function Calendar({ onChange }: CalendarProps) {
+export default function Calendar({ onChange, ScheduledDates }: CalendarProps) {
+  const ScheduledDatesFNS = ScheduledDates.map((date: string) =>
+    parse(date, "yyyy-dd-MM", new Date())
+  );
   let today = new Date();
   let [monthModalIsOpen, setMonthModalIsOpen] = React.useState(false);
   let [yearModalIsOpen, setYearModalIsOpen] = React.useState(false);
@@ -108,19 +112,22 @@ export default function Calendar({ onChange }: CalendarProps) {
             <div>Fr</div>
             <div>Sa</div>
           </div>
-          <div className="grid grid-cols-7 mt-2 text-sm">
+          <div className="grid grid-cols-7 mt-2 text-sm space-x-1 space-y-1">
             {days.map((day, dayIdx) => {
               return (
                 <div
                   key={day.toString()}
-                  className={twMerge(
-                    "bg-transparent border border-transparent rounded-full hover:bg-primary-50 transition flex justify-center items-center h-14 w-14 font-medium",
+                  className={`${twMerge(
+                    " border border-transparent rounded-full hover:bg-primary-50 transition flex justify-center items-center h-14 w-14 font-medium",
                     dayIdx === 0 && colStartClasses[getDay(day)],
                     isToday(day) &&
                       "[&>.date-wrapper]:text-secondary-500 font-bold",
                     isToday(day) && !selectedDate && "date-today",
                     isEqual(selectedDate, day) && "date-in-range-first"
                   )}
+                  ${ScheduledDates.includes(format(day, "yyyy-MM-dd")) &&
+                    "bg-primary-50 shadow-2xl"}
+                  `}
                 >
                   <div
                     className={twMerge(
