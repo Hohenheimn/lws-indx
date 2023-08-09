@@ -16,7 +16,6 @@ import { deleteData, fetchData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-
 export function BranchManagement({ router }: NextPageProps) {
   const [BranchForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);

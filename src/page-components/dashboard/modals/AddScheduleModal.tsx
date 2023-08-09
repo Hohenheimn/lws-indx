@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DatePicker, TimePicker, notification } from "antd";
 import Form from "antd/lib/form";
 import TextArea from "antd/lib/input/TextArea";
@@ -45,13 +45,13 @@ export default function AddScheduleModal({
 
   let [selectedStartTime, setSelectedStartTime] = React.useState<any>(null);
 
-  const [startDate, setStartDate] = useState<any>();
-
-  const [endDate, setEndDate] = useState<any>();
+  // let { data: schedules } = useQuery(["schedule-dates"], () =>
+  //   fetchData({
+  //     url: `/api/schedule`,
+  //   })
+  // );
 
   React.useEffect(() => {
-    // setStartDate(moment(form?.getFieldValue("start_time")))
-    // setEndDate(moment(form?.getFieldValue("end_time")))
     moment("12:00", "HH:mm");
     form.setFieldsValue({
       ...form,
@@ -82,6 +82,10 @@ export default function AddScheduleModal({
       enabled: selectedDoctor && selectedDate ? true : false,
     }
   );
+
+  useEffect(() => {
+    console.log(doctorSchedule);
+  }, [doctorSchedule]);
 
   function range(start: number, end: number, precise?: boolean) {
     const result = [];
@@ -533,7 +537,7 @@ export default function AddScheduleModal({
                       form,
                       initialValue: "doctor_id",
                     }}
-                    queryKey={["doctor"]}
+                    queryKey={["account"]}
                     displayValueKey="name"
                     returnValueKey="_id"
                     onChange={(e) => {

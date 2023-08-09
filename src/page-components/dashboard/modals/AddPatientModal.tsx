@@ -20,7 +20,6 @@ import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import { getBase64, getInitialValue } from "@utilities/helpers";
 
-
 export default function AddPatientModal({
   show,
   onClose,

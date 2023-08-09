@@ -17,7 +17,6 @@ import { deleteData, fetchData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-
 const columns: any = [
   {
     title: "",

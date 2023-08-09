@@ -9,7 +9,6 @@ import Card from "@components/Card";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
 
-
 export function PersonalRecord({ patientRecord }: any) {
   let [search, setSearch] = React.useState("");
   return (

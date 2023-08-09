@@ -61,4 +61,21 @@
   }
 }
 
+@media print {
+  .hidePrint {
+    @apply hidden;
+  }
+  .printThis {
+    margin: 0 0;
+  }
+  @page {
+    margin: 20px 0;
+  }
+  @page :blank {
+    @top-center {
+      content: "This page is intentionally left blank.";
+    }
+  }
+}
+
 @import "./antd.scss";

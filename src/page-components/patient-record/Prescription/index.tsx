@@ -15,7 +15,6 @@ import { NextPageProps } from "@utilities/types/NextPageProps";
 
 import AddPrescriptionModal from "./AddPrescriptionModal";
 
-
 const columns: any = [
   {
     title: "Prescription",

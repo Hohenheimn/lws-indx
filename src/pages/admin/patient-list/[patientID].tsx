@@ -11,6 +11,7 @@ import { PageContainer } from "@components/animation";
 import Avatar from "@components/Avatar";
 import Card from "@components/Card";
 import patientRecord from "@pagecomponents/patient-record";
+import DeleteButton from "@src/components/DeleteButton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -91,15 +92,8 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
         {!loadingPatient ? (
           <>
             <h3>Patient Record</h3>
-            <div className=" w-full flex justify-end">
-              <p
-                onClick={() => deletePatient()}
-                className="cursor-pointer flex space-x-2 text-primary-500 border-b border-primary-500 pb-1"
-              >
-                <BsTrash className=" text-lg" />
-                Delete Patient
-              </p>
-            </div>
+
+            <DeleteButton deleteHandler={() => deletePatient()} />
             <Card className="text-base">
               <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                 <div className="flex flex-col justify-center items-center gap-4">

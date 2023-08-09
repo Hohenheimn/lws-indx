@@ -17,7 +17,6 @@ import { NextPageProps } from "@utilities/types/NextPageProps";
 
 import AddPrescriptionManagementModal from "./modals/AddPrescriptionModal";
 
-
 export function PrescriptionTemplate() {
   const router = useRouter();
   const [PrescriptionForm] = Form.useForm();

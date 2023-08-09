@@ -4,6 +4,7 @@ import Form from "antd/lib/form";
 import "chart.js/auto";
 import { format, parseISO } from "date-fns";
 import moment from "moment";
+import { parseCookies } from "nookies";
 import {
   AiOutlineSearch,
   AiOutlineCalendar,
@@ -34,7 +35,14 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deleteData, fetchData, postData } from "@utilities/api";
+import {
+  deleteData,
+  fetchData,
+  postData,
+  postDataNoFormData,
+  updateData,
+} from "@utilities/api";
+
 import { Context } from "@utilities/context/Provider";
 
 import scheduleType from "@utilities/global-data/scheduleType";
@@ -101,42 +109,6 @@ export function Dashboard({}: NextPageProps) {
     },
   });
 
-  const { mutate: deleteSchedule }: any = useMutation(
-    (id: number) =>
-      deleteData({
-        url: `/api/schedule/${id}`,
-        options: {
-          isLoading: (show: boolean) => setIsAppLoading(show),
-        },
-      }),
-    {
-      onSuccess: async (res) => {
-        notification.success({
-          message: "Schedule Deleted",
-          description: "Schedule has been deleted",
-        });
-      },
-      onMutate: async (newData) => {
-        await queryClient.cancelQueries({ queryKey: ["schedule"] });
-        const previousValues = queryClient.getQueryData(["schedule"]);
-
-        return { previousValues };
-      },
-      onError: (err: any, _, context: any) => {
-        notification.warning({
-          message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
-        });
-        queryClient.setQueryData(["schedule"], context.previousValues);
-      },
-      onSettled: async () => {
-        queryClient.invalidateQueries({ queryKey: ["schedule"] });
-      },
-    }
-  );
-
   const flattenScheduleList = scheduleList?.pages
     ? scheduleList?.pages?.flatMap((page) => [...page.data])
     : [];
@@ -158,11 +130,11 @@ export function Dashboard({}: NextPageProps) {
   ]);
 
   const { mutate: updateStatus } = useMutation(
-    (payload: any) => {
-      const payloadStatus = { status: payload.status };
-      return postData({
-        url: `/api/schedule/${payload.id}?_method=PUT`,
-        payloadStatus,
+    (passpayload: any) => {
+      const payload = { status: passpayload.status };
+      return postDataNoFormData({
+        url: `/api/schedule/status/${passpayload.id}?_method=PUT`,
+        payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
@@ -189,10 +161,11 @@ export function Dashboard({}: NextPageProps) {
   );
 
   const UpdateStatushandler = (status: string, id: string) => {
-    updateStatus({
+    const Payload = {
       status: status,
       id: id,
-    });
+    };
+    updateStatus(Payload);
   };
 
   return (

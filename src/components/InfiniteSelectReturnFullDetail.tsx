@@ -18,10 +18,9 @@ interface InfiniteSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   CustomizedOption?: any;
   disabled?: boolean;
   noData?: string;
-  setSelectedDetail?: Function;
 }
 
-export function InfiniteSelect({
+export function InfiniteSelectReturnFullDetail({
   children,
   className,
   queryKey,
@@ -30,7 +29,6 @@ export function InfiniteSelect({
   api,
   CustomizedOption,
   getInitialValue,
-  setSelectedDetail,
   ...rest
 }: InfiniteSelectProps) {
   let [search, setSearch] = React.useState("");
@@ -128,7 +126,6 @@ export function InfiniteSelect({
               displayValue={props[displayValueKey]}
               value={props[returnValueKey]}
               key={index}
-              onClick={() => setSelectedDetail && setSelectedDetail(props)}
             >
               {CustomizedOption ? (
                 <CustomizedOption data={props} />

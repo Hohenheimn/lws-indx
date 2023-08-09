@@ -11,7 +11,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
-
 export function DentalHistory({ patientRecord, tab }: any) {
   const queryClient = useQueryClient();
   const [DentalHistoryForm] = Form.useForm();

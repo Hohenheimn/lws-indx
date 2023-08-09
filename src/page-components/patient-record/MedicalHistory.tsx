@@ -1,20 +1,20 @@
-import { Checkbox, DatePicker, Form, Radio, notification } from "antd";
 import React from "react";
+import { Checkbox, DatePicker, Form, Radio, notification } from "antd";
+import { AnimatePresence } from "framer-motion";
+import moment from "moment";
+import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
 import { AnimateContainer } from "@components/animation";
+import { fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
+import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
-import { fadeIn } from "@components/animation/animation";
-import { AnimatePresence } from "framer-motion";
-import { NumericFormat } from "react-number-format";
-import { getInitialValue, slugify } from "@utilities/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Context } from "@utilities/context/Provider";
 import { fetchData, postData } from "@utilities/api";
-import { InfiniteSelect } from "@components/InfiniteSelect";
-import moment from "moment";
+import { Context } from "@utilities/context/Provider";
+import { getInitialValue, slugify } from "@utilities/helpers";
 
 let medications = [
   { label: "Aspirin, Tylenol, Motrin", name: "medications_injections_1" },

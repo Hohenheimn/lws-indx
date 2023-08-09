@@ -17,7 +17,6 @@ import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { getInitialValue } from "@utilities/helpers";
 
-
 export default function AddPrescriptionModal({
   show,
   onClose,
