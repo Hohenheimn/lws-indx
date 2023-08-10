@@ -208,7 +208,7 @@ export default function AddPrescriptionModal({
                             key={key}
                             triggerOnce={true}
                           >
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                            <div className="grid grid-cols-1 z-[99] lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
                                   className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
@@ -279,7 +279,7 @@ export default function AddPrescriptionModal({
                           </AnimateContainer>
                         );
                       })}
-                      <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
+                      <div className="border border-gray-300 p-4 pt-8 rounded-md relative z-0">
                         <div className="blur-sm grid grid-cols-1 lg:grid-cols-3 gap-4">
                           <Form.Item
                             label="Medicine"

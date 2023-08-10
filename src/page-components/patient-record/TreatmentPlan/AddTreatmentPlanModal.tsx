@@ -3,7 +3,6 @@ import { DatePicker, Form, TimePicker, notification } from "antd";
 import { Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
-import Image from "next/image";
 import { AiFillMinusCircle } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
@@ -196,11 +195,8 @@ export default function AddTreatmentPlanModal({
                 };
               }
             );
-
             values.treatment_plan_list = JSON.stringify(treatment_plan_list);
-
             let id = form.getFieldValue("_id");
-
             if (!id) {
               addTreatmentPlan(values);
             } else {

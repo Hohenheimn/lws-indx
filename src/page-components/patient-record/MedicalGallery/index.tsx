@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Form, Popover, notification } from "antd";
+import { Form, Popover, notification, Image } from "antd";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsPencilSquare, BsTrashFill } from "react-icons/bs";
@@ -264,11 +263,8 @@ export function MedicalGallery({ patientRecord }: any) {
                   <div key={index}>
                     <div
                       key={index}
-                      className=" aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300 overflow-hidden"
+                      className="  group aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300 overflow-hidden"
                     >
-                      <div className="absolute top-0 left-0 h-full w-full bg-[#12c8ce9d] z-[9] flex justify-center items-center">
-                        <h5>View</h5>
-                      </div>
                       <Popover
                         showArrow={false}
                         content={
@@ -314,13 +310,20 @@ export function MedicalGallery({ patientRecord }: any) {
                       </Popover>
 
                       <Image
+                        height={"100%"}
+                        width={"100%"}
+                        className=" object-contain"
+                        src={gallery.filename}
+                      />
+
+                      {/* <Image
                         src={gallery.filename}
                         alt="random pics"
                         fill
                         sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
                         objectFit="cover"
                         className="rounded-[inherit]"
-                      />
+                      /> */}
                     </div>
                     <AnimatePresence>
                       {SelectedEdit.id === gallery._id && (

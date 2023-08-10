@@ -1,5 +1,8 @@
 import React from "react";
-import TreatmentPlanPrintTable from "@src/components/PrintTables";
+import {
+  TreatmentPlanPrintTable,
+  PrescriptionPrintTable,
+} from "@src/components/PrintTables";
 import PrintTemplate from "@src/components/PrintTemplate";
 
 export default function Print({ patient, page, tableData }: any) {
@@ -13,6 +16,9 @@ export default function Print({ patient, page, tableData }: any) {
           <h1 className=" text-[24px] mb-[15px] capitalize">{page}</h1>
           {page === "treatment plan" && (
             <TreatmentPlanPrintTable data={tableDataRecord} />
+          )}
+          {page === "prescription" && (
+            <PrescriptionPrintTable data={tableDataRecord} />
           )}
         </PrintTemplate>
       </div>

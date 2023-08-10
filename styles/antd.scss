@@ -713,3 +713,6 @@ div.ant-popover {
     }
   }
 }
+.ant-image-preview-img-wrapper {
+  @apply flex justify-center items-center h-full;
+}

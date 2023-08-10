@@ -162,7 +162,10 @@ export function Select({
               </div>
               <Combobox.Input
                 key={open.toString()}
-                onFocus={() => {
+                // onFocus={() => {
+                //   setIsActive(true);
+                // }}
+                onClick={() => {
                   setIsActive(true);
                 }}
                 onBlur={() => {

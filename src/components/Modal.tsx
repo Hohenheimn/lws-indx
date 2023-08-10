@@ -43,7 +43,7 @@ export default function Modal({
             >
               <Dialog.Panel
                 className={twMerge(
-                  "relative transform rounded-none md:rounded-lg bg-white text-left shadow-xl border border-black print:shadow-none transition-all max-w-full p-[5%] print:p-0 h-full print:h-full md:h-auto overflow-auto",
+                  "relative transform rounded-none md:rounded-lg bg-white text-left shadow-xl print:shadow-none transition-all max-w-full p-[5%] print:p-0 h-full print:h-full md:h-auto overflow-auto",
                   className
                 )}
               >

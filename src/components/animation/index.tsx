@@ -59,7 +59,7 @@ export function AnimateContainer({
       animate={inView ? "animate" : "exit"}
       exit="exit"
       variants={variants}
-      className={twMerge(className)}
+      className={twMerge(className) + " z-[9]"}
       {...rest}
     >
       {children}

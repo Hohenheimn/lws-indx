@@ -1,8 +1,14 @@
 import React from "react";
 import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
 import moment from "moment";
-import { AiOutlineSearch } from "react-icons/ai";
-import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
+import Link from "next/link";
+import { AiOutlinePrinter, AiOutlineSearch } from "react-icons/ai";
+import {
+  BsEyeFill,
+  BsPencilSquare,
+  BsTrash,
+  BsTrashFill,
+} from "react-icons/bs";
 import { scroller } from "react-scroll";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
@@ -11,35 +17,77 @@ import { Select } from "@components/Select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
+
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
 import AddPrescriptionModal from "./AddPrescriptionModal";
-
-const columns: any = [
-  {
-    title: "Prescription",
-    dataIndex: "name",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Date Created",
-    dataIndex: "created_at",
-    width: "10rem",
-    align: "center",
-    render: (created_at: Date) => moment(created_at).format("MMMM DD, YYYY"),
-  },
-];
 
 export function Prescription({ patientRecord }: any) {
   const [PrescriptionForm] = Form.useForm();
   const queryClient = useQueryClient();
   let [page, setPage] = React.useState(1);
   let [search, setSearch] = React.useState("");
-
   let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = React.useState(
     false
   );
+
+  const SelectedRowHandler = (record: any) => {
+    PrescriptionForm.setFieldsValue({
+      ...record,
+      _id: record._id,
+      created_at: moment(record.created_at).isValid()
+        ? moment(record.created_at)
+        : undefined,
+    });
+    setIsPrescriptionModalOpen(true);
+  };
+
+  const columns: any = [
+    {
+      title: "Prescription",
+      dataIndex: "name",
+      width: "10rem",
+      align: "center",
+      render: (name: any, record: any) => (
+        <div onClick={() => SelectedRowHandler(record)}>{name}</div>
+      ),
+    },
+    {
+      title: "Date Created",
+      dataIndex: "created_at",
+      width: "10rem",
+      align: "center",
+      render: (created_at: Date, record: any) => (
+        <div onClick={() => SelectedRowHandler(record)}>
+          {moment(created_at).format("MMMM DD, YYYY")}
+        </div>
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      width: "5rem",
+      align: "center",
+      render: (_: any, record: any) => {
+        return (
+          <div className="w-full flex justify-center space-x-4">
+            <BsTrash
+              className=" text-xl text-gray-400"
+              onClick={() => deletePrescription(record._id)}
+            />
+            <Link
+              href={`/admin/print?page=prescription&patient=${JSON.stringify(
+                patientRecord
+              )}&tableData=${JSON.stringify(record)}`}
+              target="_blank"
+            >
+              <AiOutlinePrinter className=" text-xl text-gray-400" />
+            </Link>
+          </div>
+        );
+      },
+    },
+  ];
 
   let { data: prescription, isLoading: prescriptionIsLoading } = useQuery(
     ["prescription", page, search],
@@ -48,8 +96,6 @@ export function Prescription({ patientRecord }: any) {
         url: `/api/patient/prescription/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
       })
   );
-
-  console.log(prescription);
 
   const { mutate: deletePrescription }: any = useMutation(
     (treatment_plan_id: number) =>
@@ -147,57 +193,7 @@ export function Prescription({ patientRecord }: any) {
             },
             body: {
               row: ({ ...rest }: any) => {
-                let selectedRow = prescription?.data?.find(
-                  ({ _id }: any) => _id === rest["data-row-key"]
-                );
-
-                return (
-                  <Popover
-                    placement="bottom"
-                    showArrow={false}
-                    content={
-                      <div className="grid grid-cols-1 gap-2">
-                        <Button
-                          appearance="link"
-                          className="text-casper-500 p-2"
-                          onClick={() => {
-                            PrescriptionForm.setFieldsValue({
-                              ...selectedRow,
-                              created_at: moment(
-                                selectedRow.created_at
-                              ).isValid()
-                                ? moment(selectedRow.created_at)
-                                : undefined,
-                              _id: selectedRow._id,
-                            });
-
-                            setIsPrescriptionModalOpen(true);
-                          }}
-                        >
-                          <div className="flex items-center gap-2">
-                            <BsPencilSquare className="text-base" />
-                            <div>Edit</div>
-                          </div>
-                        </Button>
-                        <Button
-                          appearance="link"
-                          className="text-casper-500 p-2"
-                          onClick={() =>
-                            deletePrescription(rest["data-row-key"])
-                          }
-                        >
-                          <div className="flex items-center gap-2">
-                            <BsTrashFill className="text-base" />
-                            <div>Delete</div>
-                          </div>
-                        </Button>
-                      </div>
-                    }
-                    trigger="click"
-                  >
-                    <tr {...rest} />
-                  </Popover>
-                );
+                return <tr {...rest} />;
               },
             },
           }}

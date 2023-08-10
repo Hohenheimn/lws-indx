@@ -136,14 +136,18 @@ export function ApplicationSettings({}: NextPageProps) {
               </Form.Item>
             </div>
           </div>
+
           <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
-            <div className="basis-full sm:basis-[35%]">
-              <h5>Value Added Tax (VAT) Default Percentage</h5>
+            <div className="basis-full sm:basis-[35%] space-y-4">
+              <h5>SMS Appointment Reminder</h5>
+              <div className="text-base">
+                Sends SMS reminder to patients who scheduled an appointment
+              </div>
             </div>
             <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
               <Form.Item
                 label=""
-                name="VAT_default_percentage"
+                name="sms_appointment_reminder"
                 className="w-full"
                 rules={[
                   {
@@ -153,44 +157,18 @@ export function ApplicationSettings({}: NextPageProps) {
                 ]}
                 required={false}
               >
-                <Input
-                  id="VAT_default_percentage"
-                  placeholder="VAT Default Percentage"
-                />
-              </Form.Item>
-            </div>
-          </div>
-          <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
-            <div className="basis-full sm:basis-[35%]">
-              <h5>Dentist Chart Notation</h5>
-            </div>
-            <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
-              <Form.Item
-                label=""
-                name="dentist_chart_notation"
-                className="w-full"
-                rules={[
-                  {
-                    required: true,
-                    message: "This is required!",
-                  },
-                ]}
-                required={false}
-              >
-                <Select id="dentist_chart_notation">
-                  <Select.Option value="ISO System" key="ISO System">
-                    ISO System
+                <Select id="sms_appointment_reminder">
+                  <Select.Option value="Enable" key="Enable">
+                    Enable
                   </Select.Option>
-                  <Select.Option
-                    value="Universal Numbering System"
-                    key="Universal Numbering System"
-                  >
-                    Universal Numbering System
+                  <Select.Option value="Disable" key="Disable">
+                    Disable
                   </Select.Option>
                 </Select>
               </Form.Item>
             </div>
           </div>
+
           <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
             <div className="basis-full sm:basis-[35%] space-y-4">
               <h5>Email Appointment Reminder</h5>
@@ -217,6 +195,121 @@ export function ApplicationSettings({}: NextPageProps) {
                   </Select.Option>
                   <Select.Option value="Disable" key="Disable">
                     Disable
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
+            <div className="basis-full sm:basis-[35%] space-y-4">
+              <h5>SMS Birthday Reminder</h5>
+              <div className="text-base">
+                Sends SMS reminder to patients who scheduled an birthday
+              </div>
+            </div>
+            <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
+              <Form.Item
+                label=""
+                name="sms_birthday_reminder"
+                className="w-full"
+                rules={[
+                  {
+                    required: true,
+                    message: "This is required!",
+                  },
+                ]}
+                required={false}
+              >
+                <Select id="sms_birthday_reminder">
+                  <Select.Option value="Enable" key="Enable">
+                    Enable
+                  </Select.Option>
+                  <Select.Option value="Disable" key="Disable">
+                    Disable
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
+            <div className="basis-full sm:basis-[35%] space-y-4">
+              <h5>Email Birthday Reminder</h5>
+              <div className="text-base">
+                Sends Email reminder to patients who scheduled an birthday
+              </div>
+            </div>
+            <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
+              <Form.Item
+                label=""
+                name="email_birthday_reminder"
+                className="w-full"
+                rules={[
+                  {
+                    required: true,
+                    message: "This is required!",
+                  },
+                ]}
+                required={false}
+              >
+                <Select id="email_birthday_reminder">
+                  <Select.Option value="Enable" key="Enable">
+                    Enable
+                  </Select.Option>
+                  <Select.Option value="Disable" key="Disable">
+                    Disable
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </div>
+          </div>
+          <hr />
+
+          <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
+            <div className="basis-full sm:basis-[35%] space-y-4">
+              <h5>SMS Reminder Frequency</h5>
+              <div className="text-base">
+                How many day/s before sending the appointment reminder.
+              </div>
+            </div>
+            <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
+              <Form.Item
+                label=""
+                name="sms_reminder_frequency"
+                className="w-full"
+                rules={[
+                  {
+                    required: true,
+                    message: "This is required!",
+                  },
+                ]}
+                required={false}
+              >
+                <Select id="sms_reminder_frequency">
+                  <Select.Option value="1 Day Before" key="1 Day Before">
+                    1 Day Before
+                  </Select.Option>
+                  <Select.Option value="2 Days Before" key="2 Days Before">
+                    2 Days Before
+                  </Select.Option>
+                  <Select.Option value="3 Days Before" key="3 Days Before">
+                    3 Days Before
+                  </Select.Option>
+                  <Select.Option value="4 Days Before" key="4 Days Before">
+                    4 Days Before
+                  </Select.Option>
+                  <Select.Option value="5 Days Before" key="5 Days Before">
+                    5 Days Before
+                  </Select.Option>
+                  <Select.Option value="6 Days Before" key="6 Days Before">
+                    6 Days Before
+                  </Select.Option>
+                  <Select.Option value="7 Days Before" key="7 Days Before">
+                    7 Days Before
+                  </Select.Option>
+                  <Select.Option value="1 Month Before" key="1 Month Before">
+                    1 Month Before
                   </Select.Option>
                 </Select>
               </Form.Item>
@@ -271,6 +364,7 @@ export function ApplicationSettings({}: NextPageProps) {
               </Form.Item>
             </div>
           </div>
+
           <div className="flex justify-end">
             <div className="flex-auto sm:max-w-[12rem]">
               <Button appearance="primary" type="submit" className="p-3">
