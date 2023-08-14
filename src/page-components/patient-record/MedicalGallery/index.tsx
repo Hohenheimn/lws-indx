@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Popover, notification, Image } from "antd";
+import { Form, Popover, notification, Image, Pagination } from "antd";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -356,6 +356,14 @@ export function MedicalGallery({ patientRecord }: any) {
                   </div>
                 );
               })}
+            </div>
+            <div className=" flex justify-end mt-5">
+              <Pagination
+                current={page}
+                onChange={(e) => setPage(e)}
+                total={MedicalGallery?.meta?.total} // Total number of items
+                pageSize={MedicalGallery?.meta?.per_page} // Number of items per page
+              />
             </div>
           </div>
         </div>

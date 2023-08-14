@@ -38,12 +38,13 @@ export const Layout = ({
           <AnimateContainer
             variants={fadeIn}
             rootMargin="0px"
-            className="fixed h-screen w-full top-0 left-0 z-[100000] bg-black bg-opacity-80 flex justify-center items-center"
+            className="fixed h-screen w-full top-0 left-0 z-[999999999] bg-black bg-opacity-80 flex justify-center items-center"
           >
             <LoadingScreen />
           </AnimateContainer>
         )}
       </AnimatePresence>
+
       <div
         className={twMerge(
           "flex flex-col overflow-hidden flex-auto",

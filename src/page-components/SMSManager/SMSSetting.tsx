@@ -5,7 +5,11 @@ import Modal from "@components/Modal";
 import { Button } from "@src/components/Button";
 import { Select } from "@src/components/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postDataMultipleFile } from "@utilities/api";
+import {
+  postDataMultipleFile,
+  postDataNoFormData,
+  updateData,
+} from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
 export default function SMSSettings({
@@ -19,10 +23,12 @@ export default function SMSSettings({
 
   const { setIsAppLoading } = React.useContext(Context);
 
-  const { mutate: addMedicalGallery } = useMutation(
+  let id = form?.getFieldValue("_id");
+
+  const { mutate: createSMSSettings } = useMutation(
     (payload: FormData) => {
-      return postDataMultipleFile({
-        url: `/api/patient/gallery/${patientRecord?._id}`,
+      return postDataNoFormData({
+        url: `/api/sms-setting`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -32,18 +38,18 @@ export default function SMSSettings({
     {
       onSuccess: async (res) => {
         notification.success({
-          message: "Adding Gallery Success",
-          description: `Adding gallery-list Success`,
+          message: "Creating SMS Settings Success",
+          description: `Creating SMS Settings Success`,
         });
         form.resetFields();
         onClose();
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({
-          queryKey: ["medical-gallery"],
+          queryKey: ["sms-settings"],
         });
-        const previousValues = queryClient.getQueryData(["medical-gallery"]);
-        queryClient.setQueryData(["medical-gallery"], (oldData: any) =>
+        const previousValues = queryClient.getQueryData(["sms-settings"]);
+        queryClient.setQueryData(["sms-settings"], (oldData: any) =>
           oldData ? [...oldData, newData] : undefined
         );
 
@@ -56,12 +62,57 @@ export default function SMSSettings({
             err.response.data[Object.keys(err.response.data)[0]]
           }`,
         });
-        queryClient.setQueryData(["medical-gallery"], context.previousValues);
+        queryClient.setQueryData(["sms-settings"], context.previousValues);
       },
       onSettled: async () => {
         queryClient.invalidateQueries({
-          queryKey: ["medical-gallery"],
+          queryKey: ["sms-settings"],
         });
+      },
+    }
+  );
+
+  const { mutate: editSMSSettings } = useMutation(
+    (payload: any) => {
+      return updateData({
+        url: `/api/sms-setting/${id}`,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "SMS Settings Updated!",
+          description: `SMS Settings Updated!`,
+        });
+        form.resetFields();
+        onClose();
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({
+          queryKey: ["sms-settings"],
+        });
+        const previousValues = queryClient.getQueryData(["sms-settings"]);
+        queryClient.setQueryData(["sms-settings"], (oldData: any) =>
+          oldData ? [...oldData, newData] : undefined
+        );
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["sms-settings"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["sms-settings"] });
       },
     }
   );
@@ -76,7 +127,11 @@ export default function SMSSettings({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            console.log(values);
+            if (!id) {
+              createSMSSettings(values);
+            } else {
+              editSMSSettings(values);
+            }
           }}
           onFinishFailed={(data) => {
             scroller.scrollTo(
@@ -102,7 +157,7 @@ export default function SMSSettings({
               </div>
               <div>
                 <Form.Item
-                  name="appointer_reminder"
+                  name="sms_appointment_reminder"
                   rules={[
                     {
                       required: true,
@@ -111,7 +166,7 @@ export default function SMSSettings({
                   ]}
                   required={false}
                 >
-                  <Select id="appointer_reminder">
+                  <Select id="sms_appointment_reminder">
                     <Select.Option value={"Enable"}>Enable</Select.Option>
                     <Select.Option value={"Disable"}>Disable</Select.Option>
                   </Select>
@@ -127,7 +182,7 @@ export default function SMSSettings({
               </div>
               <div>
                 <Form.Item
-                  name="birthday_reminder"
+                  name="sms_birthday_reminder"
                   rules={[
                     {
                       required: true,
@@ -136,7 +191,7 @@ export default function SMSSettings({
                   ]}
                   required={false}
                 >
-                  <Select id="appointer_reminder">
+                  <Select id="sms_birthday_reminder">
                     <Select.Option value={"Enable"}>Enable</Select.Option>
                     <Select.Option value={"Disable"}>Disable</Select.Option>
                   </Select>
@@ -152,7 +207,7 @@ export default function SMSSettings({
               </div>
               <div>
                 <Form.Item
-                  name="reminder_frequency"
+                  name="sms_reminder_frequency"
                   rules={[
                     {
                       required: true,
@@ -161,7 +216,10 @@ export default function SMSSettings({
                   ]}
                   required={false}
                 >
-                  <Select id="reminder_frequency">
+                  <Select id="sms_reminder_frequency">
+                    <Select.Option value={"1 Day Before"}>
+                      1 Day Before
+                    </Select.Option>
                     <Select.Option value={"2 Days Before"}>
                       2 Days Before
                     </Select.Option>

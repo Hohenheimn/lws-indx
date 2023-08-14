@@ -1,10 +1,12 @@
-import React from "react";
-import { Table } from "antd";
+import React, { useState } from "react";
+import { DatePicker, Table } from "antd";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
 import Input from "@components/Input";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
 
 let fakeData = [
   {
@@ -59,9 +61,33 @@ const columns: any = [
     align: "center",
   },
 ];
+const { RangePicker } = DatePicker;
 
 export function ChangeHistory({ patientRecord }: any) {
+  const [dateRange, setDateRange] = useState({
+    from: "",
+    to: "",
+  });
+
   let [search, setSearch] = React.useState("");
+
+  const handleDateChange = (dates: any, dateStrings: any) => {
+    setDateRange({
+      from: dateStrings[0],
+      to: dateStrings[1],
+    });
+  };
+
+  const [page, setPage] = useState(1);
+
+  let { data: changeHistory, isLoading: changeHistoryLoading } = useQuery(
+    ["change-history", page, search, patientRecord._id],
+    () =>
+      fetchData({
+        url: `/api/change-history/${patientRecord._id}?limit=5&page=${page}&search=${search}&date_from=${dateRange.from}&date_to=${dateRange.to}`,
+      })
+  );
+
   return (
     <Card className="flex-auto p-0">
       <div className="space-y-8 h-full flex flex-col">
@@ -79,9 +105,7 @@ export function ChangeHistory({ patientRecord }: any) {
               />
             </div>
             <div>
-              <Button className="p-3 max-w-xs" appearance="primary">
-                Create Prescription
-              </Button>
+              <RangePicker onChange={handleDateChange} format="YYYY-MM-DD" />
             </div>
           </div>
         </div>
@@ -89,13 +113,15 @@ export function ChangeHistory({ patientRecord }: any) {
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={fakeData}
+            dataSource={changeHistory?.data}
             showHeader={true}
             tableLayout="fixed"
+            loading={changeHistoryLoading}
             pagination={{
               pageSize: 5,
               hideOnSinglePage: true,
               showSizeChanger: false,
+              onChange: (page) => setPage(page),
             }}
             className="[&.ant-table]:!rounded-none"
           />

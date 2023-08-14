@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DatePicker, Form, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
@@ -27,6 +27,16 @@ export default function AddPrescriptionModal({
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
 
+  const [
+    isPrescriptionTemplateDetail,
+    setPrescriptionTemplateDetail,
+  ] = useState<any>(undefined);
+
+  useEffect(() => {
+    console.log(isPrescriptionTemplateDetail?.medicines);
+    form.setFieldValue("medicines", isPrescriptionTemplateDetail?.medicines);
+  }, [isPrescriptionTemplateDetail]);
+
   const { mutate: addPrescription } = useMutation(
     (payload: any) => {
       return postData({
@@ -45,6 +55,7 @@ export default function AddPrescriptionModal({
         });
         form.resetFields();
         onClose();
+        setPrescriptionTemplateDetail(undefined);
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: ["prescription"] });
@@ -88,6 +99,7 @@ export default function AddPrescriptionModal({
         });
         form.resetFields();
         onClose();
+        setPrescriptionTemplateDetail(undefined);
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: ["prescription"] });
@@ -114,7 +126,14 @@ export default function AddPrescriptionModal({
   );
 
   return (
-    <Modal show={show} onClose={onClose} {...rest}>
+    <Modal
+      show={show}
+      onClose={() => {
+        onClose();
+        setPrescriptionTemplateDetail(undefined);
+      }}
+      {...rest}
+    >
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div className="font-bold text-3xl">Create Prescription Template</div>
@@ -172,6 +191,7 @@ export default function AddPrescriptionModal({
                 queryKey={["prescription_id"]}
                 displayValueKey="name"
                 returnValueKey="_id"
+                setSelectedDetail={setPrescriptionTemplateDetail}
               />
             </Form.Item>
             <Form.Item
@@ -344,7 +364,10 @@ export default function AddPrescriptionModal({
             <Button
               appearance="link"
               className="p-4 bg-transparent border-none text-casper-500 font-semibold"
-              onClick={() => onClose()}
+              onClick={() => {
+                onClose();
+                setPrescriptionTemplateDetail(undefined);
+              }}
             >
               Cancel
             </Button>

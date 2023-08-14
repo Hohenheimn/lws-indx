@@ -9,16 +9,11 @@ import {
   BsTrash,
   BsTrashFill,
 } from "react-icons/bs";
-import { scroller } from "react-scroll";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
 import Input from "@components/Input";
-import { Select } from "@components/Select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
-import { numberSeparator } from "@utilities/helpers";
-
-import { NextPageProps } from "@utilities/types/NextPageProps";
 
 import AddPrescriptionModal from "./AddPrescriptionModal";
 
@@ -44,8 +39,8 @@ export function Prescription({ patientRecord }: any) {
 
   const columns: any = [
     {
-      title: "Prescription",
-      dataIndex: "name",
+      title: "Prescription Template",
+      dataIndex: "prescription_name",
       width: "10rem",
       align: "center",
       render: (name: any, record: any) => (

@@ -19,7 +19,7 @@ export function TreatmentPlanPrintTable({ data }: Props) {
         </thead>
         <tbody>
           {data?.treatment_plan_list.map((item: any, index: number) => (
-            <tr key={index}>
+            <tr key={index} className="border border-gray-300">
               <td className=" text-center text-[16px] py-[10px]">
                 {item.procedure_name}
               </td>
@@ -35,26 +35,23 @@ export function TreatmentPlanPrintTable({ data }: Props) {
 }
 
 export function PrescriptionPrintTable({ data }: Props) {
-  console.log(data);
   return (
     <div>
       <table className="w-full border border-gray-300">
         <thead className=" bg-primary-500 print:bg-primary-500 ">
           <tr>
-            <th className=" text-white text-[16px] py-[10px] ">
-              Procedure Name
-            </th>
-            <th className=" text-white text-[16px] py-[10px]">Cost</th>
+            <th className=" text-white text-[16px] py-[10px] ">Medicine</th>
+            <th className=" text-white text-[16px] py-[10px]">Quantity</th>
           </tr>
         </thead>
         <tbody>
-          {data?.treatment_plan_list.map((item: any, index: number) => (
-            <tr key={index}>
+          {data?.medicines.map((item: any, index: number) => (
+            <tr key={index} className="border border-gray-300">
               <td className=" text-center text-[16px] py-[10px]">
-                {item.procedure_name}
+                {item.name}
               </td>
               <td className=" text-center text-[16px] py-[10px]">
-                ₱{numberSeparator(item.cost, 0)}
+                ₱{numberSeparator(item.quantity, 0)}
               </td>
             </tr>
           ))}

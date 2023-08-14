@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Popover } from "antd";
 import DatePicker from "antd/lib/date-picker";
 // import Radio from "antd/lib/radio";
@@ -56,6 +56,8 @@ export function SMSManager({ router }: NextPageProps) {
 
   const [SMSTemplateForm] = Form.useForm();
 
+  const [SMSSettingsForm] = Form.useForm();
+
   let [search, setSearch] = React.useState("");
 
   const columns: any = [
@@ -81,6 +83,12 @@ export function SMSManager({ router }: NextPageProps) {
       fetchData({
         url: `/api/sms-manager?limit=5&page=${page}&search=${search}`,
       })
+  );
+
+  let { data: smsSettings } = useQuery(["sms-settings"], () =>
+    fetchData({
+      url: `/api/sms-setting`,
+    })
   );
 
   return (
@@ -118,7 +126,17 @@ export function SMSManager({ router }: NextPageProps) {
             <Button
               className="p-3"
               appearance="primary"
-              onClick={() => setShowSMSSettingModal(true)}
+              onClick={() => {
+                setShowSMSSettingModal(true);
+                SMSSettingsForm.setFieldsValue({
+                  _id: smsSettings[0]?._id,
+                  sms_appointment_reminder:
+                    smsSettings[0]?.sms_appointment_reminder,
+                  sms_birthday_reminder: smsSettings[0]?.sms_birthday_reminder,
+                  sms_reminder_frequency:
+                    smsSettings[0]?.sms_reminder_frequency,
+                });
+              }}
             >
               SMS Settings
             </Button>
@@ -196,6 +214,7 @@ export function SMSManager({ router }: NextPageProps) {
       />
 
       <SMSSettings
+        form={SMSSettingsForm}
         show={showSMSSettingModal}
         onClose={() => {
           setShowSMSSettingModal(false);
