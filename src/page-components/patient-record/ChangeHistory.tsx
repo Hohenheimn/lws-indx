@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { DatePicker, Table } from "antd";
+import moment from "moment";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { Button } from "@components/Button";
@@ -8,55 +9,25 @@ import Input from "@components/Input";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
-let fakeData = [
-  {
-    id: 1,
-    changes_made: "Update Personal Info - First Name",
-    date_created: "01/02/2022",
-    username: "Dr. Mark Abrem",
-  },
-  {
-    id: 2,
-    changes_made: "Update Personal Info - Last Name",
-    date_created: "01/02/2022",
-    username: "Dr. Mark Abrem",
-  },
-  {
-    id: 3,
-    changes_made: "Create Prescription - Pre-003",
-    date_created: "01/02/2022",
-    username: "Dr. Mark Abrem",
-  },
-  {
-    id: 4,
-    changes_made: "Deleted Treatment Plan - Treatment Plan A",
-    date_created: "01/02/2022",
-    username: "Dr. Mark Abrem",
-  },
-  {
-    id: 5,
-    changes_made: "Create Gallery - Gallery 1",
-    date_created: "01/02/2022",
-    username: "Dr. Mark Abrem",
-  },
-];
-
 const columns: any = [
   {
     title: "Changes Made",
-    dataIndex: "changes_made",
+    dataIndex: "value",
     width: "10rem",
     align: "center",
   },
   {
     title: "Date Created",
-    dataIndex: "date_created",
+    dataIndex: "created_at",
     width: "10rem",
     align: "center",
+    render: (created_at: string, record: any) => {
+      return <div>{moment(created_at).format("MMMM DD, YYYY")}</div>;
+    },
   },
   {
     title: "Username",
-    dataIndex: "username",
+    dataIndex: "patient_id",
     width: "10rem",
     align: "center",
   },

@@ -166,14 +166,14 @@ export default function AddPrescriptionModal({
           className="space-y-12"
         >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <Form.Item
+            {/* <Form.Item
               label="Prescription Name"
               name="name"
               rules={[{ required: true, message: "This is required!" }]}
               required={false}
             >
               <Input id="name" placeholder="Prescription Name" />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="Prescription Template"
               name="prescription_id"

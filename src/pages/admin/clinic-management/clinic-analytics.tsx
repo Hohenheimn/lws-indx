@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import { Form, Table } from "antd";
 import DatePicker from "antd/lib/date-picker";
-import "chart.js/auto";
 // import Radio from "antd/lib/radio";
+import "chart.js/auto";
 import { ScriptableContext } from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import moment from "moment";
+import Image from "next/image";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
+import { twMerge } from "tailwind-merge";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
 import VerifyAuth from "@auth/HOC/VerifyAuth";
 import { PageContainer } from "@components/animation";
@@ -12,538 +16,337 @@ import { Button } from "@components/Button";
 import Card from "@components/Card";
 import { Radio } from "@components/Radio";
 import { Select } from "@components/Select";
+import DoughnutChart from "@src/components/Charts/DounutChart";
+import HorizontalProgressLine from "@src/components/Charts/HorizontalProgessLine";
+import LineChart from "@src/components/Charts/LineChart";
+import { InfiniteSelect } from "@src/components/InfiniteSelect";
 import colors from "@styles/theme";
-import { numberSeparator } from "@utilities/helpers";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
+import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-const randomNumber = () => {
-  return Math.random() * (100 - 1);
-};
-
-const dummyData = [
+const columns: any = [
   {
-    content: "102",
-    description: "Total Number of Patient Records",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: (context: ScriptableContext<"line">) => {
-            const ctx = context.chart.ctx;
-            const gradient = ctx.createLinearGradient(35, 35, 35, 200);
-            gradient.addColorStop(0, colors.primary["400"]);
-            gradient.addColorStop(0.2, colors.primary["200"]);
-            return gradient;
-          },
-          borderColor: colors.primary["500"],
-          borderWidth: 2,
-          tension: 0.2,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
-    },
-    percentage: 60.2,
-    rate: "up",
+    title: "Date Created",
+    dataIndex: "created_at",
+    width: "10rem",
+    align: "center",
+    render: (created_at: Date) => moment(created_at).format("MMMM DD, YYYY"),
   },
   {
-    content: "75",
-    description: "Total Patients Catered",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: (context: ScriptableContext<"line">) => {
-            const ctx = context.chart.ctx;
-            const gradient = ctx.createLinearGradient(35, 35, 35, 200);
-            gradient.addColorStop(0, colors.secondary["400"]);
-            gradient.addColorStop(0.2, colors.secondary["200"]);
-            return gradient;
-          },
-          borderColor: colors.secondary["500"],
-          borderWidth: 2,
-          tension: 0.2,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
-    },
-    percentage: 57.4,
-    rate: "down",
+    title: "Branch",
+    dataIndex: "branch_name",
+    width: "10rem",
+    align: "center",
   },
   {
-    content: `₱ ${numberSeparator(25000)}`,
-    description: "Revenue",
-    lineData: {
-      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          backgroundColor: (context: ScriptableContext<"line">) => {
-            const ctx = context.chart.ctx;
-            const gradient = ctx.createLinearGradient(35, 35, 35, 200);
-            gradient.addColorStop(0, colors.blumine["400"]);
-            gradient.addColorStop(0.2, colors.blumine["200"]);
-            return gradient;
-          },
-          borderColor: colors.blumine["500"],
-          borderWidth: 2,
-          tension: 0.2,
-          fill: true,
-          data: [
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-            randomNumber(),
-          ],
-        },
-      ],
+    title: "Procedure",
+    dataIndex: "procedure_name",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Charge",
+    dataIndex: "charge_amount",
+    width: "10rem",
+    align: "center",
+    render: (amount: number) => {
+      if (amount) {
+        return `₱${numberSeparator(amount, 0)}`;
+      }
     },
-    percentage: 22.1,
-    rate: "up",
+  },
+  {
+    title: "Remaining Balance",
+    dataIndex: "remaining_balance",
+    width: "10rem",
+    align: "center",
+    render: (amount: number) => {
+      if (amount) {
+        return `₱${numberSeparator(amount, 0)}`;
+      }
+    },
+  },
+  {
+    title: "Payment Status",
+    dataIndex: "status",
+    width: "10rem",
+    align: "center",
+    render: (status: string) => (
+      <div
+        className={twMerge(
+          "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs ",
+          paymentStatusPalette(status === null ? "no payment" : status)
+        )}
+      >
+        {status}
+      </div>
+    ),
   },
 ];
 
-const chartData = {
-  labels: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
-  datasets: [
-    {
-      label: "Sample 1",
-      data: [65, 59, 80, 81, 56, 55, 40, 80, 81, 56, 55, 40],
-      backgroundColor: (context: ScriptableContext<"line">) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(50, 50, 50, 200);
-        gradient.addColorStop(0, colors.primary["500"]);
-        gradient.addColorStop(1, colors.primary["200"]);
-        return gradient;
-      },
-      borderColor: [colors.primary["400"]],
-      borderWidth: 1,
-    },
-    {
-      label: "Sample 2",
-      data: [80, 70, 25, 55, 38, 65, 42, 55, 38, 65, 42, 55],
-      backgroundColor: (context: ScriptableContext<"line">) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(50, 50, 50, 200);
-        gradient.addColorStop(0, colors.secondary["500"]);
-        gradient.addColorStop(1, colors.secondary["200"]);
-        return gradient;
-      },
-      borderColor: [colors.secondary["400"]],
-      borderWidth: 1,
-    },
-  ],
-};
-
-const doughnutData = {
-  labels: ["Male", "Female"],
-  datasets: [
-    {
-      data: [65, 30],
-      backgroundColor: (context: ScriptableContext<"line">) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(20, 20, 20, 100);
-        const gradient2 = ctx.createLinearGradient(20, 20, 20, 100);
-        gradient.addColorStop(0, colors.secondary["500"]);
-        gradient.addColorStop(1, colors.secondary["200"]);
-        gradient2.addColorStop(0, colors.primary["500"]);
-        gradient2.addColorStop(1, colors.primary["200"]);
-        return [gradient, gradient2];
-      },
-      borderColor: [colors.secondary["400"], colors.primary["400"]],
-      hoverOffset: 15,
-    },
-  ],
-};
-
-const pieData = {
-  labels: [
-    "18 - 25 Years Old",
-    "26 - 30 Years Old",
-    "31 - 35 Years Old",
-    "36 - 40 Years Old",
-    "41 - 45 Years Old",
-    "46 - 50 Years Old",
-  ],
-  datasets: [
-    {
-      data: [23, 30, 5, 18, 9, 15],
-      backgroundColor: [
-        colors.primary[600],
-        colors.primary[500],
-        colors.primary[400],
-        colors.primary[300],
-        colors.primary[200],
-        colors.primary[100],
-      ],
-      borderColor: [
-        colors.primary[600],
-        colors.primary[500],
-        colors.primary[400],
-        colors.primary[300],
-        colors.primary[200],
-        colors.primary[100],
-      ],
-      hoverOffset: 15,
-    },
-  ],
-};
-
-const locationData = {
-  labels: [
-    "Asia",
-    "Africa",
-    "Europe",
-    "South America",
-    "North America",
-    "Autralia",
-    "Autralia",
-    "Autralia",
-    "Autralia",
-    "Autralia",
-  ],
-  datasets: [
-    {
-      label: "Sample 1",
-      data: [65, 59, 80, 81, 56, 55, 40, 80, 81, 56],
-      backgroundColor: [colors.primary[500]],
-      borderColor: ["transparent"],
-      borderWidth: 1,
-      barPercentage: 1.06,
-    },
-    {
-      label: "Sample 2",
-      data: [80, 70, 25, 55, 38, 65, 42, 55, 38, 65],
-      backgroundColor: [colors.secondary[500]],
-      borderColor: ["transparent"],
-      borderWidth: 1,
-      barPercentage: 1.06,
-    },
-  ],
-};
-
-const userData = [
-  "Angelina Jolie",
-  "Anne Hathaway",
-  "Liam Neson",
-  "Andrew Garfield",
-  "Gerald Anderson",
-];
+const { RangePicker } = DatePicker;
 
 export function ClinicAnalytics({}: NextPageProps) {
+  const [FilterForm] = Form.useForm();
+
+  const doctor_id = Form.useWatch("doctor_id", FilterForm);
+
+  const branch_id = Form.useWatch("branch_id", FilterForm);
+
+  const [dateRange, setDateRange] = useState({
+    from: "",
+    to: "",
+  });
+
+  const handleDateChange = (dates: any, dateStrings: any) => {
+    setDateRange({
+      from: dateStrings[0],
+      to: dateStrings[1],
+    });
+  };
+
+  let [page, setPage] = React.useState(1);
+
+  let [search, setSearch] = React.useState("");
+
+  const fakeData = [
+    {
+      created_at: "",
+      branch_name: "Garcian Clinic",
+      procedure_name: "Aligner",
+      charge_amount: 200,
+      remaining_balance: 500,
+      status: "Partial Payment",
+    },
+  ];
+
+  // let { data: charting, isLoading: chartingIsLoading } = useQuery(
+  //   ["charting-list", page, search],
+  //   () =>
+  //     fetchData({
+  //       url: `/api/patient/charting/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
+  //     })
+  // );
+
   return (
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
-        <h3 className="basis-auto whitespace-nowrap">Clinic Analytics</h3>
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center md:basis-auto basis-full">
-          <Select placeholder="Select Doctor" className="border-transparent">
-            {fakeDoctors.map(({ name }, index) => {
-              return (
-                <Select.Option value={name} key={index}>
-                  {name}
-                </Select.Option>
-              );
-            })}
-          </Select>
-          <Select placeholder="Select Branch" className="border-transparent">
-            {fakeBranches.map(({ name }, index) => {
-              return (
-                <Select.Option value={name} key={index}>
-                  {name}
-                </Select.Option>
-              );
-            })}
-          </Select>
-          <DatePicker getPopupContainer={(triggerNode: any) => {
-                    return triggerNode.parentNode;
-                  }}.RangePicker className="[&.ant-picker]:border-transparent" />
-        </div> */}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {dummyData.map(
-          ({ content, description, lineData, percentage, rate }, index) => {
-            return (
-              <Card
-                key={index}
-                className="text-center space-y-1 pb-16 z-[1] overflow-hidden justify-center items-center flex flex-col"
-              >
-                <h4>{content}</h4>
-                <div className="text-base max-w-[8rem] m-auto font-medium">
-                  {description}
-                </div>
-                <p
-                  className={`${
-                    rate === "up" ? "text-green-500" : "text-red-500"
-                  } text-xs  leading-tight`}
-                >
-                  {rate === "up" ? "▲" : "▼"} {percentage}%
-                </p>
-                <div className="absolute bottom-0 inset-x-0 h-1/2 pointer-events-none -z-[1]">
-                  <Line
-                    data={lineData}
-                    options={{
-                      plugins: {
-                        legend: {
-                          display: false,
-                        },
-                      },
-                      tooltips: {
-                        enabled: false,
-                      },
-                      elements: {
-                        point: {
-                          radius: 0,
-                        },
-                      },
-                      scales: {
-                        x: {
-                          scaleLabel: false,
-                          ticks: {
-                            display: false,
-                          },
-                          grid: {
-                            drawBorder: false,
-                            display: false,
-                            ticks: false,
-                          },
-                        },
-                        y: {
-                          scaleLabel: false,
-                          ticks: {
-                            display: false,
-                          },
-                          grid: { drawBorder: false, display: false },
-                        },
-                      },
-                      layout: {
-                        padding: -10,
-                      },
-                      maintainAspectRatio: false,
-                    }}
-                  />
-                </div>
-              </Card>
-            );
-          }
-        )}
-      </div>
-      <Card className="space-y-6">
-        <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-          <h5>Total Clinic Revenue</h5>
-          <Radio.Group
-            onChange={(e: string) => console.log(e)}
-            defaultValue="monthly"
-            className="max-w-md"
-          >
-            <Radio.Button value="daily" label="Daily" />
-            <Radio.Button value="monthly" label="Monthly" />
-            <Radio.Button value="yearly" label="Yearly" />
-          </Radio.Group>
-        </div>
-        <div className="h-[25rem] w-full">
-          <Bar
-            data={chartData}
-            options={{
-              plugins: {
-                legend: {
-                  display: false,
+        <h3 className="w-full lg:w-auto">Clinic Analytics</h3>
+        <Form
+          form={FilterForm}
+          layout="vertical"
+          className=" flex flex-wrap justify-between lg:space-x-1 space-y-3 lg:space-y-0"
+        >
+          <div className="flex flex-wrap lg:space-x-1 w-full lg:w-auto  space-y-3 lg:space-y-0">
+            <Form.Item
+              label=""
+              name="doctor_id"
+              rules={[
+                {
+                  required: true,
+                  message: "This is required",
                 },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
-                  },
-                },
-                y: {
-                  grid: {
-                    display: true,
-                  },
-                },
-              },
-              responsive: true,
-              maintainAspectRatio: false,
-            }}
-          />
-        </div>
-      </Card>
-      <div className="grid grid-cols-10 gap-8">
-        <Card className="space-y-6 col-span-10 lg:col-span-6">
-          <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-            <h5>Male vs Female</h5>
-          </div>
-          <div className="h-[25rem] w-full">
-            <Doughnut
-              data={doughnutData}
-              options={{
-                plugins: {
-                  legend: {
-                    position: "bottom",
-                    fullSize: true,
-                    labels: {
-                      boxWidth: 10,
-                      boxHeight: 10,
-                      padding: 50,
-                    },
-                  },
-                },
-                cutout: "85%",
-                layout: { padding: 15 },
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </Card>
-        <Card className="space-y-6 col-span-10 lg:col-span-4">
-          <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-            <h5>Age</h5>
-          </div>
-          <div className="h-[25rem] w-full">
-            <Pie
-              data={pieData}
-              plugins={[ChartDataLabels]}
-              options={{
-                plugins: {
-                  datalabels: {
-                    anchor: "end",
-                    align: "end",
-                    formatter: (
-                      value: number,
-                      ctx: { chart: { data: { datasets: { data: any }[] } } }
-                    ) => {
-                      const datapoints = ctx.chart.data.datasets[0].data;
-                      const total = datapoints.reduce(
-                        (total: any, datapoint: any) => total + datapoint,
-                        0
-                      );
-                      const percentage = (value / total) * 100;
-                      return percentage.toFixed(2) + "%";
-                    },
-                    color: "#000",
-                    font: {
-                      weight: 600,
-                    },
-                  },
-                  legend: {
-                    position: "bottom",
-                    fullSize: true,
-                    labels: {
-                      boxWidth: 10,
-                      boxHeight: 10,
-                      padding: 50,
-                    },
-                  },
-                },
-                layout: { padding: 15 },
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </Card>
-        <Card className="space-y-6 col-span-10 lg:col-span-6">
-          <div className="flex flex-col justify-between items-center space-y-6 xs:flex-row xs:space-y-0">
-            <h5>Location</h5>
-            <Radio.Group
-              onChange={(e: string) => console.log(e)}
-              defaultValue="country"
-              className="max-w-sm"
+              ]}
+              required={false}
+              className="w-full lg:w-auto"
             >
-              <Radio.Button value="country" label="Country" />
-              <Radio.Button value="city" label="City" />
-            </Radio.Group>
-          </div>
-          <div className="h-[25rem] w-full">
-            <Bar
-              data={locationData}
-              options={{
-                plugins: {
-                  legend: {
-                    position: "top",
-                    fullSize: true,
-                    labels: {
-                      usePointStyle: true,
-                      boxWidth: 10,
-                      boxHeight: 10,
-                      padding: 50,
-                    },
-                  },
+              <InfiniteSelect
+                placeholder="Select Doctor"
+                id="doctor_id"
+                api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
+                queryKey={["doctor"]}
+                displayValueKey="name"
+                returnValueKey="_id"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label=""
+              name="branch_id"
+              rules={[
+                {
+                  required: true,
+                  message: "This is required",
                 },
-                scales: {
-                  x: {
-                    grid: {
-                      drawBorder: false,
-                      display: false,
-                    },
-                  },
-                  y: {
-                    grid: {
-                      drawBorder: false,
-                      display: true,
-                    },
-                  },
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </Card>
-        <Card className="space-y-6 col-span-10 lg:col-span-4">
-          <div className="flex flex-col justify-between items-center space-y-6">
-            <h5>Most Users</h5>
-            <Radio.Group
-              onChange={(e: string) => console.log(e)}
-              className="max-w-sm"
+              ]}
+              required={false}
+              className="w-full lg:w-auto"
             >
-              <Radio.Button value="active" label="Active" />
-              <Radio.Button value="inactive" label="Inactive" />
-            </Radio.Group>
-            <div>
-              {userData.map((user, index) => {
-                return (
-                  <div key={index} className="text-base">
-                    {user}
-                  </div>
-                );
-              })}
+              <InfiniteSelect
+                placeholder="Select Branch"
+                id="branch_id"
+                api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
+                queryKey={["branch"]}
+                displayValueKey="name"
+                returnValueKey="_id"
+              />
+            </Form.Item>
+          </div>
+          <div className="w-full lg:w-auto">
+            <RangePicker onChange={handleDateChange} format="YYYY-MM-DD" />
+          </div>
+        </Form>
+      </div>
+
+      <ul className="flex flex-wrap justify-between space-y-0">
+        <li className=" w-full lg:w-[68%] flex flex-wrap justify-between">
+          <div className="w-full aspect-[4/1] text-white relative overflow-hidden bg-[#27c5cc] mb-3 shadow-md rounded-lg p-5 flex flex-col justify-end items-start">
+            <aside className=" aspect-square h-[150%] top-[-25%] right-4 absolute">
+              <Image
+                src={"/images/clinic-analytics-banner.png"}
+                fill
+                alt={""}
+              />
+            </aside>
+            <h3 className=" text-white text-[1rem] lg:text-3xl">
+              Good Day, Dr. Lee
+            </h3>
+            <p className=" text-[1rem]">Have a Nice Day!</p>
+          </div>
+          <div className=" bg-white space-y-2 w-full lg:w-[32%] mb-3 lg:mb-0 p-3 lg:aspect-[2/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
+            <h3 className=" text-green-500 text-center ">102</h3>
+            <p className=" text-[1rem] text-center">
+              Total Number of Patient Records
+            </p>
+          </div>
+
+          <div className=" bg-white space-y-2  w-full lg:w-[32%] mb-3 lg:mb-0 p-3  lg:aspect-[2/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
+            <h3 className=" text-blue-500 text-center">503</h3>
+            <p className=" text-[1rem] text-center">Total Patients Catered</p>
+          </div>
+
+          <div className=" bg-white space-y-2 w-full lg:w-[32%] mb-3 lg:mb-0 p-3  lg:aspect-[2/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
+            <h3 className=" text-red-300 text-center">
+              P {numberSeparator(500000)}
+            </h3>
+            <p className=" text-[1rem] text-center">Clinic Revenue</p>
+          </div>
+        </li>
+
+        <li className=" w-full lg:w-[30%] shadow-md rounded-lg p-5 space-y-3 flex flex-col justify-center bg-white">
+          <h5>Clinic Visits</h5>
+          <div className="space-y-1">
+            <p>Total Visits</p>
+            <h3>500</h3>
+          </div>
+          <div>
+            <HorizontalProgressLine dataSet={[65, 150]} />
+          </div>
+        </li>
+      </ul>
+
+      <ul className="flex flex-wrap justify-between space-y-0">
+        <li className=" w-full lg:w-[68%] lg:mb-0 mb-3 flex flex-wrap justify-between">
+          <div className="w-full bg-white shadow-md rounded-lg p-5 flex flex-col justify-end items-start">
+            <h4 className=" mb-5">Total Clinic Revenue</h4>
+            <LineChart />
+          </div>
+        </li>
+
+        <li className=" w-full lg:w-[30%] flex flex-wrap justify-between">
+          <div className="w-full shadow-md rounded-lg bg-white mb-3 p-5  flex flex-col justify-center">
+            <h4 className=" mb-5">Top Procedures Done</h4>
+            <DoughnutChart />
+          </div>
+          <div className="w-full bg-white shadow-md rounded-lg p-5 space-y-2 flex flex-col justify-center">
+            <h4>Top Patient by Location</h4>
+            <ul className=" space-y-2">
+              <li className=" flex justify-between space-x-2 items-center">
+                <div className=" flex space-x-1 items-center">
+                  <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
+                    <Image src="/images/default_dentist.png" fill alt={""} />
+                  </aside>
+                  <p>Patricia Zobel</p>
+                </div>
+                <p className=" pr-5">Makati</p>
+              </li>
+              <li className=" flex justify-between space-x-2 items-center">
+                <div className=" flex space-x-1 items-center">
+                  <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
+                    <Image src="/images/default_dentist.png" fill alt={""} />
+                  </aside>
+                  <p>John Doe</p>
+                </div>
+                <p className=" pr-5">Quezon City</p>
+              </li>
+              <li className=" flex justify-between space-x-2 items-center">
+                <div className=" flex space-x-1 items-center">
+                  <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
+                    <Image src="/images/default_dentist.png" fill alt={""} />
+                  </aside>
+                  <p>Erich Santos</p>
+                </div>
+                <p className=" pr-5">Marikina</p>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <Table
+        rowKey="_id"
+        columns={columns}
+        dataSource={fakeData}
+        showHeader={true}
+        tableLayout="fixed"
+        loading={false}
+        title={() => (
+          <div className="space-y-4 md:p-12 p-6 !pb-0">
+            <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
+              <h4 className="basis-full md:basis-auto">Patient Balance List</h4>
             </div>
+            {/* <div className="flex justify-between align-middle gap-4">
+                    <div className="basis-1/2">
+                      <Input
+                        placeholder="Search"
+                        prefix={
+                          <AiOutlineSearch className="text-lg text-casper-500" />
+                        }
+                        className="rounded-full text-base shadow-none"
+                        onChange={(e: any) => setSearch(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Button
+                        className="p-3 max-w-xs"
+                        appearance="primary"
+                        onClick={() => setIsChartingModalOpen(true)}
+                      >
+                        New Chart
+                      </Button>
+                    </div>
+                  </div> */}
           </div>
-        </Card>
-      </div>
+        )}
+        pagination={{
+          pageSize: 5,
+          hideOnSinglePage: true,
+          showSizeChanger: false,
+          // total: charting?.meta?.total,
+          onChange: (page) => setPage(page),
+        }}
+        components={{
+          table: ({ ...rest }: any) => {
+            let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+            // let tableFlexGrow = 1;
+            return (
+              <table
+                {...rest}
+                style={{
+                  flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                }}
+              />
+            );
+          },
+          body: {
+            row: ({ ...rest }: any) => {
+              return <tr {...rest} />;
+            },
+          },
+        }}
+        className="[&.ant-table]:!rounded-none"
+      />
     </PageContainer>
   );
 }

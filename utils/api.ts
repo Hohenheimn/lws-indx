@@ -197,7 +197,35 @@ export const postDataMultipleFile = async ({ url, payload, options }: any) => {
       throw "Something Went Wrong";
     });
 };
+export const updateDataNoFormData = async ({ url, payload, options }: any) => {
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
 
+  return await axios
+    .put(`${process.env.REACT_APP_API_BASE_URL}${url}`, payload, {
+      headers: {
+        Authorization: `Bearer ${parseCookies().a_t}`,
+      },
+    })
+    .then((res) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+      return res.data;
+    })
+    .catch((err) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      notification[`${statusType(err.response.status)}`]({
+        message: err.response.data[0].title,
+        description: `${err.response.data[0].message}`,
+      });
+      throw "Something Went Wrong";
+    });
+};
 export const updateData = async ({ url, payload, options }: any) => {
   if (options?.isLoading) {
     options?.isLoading(true);

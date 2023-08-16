@@ -9,6 +9,7 @@ import {
   postDataMultipleFile,
   postDataNoFormData,
   updateData,
+  updateDataNoFormData,
 } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
@@ -74,7 +75,7 @@ export default function SMSSettings({
 
   const { mutate: editSMSSettings } = useMutation(
     (payload: any) => {
-      return updateData({
+      return updateDataNoFormData({
         url: `/api/sms-setting/${id}`,
         payload,
         options: {

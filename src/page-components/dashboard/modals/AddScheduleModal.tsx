@@ -3,6 +3,7 @@ import { DatePicker, TimePicker, notification } from "antd";
 import Form from "antd/lib/form";
 import TextArea from "antd/lib/input/TextArea";
 import "chart.js/auto";
+import { parse, differenceInHours } from "date-fns";
 import moment from "moment";
 import { PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
@@ -39,17 +40,17 @@ export default function AddScheduleModal({
 
   let [selectedBranch, setSelectedBranch] = React.useState("");
 
-  let [selectedDate, setSelectedDate] = React.useState(null);
+  let [selectedDate, setSelectedDate] = React.useState<any>(null);
 
   let [selectedDoctor, setSelectedDoctor] = React.useState("");
 
-  let [selectedStartTime, setSelectedStartTime] = React.useState<any>(null);
-
-  // let { data: schedules } = useQuery(["schedule-dates"], () =>
-  //   fetchData({
-  //     url: `/api/schedule`,
-  //   })
-  // );
+  let { data: doctorSchedules } = useQuery(
+    ["schedule-dates", selectedDoctor],
+    () =>
+      fetchData({
+        url: `/api/schedule?doctor_id=${selectedDoctor}`,
+      })
+  );
 
   React.useEffect(() => {
     moment("12:00", "HH:mm");
@@ -65,219 +66,6 @@ export default function AddScheduleModal({
           : undefined,
     });
   }, [show]);
-
-  const {
-    data: doctorSchedule,
-    isFetching: isDoctorScheduleLoading,
-  } = useQuery(
-    ["doc", selectedDoctor, selectedDate],
-    () =>
-      fetchData({
-        url: `/api/schedule/doctor?doctor_id=${selectedDoctor}&date=${
-          selectedDate ? moment(selectedDate).format("YYYY-MM-DD") : ""
-        }`,
-      }),
-    {
-      initialData: [],
-      enabled: selectedDoctor && selectedDate ? true : false,
-    }
-  );
-
-  useEffect(() => {
-    console.log(doctorSchedule);
-  }, [doctorSchedule]);
-
-  function range(start: number, end: number, precise?: boolean) {
-    const result = [];
-    if (precise) {
-      for (let i = start; i <= end; i++) {
-        result.push(i);
-      }
-    } else {
-      for (let i = start; i < end; i++) {
-        result.push(i);
-      }
-    }
-
-    return result;
-  }
-
-  function checkSelectedHour(dateArrays: any, selectedHour: any) {
-    let checker = dateArrays.find(({ start, end }: any) => {
-      return (
-        moment(start, "HH:mm").hour() === selectedHour ||
-        moment(end, "HH:mm").hour() === selectedHour
-      );
-    });
-
-    let checkerList = [checker?.start, checker?.end];
-
-    let getNearestFromChecker = checkerList.find((hour) => {
-      return moment(hour, "HH:mm").hour() === selectedHour;
-    });
-
-    let checkValue = checkerList
-      .map((hour, index) => {
-        if (getNearestFromChecker === hour)
-          return {
-            hour: hour,
-            index: index,
-          };
-      })
-      .filter((hour) => hour);
-
-    return checkValue[0];
-  }
-
-  function disabledRangeTime(_: any, type: "start" | "end") {
-    let mergedSelectedToArray = [
-      ...doctorSchedule,
-      {
-        start: null,
-        end: selectedStartTime ? moment(selectedStartTime, "HH:mm") : null,
-      },
-    ];
-
-    if (type === "start") {
-      let startDisabledDates = doctorSchedule
-        .map(({ start_time, end_time }: any) => {
-          return range(
-            moment(start_time, "HH:mm").hour(),
-            moment(end_time, "HH:mm").hour()
-          );
-        })
-        .flat();
-
-      return {
-        disabledHours: () => startDisabledDates,
-        disabledMinutes: (selectedHour: number) => {
-          if (
-            checkSelectedHour(doctorSchedule, selectedHour)?.index &&
-            moment(
-              checkSelectedHour(doctorSchedule, selectedHour)?.hour,
-              "HH:mm"
-            ).hour() === selectedHour
-          ) {
-            return range(
-              moment(0).minute(),
-              moment(
-                checkSelectedHour(doctorSchedule, selectedHour)?.hour,
-                "HH:mm"
-              ).minute()
-            );
-          } else if (
-            !checkSelectedHour(doctorSchedule, selectedHour)?.index &&
-            moment(
-              checkSelectedHour(doctorSchedule, selectedHour)?.hour,
-              "HH:mm"
-            ).hour() === selectedHour
-          ) {
-            return range(
-              moment(
-                checkSelectedHour(doctorSchedule, selectedHour)?.hour,
-                "HH:mm"
-              ).minute(),
-              60
-            );
-          }
-          return [];
-        },
-      };
-    } else {
-      let removeHours = range(0, 24).filter((num) => {
-        if (
-          // if lower than min start date
-          moment(selectedStartTime, "HH:mm").hour() <
-          Math.min(
-            ...doctorSchedule.map(({ start_time }: any) => {
-              return moment(start_time, "HH:mm").hour();
-            })
-          )
-        ) {
-          return (
-            num >= moment(selectedStartTime, "HH:mm").hour() &&
-            num <
-              Math.min(
-                ...doctorSchedule.map(({ start_time }: any) => {
-                  return moment(start_time, "HH:mm").hour();
-                })
-              )
-          );
-        } else if (
-          // if higher than max end date
-          moment(selectedStartTime, "HH:mm").hour() >=
-          Math.max(
-            ...doctorSchedule.map(({ end_time }: any) => {
-              return moment(end_time, "HH:mm").hour();
-            })
-          )
-        ) {
-          return num >= moment(selectedStartTime, "HH:mm").hour();
-        } else {
-          // if in middle of disabled dates
-
-          let nearestStartTime = doctorSchedule.find(({ start_time }: any) => {
-            return (
-              moment(selectedStartTime, "HH:mm").hour() <
-              moment(start_time, "HH:mm").hour()
-            );
-          })?.start_time;
-
-          return (
-            num >= moment(selectedStartTime, "HH:mm").hour() &&
-            num <= moment(nearestStartTime, "HH:mm").hour()
-          );
-        }
-      });
-
-      let disabledHours = range(0, 24).filter((nums) => {
-        return !removeHours.includes(nums);
-      });
-
-      // console.log(removeHours);
-
-      return {
-        disabledHours: () => disabledHours,
-        disabledMinutes: (selectedHour: number) => {
-          if (selectedHour < 0) {
-            return range(0, 60);
-          } else if (
-            checkSelectedHour(mergedSelectedToArray, selectedHour)?.index &&
-            moment(
-              checkSelectedHour(mergedSelectedToArray, selectedHour)?.hour,
-              "HH:mm"
-            )
-          ) {
-            return range(
-              0,
-              moment(
-                checkSelectedHour(mergedSelectedToArray, selectedHour)?.hour,
-                "HH:mm"
-              ).minute(),
-              true
-            );
-          } else if (
-            !checkSelectedHour(mergedSelectedToArray, selectedHour)?.index &&
-            moment(
-              checkSelectedHour(mergedSelectedToArray, selectedHour)?.hour,
-              "HH:mm"
-            )
-          ) {
-            return range(
-              moment(
-                checkSelectedHour(mergedSelectedToArray, selectedHour)?.hour,
-                "HH:mm"
-              ).minute(),
-              60,
-              true
-            );
-          }
-
-          return [];
-        },
-      };
-    }
-  }
 
   const { mutate: addSchedule } = useMutation(
     (payload: any) =>
@@ -372,23 +160,93 @@ export default function AddScheduleModal({
       setSelectedBranch("");
       setSelectedDate(null);
       setSelectedDoctor("");
-      setSelectedStartTime(null);
-
       form.resetFields();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
-  function disabledDate(current: any) {
-    // const doctors_date = moment(form?.getFieldValue("created_at")).isValid()
-    // ? moment(form?.getFieldValue("created_at"))
-    // : undefined
-    console.log(current);
-    // true = disabled
+  // Disable date and time depends on doctors schedule
+  let [isDoctorSchedules, setDoctorSchedules] = React.useState<
+    {
+      date: string;
+      covered_time: number;
+      start_time: string;
+      end_time: string;
+    }[]
+  >([]);
+
+  let [isTime, setTime] = React.useState<{ start: string; end: string }[]>([]);
+
+  React.useEffect(() => {
+    if (doctorSchedules) {
+      const get = doctorSchedules.map((item: any, index: number) => {
+        const startTime = parse(
+          `${item.date} ${item.start_time}`,
+          "yyyy-MM-dd HH:mm",
+          new Date()
+        );
+        const endTime = parse(
+          `${item.date} ${item.end_time}`,
+          "yyyy-MM-dd HH:mm",
+          new Date()
+        );
+        const coveredTime = differenceInHours(endTime, startTime);
+        return {
+          date: item.date,
+          covered_time: coveredTime,
+          start_time: item.start_time,
+          end_time: item.end_time,
+        };
+      });
+      setDoctorSchedules(get);
+    }
+  }, [doctorSchedules]);
+
+  useEffect(() => {
+    if (selectedDate !== null) {
+      const formattedCurrent = selectedDate.format("yyyy-MM-DD");
+      const getByFilter = isDoctorSchedules.filter(
+        (filter) => filter.date === formattedCurrent
+      );
+      setTime(() =>
+        getByFilter.map((map) => {
+          return { start: map.start_time, end: map.end_time };
+        })
+      );
+    }
+  }, [selectedDate]);
+
+  const disabledDate = (current: any) => {
+    const formattedCurrent = current.format("yyyy-MM-DD");
+    if (
+      isDoctorSchedules.some(
+        (someitem) =>
+          someitem.date === formattedCurrent && someitem.covered_time >= 23
+      )
+    ) {
+      return true;
+    }
     return false;
-    // Disable dates in the past
-    // return current && current < moment().endOf("day");
-  }
+  };
+
+  const disabledTime = (current: any, type: any) => {
+    let arrayHours: number[] = [];
+    isTime.map((item: any) => {
+      const startHour = Number(moment(item.start, "HH:mm").format("HH"));
+      const endHour = Number(moment(item.end, "HH:mm").format("HH"));
+      for (let i = startHour; i < endHour + 1; i++) {
+        arrayHours = [...arrayHours, i];
+      }
+    });
+    return {
+      disabledHours: () => arrayHours,
+      disabledMinutes: (selectedHour: number) => {
+        // disabled minutes here
+        return [];
+      },
+      disabledSeconds: (selectedHour: number, selectedMinute: number) => [],
+    };
+  };
 
   return (
     <Modal show={show} onClose={onClose} {...rest}>
@@ -586,18 +444,17 @@ export default function AddScheduleModal({
                   className="col-span-4 md:col-span-2"
                 >
                   <DatePicker
-                    disabledDate={disabledDate}
-                    getPopupContainer={(triggerNode: any) => {
-                      return triggerNode.parentNode;
-                    }}
+                    // getPopupContainer={(triggerNode: any) => {
+                    //   return triggerNode.parentNode;
+                    // }}
                     placeholder="Date"
                     id="date"
                     format="MMMM DD, YYYY"
                     onChange={(value: any) => {
-                      form.setFieldsValue({ time: [] });
+                      // form.setFieldsValue({ time: [] });
                       setSelectedDate(value);
                     }}
-                    // disabled={!selectedDoctor}
+                    disabledDate={disabledDate}
                   />
                 </Form.Item>
                 <Form.Item
@@ -625,14 +482,9 @@ export default function AddScheduleModal({
                     id="time"
                     format="HH:mm"
                     minuteStep={15}
-                    disabledTime={disabledRangeTime}
+                    disabledTime={disabledTime}
                     // disabled={!selectedDate}
                     order={false}
-                    onFocus={(e: any) => {
-                      if (e?.relatedTarget?.id === "time") {
-                        setSelectedStartTime(e.relatedTarget.value);
-                      }
-                    }}
                   />
                 </Form.Item>
                 <Form.Item
@@ -785,7 +637,7 @@ export default function AddScheduleModal({
                       form.setFieldsValue({ time: [] });
                       setSelectedDate(value);
                     }}
-                    disabled={!selectedDoctor}
+                    disabledDate={disabledDate}
                   />
                 </Form.Item>
                 <Form.Item
@@ -813,14 +665,9 @@ export default function AddScheduleModal({
                     id="time"
                     format="HH:mm"
                     minuteStep={15}
-                    disabledTime={disabledRangeTime}
+                    disabledTime={disabledTime}
                     disabled={!selectedDate}
                     order={false}
-                    onFocus={(e: any) => {
-                      if (e?.relatedTarget?.id === "time") {
-                        setSelectedStartTime(e.relatedTarget.value);
-                      }
-                    }}
                   />
                 </Form.Item>
                 <Form.Item

@@ -164,29 +164,6 @@ export function Financials({}: NextPageProps) {
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="basis-auto whitespace-nowrap">Financials</h3>
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center md:basis-auto basis-full">
-          <Select placeholder="Select Doctor" className="border-transparent">
-            {fakeDoctors.map(({ name }, index) => {
-              return (
-                <Select.Option value={name} key={index}>
-                  {name}
-                </Select.Option>
-              );
-            })}
-          </Select>
-          <Select placeholder="Select Branch" className="border-transparent">
-            {fakeBranches.map(({ name }, index) => {
-              return (
-                <Select.Option value={name} key={index}>
-                  {name}
-                </Select.Option>
-              );
-            })}
-          </Select>
-          <DatePicker getPopupContainer={(triggerNode: any) => {
-                    return triggerNode.parentNode;
-                  }}.RangePicker className="[&.ant-picker]:border-transparent" />
-        </div> */}
       </div>
 
       <Form

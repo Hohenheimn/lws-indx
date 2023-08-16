@@ -716,3 +716,28 @@ div.ant-popover {
 .ant-image-preview-img-wrapper {
   @apply flex justify-center items-center h-full;
 }
+
+.dashboard-advance-calendar .ant-picker-calendar {
+  /* Your custom styles here */
+  @apply bg-transparent;
+  .ant-picker-panel {
+    @apply p-5 rounded-md overflow-hidden shadow-md;
+    .ant-picker-body th {
+      @apply py-5 text-center font-bold;
+    }
+  }
+  .ant-select {
+    @apply flex justify-between;
+    .ant-select-selector {
+      @apply w-full transition focus-within:border-primary-500 focus-within:shadow-input focus-within:ring-0 shadow rounded-md;
+    }
+  }
+  .ant-picker-calendar-date-today {
+    @apply border-primary-500;
+  }
+}
+
+.dashboard-advance-calendar .ant-picker-cell-disabled {
+  /* Styles for disabled cells */
+  border: 1px solid red;
+}
