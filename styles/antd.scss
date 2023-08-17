@@ -741,3 +741,7 @@ div.ant-popover {
   /* Styles for disabled cells */
   border: 1px solid red;
 }
+
+.custom-select .ant-select-selector:after {
+  display: none;
+}

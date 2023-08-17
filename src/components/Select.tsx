@@ -20,13 +20,14 @@ interface SelectProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   onChange?: any;
   name?: string;
-  value?: string;
+  value?: any;
   loading?: boolean;
   lastChildRef?: any;
   noFilter?: boolean;
   onSearch?: any;
   disabled?: boolean;
   noData?: string;
+  hideResetField?: boolean;
 }
 
 const Option: React.FC<SelectOptionProps> = ({
@@ -64,6 +65,7 @@ export function Select({
   noFilter = false,
   lastChildRef,
   onSearch,
+  hideResetField,
   disabled,
   noData,
   ...rest
@@ -139,23 +141,27 @@ export function Select({
               id={id}
               onClick={(e: React.MouseEvent<HTMLElement>) => {
                 open && e.preventDefault();
+                setIsActive(true);
               }}
             >
               <div
                 className={`transition absolute inset-y-0 right-0 px-4 flex items-center text-casper-500 text-lg h-full`}
               >
-                <AiOutlineStop
-                  onClick={(e) => {
-                    onChange && onChange("");
-                    setSelectedValue("");
-                    e.preventDefault();
-                  }}
-                  className={`transition ${
-                    !value
-                      ? "opacity-0 pointer-events-none"
-                      : "opacity-1 pointer-events-auto"
-                  }`}
-                />
+                {!hideResetField && (
+                  <AiOutlineStop
+                    onClick={(e) => {
+                      onChange && onChange("");
+                      setSelectedValue("");
+                      e.preventDefault();
+                    }}
+                    className={`transition ${
+                      !value
+                        ? "opacity-0 pointer-events-none"
+                        : "opacity-1 pointer-events-auto"
+                    }`}
+                  />
+                )}
+
                 <BiChevronUp
                   className={`transition ${open ? "rotate-180" : "rotate-0"}`}
                 />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Table } from "antd";
 import DatePicker from "antd/lib/date-picker";
 // import Radio from "antd/lib/radio";
@@ -7,24 +7,41 @@ import { ScriptableContext } from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
 import Image from "next/image";
-import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
 import { twMerge } from "tailwind-merge";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
 import VerifyAuth from "@auth/HOC/VerifyAuth";
 import { PageContainer } from "@components/animation";
-import { Button } from "@components/Button";
-import Card from "@components/Card";
-import { Radio } from "@components/Radio";
-import { Select } from "@components/Select";
 import DoughnutChart from "@src/components/Charts/DounutChart";
 import HorizontalProgressLine from "@src/components/Charts/HorizontalProgessLine";
 import LineChart from "@src/components/Charts/LineChart";
 import { InfiniteSelect } from "@src/components/InfiniteSelect";
-import colors from "@styles/theme";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
+
+export type topProcedures = {
+  procedure_name: string;
+  count: number;
+};
+export type patientByLocation = {
+  _id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  city: string;
+};
+
+export type clinic_analytics = {
+  totalNoOfPatientRecord: number;
+  revenue: number;
+  totalVisits: {
+    male: number;
+    female: 1;
+  };
+  topProcedures: topProcedures[];
+  patientByLocation: patientByLocation[];
+};
 
 const columns: any = [
   {
@@ -122,13 +139,15 @@ export function ClinicAnalytics({}: NextPageProps) {
     },
   ];
 
-  // let { data: charting, isLoading: chartingIsLoading } = useQuery(
-  //   ["charting-list", page, search],
-  //   () =>
-  //     fetchData({
-  //       url: `/api/patient/charting/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
-  //     })
-  // );
+  let { data, isLoading: chartingIsLoading } = useQuery(
+    ["clinic-analytics", branch_id, doctor_id, dateRange.from, dateRange.to],
+    () =>
+      fetchData({
+        url: `/api/clinic-analytics`,
+      })
+  );
+
+  const clinicAnalytics: clinic_analytics = data;
 
   return (
     <PageContainer>
@@ -205,21 +224,23 @@ export function ClinicAnalytics({}: NextPageProps) {
             </h3>
             <p className=" text-[1rem]">Have a Nice Day!</p>
           </div>
-          <div className=" bg-white space-y-2 w-full lg:w-[32%] mb-3 lg:mb-0 p-3 lg:aspect-[2/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
-            <h3 className=" text-green-500 text-center ">102</h3>
+          <div className=" bg-white space-y-2 w-full lg:w-[49%] mb-3 lg:mb-0 p-3 lg:aspect-[3/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
+            <h3 className=" text-green-500 text-center ">
+              {isNaN(clinicAnalytics?.totalNoOfPatientRecord)
+                ? 0
+                : numberSeparator(clinicAnalytics?.totalNoOfPatientRecord, 0)}
+            </h3>
             <p className=" text-[1rem] text-center">
               Total Number of Patient Records
             </p>
           </div>
 
-          <div className=" bg-white space-y-2  w-full lg:w-[32%] mb-3 lg:mb-0 p-3  lg:aspect-[2/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
-            <h3 className=" text-blue-500 text-center">503</h3>
-            <p className=" text-[1rem] text-center">Total Patients Catered</p>
-          </div>
-
-          <div className=" bg-white space-y-2 w-full lg:w-[32%] mb-3 lg:mb-0 p-3  lg:aspect-[2/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
+          <div className=" bg-white space-y-2 w-full lg:w-[49%] mb-3 lg:mb-0 p-3  lg:aspect-[3/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
             <h3 className=" text-red-300 text-center">
-              P {numberSeparator(500000)}
+              P{" "}
+              {isNaN(clinicAnalytics?.revenue)
+                ? 0
+                : numberSeparator(clinicAnalytics?.revenue, 0)}
             </h3>
             <p className=" text-[1rem] text-center">Clinic Revenue</p>
           </div>
@@ -229,10 +250,23 @@ export function ClinicAnalytics({}: NextPageProps) {
           <h5>Clinic Visits</h5>
           <div className="space-y-1">
             <p>Total Visits</p>
-            <h3>500</h3>
+            <h3>
+              {isNaN(
+                Number(clinicAnalytics?.totalVisits?.male) +
+                  Number(clinicAnalytics?.totalVisits?.female)
+              )
+                ? 0
+                : Number(clinicAnalytics?.totalVisits?.male) +
+                  Number(clinicAnalytics?.totalVisits?.female)}
+            </h3>
           </div>
           <div>
-            <HorizontalProgressLine dataSet={[65, 150]} />
+            <HorizontalProgressLine
+              dataSet={[
+                clinicAnalytics?.totalVisits?.male,
+                clinicAnalytics?.totalVisits?.female,
+              ]}
+            />
           </div>
         </li>
       </ul>
@@ -248,38 +282,33 @@ export function ClinicAnalytics({}: NextPageProps) {
         <li className=" w-full lg:w-[30%] flex flex-wrap justify-between">
           <div className="w-full shadow-md rounded-lg bg-white mb-3 p-5  flex flex-col justify-center">
             <h4 className=" mb-5">Top Procedures Done</h4>
-            <DoughnutChart />
+            <DoughnutChart
+              topProcedures={
+                clinicAnalytics?.topProcedures
+                  ? clinicAnalytics?.topProcedures
+                  : []
+              }
+            />
           </div>
           <div className="w-full bg-white shadow-md rounded-lg p-5 space-y-2 flex flex-col justify-center">
             <h4>Top Patient by Location</h4>
             <ul className=" space-y-2">
-              <li className=" flex justify-between space-x-2 items-center">
-                <div className=" flex space-x-1 items-center">
-                  <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
-                    <Image src="/images/default_dentist.png" fill alt={""} />
-                  </aside>
-                  <p>Patricia Zobel</p>
-                </div>
-                <p className=" pr-5">Makati</p>
-              </li>
-              <li className=" flex justify-between space-x-2 items-center">
-                <div className=" flex space-x-1 items-center">
-                  <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
-                    <Image src="/images/default_dentist.png" fill alt={""} />
-                  </aside>
-                  <p>John Doe</p>
-                </div>
-                <p className=" pr-5">Quezon City</p>
-              </li>
-              <li className=" flex justify-between space-x-2 items-center">
-                <div className=" flex space-x-1 items-center">
-                  <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
-                    <Image src="/images/default_dentist.png" fill alt={""} />
-                  </aside>
-                  <p>Erich Santos</p>
-                </div>
-                <p className=" pr-5">Marikina</p>
-              </li>
+              {clinicAnalytics.patientByLocation.map((item, index) => (
+                <li
+                  key={index}
+                  className=" flex justify-between space-x-2 items-center"
+                >
+                  <div className=" flex space-x-1 items-center">
+                    <aside className=" h-10 w-10 overflow-hidden rounded-full relative shadow-md">
+                      <Image src="/images/default_dentist.png" fill alt={""} />
+                    </aside>
+                    <p>
+                      {item.first_name} {item.middle_name} {item.last_name}
+                    </p>
+                  </div>
+                  <p className=" pr-5">{item.city}</p>
+                </li>
+              ))}
             </ul>
           </div>
         </li>

@@ -1,31 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
+import { topProcedures } from "@src/pages/admin/clinic-management/clinic-analytics";
 
-const DoughnutChart = () => {
+type Props = {
+  topProcedures?: topProcedures[];
+};
+
+const DoughnutChart = ({ topProcedures }: Props) => {
+  const [totalCount, setTotalCount] = useState(0);
+  useEffect(() => {
+    setTotalCount(0);
+    let Count = 0;
+    topProcedures?.map((item) => {
+      Count = Number(Count) + Number(item.count);
+    });
+    console.log(Count);
+    setTotalCount(Count);
+  }, [topProcedures]);
+  const topProceduresWithColor = topProcedures?.map((item, index) => {
+    let color = "";
+    if (index === 0) {
+      color = "#939daf";
+    }
+    if (index === 1) {
+      color = "#afdabd";
+    }
+    if (index === 2) {
+      color = "#2dc5cc";
+    }
+    if (index === 3) {
+      color = "#ff8a8e ";
+    }
+    if (index === 4) {
+      color = "#214a80";
+    }
+    if (index === 5) {
+      color = "#45cca7";
+    }
+    return {
+      ...item,
+      color: color,
+    };
+  });
   const data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple"],
+    labels: topProceduresWithColor?.map((item) => item.procedure_name),
     datasets: [
       {
-        data: [12, 19, 3, 5, 2],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-        ],
-        borderWidth: 1,
+        data: topProceduresWithColor?.map((item) => item.count),
+        backgroundColor: topProceduresWithColor?.map((item) => item.color),
+        spacing: 4,
+        borderRadius: 5,
+        weight: 1,
       },
     ],
   };
   const options = {
+    cutoutPercentage: 150,
     plugins: {
       legend: {
         display: false,
@@ -35,53 +65,38 @@ const DoughnutChart = () => {
       },
     },
     layout: {
-      padding: 20, // Adjust the padding to make space for center text
+      padding: 10, // Adjust the padding to make space for center text
     },
     elements: {
       center: {
         text: "Total",
         fontStyle: "Helvetica",
-        sidePadding: 20,
       },
-    },
-  };
-
-  const textCenter = {
-    id: "textCenter",
-    beforeDatasetsDraw(chart: any, args: any, pluginsOptions: any) {
-      const { ctx, data } = chart;
-      ctx.save();
-      ctx.font = "bolder 30px";
-      ctx.fillStyle = "red";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(
-        "text1",
-        chart.getDatasetMeta(0).data[0].x,
-        chart.getDatasetMeta(0).data[0].y
-      );
     },
   };
 
   return (
     <ul className=" flex justify-between items-center">
       <li className=" w-[38%]">
-        <Doughnut data={data} options={options} plugins={[textCenter]} />
+        <div className=" relative">
+          <div className=" font-bold text-primary-500 text-lg absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
+            {totalCount}
+          </div>
+          <Doughnut data={data} options={options} />
+        </div>
       </li>
       <li className=" w-[60%]">
         <ul className=" list-disc space-y-2">
-          <li className="flex justify-between space-x-1 text-blue-300">
-            <p>Procedure 1</p> <p className=" text-[#333333]">50</p>
-          </li>
-          <li className="flex justify-between space-x-1 text-red-300">
-            <p>Procedure 2</p> <p className=" text-[#333333]">50</p>
-          </li>
-          <li className="flex justify-between space-x-1 text-blue-500">
-            <p>Procedure 3</p> <p className=" text-[#333333]">50</p>
-          </li>
-          <li className="flex justify-between space-x-1 text-green-500">
-            <p>Procedure 4</p> <p className=" text-[#333333]">50</p>
-          </li>
+          {topProceduresWithColor?.map((item, index: number) => (
+            <li
+              key={index}
+              style={{ color: item.color }}
+              className={`flex justify-between space-x-1`}
+            >
+              <p>{item.procedure_name}</p>{" "}
+              <p className=" text-[#333333]">{item.count}</p>
+            </li>
+          ))}
         </ul>
       </li>
     </ul>

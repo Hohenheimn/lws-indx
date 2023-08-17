@@ -31,8 +31,8 @@ import Calendar from "@components/Calendar";
 import Card from "@components/Card";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
+import AdvanceCalendar from "@src/components/AdvanceCalendar";
 import CalendarTypeIcons from "@src/components/CalendarTypeIcons";
-import AdvanceCalendar from "@src/page-components/dashboard/modals/AdvanceCalendar";
 
 import {
   useInfiniteQuery,
@@ -180,7 +180,7 @@ export function Dashboard({}: NextPageProps) {
     <>
       <PageContainer>
         <h3>Dashboard</h3>
-        <div className="flex justify-between items-center gap-4 flex-wrap lg:flex-nowrap">
+        <div className="flex justify-between items-center gap-4 flex-wrap lg:flex-nowrap mb-5">
           <div className="basis-full lg:basis-1/2">
             <Input
               placeholder="Search"

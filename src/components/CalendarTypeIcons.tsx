@@ -9,7 +9,7 @@ const CalendarTypeIcons = ({
   setCalendarType: Function;
 }) => {
   return (
-    <div className=" flex justify-end space-x-2 mb-5">
+    <div className=" flex justify-end space-x-2 mb-2">
       <AiOutlineMenu
         className={` ${
           isCalendarType === "simple" ? "text-primary-500" : "text-gray-400"
