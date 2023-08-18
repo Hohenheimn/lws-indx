@@ -1,5 +1,6 @@
 import { notification } from "antd";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 
 export const sample = {};
@@ -27,6 +28,14 @@ const statusType = (status: any) => {
 export const fetchData = async ({ url, options }: any) => {
   const token = parseCookies().a_t;
 
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
+
   if (options?.isLoading) {
     options?.isLoading(true);
   }
@@ -35,7 +44,7 @@ export const fetchData = async ({ url, options }: any) => {
     .get(
       `${options?.noBaseURL ? "" : process.env.REACT_APP_API_BASE_URL}${url}${
         !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
-      }`,
+      }${subdomain}`,
       {
         headers: {
           // api_key: !token ? process.env.REACT_APP_API_KEY : "",
@@ -82,11 +91,23 @@ export const postData = async ({ url, payload, options }: any) => {
     formDataPayload.append(key, keyData)
   );
 
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
   return await axios
     .post(
       `${process.env.REACT_APP_API_BASE_URL}${url}${
         !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
-      }`,
+      }${subdomain}`,
       formDataPayload,
       {
         headers: {
@@ -123,11 +144,23 @@ export const postDataNoFormData = async ({ url, payload, options }: any) => {
     options?.isLoading(true);
   }
 
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
   return await axios
     .post(
       `${process.env.REACT_APP_API_BASE_URL}${url}${
         !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
-      }`,
+      }${subdomain}`,
       payload,
       {
         headers: {
@@ -163,11 +196,19 @@ export const postDataMultipleFile = async ({ url, payload, options }: any) => {
   if (options?.isLoading) {
     options?.isLoading(true);
   }
+
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
   return await axios
     .post(
       `${process.env.REACT_APP_API_BASE_URL}${url}${
         !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
-      }`,
+      }${subdomain}`,
       payload,
       {
         headers: {
@@ -202,8 +243,16 @@ export const updateDataNoFormData = async ({ url, payload, options }: any) => {
     options?.isLoading(true);
   }
 
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
+
   return await axios
-    .put(`${process.env.REACT_APP_API_BASE_URL}${url}`, payload, {
+    .put(`${process.env.REACT_APP_API_BASE_URL}${url}${subdomain}`, payload, {
       headers: {
         Authorization: `Bearer ${parseCookies().a_t}`,
       },
@@ -244,12 +293,24 @@ export const updateData = async ({ url, payload, options }: any) => {
     formDataPayload.append(key, keyData)
   );
 
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
+
   return await axios
-    .put(`${process.env.REACT_APP_API_BASE_URL}${url}`, formDataPayload, {
-      headers: {
-        Authorization: `Bearer ${parseCookies().a_t}`,
-      },
-    })
+    .put(
+      `${process.env.REACT_APP_API_BASE_URL}${url}${subdomain}`,
+      formDataPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${parseCookies().a_t}`,
+        },
+      }
+    )
     .then((res) => {
       if (options?.isLoading) {
         options?.isLoading(false);
@@ -273,8 +334,16 @@ export const deleteData = async ({ url, options }: any) => {
   if (options?.isLoading) {
     options?.isLoading(true);
   }
+
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
   return await axios
-    .delete(`${process.env.REACT_APP_API_BASE_URL}${url}`, {
+    .delete(`${process.env.REACT_APP_API_BASE_URL}${url}${subdomain}`, {
       headers: {
         Authorization: `Bearer ${parseCookies().a_t}`,
       },
@@ -298,11 +367,18 @@ export const deleteData = async ({ url, options }: any) => {
 };
 
 export const fetchExport = async ({ url, options }: any) => {
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
   const { setExportData, isFetching, download } = options;
   isFetching(true);
 
   return await axios
-    .get(`${process.env.REACT_APP_API_BASE_URL}${url}`, {
+    .get(`${process.env.REACT_APP_API_BASE_URL}${url}${subdomain}`, {
       headers: {
         Authorization: `Bearer ${parseCookies().a_t}`,
       },

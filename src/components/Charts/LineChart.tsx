@@ -1,25 +1,17 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
+import { totalMonthlyRevenue } from "@src/pages/admin/clinic-management/clinic-analytics";
 
-const LineChart = () => {
+type Props = {
+  dataSet: totalMonthlyRevenue[];
+};
+
+const LineChart = ({ dataSet }: Props) => {
   const data = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
+    labels: dataSet.map((item) => item.label),
     datasets: [
       {
-        data: [600, 500, 800, 320, 480, 500, 600, 680, 520, 80, 955, 123],
+        data: dataSet.map((item) => item.count),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: [
           "rgba(180, 245, 247, 0.525)",

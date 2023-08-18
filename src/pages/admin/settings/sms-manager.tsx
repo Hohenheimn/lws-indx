@@ -7,6 +7,7 @@ import "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { format } from "date-fns";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
@@ -48,6 +49,8 @@ let fakeData = [
 ];
 
 export function SMSManager({ router }: NextPageProps) {
+  const routerCS = useRouter();
+
   const [showAddSMSTemplateModal, setShowAddSMSTemplateModal] = useState(false);
 
   const [showSMSSettingModal, setShowSMSSettingModal] = useState(false);
@@ -59,6 +62,12 @@ export function SMSManager({ router }: NextPageProps) {
   const [SMSSettingsForm] = Form.useForm();
 
   let [search, setSearch] = React.useState("");
+
+  useEffect(() => {
+    if (router?.query?.but_SMS_credit) {
+      setShowBuySMSModal(true);
+    }
+  }, [router.query]);
 
   const columns: any = [
     {
@@ -227,6 +236,7 @@ export function SMSManager({ router }: NextPageProps) {
         show={showBuySMSModal}
         onClose={() => {
           setShowBuySMSModal(false);
+          routerCS.push("");
         }}
         className="w-[50rem]"
         id="sms-settings"

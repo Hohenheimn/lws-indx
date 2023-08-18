@@ -32,6 +32,28 @@ export type patientByLocation = {
   city: string;
 };
 
+export type patientBalanceList = {
+  _id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  birthdate: string;
+  gender: string;
+  email: string;
+  landline_no: string;
+  mobile_no: string;
+  street: string;
+  barangay: string;
+  city: string;
+  country: string;
+  zip_code: string;
+};
+
+export type totalMonthlyRevenue = {
+  label: "July 2023";
+  count: 7;
+};
+
 export type clinic_analytics = {
   totalNoOfPatientRecord: number;
   revenue: number;
@@ -41,6 +63,21 @@ export type clinic_analytics = {
   };
   topProcedures: topProcedures[];
   patientByLocation: patientByLocation[];
+  patientBalanceList: {
+    data: patientBalanceList[];
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    next_page_url: string;
+    path: string;
+    per_page: number;
+    prev_page_url: any;
+    to: number;
+    total: number;
+  };
+  totalMonthlyRevenue: totalMonthlyRevenue[];
 };
 
 const columns: any = [
@@ -126,24 +163,15 @@ export function ClinicAnalytics({}: NextPageProps) {
 
   let [page, setPage] = React.useState(1);
 
-  let [search, setSearch] = React.useState("");
-
-  const fakeData = [
-    {
-      created_at: "",
-      branch_name: "Garcian Clinic",
-      procedure_name: "Aligner",
-      charge_amount: 200,
-      remaining_balance: 500,
-      status: "Partial Payment",
-    },
-  ];
-
   let { data, isLoading: chartingIsLoading } = useQuery(
     ["clinic-analytics", branch_id, doctor_id, dateRange.from, dateRange.to],
     () =>
       fetchData({
-        url: `/api/clinic-analytics`,
+        url: `/api/clinic-analytics?limit=5&page=${page}&doctor_id=${
+          doctor_id ? doctor_id : ""
+        }&branch_id=${branch_id ? branch_id : ""}&date_from=${
+          dateRange.from
+        }&date_to=${dateRange.to}`,
       })
   );
 
@@ -275,7 +303,7 @@ export function ClinicAnalytics({}: NextPageProps) {
         <li className=" w-full lg:w-[68%] lg:mb-0 mb-3 flex flex-wrap justify-between">
           <div className="w-full bg-white shadow-md rounded-lg p-5 flex flex-col justify-end items-start">
             <h4 className=" mb-5">Total Clinic Revenue</h4>
-            <LineChart />
+            <LineChart dataSet={clinicAnalytics?.totalMonthlyRevenue} />
           </div>
         </li>
 
@@ -293,7 +321,7 @@ export function ClinicAnalytics({}: NextPageProps) {
           <div className="w-full bg-white shadow-md rounded-lg p-5 space-y-2 flex flex-col justify-center">
             <h4>Top Patient by Location</h4>
             <ul className=" space-y-2">
-              {clinicAnalytics.patientByLocation.map((item, index) => (
+              {clinicAnalytics?.patientByLocation.map((item, index) => (
                 <li
                   key={index}
                   className=" flex justify-between space-x-2 items-center"
@@ -316,7 +344,7 @@ export function ClinicAnalytics({}: NextPageProps) {
       <Table
         rowKey="_id"
         columns={columns}
-        dataSource={fakeData}
+        dataSource={clinicAnalytics?.patientBalanceList?.data}
         showHeader={true}
         tableLayout="fixed"
         loading={false}
@@ -325,34 +353,13 @@ export function ClinicAnalytics({}: NextPageProps) {
             <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
               <h4 className="basis-full md:basis-auto">Patient Balance List</h4>
             </div>
-            {/* <div className="flex justify-between align-middle gap-4">
-                    <div className="basis-1/2">
-                      <Input
-                        placeholder="Search"
-                        prefix={
-                          <AiOutlineSearch className="text-lg text-casper-500" />
-                        }
-                        className="rounded-full text-base shadow-none"
-                        onChange={(e: any) => setSearch(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <Button
-                        className="p-3 max-w-xs"
-                        appearance="primary"
-                        onClick={() => setIsChartingModalOpen(true)}
-                      >
-                        New Chart
-                      </Button>
-                    </div>
-                  </div> */}
           </div>
         )}
         pagination={{
           pageSize: 5,
           hideOnSinglePage: true,
           showSizeChanger: false,
-          // total: charting?.meta?.total,
+          total: clinicAnalytics?.patientBalanceList?.total,
           onChange: (page) => setPage(page),
         }}
         components={{
