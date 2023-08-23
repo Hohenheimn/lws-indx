@@ -28,7 +28,7 @@ export default function Login() {
   const [LoginForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);
   const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-  const [subdomain, setSubdomain] = useState("");
+  const [isSubdomain, setSubdomain] = useState("");
 
   useEffect(() => {
     if (window?.location?.origin) {
@@ -42,7 +42,7 @@ export default function Login() {
       getSubDomain = getSubDomain[0];
       setSubdomain(getSubDomain);
     }
-  }, [window?.location?.origin]);
+  });
 
   const { mutate: login } = useMutation(
     (payload) =>
@@ -52,13 +52,14 @@ export default function Login() {
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
+        isSubdomain,
       }),
     {
       onSuccess: async (res) => {
         setCookie(null, "a_t", res?.token, {
           path: "/",
         });
-        setCookie(null, "subdomain", subdomain, {
+        setCookie(null, "subdomain", isSubdomain, {
           path: "/",
         });
         router.reload();
@@ -81,11 +82,12 @@ export default function Login() {
   const { mutate: SendEmail } = useMutation(
     (payload) =>
       postData({
-        url: `/api/auth/forget-password?subdomain=${subdomain}`,
+        url: `/api/auth/forget-password`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
+        isSubdomain,
       }),
     {
       onSuccess: async (res) => {

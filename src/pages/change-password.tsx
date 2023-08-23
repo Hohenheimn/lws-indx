@@ -46,16 +46,17 @@ export default function ChangePassword({ router }: any) {
       getSubDomain = getSubDomain[0];
       setSubdomain(getSubDomain);
     }
-  }, [window?.location?.origin]);
+  });
 
   const { mutate: ChangePassword } = useMutation(
     (payload) =>
       postData({
-        url: `/api/user/change-password?subdomain=${subdomain}`,
+        url: `/api/user/change-password`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
+        subdomain,
       }),
     {
       onSuccess: async (res) => {

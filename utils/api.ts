@@ -71,7 +71,7 @@ export const fetchData = async ({ url, options }: any) => {
     });
 };
 
-export const postData = async ({ url, payload, options }: any) => {
+export const postData = async ({ url, payload, options, isSubdomain }: any) => {
   const token = parseCookies().a_t;
 
   if (options?.isLoading) {
@@ -107,7 +107,7 @@ export const postData = async ({ url, payload, options }: any) => {
     .post(
       `${process.env.REACT_APP_API_BASE_URL}${url}${
         !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
-      }${subdomain}`,
+      }${subdomainCookie ? subdomain : `&subdomain=${isSubdomain}`}`,
       formDataPayload,
       {
         headers: {

@@ -73,7 +73,6 @@ export default function AdvanceCalendar({
               const start = 0;
               const end = 12;
               const monthOptions: string[] = [];
-
               let current = value.clone();
               const localeData = value.localeData();
               const months = [];

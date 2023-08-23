@@ -91,7 +91,14 @@ export function AccountDetails({ patientRecord }: any) {
             </li>
             <li className={li}>
               <p className=" font-semibold">Application Settings</p>
-              <p className=" font-semibold text-primary-500 hover:text-primary-400 cursor-pointer">
+              <p
+                className=" font-semibold text-primary-500 hover:text-primary-400 cursor-pointer"
+                onClick={() =>
+                  router.push(
+                    "http://lws-dentist.localhost:3000/admin/settings/application-settings"
+                  )
+                }
+              >
                 Update
               </p>
             </li>

@@ -1,16 +1,17 @@
 import React from "react";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { AiFillCaretDown } from "react-icons/ai";
-import Dropdown from "@components/Dropdown";
-import { destroyCookie, setCookie } from "nookies";
 import { notification, Menu } from "antd";
-import MobileDrawer from "./MobileDrawer";
-import { Context } from "@utilities/context/Provider";
-import Avatar from "@components/Avatar";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { destroyCookie, setCookie } from "nookies";
+import { AiFillCaretDown } from "react-icons/ai";
 import { IoPersonOutline } from "react-icons/io5";
-import { twMerge } from "tailwind-merge";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { twMerge } from "tailwind-merge";
+import Avatar from "@components/Avatar";
+import Dropdown from "@components/Dropdown";
+import { Context } from "@utilities/context/Provider";
+
+import MobileDrawer from "./MobileDrawer";
 
 interface SideMenuProps extends React.HTMLAttributes<HTMLDivElement> {
   openMenus?: string;
@@ -228,6 +229,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                       label: "Logout",
                       onClick: () => {
                         destroyCookie(undefined, "a_t", { path: "/" });
+                        destroyCookie(undefined, "subdomain", { path: "/" });
                         router.reload();
                         notification.success({
                           message: "Logout Succesful",
