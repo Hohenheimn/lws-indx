@@ -199,6 +199,7 @@ export default function AddPatientModal({
                 rules={[{ required: true, message: "This is required!" }]}
                 required={false}
                 className="col-span-3 lg:col-span-1"
+                initialValue={""}
               >
                 <Input id="first_name" placeholder="First Name" />
               </Form.Item>
@@ -206,6 +207,7 @@ export default function AddPatientModal({
                 label="Middle Name"
                 name="middle_name"
                 className="col-span-3 lg:col-span-1"
+                initialValue={""}
               >
                 <Input id="middle_name" placeholder="Middle Name" />
               </Form.Item>
@@ -215,6 +217,7 @@ export default function AddPatientModal({
                 rules={[{ required: true, message: "This is required!" }]}
                 required={false}
                 className="col-span-3 lg:col-span-1"
+                initialValue={""}
               >
                 <Input id="last_name" placeholder="Last Name" />
               </Form.Item>

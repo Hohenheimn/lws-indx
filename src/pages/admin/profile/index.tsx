@@ -21,19 +21,21 @@ export function ProfilePage({ profile: myProfile }: any) {
   return (
     <>
       <PageContainer>
-        <h3>My Profile</h3>
-        <Tabs
-          activeKey={`${router.query.tab ?? profile("")[0]?.key}`}
-          onChange={(e) =>
-            router.replace({
-              query: { ...router.query, tab: e },
-            })
-          }
-          items={profile({
-            profile: myProfile,
-            tab: router.query.tab ?? "1",
-          })}
-        />
+        <h3>Doctor Profile</h3>
+        <div className="profile-container">
+          <Tabs
+            activeKey={`${router.query.tab ?? profile("")[0]?.key}`}
+            onChange={(e) =>
+              router.replace({
+                query: { ...router.query, tab: e },
+              })
+            }
+            items={profile({
+              profile: myProfile,
+              tab: router.query.tab ?? "1",
+            })}
+          />
+        </div>
       </PageContainer>
     </>
   );

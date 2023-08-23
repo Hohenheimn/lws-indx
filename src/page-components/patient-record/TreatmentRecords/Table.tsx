@@ -7,6 +7,7 @@ export default function TreatmentRecordTable({
   TableColumns,
   Endpoint,
   patientRecord,
+  Title,
   search,
   queryName,
 }: {
@@ -15,6 +16,7 @@ export default function TreatmentRecordTable({
   patientRecord: any;
   queryName: string;
   search: string;
+  Title: React.ReactNode;
 }) {
   let [page, setPage] = React.useState(1);
 
@@ -42,6 +44,7 @@ export default function TreatmentRecordTable({
         dataSource={TableData?.data}
         showHeader={true}
         loading={TableLoading}
+        title={() => Title}
         tableLayout="fixed"
         pagination={{
           pageSize: 5,

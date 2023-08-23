@@ -24,6 +24,7 @@ export default function AddPrescriptionModal({
   patientRecord,
   ...rest
 }: any) {
+  let id = form.getFieldValue("_id");
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
 
@@ -33,7 +34,6 @@ export default function AddPrescriptionModal({
   ] = useState<any>(undefined);
 
   useEffect(() => {
-    console.log(isPrescriptionTemplateDetail?.medicines);
     form.setFieldValue("medicines", isPrescriptionTemplateDetail?.medicines);
   }, [isPrescriptionTemplateDetail]);
 
@@ -84,7 +84,7 @@ export default function AddPrescriptionModal({
   const { mutate: editPrescription } = useMutation(
     (payload: any) => {
       return postData({
-        url: `/api/patient/prescription/${payload.id}?_method=PUT`,
+        url: `/api/patient/prescription/update/${payload.id}?_method=PUT`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -136,14 +136,14 @@ export default function AddPrescriptionModal({
     >
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-bold text-3xl">Create Prescription Template</div>
+          <div className="font-bold text-3xl">
+            {id ? "Update" : "Create"} Prescription Template
+          </div>
         </div>
         <Form
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            let id = form.getFieldValue("_id");
-
             values.medicines = JSON.stringify(values.medicines);
 
             if (!id) {

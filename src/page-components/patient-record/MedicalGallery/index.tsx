@@ -72,7 +72,9 @@ export function MedicalGallery({ patientRecord }: any) {
       })
   );
 
-  const gallery_list: gallery[] = MedicalGallery?.data;
+  const gallery_list: gallery[] = MedicalGallery?.data
+    ? MedicalGallery.data
+    : [];
 
   const { mutate: deleteMedicalGallery }: any = useMutation(
     (gallery_id: number) =>
@@ -315,15 +317,6 @@ export function MedicalGallery({ patientRecord }: any) {
                         className=" object-contain"
                         src={gallery.filename}
                       />
-
-                      {/* <Image
-                        src={gallery.filename}
-                        alt="random pics"
-                        fill
-                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        objectFit="cover"
-                        className="rounded-[inherit]"
-                      /> */}
                     </div>
                     <AnimatePresence>
                       {SelectedEdit.id === gallery._id && (
@@ -361,8 +354,14 @@ export function MedicalGallery({ patientRecord }: any) {
               <Pagination
                 current={page}
                 onChange={(e) => setPage(e)}
-                total={MedicalGallery?.meta?.total} // Total number of items
-                pageSize={MedicalGallery?.meta?.per_page} // Number of items per page
+                total={
+                  MedicalGallery?.meta?.total ? MedicalGallery?.meta?.total : 1
+                } // Total number of items
+                pageSize={
+                  MedicalGallery?.meta?.per_page
+                    ? MedicalGallery?.meta?.per_page
+                    : 1
+                } // Number of items per page
               />
             </div>
           </div>

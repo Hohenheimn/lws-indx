@@ -168,7 +168,12 @@ export default function AddSMSTemplate({
         <div className="flex items-center justify-between">
           <div className="font-bold text-3xl">Add SMS Template</div>
         </div>
-        {id && <DeleteButton deleteHandler={() => deleteSMSTemplate(id)} />}
+        {id && (
+          <DeleteButton
+            label="Delete SMS Template"
+            deleteHandler={() => deleteSMSTemplate(id)}
+          />
+        )}
         <Form
           form={form}
           layout="vertical"

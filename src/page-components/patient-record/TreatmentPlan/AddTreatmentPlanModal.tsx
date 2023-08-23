@@ -175,9 +175,16 @@ export default function AddTreatmentPlanModal({
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-bold text-3xl">New Treatment Plan</div>
+          <div className="font-bold text-3xl">
+            {!id ? "New" : "Update"} Treatment Plan
+          </div>
         </div>
-        {id && <DeleteButton deleteHandler={() => deleteTreatmentPlan()} />}
+        {id && (
+          <DeleteButton
+            label="Delete Treatment Plan"
+            deleteHandler={() => deleteTreatmentPlan()}
+          />
+        )}
 
         <Form
           form={form}
@@ -562,6 +569,7 @@ export default function AddTreatmentPlanModal({
                     // rules={[{ required: true, message: "Notes is required" }]}
                     required={false}
                     className="basis-1/2"
+                    initialValue={""}
                   >
                     <TextArea
                       id="notes"

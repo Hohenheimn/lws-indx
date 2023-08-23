@@ -93,7 +93,10 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
           <>
             <h3>Patient Record</h3>
 
-            <DeleteButton deleteHandler={() => deletePatient()} />
+            <DeleteButton
+              label="Delete Patient"
+              deleteHandler={() => deletePatient()}
+            />
             <Card className="text-base">
               <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                 <div className="flex flex-col justify-center items-center gap-4">

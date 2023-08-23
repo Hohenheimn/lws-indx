@@ -6,6 +6,7 @@ import { scroller } from "react-scroll";
 import Annotate from "@components/Annotate";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
+import { Button } from "@src/components/Button";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
@@ -34,7 +35,7 @@ export default function AnnotationModal({
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-4">
         <h1 className="text-center">{SelectedAnnotate?.tooth_no}</h1>
-        <div className="h-full w-full max-h-[20rem] max-w-[20rem] m-auto">
+        <div className="h-full w-full m-auto">
           <Annotate
             // disabled={true}
             defaultValue={SelectedAnnotate}
@@ -48,6 +49,8 @@ export default function AnnotationModal({
             }
             ProceduresData={proceduresList?.data}
             setSearch={setSearch}
+            forModal={true}
+            onClose={onClose}
           />
         </div>
       </div>

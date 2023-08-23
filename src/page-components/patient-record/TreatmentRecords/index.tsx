@@ -91,6 +91,52 @@ export function TreatmentRecords({ patientRecord }: any) {
 
   let [search, setSearch] = React.useState("");
 
+  const Title = () => {
+    return (
+      <div className="space-y-8 h">
+        <div className="space-y-4 md:p-12 p-6 !pb-0">
+          <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
+            <h4 className="basis-full md:basis-auto">Treatment Records</h4>
+          </div>
+          <div className="flex justify-between w-full">
+            <div>
+              <Input
+                placeholder="Search"
+                prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
+                className="rounded-full text-base shadow-none"
+                onChange={(e: any) => setSearch(e.target.value)}
+              />
+            </div>
+            <div>
+              <Button
+                className="p-3 max-w-xs"
+                appearance="primary"
+                onClick={() => {
+                  setIsTreatmentRecordModalOpen(true);
+                }}
+              >
+                Create New Treatment
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <ul className="flex flex-auto md:px-12 px-6">
+          {tabs.map((row, index) => (
+            <li
+              key={index}
+              className={`cursor-pointer mr-5 ${row === isTabActive &&
+                " text-primary-500 border-b border-primary-500"}`}
+              onClick={() => setTabActive(row)}
+            >
+              {row}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className=" flex justify-start">
@@ -107,81 +153,39 @@ export function TreatmentRecords({ patientRecord }: any) {
           </h5>
         </Card>
       </div>
-      <Card className="flex-auto p-0">
-        <div className="space-y-8 h-full flex flex-col">
-          <div className="space-y-4 md:p-12 p-6 !pb-0">
-            <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
-              <h4 className="basis-full md:basis-auto">Treatment Records</h4>
-            </div>
-            <div className="flex justify-between w-full">
-              <div>
-                <Input
-                  placeholder="Search"
-                  prefix={
-                    <AiOutlineSearch className="text-lg text-casper-500" />
-                  }
-                  className="rounded-full text-base shadow-none"
-                  onChange={(e: any) => setSearch(e.target.value)}
-                />
-              </div>
-              <div>
-                <Button
-                  className="p-3 max-w-xs"
-                  appearance="primary"
-                  onClick={() => {
-                    setIsTreatmentRecordModalOpen(true);
-                  }}
-                >
-                  Create New Treatment
-                </Button>
-              </div>
-            </div>
-          </div>
+      <div className="flex flex-auto mt-8">
+        {isTabActive === "Records" && (
+          <TreatmentRecordTable
+            TableColumns={TableRecordColumns}
+            Endpoint={"patient/treatment"}
+            queryName="treatment-record"
+            patientRecord={patientRecord}
+            search={search}
+            Title={<Title />}
+          />
+        )}
+        {isTabActive === "Billings" && (
+          <TreatmentRecordTable
+            queryName="invoice"
+            TableColumns={TableBillingColumns}
+            Endpoint="patient/invoice"
+            patientRecord={patientRecord}
+            search={search}
+            Title={<Title />}
+          />
+        )}
+        {isTabActive === "Payments" && (
+          <TreatmentRecordTable
+            TableColumns={TablePaymentColumns}
+            Endpoint="patient/payment"
+            queryName="payment"
+            patientRecord={patientRecord}
+            search={search}
+            Title={<Title />}
+          />
+        )}
+      </div>
 
-          <ul className="flex flex-auto md:px-12 px-6">
-            {tabs.map((row, index) => (
-              <li
-                key={index}
-                className={`cursor-pointer mr-5 ${row === isTabActive &&
-                  " text-primary-500 border-b border-primary-500"}`}
-                onClick={() => setTabActive(row)}
-              >
-                {row}
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-auto">
-            {isTabActive === "Records" && (
-              <TreatmentRecordTable
-                TableColumns={TableRecordColumns}
-                Endpoint={"patient/treatment"}
-                queryName="treatment-record"
-                patientRecord={patientRecord}
-                search={search}
-              />
-            )}
-            {isTabActive === "Billings" && (
-              <TreatmentRecordTable
-                queryName="invoice"
-                TableColumns={TableBillingColumns}
-                Endpoint="patient/invoice"
-                patientRecord={patientRecord}
-                search={search}
-              />
-            )}
-            {isTabActive === "Payments" && (
-              <TreatmentRecordTable
-                TableColumns={TablePaymentColumns}
-                Endpoint="patient/payment"
-                queryName="payment"
-                patientRecord={patientRecord}
-                search={search}
-              />
-            )}
-          </div>
-        </div>
-      </Card>
       <AddTreatmentRecordModal
         show={isTreatmentRecordModalOpen}
         onClose={() => {

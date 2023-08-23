@@ -2,21 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
-import { AiFillMinusCircle } from "react-icons/ai";
-import { IoMdAddCircle } from "react-icons/io";
-import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
-import { arrayBuffer } from "stream/consumers";
-import { AnimateContainer } from "@components/animation";
-import { fadeIn } from "@components/animation/animation";
 import Annotate from "@components/Annotate";
 import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
+import DeleteButton from "@src/components/DeleteButton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData, updateData } from "@utilities/api";
+
+import { deleteData, postData } from "@utilities/api";
+
 import { Context } from "@utilities/context/Provider";
 
 import { getInitialValue, removeNumberFormatting } from "@utilities/helpers";
@@ -32,6 +29,8 @@ export default function ChartingModal({
   defaultAnnotation,
   ...rest
 }: any) {
+  let id = form.getFieldValue("_id");
+
   const queryClient = useQueryClient();
 
   const { setIsAppLoading } = React.useContext(Context);
@@ -290,18 +289,65 @@ export default function ChartingModal({
     }
   );
 
+  const { mutate: deleteCharting }: any = useMutation(
+    () =>
+      deleteData({
+        url: `/api/patient/charting/${id}`,
+      }),
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Chart Deleted",
+          description: "Chart has been deleted",
+        });
+        onClose();
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({
+          queryKey: ["charting-list"],
+        });
+        const previousValues = queryClient.getQueryData(["charting-list"]);
+        queryClient.setQueryData(["charting-list"], (oldData: any) =>
+          oldData ? [...oldData, newData] : undefined
+        );
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["charting-list"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["charting-list"] });
+      },
+    }
+  );
+
   return (
     <>
       <Modal
         show={show}
         onClose={() => {}}
-        //  onClose={onClose}
+        // onClose={onClose}
         {...rest}
       >
         <div className="space-y-8">
           <div className="flex items-center justify-between">
-            <div className="font-bold text-3xl">New Chart</div>
+            <div className="font-bold text-3xl">
+              {id ? "Update" : "New"} Chart
+            </div>
           </div>
+          {id && (
+            <DeleteButton
+              label="Delete Chart"
+              deleteHandler={() => deleteCharting()}
+            />
+          )}
           <Form
             form={form}
             layout="vertical"
@@ -338,12 +384,12 @@ export default function ChartingModal({
 
               values.procedures = procedures;
 
-              // if (!id) {
-              //     addChart(values);
-              // } else {
-              //     values.id = id;
-              //     editChart(values);
-              // }
+              if (!id) {
+                addChart(values);
+              } else {
+                values.id = id;
+                editChart(values);
+              }
             }}
             onFinishFailed={(data) => {
               scroller.scrollTo(
@@ -760,7 +806,12 @@ export default function ChartingModal({
             </div>
 
             <div className="grid grid-cols-1">
-              <Form.Item label="Remark" name="remarks" required={false}>
+              <Form.Item
+                label="Remark"
+                name="remarks"
+                required={false}
+                initialValue={""}
+              >
                 <TextArea id="remarks" placeholder="Remarks" />
               </Form.Item>
             </div>

@@ -745,3 +745,24 @@ div.ant-popover {
 .custom-select .ant-select-selector:after {
   display: none;
 }
+
+.profile-container .ant-tabs {
+  @apply lg:flex lg:flex-row lg:space-x-3 lg:items-start;
+  .ant-tabs-nav {
+    @apply lg:p-0;
+  }
+  .ant-tabs-nav-list {
+    @apply lg:flex-col;
+    .ant-tabs-tab {
+      @apply lg:px-10 lg:py-5 lg:m-0;
+    }
+    .ant-tabs-tab:nth-child(1) {
+      @media (min-width: 1024px) {
+        border-bottom: 1px solid #e8ebf0;
+      }
+    }
+  }
+}
+div.ant-tabs .ant-tabs-nav .ant-tabs-ink-bar {
+  @apply lg:hidden;
+}

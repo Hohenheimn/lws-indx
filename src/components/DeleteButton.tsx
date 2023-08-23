@@ -3,9 +3,10 @@ import { BsTrash } from "react-icons/bs";
 
 type Props = {
   deleteHandler: () => void;
+  label: string;
 };
 
-export default function DeleteButton({ deleteHandler }: Props) {
+export default function DeleteButton({ deleteHandler, label }: Props) {
   return (
     <div className=" w-full flex justify-end">
       <p
@@ -13,7 +14,7 @@ export default function DeleteButton({ deleteHandler }: Props) {
         className="cursor-pointer flex space-x-2 text-primary-500 border-b border-primary-500 pb-1"
       >
         <BsTrash className=" text-lg" />
-        Delete Patient
+        {label}
       </p>
     </div>
   );
