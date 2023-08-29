@@ -4,6 +4,7 @@ import Form from "antd/lib/form";
 import "chart.js/auto";
 import { format, parseISO } from "date-fns";
 import moment from "moment";
+import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import {
   AiOutlineSearch,
@@ -32,6 +33,7 @@ import Card from "@components/Card";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import AdvanceCalendar from "@src/components/AdvanceCalendar";
+
 import CalendarTypeIcons from "@src/components/CalendarTypeIcons";
 
 import {
@@ -63,6 +65,8 @@ import AddScheduleModal from "../../page-components/dashboard/modals/AddSchedule
 const highlightDate = "bg-black text-white";
 
 export function Dashboard({}: NextPageProps) {
+  const router = useRouter();
+
   const [isCalendarType, setCalendarType] = useState("simple");
 
   const { setIsAppLoading } = React.useContext(Context);
@@ -215,7 +219,7 @@ export function Dashboard({}: NextPageProps) {
         {isCalendarType === "simple" && (
           <div className="flex flex-col flex-auto">
             <div className="flex justify-start xl:justify-between gap-4 xl:mt-10 flex-wrap flex-auto">
-              <div className="basis-full xl:basis-[45%] max-h-[30rem]">
+              <div className="basis-full xl:basis-[45%]">
                 <CalendarTypeIcons
                   isCalendarType={isCalendarType}
                   setCalendarType={setCalendarType}
@@ -273,6 +277,7 @@ export function Dashboard({}: NextPageProps) {
                                 doctor_name,
                                 doctor_schedule_type,
                                 patient_id,
+                                dental_chair,
                                 patient_name,
                                 email,
                                 mobile_number,
@@ -300,7 +305,7 @@ export function Dashboard({}: NextPageProps) {
                                     }
                                   >
                                     <div>
-                                      <div className="flex justify-around items-center flex-wrap gap-6 lg:text-left lg:flex-nowrap text-center">
+                                      <div className="flex justify-around items-center flex-wrap gap-6 text-center">
                                         <div className="basis-full md:basis-auto flex items-center justify-center">
                                           <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
                                             {patient_name
@@ -308,8 +313,9 @@ export function Dashboard({}: NextPageProps) {
                                               : doctor_name.charAt(0)}
                                           </div>
                                         </div>
+
                                         <div className="space-y-0 basis-full md:basis-auto">
-                                          <div className="font-bold text-xl">
+                                          <div className="font-bold text-xl text-start">
                                             {patient_name
                                               ? patient_name
                                               : doctor_name}
@@ -337,7 +343,8 @@ export function Dashboard({}: NextPageProps) {
                                             </div>
                                           </div>
                                         </div>
-                                        <div className="space-y-0 font-medium basis-full md:basis-auto">
+
+                                        <div className="space-y-0 font-medium text-start basis-full md:basis-auto">
                                           <div>{reason_for_visit}</div>
                                           <div>Dr. {doctor_name}</div>
                                           <div>
@@ -370,6 +377,7 @@ export function Dashboard({}: NextPageProps) {
                                               end_time,
                                               patient_id,
                                               patient_name,
+                                              dental_chair,
                                               email,
                                               mobile_number,
                                               reason_for_visit,
@@ -405,9 +413,8 @@ export function Dashboard({}: NextPageProps) {
 
                                         <FaTooth
                                           onClick={() =>
-                                            UpdateStatushandler(
-                                              "Start Consultation",
-                                              _id
+                                            router.push(
+                                              `/admin/patient-list/${_id}`
                                             )
                                           }
                                           className="align-middle cursor-pointer hover:text-secondary transition"

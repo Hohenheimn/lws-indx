@@ -8,10 +8,10 @@ type Props = {
 
 const LineChart = ({ dataSet }: Props) => {
   const data = {
-    labels: dataSet.map((item) => item.label),
+    labels: dataSet ? dataSet.map((item) => item.label) : [],
     datasets: [
       {
-        data: dataSet.map((item) => item.count),
+        data: dataSet ? dataSet.map((item) => item.count) : [],
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: [
           "rgba(180, 245, 247, 0.525)",

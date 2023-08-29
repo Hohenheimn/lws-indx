@@ -1,9 +1,12 @@
 import React from "react";
-import { Checkbox, Form } from "antd";
+import { Checkbox, Form, notification } from "antd";
 import { IoIosArrowForward } from "react-icons/io";
 import { scroller } from "react-scroll";
 import { Button } from "@src/components/Button";
 import Card from "@src/components/Card";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchData, postDataMultipleFile } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
 
 type Props = {
   onBack: () => void;
@@ -11,6 +14,64 @@ type Props = {
 
 export default function ChangePlan({ onBack }: Props) {
   const [form] = Form.useForm();
+
+  const queryClient = useQueryClient();
+
+  const { setIsAppLoading } = React.useContext(Context);
+
+  const { mutate: addMedicalGallery } = useMutation(
+    (payload: any) => {
+      return postDataMultipleFile({
+        url: ``,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Updating Subscription Plan Success",
+          description: `Updating Subscription Plan Success`,
+        });
+        form.resetFields();
+        onBack();
+      },
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({
+          queryKey: ["subscription"],
+        });
+        const previousValues = queryClient.getQueryData(["subscription"]);
+        queryClient.setQueryData(["subscription"], (oldData: any) =>
+          oldData ? [...oldData, newData] : undefined
+        );
+
+        return { previousValues };
+      },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(["subscription"], context.previousValues);
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({
+          queryKey: ["subscription"],
+        });
+      },
+    }
+  );
+
+  let { data: subscriptionList } = useQuery(["subscription"], () =>
+    fetchData({
+      url: `/api/subscriptions`,
+    })
+  );
+
   return (
     <Card className="flex-auto md:p-12 p-6">
       <h4 className="mb-3">Change Plan</h4>

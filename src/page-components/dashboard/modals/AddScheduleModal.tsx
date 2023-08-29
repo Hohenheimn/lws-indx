@@ -13,11 +13,13 @@ import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
+import TimeRangePicker from "@src/components/TimeRangePicker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import leaveReasons from "@utilities/global-data/leaveReasons";
 import scheduleType from "@utilities/global-data/scheduleType";
+
 import { getInitialValue } from "@utilities/helpers";
 
 import AddPatientModal from "./AddPatientModal";
@@ -53,17 +55,12 @@ export default function AddScheduleModal({
   );
 
   React.useEffect(() => {
-    moment("12:00", "HH:mm");
     form.setFieldsValue({
       ...form,
       time:
-        moment(form?.getFieldValue("start_time"), "HH:mm").isValid() &&
-        moment(form?.getFieldValue("end_time"), "HH:mm").isValid()
-          ? [
-              moment(form?.getFieldValue("start_time"), "HH:mm"),
-              moment(form?.getFieldValue("end_time"), "HH:mm"),
-            ]
-          : undefined,
+        form?.getFieldValue("start_time") && form?.getFieldValue("end_time")
+          ? [form?.getFieldValue("start_time"), form?.getFieldValue("end_time")]
+          : [],
     });
   }, [show]);
 
@@ -102,6 +99,7 @@ export default function AddScheduleModal({
       },
       onSettled: async () => {
         queryClient.invalidateQueries({ queryKey: ["schedule"] });
+        queryClient.invalidateQueries({ queryKey: ["schedule-dates"] });
       },
     }
   );
@@ -182,12 +180,12 @@ export default function AddScheduleModal({
       const get = doctorSchedules.map((item: any, index: number) => {
         const startTime = parse(
           `${item.date} ${item.start_time}`,
-          "yyyy-MM-dd HH:mm",
+          "yyyy-MM-dd hh:mm a",
           new Date()
         );
         const endTime = parse(
           `${item.date} ${item.end_time}`,
-          "yyyy-MM-dd HH:mm",
+          "yyyy-MM-dd hh:mm a",
           new Date()
         );
         const coveredTime = differenceInHours(endTime, startTime);
@@ -209,8 +207,8 @@ export default function AddScheduleModal({
         (filter) => filter.date === formattedCurrent
       );
       setTime(() =>
-        getByFilter.map((map) => {
-          return { start: map.start_time, end: map.end_time };
+        getByFilter.map((item) => {
+          return { start: item.start_time, end: item.end_time };
         })
       );
     }
@@ -221,31 +219,12 @@ export default function AddScheduleModal({
     if (
       isDoctorSchedules.some(
         (someitem) =>
-          someitem.date === formattedCurrent && someitem.covered_time >= 23
+          someitem.date === formattedCurrent && someitem.covered_time >= 10
       )
     ) {
       return true;
     }
     return false;
-  };
-
-  const disabledTime = (current: any, type: any) => {
-    let arrayHours: number[] = [];
-    isTime.map((item: any) => {
-      const startHour = Number(moment(item.start, "HH:mm").format("HH"));
-      const endHour = Number(moment(item.end, "HH:mm").format("HH"));
-      for (let i = startHour; i < endHour + 1; i++) {
-        arrayHours = [...arrayHours, i];
-      }
-    });
-    return {
-      disabledHours: () => arrayHours,
-      disabledMinutes: (selectedHour: number) => {
-        // disabled minutes here
-        return [];
-      },
-      disabledSeconds: (selectedHour: number, selectedMinute: number) => [],
-    };
   };
 
   return (
@@ -257,10 +236,11 @@ export default function AddScheduleModal({
           layout="vertical"
           onFinish={(values) => {
             let id = form.getFieldValue("_id");
-            values.start_time = moment(values.time[0]).format("HH:mm");
-            values.end_time = moment(values.time[1]).format("HH:mm");
-            values.date = moment(values.date).format("YYYY-MM-DD");
 
+            values.start_time = values.time[0];
+            values.end_time = values.time[1];
+            delete values.time;
+            values.date = moment(values.date).format("YYYY-MM-DD");
             if (!id) {
               addSchedule(values);
             } else {
@@ -444,14 +424,10 @@ export default function AddScheduleModal({
                   className="col-span-4 md:col-span-2"
                 >
                   <DatePicker
-                    // getPopupContainer={(triggerNode: any) => {
-                    //   return triggerNode.parentNode;
-                    // }}
                     placeholder="Date"
                     id="date"
                     format="MMMM DD, YYYY"
                     onChange={(value: any) => {
-                      // form.setFieldsValue({ time: [] });
                       setSelectedDate(value);
                     }}
                     disabledDate={disabledDate}
@@ -478,15 +454,14 @@ export default function AddScheduleModal({
                     }
                   }}
                 >
-                  <TimePicker.RangePicker
-                    id="time"
-                    format="HH:mm"
-                    minuteStep={15}
-                    disabledTime={disabledTime}
-                    // disabled={!selectedDate}
-                    order={false}
+                  <TimeRangePicker
+                    onChange={(value) => {
+                      form.setFieldValue("time", value);
+                    }}
+                    isTime={isTime}
                   />
                 </Form.Item>
+
                 <Form.Item
                   label="Dental Chair"
                   name="dental_chair"
@@ -512,6 +487,7 @@ export default function AddScheduleModal({
                     </Select.Option>
                   </Select>
                 </Form.Item>
+
                 <Form.Item
                   label="Remarks"
                   name="remarks"
@@ -661,13 +637,11 @@ export default function AddScheduleModal({
                     }
                   }}
                 >
-                  <TimePicker.RangePicker
-                    id="time"
-                    format="HH:mm"
-                    minuteStep={15}
-                    disabledTime={disabledTime}
-                    disabled={!selectedDate}
-                    order={false}
+                  <TimeRangePicker
+                    onChange={(value) => {
+                      form.setFieldValue("time", value);
+                    }}
+                    isTime={isTime}
                   />
                 </Form.Item>
                 <Form.Item

@@ -120,13 +120,14 @@ export const fadeIn = {
   animate: {
     opacity: 1,
     transition: {
-      duration: 0.6,
+      duration: 0.3,
       type: "cubic-bezier",
     },
   },
   exit: {
     opacity: 0,
     transition: {
+      duration: 0.3,
       type: "cubic-bezier",
     },
   },

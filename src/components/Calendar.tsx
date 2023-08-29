@@ -77,8 +77,8 @@ export default function Calendar({ onChange, ScheduledDates }: CalendarProps) {
 
   return (
     <>
-      <div className="flex w-full h-full bg-white shadow-lg rounded-3xl p-8 items-center justify-center">
-        <div className="flex flex-col">
+      <div className="flex w-full h-auto bg-white shadow-lg rounded-3xl p-8 items-center justify-center ">
+        <div className="flex flex-col w-full">
           <div className="flex items-center justify-between">
             <BsArrowLeft
               className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
@@ -112,13 +112,13 @@ export default function Calendar({ onChange, ScheduledDates }: CalendarProps) {
             <div>Fr</div>
             <div>Sa</div>
           </div>
-          <div className="grid grid-cols-7 mt-2 text-sm space-x-1 space-y-1">
+          <div className="grid grid-cols-7 gap-3 mt-2 text-sm space-x-1 space-y-1 ">
             {days.map((day, dayIdx) => {
               return (
                 <div
                   key={day.toString()}
                   className={`${twMerge(
-                    " border border-transparent rounded-full hover:bg-primary-50 transition flex justify-center items-center h-14 w-14 font-medium",
+                    " border border-transparent rounded-full hover:bg-primary-50 transition flex justify-center items-center h-[100%] aspect-square font-medium",
                     dayIdx === 0 && colStartClasses[getDay(day)],
                     isToday(day) &&
                       "[&>.date-wrapper]:text-secondary-500 font-bold",

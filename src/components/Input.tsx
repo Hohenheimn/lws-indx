@@ -80,6 +80,7 @@ export const Input: React.ForwardRefRenderFunction<
           type={isPasswordVisible && type === "password" ? "text" : type}
           name={name}
           id={name}
+          autoComplete="off"
           className={twMerge(
             "focus:border-primary-500 focus:ring-0 focus:shadow-input p-4 bg-white border-default shadow rounded-md transition block w-full text-sm leading-[normal] disabled:bg-[#f5f5f5]",
             `${prefix ? "pl-8" : ""} ${suffix ? "pr-12" : ""}`,

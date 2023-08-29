@@ -163,7 +163,7 @@ export function ClinicAnalytics({}: NextPageProps) {
 
   let [page, setPage] = React.useState(1);
 
-  let { data, isLoading: chartingIsLoading } = useQuery(
+  let { data } = useQuery(
     ["clinic-analytics", branch_id, doctor_id, dateRange.from, dateRange.to],
     () =>
       fetchData({
