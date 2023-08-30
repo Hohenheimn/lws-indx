@@ -222,7 +222,7 @@ div.ant-select {
       }
     }
     .ant-select-selector {
-      @apply p-4 rounded-md hover:border-primary;
+      @apply p-2 rounded-md hover:border-primary shadow-md h-14;
       .ant-select-selection-item {
         @apply text-[1em] leading-none flex justify-center items-center h-auto p-2 m-0 mr-2;
         .ant-select-selection-item-remove {
@@ -246,6 +246,13 @@ div.ant-select {
         @apply p-0 left-[unset] right-[unset];
       }
     }
+  }
+
+  .ant-select-selection-item {
+    @apply bg-primary-500 text-white border border-primary-300 rounded-md cursor-pointer hover:bg-primary-600;
+  }
+  .ant-select-selection-item-remove {
+    @apply text-white hover:text-gray-200;
   }
 
   // .ant-select-selector {

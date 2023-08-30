@@ -108,10 +108,14 @@ const sideMenu: Array<sideMenuProps> = [
 
 export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
   const router = useRouter();
-  const { isDrawerOpen, setIsDrawerOpen } = React.useContext(Context);
+  const {
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isSideMenuCollapsed,
+    setIsSideMenuCollapsed,
+  } = React.useContext(Context);
   let [isImageError, setIsImageError] = React.useState(false);
   let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
-  let [isSideMenuCollapsed, setIsSideMenuCollapsed] = React.useState(false);
 
   return (
     <>
@@ -271,7 +275,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
         </div>
         <div
           className="absolute top-0 left-full z-10 bg-primary bg-opacity-70 text-white p-2 text-2xl mt-8 cursor-pointer rounded-tr-md rounded-br-md"
-          onClick={() => setIsSideMenuCollapsed((prevState) => !prevState)}
+          onClick={() => setIsSideMenuCollapsed((prevState: any) => !prevState)}
         >
           <RxHamburgerMenu />
         </div>

@@ -44,7 +44,6 @@ export const Layout = ({
           </AnimateContainer>
         )}
       </AnimatePresence>
-
       <div
         className={twMerge(
           "flex flex-col overflow-hidden flex-auto",

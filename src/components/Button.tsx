@@ -21,13 +21,13 @@ function appearanceChecker(
 ) {
   switch (appearance) {
     case "primary":
-      return "bg-primary-500 border-primary-500 hover:bg-primary-500 hover:shadow-lg active:bg-primary-700 active:shadow-lg text-white";
+      return "bg-primary-500 border-primary-500 hover:bg-primary-600 hover:shadow-lg active:bg-primary-700 active:shadow-lg text-white";
     case "secondary":
-      return "bg-secondary-500 border-secondary-500 hover:bg-secondary-500 hover:shadow-lg active:bg-secondary-700 active:shadow-lg text-white";
+      return "bg-secondary-500 border-secondary-500 hover:bg-secondary-600 hover:shadow-lg active:bg-secondary-700 active:shadow-lg text-white";
     case "blumine":
-      return "bg-blumine-500 border-blumine-500 hover:bg-blumine-500 hover:shadow-lg active:bg-blumine-700 active:shadow-lg text-white";
+      return "bg-blumine-500 border-blumine-500 hover:bg-blumine-600 hover:shadow-lg active:bg-blumine-700 active:shadow-lg text-white";
     case "danger":
-      return "bg-danger-500 border-danger-500 hover:bg-danger-500 hover:shadow-lg active:bg-danger-700 active:shadow-lg text-white";
+      return "bg-danger-500 border-danger-500 hover:bg-danger-600 hover:shadow-lg active:bg-danger-700 active:shadow-lg text-white";
     case "link":
       return "bg-transparent shadow-none text-default-text w-auto p-0 m-0 border-none tracking-normal hover:text-primary-500 overflow-visible";
     case "disabled":

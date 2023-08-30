@@ -55,14 +55,12 @@ export function PersonalInfo({ patientRecord, tab }: any) {
           ? moment(patientRecord?.birthdate)
           : undefined,
         age: moment(patientRecord?.birthdate).isValid()
-          ? moment().diff(
-              moment(patientRecord?.birthdate, "MMMM DD, YYYY"),
-              "years"
-            )
+          ? moment().diff(moment(patientRecord?.birthdate), "years")
           : undefined,
         patient_consent: Boolean(patientRecord?.patient_signature_path),
       });
     }
+    // computeAge()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
@@ -107,6 +105,12 @@ export function PersonalInfo({ patientRecord, tab }: any) {
       },
     }
   );
+
+  const computeAge = (dob: any) => {
+    PersonalInfoForm.setFieldsValue({
+      age: moment().diff(moment(dob), "years"),
+    });
+  };
 
   return (
     <Card className="flex-auto">
@@ -202,11 +206,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                     return current && current >= moment().subtract(3, "year");
                   }}
                   onChange={(dob, dobString) => {
-                    const date = parse(dobString, "MMMM dd, yyyy", new Date());
-
-                    PersonalInfoForm.setFieldsValue({
-                      age: moment().diff(moment(dob), "years"),
-                    });
+                    computeAge(dob);
                   }}
                 />
               </Form.Item>
@@ -363,7 +363,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                   <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="Region"
                 required={false}
                 className="col-span-12 lg:col-span-6"
@@ -398,11 +398,11 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                     </Form.Item>
                   );
                 }}
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item
                 label="Province"
                 required={false}
-                className="col-span-12 lg:col-span-4"
+                className="col-span-12 lg:col-span-6"
                 shouldUpdate={(prev, curr) => {
                   return true;
                 }}
@@ -442,7 +442,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="City"
                 required={false}
-                className="col-span-12 lg:col-span-4"
+                className="col-span-12 lg:col-span-6"
                 shouldUpdate={(prev, curr) => {
                   return true;
                 }}
@@ -482,7 +482,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Barangay"
                 required={false}
-                className="col-span-12 lg:col-span-4"
+                className="col-span-12 lg:col-span-6"
                 shouldUpdate={(prev, curr) => {
                   return true;
                 }}
@@ -525,7 +525,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 name="street"
                 rules={[{ required: true, message: "Street is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-8"
+                className="col-span-12 lg:col-span-6"
               >
                 <Input id="street" placeholder="Add street name" />
               </Form.Item>
@@ -534,7 +534,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 name="zip_code"
                 rules={[{ required: true, message: "Zip Code is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-4"
+                className="col-span-12 lg:col-span-6"
               >
                 <NumericFormat
                   customInput={Input}

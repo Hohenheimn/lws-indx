@@ -10,11 +10,13 @@ import { twMerge } from "tailwind-merge";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn, stagger } from "@components/animation/animation";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import { capitalizeTitle } from "@utilities/helpers";
 
 import "../../styles/globals.scss";
 import Layout from "../layout";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 
 
 const AppProvider = dynamic(() => import("@utilities/context/Provider"));
@@ -30,7 +32,10 @@ const queryClient = new QueryClient({
 });
 
 export default function App({ Component, pageProps, router }: AppProps) {
+
   const [isAppLoading, setIsAppLoading] = React.useState(false);
+
+  let [isSideMenuCollapsed, setIsSideMenuCollapsed] = React.useState(false);
 
   Router.events.on("routeChangeStart", (url) => {
     if (Router?.router?.route !== url) {
@@ -76,6 +81,8 @@ export default function App({ Component, pageProps, router }: AppProps) {
       <AppProvider
         isAppLoading={isAppLoading}
         setIsAppLoading={(show: boolean) => setIsAppLoading(show)}
+        isSideMenuCollapsed={isSideMenuCollapsed}
+        setIsSideMenuCollapsed={setIsSideMenuCollapsed}
       >
         <AnimatePresence mode="wait">
           <div key={router.route} className={"flex flex-col flex-auto"}>

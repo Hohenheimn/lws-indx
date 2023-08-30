@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, message, notification } from "antd";
 import { format, parseISO, differenceInYears, parse } from "date-fns";
 import Image from "next/image";
@@ -23,6 +23,8 @@ interface PatientRecordProps extends NextPageProps {
 
 export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
   const queryClient = useQueryClient();
+
+  const [type, setType] = useState("view");
 
   const { setIsAppLoading } = React.useContext(Context);
 
@@ -91,7 +93,24 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
       <PageContainer>
         {!loadingPatient ? (
           <>
-            <h3>Patient Record</h3>
+            <div className=" flex justify-between w-full items-center">
+              <h3>Patient Record</h3>
+              <ul className=" w-44 grid grid-cols-2 overflow-hidden rounded-md shadow-md">
+                <li
+                  onClick={() => setType("")}
+                  className={` flex cursor-pointer justify-center py-2 text-lg ${type ===
+                    "view" && " bg-primary-500 text-white"}`}
+                >
+                  <p>View</p>
+                </li>
+                <li
+                  className={` flex cursor-pointer justify-center py-2 text-lg ${type ===
+                    "edit" && " bg-primary-500 text-white"}`}
+                >
+                  <p>Edit</p>
+                </li>
+              </ul>
+            </div>
 
             <DeleteButton
               label="Delete Patient"

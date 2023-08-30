@@ -230,9 +230,9 @@ export default function Login() {
                 <Button appearance="secondary" type="submit" className="py-4">
                   LOG IN
                 </Button>
-                <Button className="!text-secondary-500 border-secondary-500 py-4">
+                {/* <Button className="!text-secondary-500 border-secondary-500 py-4">
                   CREATE ACCOUNT
-                </Button>
+                </Button> */}
               </div>
             </Form>
           </div>

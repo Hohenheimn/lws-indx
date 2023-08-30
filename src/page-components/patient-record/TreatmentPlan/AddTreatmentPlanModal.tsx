@@ -1,5 +1,5 @@
-import React from "react";
-import { DatePicker, Form, TimePicker, notification } from "antd";
+import React, { useEffect } from "react";
+import { DatePicker, Form, Radio, TimePicker, notification } from "antd";
 import { Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
@@ -29,6 +29,30 @@ export default function AddTreatmentPlanModal({
   const queryClient = useQueryClient();
 
   const { setIsAppLoading } = React.useContext(Context);
+
+  const discount_type = Form.useWatch("discount_type", form);
+
+  const discountField = Form.useWatch("discount", form);
+
+  const estimated_costField = Form.useWatch("estimated_cost", form);
+
+  useEffect(() => {
+    let discount = 0;
+    if (discount_type === "Percent") {
+      discount = removeNumberFormatting(discountField)
+        ? removeNumberFormatting(discountField) / 100
+        : 0;
+      discount = estimated_costField * discount;
+    }
+    if (discount_type === "Amount") {
+      discount = removeNumberFormatting(discountField)
+        ? removeNumberFormatting(discountField)
+        : 0;
+    }
+
+    let total = estimated_costField - discount;
+    form.setFieldValue("total_amount", total);
+  }, [discountField, estimated_costField, discount_type]);
 
   let id = form.getFieldValue("_id");
 
@@ -194,6 +218,7 @@ export default function AddTreatmentPlanModal({
             values.discount = removeNumberFormatting(values.discount);
             delete values.cost;
             delete values.date_created;
+            delete values.type_discount;
             let treatment_plan_list = values.treatment_plan_list.map(
               (itemMap: any) => {
                 return {
@@ -380,14 +405,13 @@ export default function AddTreatmentPlanModal({
                                     });
                                   }}
                                 >
-                                  <Select.Option value={1}>
-                                    Toothache
-                                  </Select.Option>
+                                  <Select.Option value={1}>1</Select.Option>
                                   <Select.Option value={2}>2</Select.Option>
                                   <Select.Option value={3}>3</Select.Option>
                                   <Select.Option value={4}>4</Select.Option>
                                 </Select>
                               </Form.Item>
+
                               <Form.Item
                                 label="Cost"
                                 name={[name, "cost"]}
@@ -598,6 +622,24 @@ export default function AddTreatmentPlanModal({
                       thousandSeparator
                     />
                   </Form.Item>
+
+                  <div>
+                    <p className="mb-1">Choose Type of Discount</p>
+                    <Form.Item
+                      name="discount_type"
+                      required={false}
+                      className="text-base"
+                      initialValue={""}
+                    >
+                      <Radio.Group
+                        id="discount_type"
+                        className="grid grid-cols-1 gap-1 text-lg"
+                      >
+                        <Radio value="Amount">Amount Discount</Radio>
+                        <Radio value="Percent">Percent Discount</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </div>
                   <Form.Item
                     label="Add Discount (Optional)"
                     name="discount"
@@ -615,20 +657,17 @@ export default function AddTreatmentPlanModal({
                       customInput={Input}
                       placeholder="Add Discount"
                       id="discount"
-                      suffix="%"
-                      allowLeadingZeros={false}
+                      prefix={discount_type === "Amount" ? "₱" : ""}
+                      suffix={discount_type === "Percent" ? "%" : ""}
                       isAllowed={({ floatValue }: any) => {
-                        return floatValue >= 0 && floatValue <= 100;
-                      }}
-                      onValueChange={({ floatValue, ...rest }) => {
-                        let estimated_cost = removeNumberFormatting(
-                          form.getFieldValue("estimated_cost") ?? 0
-                        );
-                        let discount = floatValue ? floatValue / 100 : 0;
-                        let discountedCost = estimated_cost * discount;
-                        let total = estimated_cost - discountedCost;
-
-                        form.setFieldValue("total_amount", total);
+                        if (discount_type === "Percent")
+                          return floatValue === undefined || floatValue <= 100;
+                        if (discount_type === "Amount")
+                          return (
+                            floatValue === undefined ||
+                            floatValue <= estimated_costField
+                          );
+                        return false;
                       }}
                     />
                   </Form.Item>

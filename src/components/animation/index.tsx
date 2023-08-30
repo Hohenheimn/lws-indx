@@ -1,8 +1,12 @@
+import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useInView } from "react-intersection-observer";
-import { twMerge } from "tailwind-merge";
 
-import { pageTransition } from "./animation";
+import { twMerge } from "tailwind-merge";
+import { Context } from "@utilities/context/Provider";
+
+import { fadeInLeft, pageTransition } from "./animation";
 
 interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
@@ -21,21 +25,40 @@ export function PageContainer({
   variants,
   ...rest
 }: PageContainerProps) {
+  const { isSideMenuCollapsed } = React.useContext(Context);
+
   return (
-    <motion.div
-      variants={variants ?? pageTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className={twMerge(
-        "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto scroll-smooth",
-        className
-      )}
-      {...rest}
-      id="main-container"
-    >
-      {children}
-    </motion.div>
+    <>
+      <motion.div
+        variants={variants ?? pageTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className={twMerge(
+          "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto scroll-smooth",
+          className,
+          "relative"
+        )}
+        {...rest}
+        id="main-container"
+      >
+        {isSideMenuCollapsed && (
+          <div
+            id="indx-mini-icon"
+            className=" absolute top-[2%] md:top-[5%] left-0 px-[5%]"
+          >
+            <Image
+              src="/images/logo.png"
+              alt="random pics"
+              height={30}
+              width={80}
+            />
+          </div>
+        )}
+
+        {children}
+      </motion.div>
+    </>
   );
 }
 
