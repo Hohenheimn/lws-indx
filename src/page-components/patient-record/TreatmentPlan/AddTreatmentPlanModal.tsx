@@ -218,7 +218,6 @@ export default function AddTreatmentPlanModal({
             values.discount = removeNumberFormatting(values.discount);
             delete values.cost;
             delete values.date_created;
-            delete values.type_discount;
             let treatment_plan_list = values.treatment_plan_list.map(
               (itemMap: any) => {
                 return {
