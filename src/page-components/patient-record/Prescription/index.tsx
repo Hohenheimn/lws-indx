@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
+import { Checkbox, DatePicker, Form, Popover, Table, Tooltip, notification } from "antd";
 import moment from "moment";
 import Link from "next/link";
 import { AiOutlinePrinter, AiOutlineSearch } from "react-icons/ai";
@@ -15,9 +15,15 @@ import Input from "@components/Input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 
+
+
+
 import AddPrescriptionModal from "./AddPrescriptionModal";
 
-export function Prescription({ patientRecord }: any) {
+
+
+
+export function Prescription({ patientRecord, pageType }: any) {
   const [PrescriptionForm] = Form.useForm();
   const queryClient = useQueryClient();
   let [page, setPage] = React.useState(1);
@@ -66,17 +72,25 @@ export function Prescription({ patientRecord }: any) {
       render: (_: any, record: any) => {
         return (
           <div className="w-full flex justify-center space-x-4">
-            <BsTrash
-              className=" text-xl text-gray-400"
-              onClick={() => deletePrescription(record._id)}
-            />
+            {
+              pageType === 'edit' && (
+                <Tooltip title="Delete">
+                  <BsTrash
+                    className=" text-xl text-gray-400"
+                    onClick={() => deletePrescription(record._id)}
+                  />
+                </Tooltip>
+              )
+            }
             <Link
               href={`/admin/print?page=prescription&patient=${JSON.stringify(
                 patientRecord
               )}&tableData=${JSON.stringify(record)}`}
               target="_blank"
             >
-              <AiOutlinePrinter className=" text-xl text-gray-400" />
+              <Tooltip title='Print'>
+                <AiOutlinePrinter className=" text-xl text-gray-400" />
+              </Tooltip>
             </Link>
           </div>
         );
@@ -116,9 +130,8 @@ export function Prescription({ patientRecord }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["prescription"], context.previousValues);
       },
@@ -205,6 +218,7 @@ export function Prescription({ patientRecord }: any) {
         id="prescription-modal"
         patientRecord={patientRecord}
         form={PrescriptionForm}
+        pageType={pageType}
       />
     </>
   );

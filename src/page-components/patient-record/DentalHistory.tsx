@@ -11,7 +11,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
-export function DentalHistory({ patientRecord, tab }: any) {
+
+
+export function DentalHistory({ patientRecord, tab, pageType }: any) {
   const queryClient = useQueryClient();
   const [DentalHistoryForm] = Form.useForm();
 
@@ -57,9 +59,8 @@ export function DentalHistory({ patientRecord, tab }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["dental-history"], context.previousValues);
       },
@@ -107,7 +108,7 @@ export function DentalHistory({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12 md:col-span-6"
               >
-                <Input id="previous_dentist" placeholder="Previous Dentist" />
+                <Input id="previous_dentist" disabled={pageType === 'view'} placeholder="Previous Dentist" />
               </Form.Item>
               <Form.Item
                 label="Last Dentist Visit"
@@ -125,6 +126,7 @@ export function DentalHistory({ patientRecord, tab }: any) {
                   disabledDate={(current) => {
                     return current > moment();
                   }}
+                  disabled={pageType === 'view'}
                   id="last_visit_date"
                   placeholder="Last Dentist Visit"
                   format="MMMM DD, YYYY"
@@ -145,6 +147,7 @@ export function DentalHistory({ patientRecord, tab }: any) {
                 <InfiniteSelect
                   placeholder="Select Reason for Visit"
                   id="last_visit_reason"
+                  disabled={pageType === 'view'}
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
                   queryKey={["procedure"]}
                   displayValueKey="name"
@@ -163,7 +166,7 @@ export function DentalHistory({ patientRecord, tab }: any) {
                 required={false}
                 className="col-span-12"
               >
-                <Input id="chief_complaint" placeholder="Chief Complaint" />
+                <Input id="chief_complaint" disabled={pageType === 'view'} placeholder="Chief Complaint" />
               </Form.Item>
             </div>
           </div>
@@ -176,7 +179,7 @@ export function DentalHistory({ patientRecord, tab }: any) {
               required={false}
               className="col-span-full text-base"
             >
-              <Checkbox.Group className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center py-4 lg:px-[10%] text-lg">
+              <Checkbox.Group disabled={pageType === 'view'} className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center py-4 lg:px-[10%] text-lg">
                 <Checkbox value="bad_breath">Bad Breath</Checkbox>
                 <Checkbox value="food_collection_between_teeth">
                   Food Collection between Teeth
@@ -209,15 +212,20 @@ export function DentalHistory({ patientRecord, tab }: any) {
               </Checkbox.Group>
             </Form.Item>
           </div>
-          <div className="flex justify-center items-center">
-            <Button
-              appearance={!isLoading ? "primary" : "disabled"}
-              type="submit"
-              className="max-w-md py-4"
-            >
-              Save
-            </Button>
-          </div>
+          {
+            pageType === 'edit' && (
+              <div className="flex justify-center items-center">
+                <Button
+                  appearance={!isLoading ? "primary" : "disabled"}
+                  type="submit"
+                  className="max-w-md py-4"
+                >
+                  Save
+                </Button>
+              </div>
+            )
+          }
+
         </div>
       </Form>
     </Card>

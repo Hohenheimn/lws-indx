@@ -4,7 +4,17 @@ import Annotation from "react-image-annotation";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@components/Button";
 
+
+
+
+
+
 import Input from "./Input";
+
+
+
+
+
 
 interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
@@ -22,6 +32,8 @@ interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
   }[];
   forModal?: boolean;
   setSearch?: Function;
+  pageType: string
+  formType?: string
   onClose?: () => void;
 }
 
@@ -145,6 +157,8 @@ export function Annotate({
   setSearch,
   forModal,
   onClose,
+  formType,
+  pageType,
   ...rest
 }: AnnotateProps) {
   let [annotations, setAnnotations] = React.useState<any>([]);
@@ -313,12 +327,17 @@ export function Annotate({
         />
       </div>
       {forModal && (
+
         <div className=" w-full flex justify-between">
-          <div>
-            <Button appearance="primary" onClick={ResetProcedures}>
-              Reset Procedure
-            </Button>
-          </div>
+          {
+            pageType === 'view' && formType === 'edit' ? <div></div> : (
+              <div>
+                <Button appearance="primary" onClick={ResetProcedures}>
+                  Reset Procedure
+                </Button>
+              </div>
+            )
+          }
           <div>
             <Button appearance="primary" onClick={onClose}>
               Close

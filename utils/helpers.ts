@@ -1,5 +1,7 @@
 import { parse, differenceInYears } from "date-fns";
 
+
+
 export function statusPalette(status: string) {
   switch (status?.toLowerCase()) {
     case "pending":
@@ -63,8 +65,8 @@ export function convertNumber(number: number) {
   return ((Math.log10(number) / 3) | 0) === 0
     ? number
     : Number(
-        (number / Math.pow(10, ((Math.log10(number) / 3) | 0) * 3)).toFixed(1)
-      ) + ["", "K", "M", "B", "T"][(Math.log10(number) / 3) | 0];
+      (number / Math.pow(10, ((Math.log10(number) / 3) | 0) * 3)).toFixed(1)
+    ) + ["", "K", "M", "B", "T"][(Math.log10(number) / 3) | 0];
 }
 
 export function contactNumberFormatter(number: string) {
@@ -164,4 +166,8 @@ export const getAge = (birthdate: string) => {
   );
   const age = differenceInYears(new Date(), birthday);
   return age;
+};
+
+export const scrollToTarget = async (ref: any) => {
+  ref?.current?.scrollIntoView();
 };

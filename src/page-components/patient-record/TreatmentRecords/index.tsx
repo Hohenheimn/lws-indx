@@ -15,6 +15,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
+
+
+
+
 import AddTreatmentRecordModal from "./AddTreatmentRecordModal";
 import { BillingColumns, PaymentColumns, RecordColumns } from "./Columns";
 import CreateBillingStatementModal from "./CreateBillingStatementModal";
@@ -24,7 +28,11 @@ import TreatmentRecordTable from "./Table";
 import { SelectedTreatment, SelectedBilling, SelectedPayment } from "./types";
 import ViewPaymentModal from "./ViewPaymentModa";
 
-export function TreatmentRecords({ patientRecord }: any) {
+
+
+
+
+export function TreatmentRecords({ patientRecord, pageType }: any) {
   const [TreatmentRecordForm] = Form.useForm();
 
   const [SelectedTreatments, setSelectedTreatments] = useState<
@@ -45,17 +53,20 @@ export function TreatmentRecords({ patientRecord }: any) {
 
   const TableRecordColumns = RecordColumns(
     SelectedTreatments,
-    setSelectedTreatments
+    setSelectedTreatments,
+    pageType
   );
 
   const TableBillingColumns = BillingColumns(
     SelectedBilling,
-    setSelectedBilling
+    setSelectedBilling,
+    pageType
   );
 
   const TablePaymentColumns = PaymentColumns(
     SelectedPayment,
-    setSelectedPayment
+    setSelectedPayment,
+    pageType
   );
 
   let [
@@ -146,7 +157,7 @@ export function TreatmentRecords({ patientRecord }: any) {
             P {numberSeparator(invoiceTotal ? invoiceTotal : 0, 0)}
           </h1>
           <h5
-            className="text-white text-lg cursor-pointer font-semibold border-b border-white inline"
+            className={` text-lg cursor-pointer font-semibold border-b border-white inline ${pageType === 'view' ? 'text-gray-300 pointer-events-none border-gray-300' : ' border-white text-white'}`}
             onClick={() => setPayCertainAmountModalOpen(true)}
           >
             Pay Certain Amount
@@ -245,30 +256,30 @@ export function TreatmentRecords({ patientRecord }: any) {
       {(SelectedTreatments.length > 0 ||
         SelectedBilling.length > 0 ||
         SelectedPayment.length > 0) && (
-        <div className=" fixed w-full bottom-0 left-0 bg-primary-500 text-white py-3 px-10 flex justify-end items-center space-x-8">
-          <p className=" text-lg">
-            {isTabActive === "Records" && SelectedTreatments.length}
-            {isTabActive === "Payments" && SelectedPayment.length}
-            {isTabActive === "Billings" && SelectedBilling.length} Item Selected
-          </p>
+          <div className=" fixed w-full bottom-0 left-0 bg-primary-500 text-white py-3 px-10 flex justify-end items-center space-x-8">
+            <p className=" text-lg">
+              {isTabActive === "Records" && SelectedTreatments.length}
+              {isTabActive === "Payments" && SelectedPayment.length}
+              {isTabActive === "Billings" && SelectedBilling.length} Item Selected
+            </p>
 
-          <div>
-            <Button
-              className="text-white font-semibold "
-              onClick={() => {
-                isTabActive === "Records" &&
-                  setCreateBillingStatementModalOpen(true);
-                isTabActive === "Billings" && setCreatePaymentModalOpen(true);
-                isTabActive === "Payments" && setViewPaymentModal(true);
-              }}
-            >
-              {isTabActive === "Records" && "Proceed To Billing Statement"}
-              {isTabActive === "Billings" && "Pay Selected Billing"}
-              {isTabActive === "Payments" && "View Payments"}
-            </Button>
+            <div>
+              <Button
+                className="text-white font-semibold "
+                onClick={() => {
+                  isTabActive === "Records" &&
+                    setCreateBillingStatementModalOpen(true);
+                  isTabActive === "Billings" && setCreatePaymentModalOpen(true);
+                  isTabActive === "Payments" && setViewPaymentModal(true);
+                }}
+              >
+                {isTabActive === "Records" && "Proceed To Billing Statement"}
+                {isTabActive === "Billings" && "Pay Selected Billing"}
+                {isTabActive === "Payments" && "View Payments"}
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </>
   );
 }

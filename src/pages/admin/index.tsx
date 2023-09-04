@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { notification } from "antd";
+import { Tooltip, notification } from "antd";
 import Form from "antd/lib/form";
 import "chart.js/auto";
 import { format, parseISO } from "date-fns";
@@ -57,10 +57,20 @@ import scheduleType from "@utilities/global-data/scheduleType";
 
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+
+
+
+
+
 import PrivateRoute from "../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../auth/HOC/VerifyAuth";
 import AddPatientModal from "../../page-components/dashboard/modals/AddPatientModal";
 import AddScheduleModal from "../../page-components/dashboard/modals/AddScheduleModal";
+
+
+
+
+
 
 const highlightDate = "bg-black text-white";
 
@@ -362,77 +372,80 @@ export function Dashboard({}: NextPageProps) {
                                     </div>
 
                                     <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
-                                      {/* <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" /> */}
-                                      {/* <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" /> */}
-                                      <BsPencilSquare
-                                        className="align-middle cursor-pointer hover:text-secondary transition"
-                                        onClick={() => {
-                                          ScheduleForm.setFieldsValue({
-                                            branch_id,
-                                            branch_name,
-                                            clinic_room,
-                                            created_at,
-                                            doctor_id,
-                                            doctor_name,
-                                            doctor_schedule_type,
-                                            end_time,
-                                            patient_id,
-                                            patient_name,
-                                            dental_chair,
-                                            email,
-                                            mobile_number,
-                                            reason_for_visit,
-                                            reason_for_visit_id,
-                                            schedule_type,
-                                            start_time,
-                                            updated_at,
-                                            status,
-                                            _id,
-                                            remarks,
-                                            time: [
-                                              moment(start_time).isValid()
-                                                ? moment(start_time, "HH:mm")
+                                      
+                                      <Tooltip title='Edit'>
+                                        <BsPencilSquare
+                                          className="align-middle cursor-pointer hover:text-secondary transition"
+                                          onClick={() => {
+                                            ScheduleForm.setFieldsValue({
+                                              branch_id,
+                                              branch_name,
+                                              clinic_room,
+                                              created_at,
+                                              doctor_id,
+                                              doctor_name,
+                                              doctor_schedule_type,
+                                              end_time,
+                                              patient_id,
+                                              patient_name,
+                                              dental_chair,
+                                              email,
+                                              mobile_number,
+                                              reason_for_visit,
+                                              reason_for_visit_id,
+                                              schedule_type,
+                                              start_time,
+                                              updated_at,
+                                              status,
+                                              _id,
+                                              remarks,
+                                              time: [
+                                                moment(start_time).isValid()
+                                                  ? moment(start_time, "HH:mm")
+                                                  : undefined,
+                                                moment(end_time).isValid()
+                                                  ? moment(end_time, "HH:mm")
+                                                  : undefined,
+                                              ],
+                                              date: moment(date).isValid()
+                                                ? moment(date)
                                                 : undefined,
-                                              moment(end_time).isValid()
-                                                ? moment(end_time, "HH:mm")
-                                                : undefined,
-                                            ],
-                                            date: moment(date).isValid()
-                                              ? moment(date)
-                                              : undefined,
-                                          });
+                                            });
 
-                                          setIsScheduleModalOpen(true);
-                                        }}
-                                      />
-                                      {/* <BsTrash
-                                        className="align-middle cursor-pointer hover:text-secondary transition"
-                                        onClick={() => {
-                                          deleteSchedule(_id);
-                                        }}
-                                      /> */}
+                                            setIsScheduleModalOpen(true);
+                                          }}
+                                        />
+                                      </Tooltip>
 
-                                      <FaTooth
-                                        onClick={() =>
-                                          router.push(
-                                            `/admin/patient-list/${_id}`
-                                          )
-                                        }
-                                        className="align-middle cursor-pointer hover:text-secondary transition"
-                                      />
+                                      <Tooltip title='Start Consultation'>
+                                        <FaTooth
+                                          onClick={() =>
+                                            router.push(
+                                              `/admin/patient-list/${_id}`
+                                            )
+                                          }
+                                          className="align-middle cursor-pointer hover:text-secondary transition"
+                                        />
+                                      </Tooltip>
+
+                                     <Tooltip title='Complete'>
                                       <BsCheckSquare
-                                        onClick={() =>
-                                          UpdateStatushandler("Completed", _id)
-                                        }
-                                        className="align-middle cursor-pointer hover:text-secondary transition"
-                                      />
+                                          onClick={() =>
+                                            UpdateStatushandler("Completed", _id)
+                                          }
+                                          className="align-middle cursor-pointer hover:text-secondary transition"
+                                        />
+                                     </Tooltip>
+
+                                     <Tooltip title='Cancel'>
                                       <MdOutlineCancel
-                                        className="align-middle cursor-pointer hover:text-secondary transition"
-                                        onClick={() =>
-                                          UpdateStatushandler("Canceled", _id)
-                                        }
-                                      />
+                                          className="align-middle cursor-pointer hover:text-secondary transition"
+                                          onClick={() =>
+                                            UpdateStatushandler("Canceled", _id)
+                                          }
+                                        />
+                                     </Tooltip>
+                                     
                                     </div>
                                   </Card>
                                 </AnimateContainer>

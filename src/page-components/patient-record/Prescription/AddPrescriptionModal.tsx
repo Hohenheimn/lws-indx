@@ -17,11 +17,15 @@ import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { getInitialValue } from "@utilities/helpers";
 
+
+
+
 export default function AddPrescriptionModal({
   show,
   onClose,
   form,
   patientRecord,
+  pageType,
   ...rest
 }: any) {
   let id = form.getFieldValue("_id");
@@ -69,9 +73,8 @@ export default function AddPrescriptionModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["prescription"], context.previousValues);
       },
@@ -113,9 +116,8 @@ export default function AddPrescriptionModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["prescription"], context.previousValues);
       },
@@ -166,14 +168,6 @@ export default function AddPrescriptionModal({
           className="space-y-12"
         >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* <Form.Item
-              label="Prescription Name"
-              name="name"
-              rules={[{ required: true, message: "This is required!" }]}
-              required={false}
-            >
-              <Input id="name" placeholder="Prescription Name" />
-            </Form.Item> */}
             <Form.Item
               label="Prescription Template"
               name="prescription_id"
@@ -182,12 +176,12 @@ export default function AddPrescriptionModal({
               <InfiniteSelect
                 placeholder="Prescription Template"
                 id="prescription_id"
-                api={`${
-                  process.env.REACT_APP_API_BASE_URL
-                }/api/prescription?limit=3&for_dropdown=true&page=1${getInitialValue(
-                  form,
-                  "prescription_id"
-                )}`}
+                api={`${process.env.REACT_APP_API_BASE_URL
+                  }/api/prescription?limit=3&for_dropdown=true&page=1${getInitialValue(
+                    form,
+                    "prescription_id"
+                  )}`}
+                disabled={pageType === 'view' && id}
                 queryKey={["prescription_id"]}
                 displayValueKey="name"
                 returnValueKey="_id"
@@ -231,8 +225,11 @@ export default function AddPrescriptionModal({
                             <div className="grid grid-cols-1 z-[99] lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
-                                  className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
-                                  onClick={() => remove(name)}
+                                  className={`absolute top-0 right-0 m-2  text-3xl ${pageType === 'view' && id ? ' text-gray-400' : 'cursor-pointer text-danger'}`}
+                                  onClick={() => {
+                                    if (pageType === 'view' && id) return
+                                    remove(name)
+                                  }}
                                 />
                               ) : null}
                               <Form.Item
@@ -252,6 +249,7 @@ export default function AddPrescriptionModal({
                                   id={["medicines", name, "medicine_id"].join(
                                     "-"
                                   )}
+                                  disabled={pageType === 'view' && id}
                                   api={`${process.env.REACT_APP_API_BASE_URL}/api/medicine?limit=3&for_dropdown=true&page=1`}
                                   queryKey={["medicineList"]}
                                   displayValueKey="name"
@@ -276,6 +274,7 @@ export default function AddPrescriptionModal({
                                   customInput={Input}
                                   thousandSeparator=","
                                   thousandsGroupStyle="thousand"
+                                  disabled={pageType === 'view' && id}
                                 />
                               </Form.Item>
                               <Form.Item
@@ -293,6 +292,7 @@ export default function AddPrescriptionModal({
                                 <Input
                                   id={["medicines", name, "sig"].join("-")}
                                   placeholder="Sig"
+                                  disabled={pageType === 'view' && id}
                                 />
                               </Form.Item>
                             </div>
@@ -313,6 +313,7 @@ export default function AddPrescriptionModal({
                               queryKey={["procedureList"]}
                               displayValueKey="name"
                               returnValueKey="_id"
+                              disabled
                             />
                           </Form.Item>
                           <Form.Item
@@ -325,6 +326,7 @@ export default function AddPrescriptionModal({
                               customInput={Input}
                               thousandSeparator=","
                               thousandsGroupStyle="thousand"
+                              disabled
                             />
                           </Form.Item>
                           <Form.Item
@@ -332,14 +334,17 @@ export default function AddPrescriptionModal({
                             required={false}
                             className="col-span-3 lg:col-span-1"
                           >
-                            <Input placeholder="Sig" />
+                            <Input placeholder="Sig" disabled />
                           </Form.Item>
                         </div>
                         <div
-                          className="absolute top-0 left-0 h-full w-full flex justify-center items-center cursor-pointer"
-                          onClick={() => add()}
+                          className={`absolute top-0 left-0 h-full w-full flex justify-center items-center ${pageType === 'view' && id ? '' : 'cursor-pointer'} `}
+                          onClick={() => {
+                            if (pageType === 'view' && id) return
+                            add()
+                          }}
                         >
-                          <IoMdAddCircle className="text-7xl text-primary" />
+                          <IoMdAddCircle className={`text-7xl ${pageType === 'view' && id ? 'text-gray-400' : 'text-primary'}`} />
                         </div>
                       </div>
                     </>
@@ -355,6 +360,7 @@ export default function AddPrescriptionModal({
                 <TextArea
                   id="additional_instructions"
                   placeholder="Additional Instructions"
+                  disabled={pageType === 'view' && id}
                   rows={8}
                 />
               </Form.Item>
@@ -369,15 +375,17 @@ export default function AddPrescriptionModal({
                 setPrescriptionTemplateDetail(undefined);
               }}
             >
-              Cancel
+              {pageType === 'view' && id ? 'Close' : 'Cancel'}
             </Button>
-            <Button
-              appearance="primary"
-              className="max-w-[10rem]"
-              type="submit"
-            >
-              Save
-            </Button>
+            {
+              pageType === 'view' && id ? <div></div> : <Button
+                appearance="primary"
+                className="max-w-[10rem]"
+                type="submit"
+              >
+                Save
+              </Button>
+            }
           </div>
         </Form>
       </div>

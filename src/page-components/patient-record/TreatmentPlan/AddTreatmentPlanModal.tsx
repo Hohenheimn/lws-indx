@@ -19,11 +19,13 @@ import { deleteData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { getInitialValue, removeNumberFormatting } from "@utilities/helpers";
 
+
 export default function AddTreatmentPlanModal({
   show,
   onClose,
   form,
   patientRecord,
+  pageType,
   ...rest
 }: any) {
   const queryClient = useQueryClient();
@@ -35,6 +37,16 @@ export default function AddTreatmentPlanModal({
   const discountField = Form.useWatch("discount", form);
 
   const estimated_costField = Form.useWatch("estimated_cost", form);
+
+  const treatment_plan_list = Form.useWatch('treatment_plan_list', form)
+
+  useEffect(() => {
+    let total = 0
+    treatment_plan_list?.map((item: any) => total = total + item.total)
+    form.setFieldValue("estimated_cost", total);
+    form.setFieldValue("total_amount", total);
+  }, [treatment_plan_list])
+
 
   useEffect(() => {
     let discount = 0;
@@ -49,12 +61,20 @@ export default function AddTreatmentPlanModal({
         ? removeNumberFormatting(discountField)
         : 0;
     }
-
     let total = estimated_costField - discount;
     form.setFieldValue("total_amount", total);
   }, [discountField, estimated_costField, discount_type]);
 
   let id = form.getFieldValue("_id");
+
+  const addHandler = () => {
+    form.setFieldValue('treatment_plan_list', [...treatment_plan_list, {
+      procedure_id: "",
+      tooth: [],
+      cost: "",
+      total: "",
+    }])
+  }
 
   React.useEffect(() => {
     form.setFieldsValue({
@@ -98,9 +118,8 @@ export default function AddTreatmentPlanModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["treatment-plan"], context.previousValues);
       },
@@ -143,9 +162,8 @@ export default function AddTreatmentPlanModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["treatment-plan"], context.previousValues);
       },
@@ -183,9 +201,8 @@ export default function AddTreatmentPlanModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["treatment-plan"], context.previousValues);
       },
@@ -263,6 +280,7 @@ export default function AddTreatmentPlanModal({
                 <Input
                   id="treatment_plan_name"
                   placeholder="Add Treatment Plan Name"
+                  disabled={pageType === 'view' && id}
                 />
               </Form.Item>
 
@@ -309,8 +327,11 @@ export default function AddTreatmentPlanModal({
                             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
-                                  className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
-                                  onClick={() => remove(name)}
+                                  className={`absolute top-0 right-0 m-2  text-3xl ${pageType === 'view' && id ? ' text-gray-400' : 'cursor-pointer text-danger'}`}
+                                  onClick={() => {
+                                    if (pageType === 'view' && id) return
+                                    remove(name)
+                                  }}
                                 />
                               ) : null}
                               <Form.Item
@@ -326,17 +347,17 @@ export default function AddTreatmentPlanModal({
                               >
                                 <InfiniteSelect
                                   placeholder="Select Procedure"
+                                  disabled={pageType === 'view' && id}
                                   id={[
                                     "treatment_plan_list",
                                     name,
                                     "procedure_id",
                                   ].join("-")}
-                                  api={`${
-                                    process.env.REACT_APP_API_BASE_URL
-                                  }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
-                                    form,
-                                    "procedure"
-                                  )}`}
+                                  api={`${process.env.REACT_APP_API_BASE_URL
+                                    }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
+                                      form,
+                                      "procedure"
+                                    )}`}
                                   queryKey={["procedure"]}
                                   displayValueKey="name"
                                   returnValueKey="_id"
@@ -345,6 +366,7 @@ export default function AddTreatmentPlanModal({
                               <Form.Item
                                 label="Tooth"
                                 name={[name, "tooth"]}
+
                                 rules={[
                                   {
                                     required: true,
@@ -357,6 +379,7 @@ export default function AddTreatmentPlanModal({
                                   mode="multiple"
                                   allowClear
                                   placeholder="Tooth"
+                                  disabled={pageType === 'view' && id}
                                   id={[
                                     "treatment_plan_list",
                                     name,
@@ -366,41 +389,16 @@ export default function AddTreatmentPlanModal({
                                     return triggerNode.parentNode;
                                   }}
                                   onChange={(e) => {
-                                    let treatmentList = form.getFieldValue(
-                                      "treatment_plan_list"
-                                    );
                                     let cost = removeNumberFormatting(
-                                      treatmentList[key].cost ?? 0
+                                      treatment_plan_list[name]?.cost === undefined ? 0 : treatment_plan_list[name].cost
                                     );
                                     let toothTotal = e.length ?? 0;
-                                    const { ...rest } = treatmentList;
+                                    const { ...rest } = treatment_plan_list;
 
                                     let total = Number(cost * toothTotal);
 
-                                    Object.assign(rest[key], {
+                                    Object.assign(rest[name], {
                                       total,
-                                    });
-
-                                    let estimated_cost = treatmentList.reduce(
-                                      (a: any, b: any) => Number(a + b.total),
-                                      0
-                                    );
-                                    let discount =
-                                      removeNumberFormatting(
-                                        form.getFieldValue("discount")
-                                      ) ?? 0;
-                                    let discountVal = discount
-                                      ? discount / 100
-                                      : 0;
-                                    let discountedCost =
-                                      estimated_cost * discountVal;
-                                    let total_amount =
-                                      estimated_cost - discountedCost;
-
-                                    form.setFieldsValue({
-                                      rest,
-                                      estimated_cost,
-                                      total_amount,
                                     });
                                   }}
                                 >
@@ -420,10 +418,12 @@ export default function AddTreatmentPlanModal({
                                     message: "This is required!",
                                   },
                                 ]}
+
                                 required={false}
                               >
                                 <NumericFormat
                                   customInput={Input}
+                                  disabled={pageType === 'view' && id}
                                   placeholder="Cost"
                                   thousandSeparator=","
                                   thousandsGroupStyle="thousand"
@@ -440,35 +440,12 @@ export default function AddTreatmentPlanModal({
                                     let cost = floatValue ?? 0;
 
                                     let toothTotal =
-                                      treatmentList[key]?.tooth?.length ?? 0;
+                                      treatmentList[name]?.tooth?.length ?? 0;
                                     const { ...rest } = treatmentList;
 
                                     let total = Number(cost * toothTotal);
-                                    Object.assign(rest[key], {
+                                    Object.assign(rest[name], {
                                       total,
-                                    });
-
-                                    let estimated_cost = treatmentList.reduce(
-                                      (a: any, b: any) => Number(a + b.total),
-                                      0
-                                    );
-
-                                    let discount =
-                                      removeNumberFormatting(
-                                        form.getFieldValue("discount")
-                                      ) ?? 0;
-                                    let discountVal = discount
-                                      ? discount / 100
-                                      : 0;
-                                    let discountedCost =
-                                      estimated_cost * discountVal;
-                                    let total_amount =
-                                      estimated_cost - discountedCost;
-
-                                    form.setFieldsValue({
-                                      rest,
-                                      estimated_cost,
-                                      total_amount,
                                     });
                                   }}
                                 />
@@ -496,6 +473,7 @@ export default function AddTreatmentPlanModal({
                                   ].join("-")}
                                   prefix="₱"
                                   readOnly
+                                  disabled={true}
                                 />
                               </Form.Item>
                             </div>
@@ -516,12 +494,11 @@ export default function AddTreatmentPlanModal({
                           >
                             <InfiniteSelect
                               placeholder="Select Procedure"
-                              api={`${
-                                process.env.REACT_APP_API_BASE_URL
-                              }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
-                                form,
-                                "procedure"
-                              )}`}
+                              api={`${process.env.REACT_APP_API_BASE_URL
+                                }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
+                                  form,
+                                  "procedure"
+                                )}`}
                               queryKey={["procedure"]}
                               displayValueKey="name"
                               returnValueKey="_id"
@@ -565,17 +542,15 @@ export default function AddTreatmentPlanModal({
                           </Form.Item>
                         </div>
                         <div
-                          className="absolute top-0 left-0 h-full w-full flex justify-center items-center cursor-pointer"
-                          onClick={() =>
-                            add({
-                              procedure_id: "",
-                              tooth: [],
-                              cost: "",
-                              total: "",
-                            })
+                          className={`absolute top-0 left-0 h-full w-full flex justify-center items-center ${pageType === 'view' && id ? '' : 'cursor-pointer'} `}
+                          onClick={() => {
+                            if (pageType === 'view' && id) return
+                            addHandler()
+                          }
+
                           }
                         >
-                          <IoMdAddCircle className="text-7xl text-primary" />
+                          <IoMdAddCircle className={`text-7xl ${pageType === 'view' && id ? 'text-gray-400' : 'text-primary'}`} />
                         </div>
                       </div>
                     </>
@@ -599,6 +574,7 @@ export default function AddTreatmentPlanModal({
                       placeholder="Notes"
                       // rows={8}
                       className="!border-2"
+                      disabled={pageType === 'view' && id}
                     />
                   </Form.Item>
                   <Form.Item
@@ -619,6 +595,7 @@ export default function AddTreatmentPlanModal({
                       prefix="₱"
                       readOnly
                       thousandSeparator
+                      disabled={pageType === 'view' && id}
                     />
                   </Form.Item>
 
@@ -633,6 +610,7 @@ export default function AddTreatmentPlanModal({
                       <Radio.Group
                         id="discount_type"
                         className="grid grid-cols-1 gap-1 text-lg"
+                        disabled={pageType === 'view' && id}
                       >
                         <Radio value="Amount">Amount Discount</Radio>
                         <Radio value="Percent">Percent Discount</Radio>
@@ -658,6 +636,7 @@ export default function AddTreatmentPlanModal({
                       id="discount"
                       prefix={discount_type === "Amount" ? "₱" : ""}
                       suffix={discount_type === "Percent" ? "%" : ""}
+                      disabled={pageType === 'view' && id}
                       isAllowed={({ floatValue }: any) => {
                         if (discount_type === "Percent")
                           return floatValue === undefined || floatValue <= 100;
@@ -676,6 +655,7 @@ export default function AddTreatmentPlanModal({
                   label="Total Amount"
                   required={false}
                   name="total_amount"
+
                   rules={[
                     {
                       required: true,
@@ -690,27 +670,48 @@ export default function AddTreatmentPlanModal({
                     thousandSeparator
                     prefix="₱"
                     readOnly
+                    disabled={true}
                   />
                 </Form.Item>
               </div>
             </div>
           </div>
-          <div className="flex justify-end items-center gap-4">
-            <Button
-              appearance="link"
-              className="p-4 bg-transparent border-none text-casper-500 font-semibold"
-              onClick={() => onClose()}
-            >
-              Cancel
-            </Button>
-            <Button
-              appearance="primary"
-              className="max-w-[10rem]"
-              type="submit"
-            >
-              Save
-            </Button>
-          </div>
+          {
+            pageType === 'view' && id ? (
+              <div>
+                <div className="flex justify-end items-center gap-4">
+                  <Button
+                    appearance="link"
+                    className="p-4 bg-transparent border-none text-casper-500 font-semibold"
+                    onClick={() => onClose()}
+                  >
+                    Close
+                  </Button>
+
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex justify-end items-center gap-4">
+                  <Button
+                    appearance="link"
+                    className="p-4 bg-transparent border-none text-casper-500 font-semibold"
+                    onClick={() => onClose()}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    appearance="primary"
+                    className="max-w-[10rem]"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            )
+          }
+
         </Form>
       </div>
     </Modal>

@@ -31,7 +31,15 @@ import {
   removeNumberFormatting,
 } from "@utilities/helpers";
 
+
+
+
+
 import AddAndUseCredit from "./AddAndUseCredit";
+
+
+
+
 
 export default function PerCertainAmountModal({
   show,
@@ -70,7 +78,10 @@ export default function PerCertainAmountModal({
 
   useEffect(() => {
     let total = Number(removeNumberFormatting(amount));
-    let balance = CertainAmount - total - Number(useCreditAmount);
+    let balance = CertainAmount - total;
+    if (total >= CertainAmount) {
+      balance = 0
+    }
     setTotal(total);
     setBalance(balance);
   }, [amount, useCreditAmount]);
@@ -134,9 +145,8 @@ export default function PerCertainAmountModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["payment"], context.previousValues);
       },
@@ -301,11 +311,11 @@ export default function PerCertainAmountModal({
                 </Form.Item>
               </li>
               <li className="  space-y-4">
-                {/* <p className=" text-end">
+                <p className=" text-end">
                   Remaining Credit:{" "}
                   {Credit?.amount !== undefined &&
                     numberSeparator(Credit?.amount, 0)}
-                </p> */}
+                </p>
 
                 <div className="p-8 border border-primary-500 rounded-md space-y-4">
                   <h4 className="text-lg">Billing Statement</h4>

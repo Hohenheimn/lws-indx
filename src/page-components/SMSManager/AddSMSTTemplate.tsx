@@ -15,6 +15,8 @@ import {
 } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
+
+
 export default function AddSMSTemplate({
   show,
   onClose,
@@ -27,8 +29,6 @@ export default function AddSMSTemplate({
   const { setIsAppLoading } = React.useContext(Context);
 
   let id = form?.getFieldValue("_id");
-
-  console.log(id);
 
   const { mutate: createSMSTemplate } = useMutation(
     (payload: FormData) => {

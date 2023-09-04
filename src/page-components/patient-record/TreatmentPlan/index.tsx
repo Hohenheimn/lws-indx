@@ -10,12 +10,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
+
+
 import AddTreatmentPlanModal from "./AddTreatmentPlanModal";
 
-export function TreatmentPlan({ patientRecord }: any) {
+
+
+export function TreatmentPlan({ patientRecord, pageType }: any) {
   const router = useRouter();
 
   const SelectedRowHandler = (selectedRowRecord: any) => {
+
     TreatmentPlanForm.setFieldsValue({
       ...selectedRowRecord,
       _id: selectedRowRecord._id,
@@ -134,9 +139,8 @@ export function TreatmentPlan({ patientRecord }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["treatment-plan"], context.previousValues);
       },
@@ -217,6 +221,7 @@ export function TreatmentPlan({ patientRecord }: any) {
         />
       </div>
       <AddTreatmentPlanModal
+        pageType={pageType}
         show={isTreatmentPlanModalOpen}
         onClose={() => {
           setIsTreatmentPlanModalOpen(false);

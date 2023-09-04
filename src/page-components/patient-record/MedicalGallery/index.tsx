@@ -13,7 +13,31 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
+
+
+
+
+
+
+
+
+
+
+
+
 import AddMedicalGalleryModal from "./AddMedicalGalleryModal";
+
+
+
+
+
+
+
+
+
+
+
+
 
 type gallery = {
   _id: string;
@@ -32,7 +56,7 @@ type SelectedEdit = {
   description: string;
 };
 
-export function MedicalGallery({ patientRecord }: any) {
+export function MedicalGallery({ patientRecord, pageType }: any) {
   const [MedicalGalleryForm] = Form.useForm();
   const queryClient = useQueryClient();
   let [page, setPage] = React.useState(1);
@@ -64,11 +88,9 @@ export function MedicalGallery({ patientRecord }: any) {
     ["medical-gallery", page, search, isTabActive === "All" ? "" : isTabActive],
     () =>
       fetchData({
-        url: `/api/patient/gallery/${
-          patientRecord._id
-        }?limit=7&page=${page}&search=${search}&category=${
-          isTabActive === "All" ? "" : isTabActive
-        }`,
+        url: `/api/patient/gallery/${patientRecord._id
+          }?limit=7&page=${page}&search=${search}&category=${isTabActive === "All" ? "" : isTabActive
+          }`,
       })
   );
 
@@ -102,9 +124,8 @@ export function MedicalGallery({ patientRecord }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["medical-gallery"], context.previousValues);
       },
@@ -157,9 +178,8 @@ export function MedicalGallery({ patientRecord }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["medical-gallery"], context.previousValues);
       },
@@ -218,7 +238,7 @@ export function MedicalGallery({ patientRecord }: any) {
                   onClick={SaveHandler}
                 >
                   {prevSelectedEdit.name === SelectedEdit.name &&
-                  prevSelectedEdit.description === SelectedEdit.description
+                    prevSelectedEdit.description === SelectedEdit.description
                     ? "BACK"
                     : "SAVE"}
                 </Button>
@@ -252,103 +272,110 @@ export function MedicalGallery({ patientRecord }: any) {
             </ul>
 
             <div className="grid grid-cols-4 gap-12 !mt-12">
-              <div className="aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300">
+              <div className="aspect-[1.3/1] w-full relative rounded-3xl overflow-hidden border-2 border-gray-300">
                 <div
                   onClick={() => setIsMedicalGalleryModalOpen(true)}
-                  className=" cursor-pointer flex justify-center items-center w-full h-full text-base text-gray-400"
+                  className={` cursor-pointer flex justify-center items-center w-full h-full text-base text-gray-400 ${pageType === 'view' && 'bg-gray-100 pointer-events-none'}`}
                 >
                   + Add
                 </div>
               </div>
-              {gallery_list?.map((gallery: gallery, index) => {
-                return (
-                  <div key={index}>
-                    <div
-                      key={index}
-                      className="  group aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300 overflow-hidden"
-                    >
-                      <Popover
-                        showArrow={false}
-                        content={
-                          <div className="grid grid-cols-1 gap-2">
-                            <Button
-                              appearance="link"
-                              className="text-casper-500 p-2"
-                              onClick={() => {
-                                setSelectedEdit({
-                                  id: gallery._id,
-                                  name: gallery.name,
-                                  description: gallery.description,
-                                });
-                                setPrevSelectedEdit({
-                                  id: gallery._id,
-                                  name: gallery.name,
-                                  description: gallery.description,
-                                });
-                              }}
-                            >
-                              <div className="flex items-center gap-2">
-                                <BsPencilSquare className="text-base" />
-                                <div>Edit</div>
-                              </div>
-                            </Button>
-                            <Button
-                              appearance="link"
-                              className="text-casper-500 p-2"
-                              onClick={() => {
-                                deleteMedicalGallery(gallery._id);
-                              }}
-                            >
-                              <div className="flex items-center gap-2">
-                                <BsTrashFill className="text-base" />
-                                <div>Delete</div>
-                              </div>
-                            </Button>
-                          </div>
-                        }
-                        trigger="click"
+              <Image.PreviewGroup>
+                {gallery_list?.map((gallery: gallery, index) => {
+                  return (
+                    <div key={index}>
+                      <div
+                        key={index}
+                        className="  group aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300 overflow-hidden"
                       >
-                        <BiDotsHorizontalRounded className=" cursor-pointer absolute z-10 top-1 right-1 text-primary-500 text-4xl" />
-                      </Popover>
+                        {
+                          pageType === 'edit' && (
+                            <Popover
+                              showArrow={false}
+                              content={
+                                <div className="grid grid-cols-1 gap-2">
+                                  <Button
+                                    appearance="link"
+                                    className="text-casper-500 p-2"
+                                    onClick={() => {
+                                      setSelectedEdit({
+                                        id: gallery._id,
+                                        name: gallery.name,
+                                        description: gallery.description,
+                                      });
+                                      setPrevSelectedEdit({
+                                        id: gallery._id,
+                                        name: gallery.name,
+                                        description: gallery.description,
+                                      });
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <BsPencilSquare className="text-base" />
+                                      <div>Edit</div>
+                                    </div>
+                                  </Button>
+                                  <Button
+                                    appearance="link"
+                                    className="text-casper-500 p-2"
+                                    onClick={() => {
+                                      deleteMedicalGallery(gallery._id);
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <BsTrashFill className="text-base" />
+                                      <div>Delete</div>
+                                    </div>
+                                  </Button>
+                                </div>
+                              }
+                              trigger="click"
+                            >
+                              <BiDotsHorizontalRounded className=" cursor-pointer absolute z-10 top-1 right-1 text-primary-500 text-4xl" />
+                            </Popover>
+                          )
+                        }
 
-                      <Image
-                        height={"100%"}
-                        width={"100%"}
-                        className=" object-contain"
-                        src={gallery.filename}
-                      />
+                        <Image
+                          height={"100%"}
+                          width={"100%"}
+                          className=" object-contain"
+                          src={gallery.filename}
+                        />
+
+                      </div>
+                      <AnimatePresence>
+                        {SelectedEdit.id === gallery._id && (
+                          <motion.div variants={fadeIn}>
+                            <Input
+                              placeholder="Name"
+                              value={SelectedEdit.name}
+                              className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
+                              onChange={(e: any) => {
+                                setSelectedEdit({
+                                  ...SelectedEdit,
+                                  name: e.target.value,
+                                });
+                              }}
+                            />
+                            <Input
+                              placeholder="Description"
+                              value={SelectedEdit.description}
+                              className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
+                              onChange={(e: any) => {
+                                setSelectedEdit({
+                                  ...SelectedEdit,
+                                  description: e.target.value,
+                                });
+                              }}
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                    <AnimatePresence>
-                      {SelectedEdit.id === gallery._id && (
-                        <motion.div variants={fadeIn}>
-                          <Input
-                            placeholder="Name"
-                            value={SelectedEdit.name}
-                            className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
-                            onChange={(e: any) => {
-                              setSelectedEdit({
-                                ...SelectedEdit,
-                                name: e.target.value,
-                              });
-                            }}
-                          />
-                          <Input
-                            placeholder="Description"
-                            value={SelectedEdit.description}
-                            className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
-                            onChange={(e: any) => {
-                              setSelectedEdit({
-                                ...SelectedEdit,
-                                description: e.target.value,
-                              });
-                            }}
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </Image.PreviewGroup>
             </div>
             <div className=" flex justify-end mt-5">
               <Pagination

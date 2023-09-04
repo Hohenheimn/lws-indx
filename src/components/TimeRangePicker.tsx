@@ -1,18 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import {
   addMinutes,
   format,
   startOfDay,
   parse,
   differenceInMinutes,
+  addHours
 } from "date-fns";
-
 import { AnimatePresence } from "framer-motion";
-
 import { motion } from "framer-motion";
-
 import moment from "moment";
+import { scrollToTarget } from "@utilities/helpers";
 
 import { fadeIn } from "./animation/animation";
 import { Button } from "./Button";
@@ -21,6 +19,7 @@ import Input from "./Input";
 type Props = {
   onChange: (value: string[]) => void;
   isTime: { start: string; end: string }[];
+  id?: any
 };
 
 const convertTo24HourFormat = (time12Hour: string) => {
@@ -56,13 +55,15 @@ const disabledTime = (
   return disableHours;
 };
 
-export default function TimeRangePicker({ isTime, onChange, ...rest }: Props) {
+export default function TimeRangePicker({ isTime, id, onChange, ...rest }: Props) {
+
   const disabledTimeArray = disabledTime("", isTime);
   const [show, setShow] = useState(false);
   const timeSlots = generateTimeSlots();
   const restValue: any = rest;
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  const [start, setStart] = useState(restValue?.value ? restValue.value[0] : '');
+  const [end, setEnd] = useState(restValue?.value ? restValue.value[1] : '');
+
   // close by clicking outside
   const Container = useRef<any>();
   useEffect(() => {
@@ -77,6 +78,19 @@ export default function TimeRangePicker({ isTime, onChange, ...rest }: Props) {
     };
   });
 
+  useEffect(() => {
+    if (start === '') return
+    const selectedTime = parse(start, 'hh:mm a', new Date());
+    const oneHourLater = addHours(selectedTime, 1);
+    setEnd(format(oneHourLater, 'hh:mm a'))
+  }, [start])
+
+  useEffect(() => {
+
+    scrollToTarget(endTimeScroll)
+    scrollToTarget(startTimeScroll)
+  }, [start, end])
+
   const applyHandler = () => {
     const startNumber = convertToNumber(start);
     const endNumber = convertToNumber(end);
@@ -90,20 +104,28 @@ export default function TimeRangePicker({ isTime, onChange, ...rest }: Props) {
     setShow(false);
   };
 
+  const startTimeScroll = useRef<any>(null);
+  const endTimeScroll = useRef<any>(null);
+
+  useEffect(() => {
+    scrollToTarget(startTimeScroll);
+    scrollToTarget(endTimeScroll);
+  }, [show]);
+
   return (
     <div className=" flex gap-3 relative z-10" ref={Container}>
       <Input
         {...rest}
+        id={id}
         placeholder="time"
         value={
           restValue?.value?.length > 0
             ? restValue?.value[0] +
-              `${
-                restValue?.value[0] === "" && restValue?.value[1] === ""
-                  ? ""
-                  : " - "
-              }` +
-              restValue?.value[1]
+            `${restValue?.value[0] === "" && restValue?.value[1] === ""
+              ? ""
+              : " - "
+            }` +
+            restValue?.value[1]
             : ""
         }
         onClick={() => setShow(true)}
@@ -120,13 +142,17 @@ export default function TimeRangePicker({ isTime, onChange, ...rest }: Props) {
             <ul className=" bg-white rounded-md shadow-md max-h-[15rem] overflow-auto border border-gray-300">
               {timeSlots.map((time) => (
                 <li
-                  key={time}
+                  key={time} id="start"
+                  ref={start === time ? startTimeScroll : undefined}
                   className={`border-b cursor-pointer py-2 px-5 hover:bg-primary-500 hover:text-white duration-100 ${start ===
                     time &&
                     "bg-primary-500 text-white"} ${disabledTimeArray.includes(
-                    time
-                  ) && "pointer-events-none bg-gray-200 border-gray-300"}`}
-                  onClick={() => setStart(time)}
+                      time
+                    ) && "pointer-events-none bg-gray-200 border-gray-300"}`}
+                  onClick={() => {
+                    setStart(time)
+
+                  }}
                 >
                   {time}
                 </li>
@@ -135,12 +161,13 @@ export default function TimeRangePicker({ isTime, onChange, ...rest }: Props) {
             <ul className=" bg-white rounded-md shadow-md max-h-[15rem] overflow-auto border border-gray-300">
               {timeSlots.map((time) => (
                 <li
-                  key={time}
+                  key={time} id="end"
+                  ref={end === time ? endTimeScroll : undefined}
                   className={`border-b cursor-pointer py-2 px-5 hover:bg-primary-500 hover:text-white duration-100 ${end ===
                     time &&
                     "bg-primary-500 text-white"} ${disabledTimeArray.includes(
-                    time
-                  ) && "pointer-events-none bg-gray-200 border-gray-300"}`}
+                      time
+                    ) && "pointer-events-none bg-gray-200 border-gray-300"}`}
                   onClick={() => setEnd(time)}
                 >
                   {time}

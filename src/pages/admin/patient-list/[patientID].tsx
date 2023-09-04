@@ -12,10 +12,15 @@ import Avatar from "@components/Avatar";
 import Card from "@components/Card";
 import patientRecord from "@pagecomponents/patient-record";
 import DeleteButton from "@src/components/DeleteButton";
+import { Radio } from "@src/components/Radio";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { NextPageProps } from "@utilities/types/NextPageProps";
+
+
+
+
 
 interface PatientRecordProps extends NextPageProps {
   selectedPatientID: number;
@@ -24,7 +29,7 @@ interface PatientRecordProps extends NextPageProps {
 export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
   const queryClient = useQueryClient();
 
-  const [type, setType] = useState("view");
+  const [pageType, setPageType] = useState("view");
 
   const { setIsAppLoading } = React.useContext(Context);
 
@@ -95,21 +100,14 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
           <>
             <div className=" flex justify-between w-full items-center">
               <h3>Patient Record</h3>
-              <ul className=" w-44 grid grid-cols-2 overflow-hidden rounded-md shadow-md">
-                <li
-                  onClick={() => setType("")}
-                  className={` flex cursor-pointer justify-center py-2 text-lg ${type ===
-                    "view" && " bg-primary-500 text-white"}`}
-                >
-                  <p>View</p>
-                </li>
-                <li
-                  className={` flex cursor-pointer justify-center py-2 text-lg ${type ===
-                    "edit" && " bg-primary-500 text-white"}`}
-                >
-                  <p>Edit</p>
-                </li>
-              </ul>
+              <Radio.Group
+                onChange={(e: string) => setPageType(e)}
+                defaultValue="view"
+                className="md:max-w-md"
+              >
+                <Radio.Button value={"view"} label="View" />
+                <Radio.Button value={"edit"} label="Edit" />
+              </Radio.Group>
             </div>
 
             <DeleteButton
@@ -139,23 +137,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
                   <h5>
                     {patient?.first_name} {patient?.last_name}
                   </h5>
-                  {/* <div className="flex justify-center items-center gap-3">
-                    <Button appearance="link" className="text-lg">
-                      <AiOutlineCalendar />
-                    </Button>
-                    <Button appearance="link" className="text-lg">
-                      <BsCameraVideo />
-                    </Button>
-                    <Button appearance="link" className="text-lg">
-                      <BsBoxArrowUpRight />
-                    </Button>
-                    <Button appearance="link" className="text-lg">
-                      <BsPrinter />
-                    </Button>
-                    <Button appearance="link" className="text-lg">
-                      <BsTrash />
-                    </Button>
-                  </div> */}
+             
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] xs:gap-4">
                   <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-[auto_1fr] xs:gap-4">
@@ -221,6 +203,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
               items={patientRecord({
                 patientRecord: patient,
                 tab: router.query.tab ?? "2",
+                pageType
               })}
             />
           </>

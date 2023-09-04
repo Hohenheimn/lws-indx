@@ -248,8 +248,14 @@ div.ant-select {
     }
   }
 
+  .ant-select-multiple.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+    pointer-events: none;
+  }
   .ant-select-selection-item {
     @apply bg-primary-500 text-white border border-primary-300 rounded-md cursor-pointer hover:bg-primary-600;
+  }
+  .ant-select-selection-item-content{
+    @apply text-white;
   }
   .ant-select-selection-item-remove {
     @apply text-white hover:text-gray-200;

@@ -7,7 +7,13 @@ import Input from "@components/Input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
+
+
+
 import ChartingModal from "./ChartingModal";
+
+
+
 
 const columns: any = [
   {
@@ -25,9 +31,8 @@ const columns: any = [
   },
 ];
 
-export function Charting({ patientRecord }: any) {
+export function Charting({ patientRecord, pageType }: any) {
   const [ChartingForm] = Form.useForm();
-  const queryClient = useQueryClient();
   let [page, setPage] = React.useState(1);
   let [search, setSearch] = React.useState("");
 
@@ -43,7 +48,6 @@ export function Charting({ patientRecord }: any) {
       })
   );
 
-  console.log("charting");
 
   return (
     <>
@@ -150,6 +154,7 @@ export function Charting({ patientRecord }: any) {
         patientRecord={patientRecord}
         form={ChartingForm}
         defaultAnnotation={defaultAnnotation}
+        pageType={pageType}
       />
     </>
   );

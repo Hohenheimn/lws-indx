@@ -16,6 +16,7 @@ import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { getInitialValue, slugify } from "@utilities/helpers";
 
+
 let medications = [
   { label: "Aspirin, Tylenol, Motrin", name: "medications_injections_1" },
   {
@@ -97,7 +98,7 @@ let healthProblem = [
   "Heart Murmur",
 ];
 
-export function MedicalHistory({ patientRecord }: any) {
+export function MedicalHistory({ patientRecord, pageType }: any) {
   const [MedicalHistoryForm] = Form.useForm();
 
   const queryClient = useQueryClient();
@@ -150,9 +151,8 @@ export function MedicalHistory({ patientRecord }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["medical-history"], context.previousValues);
       },
@@ -203,7 +203,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 md:col-span-6"
                 >
-                  <Input id="physician_name" placeholder="Name of Physician" />
+                  <Input id="physician_name" disabled={pageType === 'view'} placeholder="Name of Physician" />
                 </Form.Item>
                 <Form.Item
                   label="Specialty (if Applicable)"
@@ -211,7 +211,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 md:col-span-6"
                 >
-                  <Input id="specialty" placeholder="Specialty" />
+                  <Input id="specialty" disabled={pageType === 'view'} placeholder="Specialty" />
                 </Form.Item>
               </div>
             </div>
@@ -227,13 +227,13 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 lg:col-span-6"
                 >
-                  <Select placeholder="Select Country" id="clinic_country">
+                  <Select disabled={pageType === 'view'} placeholder="Select Country" id="clinic_country">
                     <Select.Option value="Philippines">
                       Philippines
                     </Select.Option>
                   </Select>
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   label="Region"
                   required={false}
                   className="col-span-12 lg:col-span-6"
@@ -275,7 +275,7 @@ export function MedicalHistory({ patientRecord }: any) {
                       </Form.Item>
                     );
                   }}
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item
                   label="Province"
                   required={false}
@@ -295,11 +295,10 @@ export function MedicalHistory({ patientRecord }: any) {
                         <InfiniteSelect
                           placeholder="Province"
                           id="clinic_province"
-                          api={`${
-                            process.env.REACT_APP_API_BASE_URL
-                          }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "clinic_region"
-                          )}`}
+                          api={`${process.env.REACT_APP_API_BASE_URL
+                            }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                              "clinic_region"
+                            )}`}
                           getInitialValue={{
                             form: MedicalHistoryForm,
                             initialValue: "clinic_province",
@@ -310,7 +309,7 @@ export function MedicalHistory({ patientRecord }: any) {
                           ]}
                           displayValueKey="name"
                           returnValueKey="_id"
-                          disabled={Boolean(!getFieldValue("clinic_region"))}
+                          disabled={Boolean(!getFieldValue("clinic_country")) || pageType === 'view'}
                           onChange={() => {
                             resetFields(["clinic_city", "clinic_barangay"]);
                           }}
@@ -338,11 +337,10 @@ export function MedicalHistory({ patientRecord }: any) {
                         <InfiniteSelect
                           placeholder="City"
                           id="clinic_city"
-                          api={`${
-                            process.env.REACT_APP_API_BASE_URL
-                          }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "clinic_region"
-                          )}&province_code=${getFieldValue("clinic_province")}`}
+                          api={`${process.env.REACT_APP_API_BASE_URL
+                            }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                              "clinic_region"
+                            )}&province_code=${getFieldValue("clinic_province")}`}
                           getInitialValue={{
                             form: MedicalHistoryForm,
                             initialValue: "clinic_city",
@@ -354,8 +352,8 @@ export function MedicalHistory({ patientRecord }: any) {
                           displayValueKey="name"
                           returnValueKey="_id"
                           disabled={Boolean(
-                            !getFieldValue("clinic_region") ||
-                              !getFieldValue("clinic_province")
+                            pageType === 'view' ||
+                            !getFieldValue("clinic_province")
                           )}
                           onChange={() => {
                             resetFields(["clinic_barangay"]);
@@ -384,13 +382,12 @@ export function MedicalHistory({ patientRecord }: any) {
                         <InfiniteSelect
                           placeholder="Barangay"
                           id="clinic_barangay"
-                          api={`${
-                            process.env.REACT_APP_API_BASE_URL
-                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "clinic_region"
-                          )}&province_code=${getFieldValue(
-                            "clinic_province"
-                          )}&city_code=${getFieldValue("clinic_city")}`}
+                          api={`${process.env.REACT_APP_API_BASE_URL
+                            }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                              "clinic_region"
+                            )}&province_code=${getFieldValue(
+                              "clinic_province"
+                            )}&city_code=${getFieldValue("clinic_city")}`}
                           getInitialValue={{
                             form: MedicalHistoryForm,
                             initialValue: "clinic_barangay",
@@ -402,9 +399,9 @@ export function MedicalHistory({ patientRecord }: any) {
                           displayValueKey="name"
                           returnValueKey="_id"
                           disabled={Boolean(
-                            !getFieldValue("clinic_region") ||
-                              !getFieldValue("clinic_province") ||
-                              !getFieldValue("clinic_city")
+                            pageType === 'view' ||
+                            !getFieldValue("clinic_province") ||
+                            !getFieldValue("clinic_city")
                           )}
                         />
                       </Form.Item>
@@ -418,7 +415,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   required={false}
                   className="col-span-12 lg:col-span-8"
                 >
-                  <Input id="clinic_street" placeholder="Add street name" />
+                  <Input id="clinic_street" disabled={pageType === 'view'} placeholder="Add street name" />
                 </Form.Item>
                 <Form.Item
                   label="Zip Code"
@@ -432,6 +429,7 @@ export function MedicalHistory({ patientRecord }: any) {
                     id="clinic_zip_code"
                     allowNegative={false}
                     placeholder="Zip Code"
+                    disabled={pageType === 'view'}
                   />
                 </Form.Item>
               </div>
@@ -461,6 +459,7 @@ export function MedicalHistory({ patientRecord }: any) {
                   <Input
                     id="referred_by"
                     placeholder="Referred to this Clinic by"
+                    disabled={pageType === 'view'}
                   />
                 </Form.Item>
                 <Form.Item
@@ -485,6 +484,7 @@ export function MedicalHistory({ patientRecord }: any) {
                     id="last_medical_exam_date"
                     placeholder="Date of the Last Medical Exam"
                     format="MMMM DD, YYYY"
+                    disabled={pageType === 'view'}
                   />
                 </Form.Item>
               </div>
@@ -502,7 +502,7 @@ export function MedicalHistory({ patientRecord }: any) {
                 required={false}
                 className="col-span-12"
               >
-                <Input id="allergy" placeholder="Allergies" />
+                <Input id="allergy" placeholder="Allergies" disabled={pageType === 'view'} />
               </Form.Item>
               <Form.Item
                 label="What medications are you taking?"
@@ -516,7 +516,7 @@ export function MedicalHistory({ patientRecord }: any) {
                 required={false}
                 className="col-span-12"
               >
-                <Input id="medication" placeholder="Medications" />
+                <Input id="medication" placeholder="Medications" disabled={pageType === 'view'} />
               </Form.Item>
             </div>
             <Form.Item
@@ -542,6 +542,7 @@ export function MedicalHistory({ patientRecord }: any) {
                       <Radio.Group
                         className="lg:p-4 py-4 space-x-12"
                         id="change_in_health"
+                        disabled={pageType === 'view'}
                       >
                         <Radio value="1">Yes</Radio>
                         <Radio value="0">No</Radio>
@@ -567,6 +568,7 @@ export function MedicalHistory({ patientRecord }: any) {
                             <Input
                               id="change_explanation"
                               placeholder="Explanation"
+                              disabled={pageType === 'view'}
                             />
                           </Form.Item>
                         </AnimateContainer>
@@ -599,6 +601,7 @@ export function MedicalHistory({ patientRecord }: any) {
                       <Radio.Group
                         className="lg:p-4 py-4 space-x-12"
                         id="been_hospitalized"
+                        disabled={pageType === 'view'}
                       >
                         <Radio value="1">Yes</Radio>
                         <Radio value="0">No</Radio>
@@ -624,6 +627,7 @@ export function MedicalHistory({ patientRecord }: any) {
                             <Input
                               id="hospitalized_reason"
                               placeholder="Reason"
+                              disabled={pageType === 'view'}
                             />
                           </Form.Item>
                         </AnimateContainer>
@@ -655,7 +659,7 @@ export function MedicalHistory({ patientRecord }: any) {
                       required={false}
                       className="lg:justify-self-end"
                     >
-                      <Radio.Group className="space-x-12">
+                      <Radio.Group className="space-x-12" disabled={pageType === 'view'}>
                         <Radio value="1">Yes</Radio>
                         <Radio value="0">No</Radio>
                       </Radio.Group>
@@ -673,7 +677,7 @@ export function MedicalHistory({ patientRecord }: any) {
                 name="disease_history"
                 className="col-span-12 mb-0"
               >
-                <Checkbox.Group className="grid grid-cols-3 max-lg:grid-cols-1 gap-4 text-xl mt-8">
+                <Checkbox.Group disabled={pageType === 'view'} className="grid grid-cols-3 max-lg:grid-cols-1 gap-4 text-xl mt-8">
                   {healthProblem.map((health, index) => {
                     return (
                       <Checkbox key={index} value={slugify(health)}>
@@ -690,7 +694,7 @@ export function MedicalHistory({ patientRecord }: any) {
                 name="family_disease_history"
                 className="col-span-12 mb-0"
               >
-                <Checkbox.Group className="grid grid-cols-1 gap-4 text-xl mt-8">
+                <Checkbox.Group disabled={pageType === 'view'} className="grid grid-cols-1 gap-4 text-xl mt-8">
                   {familyDiseaseHistory.map((disease, index) => {
                     return (
                       <Checkbox value={slugify(disease)} key={index}>
@@ -714,7 +718,7 @@ export function MedicalHistory({ patientRecord }: any) {
                 required={false}
                 className="col-span-12"
               >
-                <Radio.Group className="lg:p-4 py-4 space-x-12" id="is_smoking">
+                <Radio.Group disabled={pageType === 'view'} className="lg:p-4 py-4 space-x-12" id="is_smoking">
                   <Radio value="1">Yes</Radio>
                   <Radio value="0">No</Radio>
                 </Radio.Group>
@@ -724,28 +728,27 @@ export function MedicalHistory({ patientRecord }: any) {
               <Form.Item
                 label="8. Other Sickness"
                 name="other_sickness"
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "Other Sickness is required",
-                //   },
-                // ]}
+
                 required={false}
                 className="col-span-12"
               >
-                <Input id="other_sickness" placeholder="Other Sickness" />
+                <Input id="other_sickness" disabled={pageType === 'view'} placeholder="Other Sickness" />
               </Form.Item>
             </div>
+            {
+              pageType === 'edit' && (
+                <div className="flex justify-center items-center">
+                  <Button
+                    appearance="primary"
+                    type="submit"
+                    className="max-w-md py-4"
+                  >
+                    Save
+                  </Button>
+                </div>
+              )
+            }
 
-            <div className="flex justify-center items-center">
-              <Button
-                appearance="primary"
-                type="submit"
-                className="max-w-md py-4"
-              >
-                Save
-              </Button>
-            </div>
           </div>
         ) : (
           <h4>Fetching Information</h4>

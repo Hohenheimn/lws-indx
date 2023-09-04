@@ -5,6 +5,10 @@ import { twMerge } from "tailwind-merge";
 
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 
+
+
+
+
 import {
   treatmentRecord,
   SelectedTreatment,
@@ -14,9 +18,14 @@ import {
   payment,
 } from "./types";
 
+
+
+
+
 export const RecordColumns = (
   SelectedTreatments: SelectedTreatment[],
-  setSelectedTreatments: Function
+  setSelectedTreatments: Function,
+  pageType: string
 ) => {
   const columns: any = [
     {
@@ -26,6 +35,7 @@ export const RecordColumns = (
         <>
           {record.status !== "billed" && (
             <Checkbox
+              disabled={pageType === 'view'}
               checked={SelectedTreatments.some(
                 (someItem) => someItem.treatment_id === record._id
               )}
@@ -122,7 +132,8 @@ export const RecordColumns = (
 
 export const BillingColumns = (
   SelectedBilling: SelectedBilling[],
-  setSelectedBilling: Function
+  setSelectedBilling: Function,
+  pageType: string
 ) => {
   const columns: any = [
     {
@@ -132,6 +143,7 @@ export const BillingColumns = (
         <>
           {record.status !== "void" && record.status !== "paid" && (
             <Checkbox
+              disabled={pageType === 'view'}
               checked={SelectedBilling.some(
                 (someItem) => someItem.id === record._id
               )}
@@ -232,7 +244,8 @@ export const BillingColumns = (
 
 export const PaymentColumns = (
   SelectedPayment: SelectedPayment[],
-  setSelectedPayment: Function
+  setSelectedPayment: Function,
+  pageType: string
 ) => {
   const columns: any = [
     {
@@ -240,6 +253,7 @@ export const PaymentColumns = (
       dataIndex: "checkbox",
       render: (_: any, record: payment) => (
         <Checkbox
+          disabled={pageType === 'view'}
           checked={SelectedPayment.some(
             (someItem) => someItem._id === record._id
           )}

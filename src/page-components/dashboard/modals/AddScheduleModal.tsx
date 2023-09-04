@@ -19,7 +19,6 @@ import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import leaveReasons from "@utilities/global-data/leaveReasons";
 import scheduleType from "@utilities/global-data/scheduleType";
-
 import { getInitialValue } from "@utilities/helpers";
 
 import AddPatientModal from "./AddPatientModal";
@@ -36,15 +35,20 @@ export default function AddScheduleModal({
 
   const { setIsAppLoading } = React.useContext(Context);
 
-  let [isPatientModalOpen, setIsPatientModalOpen] = React.useState(false);
+  const [isPatientModalOpen, setIsPatientModalOpen] = React.useState(false);
 
-  let [schedType, setSchedType] = React.useState("patient");
+  const [schedType, setSchedType] = React.useState("patient");
 
-  let [selectedBranch, setSelectedBranch] = React.useState("");
+  const [selectedBranch, setSelectedBranch] = React.useState<any>("");
 
-  let [selectedDate, setSelectedDate] = React.useState<any>(null);
+  const [selectedDate, setSelectedDate] = React.useState<any>(null);
 
-  let [selectedDoctor, setSelectedDoctor] = React.useState("");
+  const [selectedDoctor, setSelectedDoctor] = React.useState("");
+
+  useEffect(() => {
+    console.log(selectedBranch)
+  }, [selectedBranch])
+
 
   let { data: doctorSchedules } = useQuery(
     ["schedule-dates", selectedDoctor],
@@ -91,9 +95,8 @@ export default function AddScheduleModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["schedule"], context.previousValues);
       },
@@ -135,9 +138,8 @@ export default function AddScheduleModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["schedule"], context.previousValues);
       },
@@ -148,14 +150,9 @@ export default function AddScheduleModal({
   );
 
   React.useEffect(() => {
-    if (show) {
-      // setSchedType(form.getFieldValue(["schedule_type"]));
-      setSelectedBranch(form.getFieldValue(["branch_id"]));
-    }
 
     if (!show) {
       // setSchedType("");
-      setSelectedBranch("");
       setSelectedDate(null);
       setSelectedDoctor("");
       form.resetFields();
@@ -305,12 +302,11 @@ export default function AddScheduleModal({
                   <InfiniteAutoComplete
                     placeholder="Patient"
                     id="patient_id"
-                    api={`${
-                      process.env.REACT_APP_API_BASE_URL
-                    }/api/patient?limit=3&for_dropdown=true&page=1${getInitialValue(
-                      form,
-                      "patient_id"
-                    )}`}
+                    api={`${process.env.REACT_APP_API_BASE_URL
+                      }/api/patient?limit=3&for_dropdown=true&page=1${getInitialValue(
+                        form,
+                        "patient_id"
+                      )}`}
                     queryKey={["patient", form.getFieldValue(["patient_id"])]}
                     displayValueKey="name"
                     returnValueKey="_id"
@@ -406,11 +402,36 @@ export default function AddScheduleModal({
                     queryKey={["branch"]}
                     displayValueKey="name"
                     returnValueKey="_id"
-                    onChange={(e) => {
-                      setSelectedBranch(e);
-                    }}
+                    setSelectedDetail={setSelectedBranch}
                   />
                 </Form.Item>
+
+                <Form.Item
+                  label="Dental Chair"
+                  name="dental_chair"
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is required!",
+                    },
+                  ]}
+                  required={false}
+                  className="col-span-4"
+                >
+                  <Select
+                    id="dental_chair"
+                    placeholder="Select chair"
+                    className="border-transparent"
+                  >
+                    <Select.Option value="Chair No. 1" key="Chair No. 1">
+                      Chair No. 1
+                    </Select.Option>
+                    <Select.Option value="Chair No. 2" key="Chair No. 2">
+                      Chair No. 2
+                    </Select.Option>
+                  </Select>
+                </Form.Item>
+
                 <Form.Item
                   label="Date"
                   name="date"
@@ -463,32 +484,6 @@ export default function AddScheduleModal({
                 </Form.Item>
 
                 <Form.Item
-                  label="Dental Chair"
-                  name="dental_chair"
-                  rules={[
-                    {
-                      required: true,
-                      message: "This is required!",
-                    },
-                  ]}
-                  required={false}
-                  className="col-span-4"
-                >
-                  <Select
-                    id="dental_chair"
-                    placeholder="Select chair"
-                    className="border-transparent"
-                  >
-                    <Select.Option value="Chair No. 1" key="Chair No. 1">
-                      Chair No. 1
-                    </Select.Option>
-                    <Select.Option value="Chair No. 2" key="Chair No. 2">
-                      Chair No. 2
-                    </Select.Option>
-                  </Select>
-                </Form.Item>
-
-                <Form.Item
                   label="Remarks"
                   name="remarks"
                   // rules={[{ required: true, message: "Remarks is required" }]}
@@ -522,12 +517,11 @@ export default function AddScheduleModal({
                   <InfiniteAutoComplete
                     placeholder="Doctor"
                     id="doctor_id"
-                    api={`${
-                      process.env.REACT_APP_API_BASE_URL
-                    }/api/account?limit=3&for_dropdown=true&page=1${getInitialValue(
-                      form,
-                      "doctor_id"
-                    )}`}
+                    api={`${process.env.REACT_APP_API_BASE_URL
+                      }/api/account?limit=3&for_dropdown=true&page=1${getInitialValue(
+                        form,
+                        "doctor_id"
+                      )}`}
                     queryKey={["doctor"]}
                     displayValueKey="name"
                     returnValueKey="_id"
@@ -585,9 +579,7 @@ export default function AddScheduleModal({
                     queryKey={["branch"]}
                     displayValueKey="name"
                     returnValueKey="_id"
-                    onChange={(e) => {
-                      setSelectedBranch(e);
-                    }}
+                    setSelectedDetail={setSelectedBranch}
                   />
                 </Form.Item>
                 <Form.Item

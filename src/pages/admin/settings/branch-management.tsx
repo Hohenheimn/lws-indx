@@ -16,6 +16,7 @@ import { deleteData, fetchData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+
 export function BranchManagement({ router }: NextPageProps) {
   const [BranchForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);
@@ -60,9 +61,8 @@ export function BranchManagement({ router }: NextPageProps) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["branch"], context.previousValues);
       },
@@ -163,8 +163,7 @@ export function BranchManagement({ router }: NextPageProps) {
                 let schedules = selectedRow?.schedules?.map(
                   ({ day, open_time, close_time }: any) => ({
                     day: day,
-                    opening_time: moment(open_time, "HH:mm:ss"),
-                    closing_time: moment(close_time, "HH:mm:ss"),
+                    time_range: [open_time, close_time],
                   })
                 );
 
@@ -178,10 +177,11 @@ export function BranchManagement({ router }: NextPageProps) {
                           appearance="link"
                           className="text-casper-500 p-2"
                           onClick={() => {
+
                             BranchForm.setFieldsValue({
                               ...selectedRow,
                               _id: selectedRow._id,
-                              schedules,
+                              schedules: schedules,
                             });
 
                             setIsBranchModalOpen(true);

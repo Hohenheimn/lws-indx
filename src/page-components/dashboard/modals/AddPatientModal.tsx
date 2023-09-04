@@ -20,6 +20,7 @@ import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import { getBase64, getInitialValue } from "@utilities/helpers";
 
+
 export default function AddPatientModal({
   show,
   onClose,
@@ -342,7 +343,7 @@ export default function AddPatientModal({
                   <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="Region"
                 required={false}
                 shouldUpdate={(prev, curr) => {
@@ -377,7 +378,7 @@ export default function AddPatientModal({
                     </Form.Item>
                   );
                 }}
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item
                 label="Province"
                 required={false}

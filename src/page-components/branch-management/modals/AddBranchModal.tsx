@@ -1,28 +1,23 @@
-import React from "react";
-import { DatePicker, Form, TimePicker, notification } from "antd";
-import { differenceInYears, parse, parseISO, format } from "date-fns";
+import React, { useEffect } from "react";
+import { Form, TimePicker, notification } from "antd";
 import moment from "moment";
-import Image from "next/image";
 import { AiFillMinusCircle } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
-import { IoPersonOutline } from "react-icons/io5";
 import { NumericFormat, PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn } from "@components/animation/animation";
-import Avatar from "@components/Avatar";
 import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
-import Uploader from "@components/Uploader";
+import TimeRangePicker from "@src/components/TimeRangePicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData, updateData } from "@utilities/api";
+import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import days from "@utilities/global-data/days";
-import gender from "@utilities/global-data/gender";
-import { getInitialValue } from "@utilities/helpers";
+
 
 export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
   const queryClient = useQueryClient();
@@ -59,9 +54,8 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["branch"], context.previousValues);
       },
@@ -102,9 +96,8 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          description: `${err.response.data[Object.keys(err.response.data)[0]]
+            }`,
         });
         queryClient.setQueryData(["branch"], context.previousValues);
       },
@@ -125,17 +118,14 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
           layout="vertical"
           onFinish={(values) => {
             let id = form.getFieldValue("_id");
-            values.schedules.map((row: any, index: any) => {
-              values.schedules[index].open_time = row.opening_time.format(
-                "HH:mm:ss"
-              );
-              values.schedules[index].close_time = row.closing_time.format(
-                "HH:mm:ss"
-              );
-            });
-
-            values.rooms = JSON.stringify(values.rooms);
-            values.schedules = JSON.stringify(values.schedules);
+            values.schedules = values.schedules.map((item: any) => {
+              return {
+                day: item.day,
+                open_time: item.time_range[0],
+                close_time: item.time_range[1]
+              }
+            })
+            values.schedules = JSON.stringify(values.schedules)
 
             if (!id) {
               addBranch(values);
@@ -201,6 +191,23 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 className="col-span-3 lg:col-span-1"
               >
                 <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
+              </Form.Item>
+              <Form.Item
+                label="Chair Quantity"
+                name="chair_quantity"
+                rules={[
+                  { required: true, message: "This is required!" },
+
+                ]}
+                required={false}
+                className="col-span-3 lg:col-span-1"
+              >
+                <NumericFormat
+                  customInput={Input}
+                  id="chair_quantity"
+                  allowNegative={false}
+                  placeholder="Chair Quantity"
+                />
               </Form.Item>
             </div>
           </div>
@@ -273,11 +280,10 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                       <InfiniteSelect
                         placeholder="Province"
                         id="province"
-                        api={`${
-                          process.env.REACT_APP_API_BASE_URL
-                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                          "region"
-                        )}`}
+                        api={`${process.env.REACT_APP_API_BASE_URL
+                          }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                            "region"
+                          )}`}
                         getInitialValue={{
                           form,
                           initialValue: "province",
@@ -311,11 +317,10 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                       <InfiniteSelect
                         placeholder="City"
                         id="city"
-                        api={`${
-                          process.env.REACT_APP_API_BASE_URL
-                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                          "region"
-                        )}&province_code=${getFieldValue("province")}`}
+                        api={`${process.env.REACT_APP_API_BASE_URL
+                          }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                            "region"
+                          )}&province_code=${getFieldValue("province")}`}
                         getInitialValue={{
                           form,
                           initialValue: "city",
@@ -351,13 +356,12 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                       <InfiniteSelect
                         placeholder="Barangay"
                         id="barangay"
-                        api={`${
-                          process.env.REACT_APP_API_BASE_URL
-                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                          "region"
-                        )}&province_code=${getFieldValue(
-                          "province"
-                        )}&city_code=${getFieldValue("city")}`}
+                        api={`${process.env.REACT_APP_API_BASE_URL
+                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                            "region"
+                          )}&province_code=${getFieldValue(
+                            "province"
+                          )}&city_code=${getFieldValue("city")}`}
                         getInitialValue={{
                           form,
                           initialValue: "barangay",
@@ -367,8 +371,8 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                         returnValueKey="_id"
                         disabled={Boolean(
                           !getFieldValue("region") ||
-                            !getFieldValue("province") ||
-                            !getFieldValue("city")
+                          !getFieldValue("province") ||
+                          !getFieldValue("city")
                         )}
                       />
                     </Form.Item>
@@ -400,72 +404,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
               </Form.Item>
             </div>
           </div>
-          <div className="space-y-4">
-            <h4>Clinic Rooms</h4>
-            <div className="grid grid-cols-1 gap-4">
-              <Form.List name="rooms" initialValue={[{}]}>
-                {(fields, { add, remove }) => {
-                  return (
-                    <>
-                      {fields.map(({ name, key, ...rest }) => {
-                        return (
-                          <AnimateContainer
-                            variants={fadeIn}
-                            key={key}
-                            triggerOnce={true}
-                          >
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
-                              {fields.length > 1 ? (
-                                <AiFillMinusCircle
-                                  className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
-                                  onClick={() => remove(name)}
-                                />
-                              ) : null}
 
-                              <Form.Item
-                                label="Room Name"
-                                name={[name, "name"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "This is required!",
-                                  },
-                                ]}
-                                required={false}
-                              >
-                                <Input
-                                  placeholder="Room Name"
-                                  id={["rooms", name, "name"].join("-")}
-                                />
-                              </Form.Item>
-                            </div>
-                          </AnimateContainer>
-                        );
-                      })}
-                      <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
-                        <div className="blur-sm grid grid-cols-1 lg:grid-cols-3 gap-4">
-                          <Form.Item
-                            label="Room Name"
-                            required={false}
-                            {...rest}
-                            className="col-span-3 lg:col-span-1"
-                          >
-                            <Input placeholder="Room Name" />
-                          </Form.Item>
-                        </div>
-                        <div
-                          className="absolute top-0 left-0 h-full w-full flex justify-center items-center cursor-pointer"
-                          onClick={() => add()}
-                        >
-                          <IoMdAddCircle className="text-7xl text-primary" />
-                        </div>
-                      </div>
-                    </>
-                  );
-                }}
-              </Form.List>
-            </div>
-          </div>
           <div className="space-y-4">
             <h4>Clinic Schedule</h4>
             <div className="grid grid-cols-1 gap-4">
@@ -480,7 +419,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                             key={key}
                             triggerOnce={true}
                           >
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
                                   className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
@@ -497,6 +436,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                                   },
                                 ]}
                                 required={false}
+                                className="col-span-2 md:col-span-1"
                                 {...rest}
                               >
                                 <Select
@@ -512,55 +452,51 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                                   })}
                                 </Select>
                               </Form.Item>
+
                               <Form.Item
-                                label="Opening Time"
-                                name={[name, "opening_time"]}
+                                label="Time Range"
+                                name={[name, "time_range"]}
                                 rules={[
                                   {
                                     required: true,
-                                    message: "This is required!",
+                                    message: "Time is required",
                                   },
                                 ]}
                                 required={false}
+                                className="col-span-2 md:col-span-1"
+                                getValueFromEvent={(e) => {
+                                  if (e) {
+                                    if (moment(e[0]).isSameOrAfter(moment(e[1]))) {
+                                      return [e[0], null];
+                                    }
+
+                                    return e;
+                                  }
+                                }}
                               >
-                                <TimePicker
-                                  format="HH:mm"
-                                  minuteStep={15}
-                                  id={["schedules", name, "opening_time"].join(
-                                    "-"
-                                  )}
+                                <TimeRangePicker
+                                  onChange={(value) => {
+                                    const { ...rest } = form.getFieldValue('schedules');
+                                    Object.assign(rest[name], {
+                                      time_range: value,
+                                    });
+                                  }}
+                                  isTime={[]}
+                                  id={["schedules", name, "day"].join("-")}
                                 />
                               </Form.Item>
-                              <Form.Item
-                                label="Closing Time"
-                                name={[name, "closing_time"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "This is required!",
-                                  },
-                                ]}
-                                required={false}
-                              >
-                                <TimePicker
-                                  format="HH:mm"
-                                  minuteStep={15}
-                                  id={["schedules", name, "closing_time"].join(
-                                    "-"
-                                  )}
-                                />
-                              </Form.Item>
+
                             </div>
                           </AnimateContainer>
                         );
                       })}
                       <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
-                        <div className="blur-sm grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div className="blur-sm grid grid-cols-1 md:grid-cols-2 gap-4">
                           <Form.Item
                             label="Days"
                             required={false}
                             {...rest}
-                            className="col-span-3 lg:col-span-1"
+                            className="col-span-2 md:col-span-1"
                           >
                             <Select placeholder="Days">
                               {days.map((day, index) => {
@@ -573,19 +509,13 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                             </Select>
                           </Form.Item>
                           <Form.Item
-                            label="Opening Time"
+                            label="Time Range"
                             required={false}
-                            className="col-span-3 lg:col-span-1"
+                            className="col-span-2 md:col-span-1"
                           >
                             <TimePicker format="HH:mm" minuteStep={15} />
                           </Form.Item>
-                          <Form.Item label="Closing Time" required={false}>
-                            <TimePicker
-                              format="HH:mm"
-                              minuteStep={15}
-                              className="col-span-3 lg:col-span-1"
-                            />
-                          </Form.Item>
+
                         </div>
                         <div
                           className="absolute top-0 left-0 h-full w-full flex justify-center items-center cursor-pointer"

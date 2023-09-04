@@ -18,7 +18,10 @@ import { Context } from "@utilities/context/Provider";
 import { numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-const columns: any = [
+
+
+
+const columnsInventory: any = [
   {
     title: "Item Name",
     dataIndex: "item_name",
@@ -65,6 +68,46 @@ const columns: any = [
   },
 ];
 
+const UsageHistory: any = [
+  {
+    title: "Item Name",
+    dataIndex: "item_name",
+    width: "10rem",
+    align: "center",
+  },
+  // {
+  //   title: "Serial Number",
+  //   dataIndex: "serial_number",
+  //   width: "10rem",
+  //   align: "center",
+  // },
+  {
+    title: "Quantity Used",
+    dataIndex: "quantity_used",
+    width: "15rem",
+    align: "center",
+    render: (quantity: number) => numberSeparator(quantity, 0),
+  },
+  {
+    title: "Date Used",
+    dataIndex: "date_used",
+    width: "15rem",
+    align: "center",
+  },
+  {
+    title: "Used By",
+    dataIndex: "used_by",
+    width: "10rem",
+    align: "center",
+  },
+  {
+    title: "Branch Assigned",
+    dataIndex: "branch_name",
+    width: "10rem",
+    align: "center",
+  },
+];
+
 export function Inventory({ router }: NextPageProps) {
   const [InventoryForm] = Form.useForm();
   const [FilterForm] = Form.useForm();
@@ -75,7 +118,7 @@ export function Inventory({ router }: NextPageProps) {
   let { setIsAppLoading } = React.useContext(Context);
   let queryClient = useQueryClient();
 
-  const [tableType, setTableType] = useState(1);
+  const [tableType, setTableType] = useState("1");
 
   const { mutate: deleteInventory }: any = useMutation(
     (id: number) =>
@@ -127,10 +170,12 @@ export function Inventory({ router }: NextPageProps) {
   return (
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
-        <h3 className="basis-auto whitespace-nowrap">Inventory</h3>
+        <h3 className="basis-auto whitespace-nowrap">
+          {tableType === "1" ? "Inventory" : "Usage History"}
+        </h3>
 
         <Radio.Group
-          onChange={(e: number) => setTableType(e)}
+          onChange={(e: string) => setTableType(`${e}`)}
           defaultValue="1"
           className="md:max-w-md"
         >
@@ -183,7 +228,7 @@ export function Inventory({ router }: NextPageProps) {
       </div>
       <Table
         rowKey="_id"
-        columns={columns}
+        columns={tableType === '1' ?  columnsInventory : UsageHistory}
         dataSource={inventory?.data}
         showHeader={true}
         tableLayout="fixed"

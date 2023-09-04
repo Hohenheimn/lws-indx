@@ -6,8 +6,10 @@ import { PageContainer } from "@components/animation";
 import Annotate from "@components/Annotate";
 import { Button } from "@components/Button";
 
+
 import PrivateRoute from "../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../auth/HOC/VerifyAuth";
+
 
 const Shape = ({ children, geometry, style }: any) => {
   return (
@@ -253,8 +255,7 @@ export function Sample({ router }: any) {
       <div className=" h-80 w-80 m-auto [&>div]:h-full [&>div]:w-full">
         <Annotate
           // disabled={true}
-          image={`/images/tooth-periodontal.png`}
-        />
+          image={`/images/tooth-periodontal.png`} pageType={""} />
       </div>
     </PageContainer>
   );

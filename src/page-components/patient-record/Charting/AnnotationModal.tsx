@@ -4,6 +4,8 @@ import Modal from "@components/Modal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
+
+
 export default function AnnotationModal({
   show,
   onClose,
@@ -11,6 +13,7 @@ export default function AnnotationModal({
   UpdateToothsHandler,
   form,
   ChartView,
+  pageType,
   ...rest
 }: any) {
   const [page, setPage] = useState(1);
@@ -36,8 +39,8 @@ export default function AnnotationModal({
             UpdateToothsHandler={UpdateToothsHandler}
             image={
               ChartView === "Periodontal" ||
-              ChartView === undefined ||
-              ChartView === "All"
+                ChartView === undefined ||
+                ChartView === "All"
                 ? "/images/tooth-standard.png"
                 : `/images/tooth-periodontal.png`
             }
@@ -45,6 +48,8 @@ export default function AnnotationModal({
             setSearch={setSearch}
             forModal={true}
             onClose={onClose}
+            pageType={pageType}
+            formType='edit'
           />
         </div>
       </div>
