@@ -83,6 +83,16 @@ export default function PerCertainAmountModal({
       })
   );
 
+  const mode_of_payment = Form.useWatch("mode_of_payment", form);
+
+  useEffect(() => {
+    if (mode_of_payment === "Use Credits") {
+      form.setFieldValue("amount", Number(Credit?.amount));
+    } else {
+      form.setFieldValue("amount", 0);
+    }
+  }, [mode_of_payment]);
+
   const { mutate: addPayment } = useMutation(
     (payload: any) => {
       return postDataNoFormData({
@@ -166,7 +176,7 @@ export default function PerCertainAmountModal({
               >
                 Add Credits
               </Button>
-              <Button
+              {/* <Button
                 appearance="primary"
                 className="max-w-[10rem]"
                 type="submit"
@@ -178,7 +188,7 @@ export default function PerCertainAmountModal({
                 }
               >
                 Use Credits
-              </Button>
+              </Button> */}
             </div>
           </div>
           <Form
@@ -187,6 +197,12 @@ export default function PerCertainAmountModal({
             onFinish={(values: any) => {
               values.amount = removeNumberFormatting(values.amount);
               values.credits = useCreditAmount;
+              if (values.amount !== CertainAmount) {
+                notification.warning({
+                  message: "Must pay exact price",
+                });
+                return;
+              }
               addPayment(values);
             }}
             onFinishFailed={(data) => {
@@ -233,11 +249,20 @@ export default function PerCertainAmountModal({
                     placeholder="Select Mode of Payment"
                     id="mode_of_payment"
                   >
-                    <Select.Option value={"Cash on Deliver"}>
-                      Cash on Deliver
+                    <Select.Option value={"Cash"}>Cash</Select.Option>
+                    <Select.Option value={"Credit Card"}>
+                      Credit Card
                     </Select.Option>
-
-                    <Select.Option value={"E-Payment"}>E-Payment</Select.Option>
+                    <Select.Option value={"Debit Card"}>
+                      Debit Card
+                    </Select.Option>
+                    <Select.Option value={"Bank Transfer"}>
+                      Bank Transfer
+                    </Select.Option>
+                    <Select.Option value={"Gcash"}>Gcash</Select.Option>
+                    <Select.Option value={"Use Credits"}>
+                      Use Credits
+                    </Select.Option>
                   </Select>
                 </Form.Item>
 
@@ -259,6 +284,11 @@ export default function PerCertainAmountModal({
                     id="amount"
                     prefix="₱"
                     thousandSeparator
+                    disabled={
+                      mode_of_payment === "Use Credits" ||
+                      mode_of_payment === undefined ||
+                      mode_of_payment === ""
+                    }
                     isAllowed={({ floatValue }: any) => {
                       return (
                         floatValue <= CertainAmount || floatValue === undefined
@@ -266,26 +296,16 @@ export default function PerCertainAmountModal({
                     }}
                   />
                 </Form.Item>
-                <Form.Item
-                  label="Remarks"
-                  name="remarks"
-                  rules={[
-                    {
-                      required: true,
-                      message: "This is required!",
-                    },
-                  ]}
-                  required={false}
-                >
+                <Form.Item label="Remarks" name="remarks">
                   <Input id="remarks" placeholder="Remarks" />
                 </Form.Item>
               </li>
               <li className="  space-y-4">
-                <p className=" text-end">
+                {/* <p className=" text-end">
                   Remaining Credit:{" "}
                   {Credit?.amount !== undefined &&
                     numberSeparator(Credit?.amount, 0)}
-                </p>
+                </p> */}
 
                 <div className="p-8 border border-primary-500 rounded-md space-y-4">
                   <h4 className="text-lg">Billing Statement</h4>

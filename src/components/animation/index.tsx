@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 import { twMerge } from "tailwind-merge";
 import { Context } from "@utilities/context/Provider";
 
-import { fadeInLeft, pageTransition } from "./animation";
+import { fadeIn, pageTransition } from "./animation";
 
 interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   variants?: {};
@@ -30,7 +30,7 @@ export function PageContainer({
   return (
     <>
       <motion.div
-        variants={variants ?? pageTransition}
+        variants={pageTransition}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -79,9 +79,9 @@ export function AnimateContainer({
     <motion.div
       ref={ref}
       initial="initial"
-      animate={inView ? "animate" : "exit"}
+      animate="animate"
       exit="exit"
-      variants={variants}
+      variants={variants === undefined ? fadeIn : variants}
       className={twMerge(className) + " z-[9999]"}
       {...rest}
     >

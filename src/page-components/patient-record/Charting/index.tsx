@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
+import { Form, Table } from "antd";
 import moment from "moment";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { scroller } from "react-scroll";
 import { Button } from "@components/Button";
-import Card from "@components/Card";
 import Input from "@components/Input";
-import { Select } from "@components/Select";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteData, fetchData } from "@utilities/api";
-import { numberSeparator } from "@utilities/helpers";
-import { NextPageProps } from "@utilities/types/NextPageProps";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
 
 import ChartingModal from "./ChartingModal";
 
@@ -48,6 +42,8 @@ export function Charting({ patientRecord }: any) {
         url: `/api/patient/charting/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
       })
   );
+
+  console.log("charting");
 
   return (
     <>

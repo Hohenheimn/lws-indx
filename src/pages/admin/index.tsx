@@ -229,7 +229,7 @@ export function Dashboard({}: NextPageProps) {
                   ScheduledDates={scheduleDates ? scheduleDates : []}
                 />
               </div>
-              <div className="basis-full xl:basis-[45%] space-y-4 mt-4 xl:mt-0 flex flex-col">
+              <div className="basis-full xl:basis-[50%] space-y-4 mt-4 xl:mt-0 flex flex-col">
                 <div className="text-2xl font-medium">UPCOMING APPOINMENTS</div>
                 <div className="grid grid-cols-12 items-center gap-4">
                   <div className="text-sm text-casper-500 font-medium col-span-12 xs:col-span-2">
@@ -304,137 +304,135 @@ export function Dashboard({}: NextPageProps) {
                                         : null
                                     }
                                   >
-                                    <div>
-                                      <div className="flex justify-around items-center flex-wrap gap-6 text-center">
-                                        <div className="basis-full md:basis-auto flex items-center justify-center">
-                                          <div className="relative w-16 h-16 bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
-                                            {patient_name
-                                              ? patient_name.charAt(0)
-                                              : doctor_name.charAt(0)}
-                                          </div>
+                                    <div className=" flex md:justify-between space-y-5 md:space-y-0 justify-center items-center flex-wrap">
+                                      <div className="md:w-[10%] w-full flex items-center justify-center">
+                                        <div className="relative md:w-full w-16 aspect-square bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
+                                          {patient_name
+                                            ? patient_name.charAt(0)
+                                            : doctor_name.charAt(0)}
                                         </div>
+                                      </div>
 
-                                        <div className="space-y-0 basis-full md:basis-auto">
-                                          <div className="font-bold text-xl text-start">
-                                            {patient_name
-                                              ? patient_name
-                                              : doctor_name}
+                                      <div className="  md:w-[33%] w-full md:text-start text-center space-y-1 ">
+                                        <h5 className="truncate">
+                                          {patient_name
+                                            ? patient_name
+                                            : doctor_name}
+                                        </h5>
+                                        <p className="truncate">{email}</p>
+                                        <p>{mobile_number}</p>
+                                        <div className="flex flex-wrap md:justify-start justify-center">
+                                          <div className="align-middle text-sm whitespace-nowrap">
+                                            <AiOutlineCalendar className="inline-block align-middle" />{" "}
+                                            <span>
+                                              {format(
+                                                parseISO(created_at),
+                                                "dd/MM/yyyy"
+                                              )}
+                                            </span>
                                           </div>
-                                          <div>{email}</div>
-                                          <div>{mobile_number}</div>
-                                          <div className="flex items-center md:justify-start justify-center gap-4">
-                                            <div className="align-middle text-sm whitespace-nowrap">
-                                              <AiOutlineCalendar className="inline-block align-middle" />{" "}
-                                              <span>
-                                                {format(
-                                                  parseISO(created_at),
-                                                  "dd/MM/yyyy"
-                                                )}
-                                              </span>
-                                            </div>
-                                            <div className="align-middle text-sm whitespace-nowrap">
-                                              <AiOutlineClockCircle className="inline-block align-middle" />{" "}
-                                              <span>
-                                                {format(
-                                                  parseISO(created_at),
-                                                  "H:mm:ss"
-                                                )}
-                                              </span>
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        <div className="space-y-0 font-medium text-start basis-full md:basis-auto">
-                                          <div>{reason_for_visit}</div>
-                                          <div>Dr. {doctor_name}</div>
-                                          <div>
-                                            {branch_name}{" "}
-                                            {clinic_room_name &&
-                                              `- ${clinic_room_name}`}
-                                          </div>
-                                        </div>
-                                        <div className="space-y-0 font-medium basis-full md:basis-auto">
-                                          <div className=" px-2 py-1 border border-primary-500 text-sm rounded-lg">
-                                            {status}
+                                          <div className="align-middle text-sm whitespace-nowrap truncate">
+                                            <AiOutlineClockCircle className="inline-block align-middle" />{" "}
+                                            <span>
+                                              {start_time} - {end_time}
+                                            </span>
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
-                                        {/* <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
-                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" /> */}
-                                        {/* <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" /> */}
-                                        <BsPencilSquare
-                                          className="align-middle cursor-pointer hover:text-secondary transition"
-                                          onClick={() => {
-                                            ScheduleForm.setFieldsValue({
-                                              branch_id,
-                                              branch_name,
-                                              clinic_room,
-                                              created_at,
-                                              doctor_id,
-                                              doctor_name,
-                                              doctor_schedule_type,
-                                              end_time,
-                                              patient_id,
-                                              patient_name,
-                                              dental_chair,
-                                              email,
-                                              mobile_number,
-                                              reason_for_visit,
-                                              reason_for_visit_id,
-                                              schedule_type,
-                                              start_time,
-                                              updated_at,
-                                              status,
-                                              _id,
-                                              remarks,
-                                              time: [
-                                                moment(start_time).isValid()
-                                                  ? moment(start_time, "HH:mm")
-                                                  : undefined,
-                                                moment(end_time).isValid()
-                                                  ? moment(end_time, "HH:mm")
-                                                  : undefined,
-                                              ],
-                                              date: moment(date).isValid()
-                                                ? moment(date)
-                                                : undefined,
-                                            });
 
-                                            setIsScheduleModalOpen(true);
-                                          }}
-                                        />
-                                        {/* <BsTrash
+                                      <div className=" text-center md:text-start  md:w-[28%]  w-full ">
+                                        <p className="truncate">
+                                          {reason_for_visit}
+                                        </p>
+                                        <p className="truncate">
+                                          Dr. {doctor_name}
+                                        </p>
+                                        <p className="truncate">
+                                          {branch_name}{" "}
+                                          {clinic_room_name &&
+                                            `- ${clinic_room_name}`}
+                                        </p>
+                                      </div>
+
+                                      <div className=" md:w-[15%] w-[48%] text-center space-y-0 font-medium basis-full md:basis-auto">
+                                        <div className=" px-2 py-1 border border-primary-500 text-sm rounded-lg">
+                                          {status}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
+                                      {/* <BsCameraVideo className="align-middle cursor-pointer hover:text-secondary transition" />
+                                    <BsCheck2Square className="align-middle cursor-pointer hover:text-secondary transition" /> */}
+                                      {/* <AiOutlineStop className="align-middle cursor-pointer hover:text-secondary transition" /> */}
+                                      <BsPencilSquare
+                                        className="align-middle cursor-pointer hover:text-secondary transition"
+                                        onClick={() => {
+                                          ScheduleForm.setFieldsValue({
+                                            branch_id,
+                                            branch_name,
+                                            clinic_room,
+                                            created_at,
+                                            doctor_id,
+                                            doctor_name,
+                                            doctor_schedule_type,
+                                            end_time,
+                                            patient_id,
+                                            patient_name,
+                                            dental_chair,
+                                            email,
+                                            mobile_number,
+                                            reason_for_visit,
+                                            reason_for_visit_id,
+                                            schedule_type,
+                                            start_time,
+                                            updated_at,
+                                            status,
+                                            _id,
+                                            remarks,
+                                            time: [
+                                              moment(start_time).isValid()
+                                                ? moment(start_time, "HH:mm")
+                                                : undefined,
+                                              moment(end_time).isValid()
+                                                ? moment(end_time, "HH:mm")
+                                                : undefined,
+                                            ],
+                                            date: moment(date).isValid()
+                                              ? moment(date)
+                                              : undefined,
+                                          });
+
+                                          setIsScheduleModalOpen(true);
+                                        }}
+                                      />
+                                      {/* <BsTrash
                                         className="align-middle cursor-pointer hover:text-secondary transition"
                                         onClick={() => {
                                           deleteSchedule(_id);
                                         }}
                                       /> */}
 
-                                        <FaTooth
-                                          onClick={() =>
-                                            router.push(
-                                              `/admin/patient-list/${_id}`
-                                            )
-                                          }
-                                          className="align-middle cursor-pointer hover:text-secondary transition"
-                                        />
-                                        <BsCheckSquare
-                                          onClick={() =>
-                                            UpdateStatushandler(
-                                              "Completed",
-                                              _id
-                                            )
-                                          }
-                                          className="align-middle cursor-pointer hover:text-secondary transition"
-                                        />
-                                        <MdOutlineCancel
-                                          className="align-middle cursor-pointer hover:text-secondary transition"
-                                          onClick={() =>
-                                            UpdateStatushandler("Canceled", _id)
-                                          }
-                                        />
-                                      </div>
+                                      <FaTooth
+                                        onClick={() =>
+                                          router.push(
+                                            `/admin/patient-list/${_id}`
+                                          )
+                                        }
+                                        className="align-middle cursor-pointer hover:text-secondary transition"
+                                      />
+                                      <BsCheckSquare
+                                        onClick={() =>
+                                          UpdateStatushandler("Completed", _id)
+                                        }
+                                        className="align-middle cursor-pointer hover:text-secondary transition"
+                                      />
+                                      <MdOutlineCancel
+                                        className="align-middle cursor-pointer hover:text-secondary transition"
+                                        onClick={() =>
+                                          UpdateStatushandler("Canceled", _id)
+                                        }
+                                      />
                                     </div>
                                   </Card>
                                 </AnimateContainer>

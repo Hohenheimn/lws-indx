@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Popover, notification } from "antd";
 import Table from "antd/lib/table/Table";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -75,6 +75,8 @@ export function Inventory({ router }: NextPageProps) {
   let { setIsAppLoading } = React.useContext(Context);
   let queryClient = useQueryClient();
 
+  const [tableType, setTableType] = useState(1);
+
   const { mutate: deleteInventory }: any = useMutation(
     (id: number) =>
       deleteData({
@@ -126,6 +128,26 @@ export function Inventory({ router }: NextPageProps) {
     <PageContainer>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="basis-auto whitespace-nowrap">Inventory</h3>
+
+        <Radio.Group
+          onChange={(e: number) => setTableType(e)}
+          defaultValue="1"
+          className="md:max-w-md"
+        >
+          <Radio.Button value={"1"} label="Item List" />
+          <Radio.Button value={"2"} label="Usage History" />
+        </Radio.Group>
+      </div>
+
+      <div className="flex justify-between items-center gap-4 flex-wrap">
+        <div className="basis-full lg:basis-1/2">
+          <Input
+            placeholder="Search"
+            prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
+            className="rounded-full text-base shadow-none"
+            onChange={(e: any) => setSearch(e.target.value)}
+          />
+        </div>
         <Form form={FilterForm} layout="vertical">
           <Form.Item
             label=""
@@ -144,24 +166,6 @@ export function Inventory({ router }: NextPageProps) {
             />
           </Form.Item>
         </Form>
-        {/* <Radio.Group
-                    onChange={(e: string) => console.log(e)}
-                    defaultValue="1"
-                    className="md:max-w-md"
-                >
-                    <Radio.Button value="1" label="Item List" />
-                    <Radio.Button value="2" label="Logs History" />
-                </Radio.Group> */}
-      </div>
-      <div className="flex justify-between items-center gap-4 flex-wrap">
-        <div className="basis-full lg:basis-1/2">
-          <Input
-            placeholder="Search"
-            prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-            className="rounded-full text-base shadow-none"
-            onChange={(e: any) => setSearch(e.target.value)}
-          />
-        </div>
         <div className="basis-full lg:basis-auto flex gap-4">
           <Button
             className="p-3 min-w-[15rem]"

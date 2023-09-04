@@ -2,7 +2,6 @@ import React from "react";
 import { AnimatePresence } from "framer-motion";
 import { FaHome, FaUser } from "react-icons/fa";
 import { FiMoreHorizontal } from "react-icons/fi";
-import { scroller } from "react-scroll";
 import { twMerge } from "tailwind-merge";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn } from "@components/animation/animation";
@@ -50,7 +49,7 @@ export const Layout = ({
           className
         )}
       >
-        <div className="flex flex-auto">
+        <div className="flex flex-auto border border-black">
           {profile && subdomain && (
             <SideMenu openMenus={openMenus} profile={profile} />
           )}

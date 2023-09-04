@@ -149,6 +149,7 @@ export const BillingColumns = (
                       balance: record.balance,
                       procedure_name: record.procedure_name,
                       paid_amount: record.paid_amount,
+                      charge: record?.total,
                     },
                   ]);
                 }

@@ -553,7 +553,6 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Position"
                 name="occupation_position"
-                rules={[{ required: true, message: "Position is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -562,9 +561,6 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Company Name"
                 name="company_name"
-                rules={[
-                  { required: true, message: "Company Name is required" },
-                ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -573,10 +569,6 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Email Address"
                 name="occupation_email"
-                rules={[
-                  { type: "email", message: "Must be a valid email" },
-                  { required: true, message: "Email Address is required" },
-                ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -585,9 +577,6 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Landline Number"
                 name="occupation_landline_no"
-                rules={[
-                  { required: true, message: "Landline Number is required" },
-                ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -602,7 +591,6 @@ export function PersonalInfo({ patientRecord, tab }: any) {
                 label="Mobile Number"
                 name="occupation_mobile_no"
                 rules={[
-                  { required: true, message: "Mobile Number is required" },
                   {
                     pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
                     message:
@@ -624,7 +612,6 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Zip Code"
                 name="zip_code"
-                rules={[{ required: true, message: "Zip Code is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -645,57 +632,14 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Country"
                 name="office_country"
-                rules={[{ required: true, message: "Country is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
               >
                 <Select placeholder="Select Country" id="office_country">
                   <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="Region"
-                required={false}
-                className="col-span-12 lg:col-span-6"
-                shouldUpdate={(prev, curr) => {
-                  return true;
-                }}
-              >
-                {({ getFieldValue, resetFields }) => {
-                  return (
-                    <Form.Item
-                      name="office_region"
-                      rules={[
-                        { required: true, message: "Region is required" },
-                      ]}
-                    >
-                      <InfiniteSelect
-                        placeholder="Region"
-                        id="office_region"
-                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/region?limit=3&for_dropdown=true&page=1`}
-                        getInitialValue={{
-                          form: PersonalInfoForm,
-                          initialValue: "office_region",
-                        }}
-                        queryKey={[
-                          "office_region",
-                          getFieldValue("office_country"),
-                        ]}
-                        displayValueKey="name"
-                        returnValueKey="_id"
-                        disabled={Boolean(!getFieldValue("office_country"))}
-                        onChange={() => {
-                          resetFields([
-                            "office_province",
-                            "office_city",
-                            "office_barangay",
-                          ]);
-                        }}
-                      />
-                    </Form.Item>
-                  );
-                }}
-              </Form.Item>
+
               <Form.Item
                 label="Province"
                 required={false}
@@ -706,12 +650,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               >
                 {({ getFieldValue, resetFields }) => {
                   return (
-                    <Form.Item
-                      name="office_province"
-                      rules={[
-                        { required: true, message: "Province is required" },
-                      ]}
-                    >
+                    <Form.Item name="office_province">
                       <InfiniteSelect
                         placeholder="Province"
                         id="office_province"
@@ -749,10 +688,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               >
                 {({ getFieldValue, resetFields }) => {
                   return (
-                    <Form.Item
-                      name="office_city"
-                      rules={[{ required: true, message: "City is required" }]}
-                    >
+                    <Form.Item name="office_city">
                       <InfiniteSelect
                         placeholder="City"
                         id="office_city"
@@ -793,12 +729,7 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               >
                 {({ getFieldValue, resetFields }) => {
                   return (
-                    <Form.Item
-                      name="office_barangay"
-                      rules={[
-                        { required: true, message: "Barangay is required" },
-                      ]}
-                    >
+                    <Form.Item name="office_barangay">
                       <InfiniteSelect
                         placeholder="Barangay"
                         id="office_barangay"
@@ -832,16 +763,14 @@ export function PersonalInfo({ patientRecord, tab }: any) {
               <Form.Item
                 label="Street"
                 name="office_street"
-                rules={[{ required: true, message: "Street is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-8"
+                className="col-span-12 lg:col-span-4"
               >
                 <Input id="office_street" placeholder="Add street name" />
               </Form.Item>
               <Form.Item
                 label="Zip Code"
                 name="office_zip_code"
-                rules={[{ required: true, message: "Zip Code is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >

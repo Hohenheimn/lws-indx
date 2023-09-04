@@ -11,12 +11,10 @@ import Modal from "@components/Modal";
 import { Select } from "@components/Select";
 import DeleteButton from "@src/components/DeleteButton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { deleteData, postData } from "@utilities/api";
-
 import { Context } from "@utilities/context/Provider";
 
-import { getInitialValue, removeNumberFormatting } from "@utilities/helpers";
+import { getAge } from "@utilities/helpers";
 
 import AnnotationModal from "./AnnotationModal";
 import { Teeth } from "./Teeth";
@@ -29,9 +27,15 @@ export default function ChartingModal({
   defaultAnnotation,
   ...rest
 }: any) {
+  const age = getAge(patientRecord.birthdate);
+
   let id = form.getFieldValue("_id");
 
   const queryClient = useQueryClient();
+
+  const chart_type = Form.useWatch("chart_type", form);
+
+  const chart_view = Form.useWatch("chart_view", form);
 
   const { setIsAppLoading } = React.useContext(Context);
 
@@ -50,6 +54,30 @@ export default function ChartingModal({
     tooth_position: "",
     tooth_no: 1,
   });
+
+  const [procedures, setProcedure] = useState<any>([]);
+
+  useEffect(() => {
+    const upper_left = TeethUpperLeft.filter(
+      (itemFilter) => itemFilter.annotations.length > 0
+    );
+    const upper_right = TeethUpperRight.filter(
+      (itemFilter) => itemFilter.annotations.length > 0
+    );
+    const lower_left = TeethLowerLeft.filter(
+      (itemFilter) => itemFilter.annotations.length > 0
+    );
+    const lower_right = TeethLowerRight.filter(
+      (itemFilter) => itemFilter.annotations.length > 0
+    );
+    const procedures = [
+      ...upper_left,
+      ...upper_right,
+      ...lower_right,
+      ...lower_left,
+    ];
+    setProcedure(procedures);
+  }, [TeethUpperLeft, TeethUpperRight, TeethLowerLeft, TeethLowerRight]);
 
   useEffect(() => {
     let UpperLeft: any[] = [];
@@ -363,26 +391,30 @@ export default function ChartingModal({
                 values.legend_appliances
               );
               values.legend_tmds = JSON.stringify(values.legend_tmds);
-              const upper_left = TeethUpperLeft.filter(
-                (itemFilter) => itemFilter.annotations.length > 0
-              );
-              const upper_right = TeethUpperRight.filter(
-                (itemFilter) => itemFilter.annotations.length > 0
-              );
-              const lower_left = TeethLowerLeft.filter(
-                (itemFilter) => itemFilter.annotations.length > 0
-              );
-              const lower_right = TeethLowerRight.filter(
-                (itemFilter) => itemFilter.annotations.length > 0
-              );
-              const procedures = JSON.stringify([
-                ...upper_left,
-                ...upper_right,
-                ...lower_right,
-                ...lower_left,
-              ]);
 
-              values.procedures = procedures;
+              values.procedures = JSON.stringify(procedures);
+
+              values.legend_periodical_screening_others =
+                values.legend_periodical_screening_others === null
+                  ? ""
+                  : values.legend_periodical_screening_others;
+
+              values.legend_occlusions_others =
+                values.legend_occlusions_others === null
+                  ? ""
+                  : values.legend_occlusions_others;
+
+              values.legend_appliances_others =
+                values.legend_appliances_others === null
+                  ? ""
+                  : values.legend_appliances_others;
+
+              values.legend_tmds_others =
+                values.legend_tmds_others === null
+                  ? ""
+                  : values.legend_tmds_others;
+
+              values.remarks = values.remarks === null ? "" : values.remarks;
 
               if (!id) {
                 addChart(values);
@@ -444,8 +476,13 @@ export default function ChartingModal({
                   },
                 ]}
                 required={false}
+                initialValue={""}
               >
-                <Select placeholder="Chart view" id="chart_type">
+                <Select
+                  placeholder="Chart view"
+                  id="chart_type"
+                  disabled={procedures.length > 0}
+                >
                   <Select.Option value={"Basic"}>Basic</Select.Option>
 
                   <Select.Option value={"Initial"}>Initial</Select.Option>
@@ -462,10 +499,13 @@ export default function ChartingModal({
                   },
                 ]}
                 required={false}
+                initialValue={""}
               >
-                <Select placeholder="Chart view" id="chart_view">
-                  <Select.Option value={"All"}>All</Select.Option>
-
+                <Select
+                  placeholder="Chart view"
+                  id="chart_view"
+                  disabled={procedures.length > 0}
+                >
                   <Select.Option value={"Standard"}>Standard</Select.Option>
 
                   <Select.Option value={"Periodontal"}>
@@ -518,7 +558,11 @@ export default function ChartingModal({
             </div>
             <hr className="border-t-2" />
 
-            <div className="space-y-8">
+            <div
+              className={`space-y-8 ${(chart_type === "" ||
+                chart_view === "") &&
+                "blur-sm pointer-events-none"}`}
+            >
               <div className="grid grid-cols-2 gap-12">
                 <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
                   {TeethUpperLeft.map((item: any, index: number) => {
@@ -533,9 +577,9 @@ export default function ChartingModal({
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
 
-                        {(ChartView === "Standard" ||
+                        {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -545,9 +589,9 @@ export default function ChartingModal({
                           </div>
                         )}
 
-                        {(ChartView === "Periodontal" ||
+                        {(ChartView === "Standard" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -556,10 +600,6 @@ export default function ChartingModal({
                             />
                           </div>
                         )}
-
-                        {/* <div className="flex justify-center items-center">
-                                                        {row}
-                                                    </div> */}
                       </div>
                     );
                   })}
@@ -576,9 +616,9 @@ export default function ChartingModal({
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
-                        {(ChartView === "Standard" ||
+                        {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -588,9 +628,9 @@ export default function ChartingModal({
                           </div>
                         )}
 
-                        {(ChartView === "Periodontal" ||
+                        {(ChartView === "Standard" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -621,9 +661,9 @@ export default function ChartingModal({
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
-                        {(ChartView === "Standard" ||
+                        {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -633,9 +673,9 @@ export default function ChartingModal({
                           </div>
                         )}
 
-                        {(ChartView === "Periodontal" ||
+                        {(ChartView === "Standard" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -663,9 +703,9 @@ export default function ChartingModal({
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
-                        {(ChartView === "Standard" ||
+                        {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}
@@ -675,9 +715,9 @@ export default function ChartingModal({
                           </div>
                         )}
 
-                        {(ChartView === "Periodontal" ||
+                        {(ChartView === "Standard" ||
                           ChartView === undefined ||
-                          ChartView === "All") && (
+                          ChartView === "") && (
                           <div className="w-full">
                             <Annotate
                               disabled={true}

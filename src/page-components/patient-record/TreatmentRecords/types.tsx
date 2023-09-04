@@ -60,6 +60,7 @@ export type SelectedBilling = {
   balance: number;
   procedure_name: string;
   paid_amount: number;
+  charge: number;
 };
 
 export type SelectedPayment = {

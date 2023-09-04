@@ -82,6 +82,8 @@ export default function TimeRangePicker({ isTime, onChange, ...rest }: Props) {
     const endNumber = convertToNumber(end);
     if (startNumber > endNumber) {
       onChange([end, start]);
+      setStart(end);
+      setEnd(start);
     } else {
       onChange([start, end]);
     }

@@ -1,3 +1,5 @@
+import { parse, differenceInYears } from "date-fns";
+
 export function statusPalette(status: string) {
   switch (status?.toLowerCase()) {
     case "pending":
@@ -153,3 +155,13 @@ export function getBase64(img: any, callback: any) {
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 }
+
+export const getAge = (birthdate: string) => {
+  const birthday = parse(
+    birthdate,
+    "EEE MMM dd yyyy HH:mm:ss 'GMT'xx",
+    new Date()
+  );
+  const age = differenceInYears(new Date(), birthday);
+  return age;
+};

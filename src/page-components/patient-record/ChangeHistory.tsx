@@ -30,6 +30,13 @@ const columns: any = [
     dataIndex: "patient_id",
     width: "10rem",
     align: "center",
+    render: (created_at: string, record: any) => {
+      return (
+        <div>
+          {record.user_first_name} {record.user_last_name}
+        </div>
+      );
+    },
   },
 ];
 const { RangePicker } = DatePicker;

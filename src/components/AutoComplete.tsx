@@ -27,6 +27,7 @@ interface AutoCompleteProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   onSearch?: any;
   noData?: string;
+  onClose?: (setClose: Function) => void;
 }
 
 const Option: React.FC<AutoCompleteOptionProps> = ({
@@ -49,7 +50,7 @@ const Option: React.FC<AutoCompleteOptionProps> = ({
       onClick={onClick}
       {...rest}
     >
-      <div ref={lastChildRef}>{children}</div>
+      <div ref={lastChildRef}> {children}</div>
     </Combobox.Option>
   );
 };
@@ -135,12 +136,13 @@ export function AutoComplete({
           >
             <Combobox.Input
               key={open.toString()}
-              onFocus={() =>
-                selectedValue || value ? setIsActive(true) : setIsActive(false)
-              }
+              // onFocus={() =>
+              //   selectedValue || value ? setIsActive(true) : setIsActive(false)
+              // }
               onBlur={() => {
                 setIsActive(false);
               }}
+              onClick={() => setIsActive(true)}
               displayValue={(value: string) => {
                 let displayValue = flattenChildren.find(
                   (val: any) => val.props.value === value
@@ -179,7 +181,7 @@ export function AutoComplete({
                 childrenWithProps
               ) : (
                 <div
-                  className="p-4 text-casper text-center"
+                  className="p-4 text-casper text-center border border-black"
                   onClick={(e) => {
                     e.preventDefault();
                   }}

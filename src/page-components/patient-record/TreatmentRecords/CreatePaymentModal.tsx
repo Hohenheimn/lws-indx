@@ -55,7 +55,7 @@ export default function CreatePaymentModal({
 
   const [TotalBalance, setTotalBalance] = useState(0);
 
-  const amount = Form.useWatch("amount", form);
+  const mode_of_payment = Form.useWatch("mode_of_payment", form);
 
   React.useEffect(() => {
     setTotalBalance(0);
@@ -74,6 +74,14 @@ export default function CreatePaymentModal({
         : undefined,
     });
   }, [show]);
+
+  useEffect(() => {
+    if (mode_of_payment === "Use Credits") {
+      form.setFieldValue("amount", Number(Credit?.amount));
+    } else {
+      form.setFieldValue("amount", 0);
+    }
+  }, [mode_of_payment]);
 
   let { data: Credit, isLoading: CreditLoading } = useQuery(
     ["credit", patientRecord._id],
@@ -211,7 +219,7 @@ export default function CreatePaymentModal({
       >
         <div className="space-y-8">
           <div className="flex items-center justify-between">
-            <div className="font-bold text-3xl">Create Payment</div>
+            <div className="font-bold text-3xl">Billing Statement</div>
             <div className="flex justify-end items-center gap-4">
               <Button
                 appearance=""
@@ -226,7 +234,7 @@ export default function CreatePaymentModal({
               >
                 Add Credits
               </Button>
-              <Button
+              {/* <Button
                 appearance="primary"
                 className="max-w-[10rem]"
                 type="submit"
@@ -238,7 +246,7 @@ export default function CreatePaymentModal({
                 }
               >
                 Use Credits
-              </Button>
+              </Button> */}
             </div>
           </div>
           <Form
@@ -251,6 +259,24 @@ export default function CreatePaymentModal({
               );
               values.credits = useCreditAmount;
               values.total = TotalBalance;
+              if (values.billings.length > 1 && values.amount < TotalBalance) {
+                notification.warning({
+                  message: "Must pay exact price",
+                  description:
+                    "You must pay exact price if you paying more than one invoice",
+                });
+                return;
+              }
+
+              if (values.amount > TotalBalance) {
+                notification.warning({
+                  message: "Must pay exact price",
+                  description:
+                    "You inputted so much amount more than the total balance",
+                });
+                return;
+              }
+
               addPayment(values);
             }}
             onFinishFailed={(data) => {
@@ -308,6 +334,9 @@ export default function CreatePaymentModal({
                       Bank Transfer
                     </Select.Option>
                     <Select.Option value={"Gcash"}>Gcash</Select.Option>
+                    <Select.Option value={"Use Credits"}>
+                      Use Credits
+                    </Select.Option>
                   </Select>
                 </Form.Item>
 
@@ -329,19 +358,15 @@ export default function CreatePaymentModal({
                     id="amount"
                     prefix="₱"
                     thousandSeparator
+                    disabled={mode_of_payment === "Use Credits"}
+                    isAllowed={({ floatValue }: any) => {
+                      return (
+                        floatValue <= TotalBalance || floatValue === undefined
+                      );
+                    }}
                   />
                 </Form.Item>
-                <Form.Item
-                  label="Remarks"
-                  name="remarks"
-                  rules={[
-                    {
-                      required: true,
-                      message: "This is required!",
-                    },
-                  ]}
-                  required={false}
-                >
+                <Form.Item label="Remarks" name="remarks">
                   <Input id="remarks" placeholder="Remarks" />
                 </Form.Item>
               </li>
@@ -351,18 +376,18 @@ export default function CreatePaymentModal({
                   {Credit?.amount !== undefined &&
                     numberSeparator(Credit?.amount, 0)}
                 </p>
-                <p className=" text-end">
+                {/* <p className=" text-end">
                   Use Credit:{" "}
                   {Credit?.amount !== undefined &&
                     numberSeparator(useCreditAmount, 0)}
-                </p>
+                </p> */}
                 <div className="p-8 border border-primary-500 rounded-md space-y-4">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-primary-500">
                         <th>Procedure:</th>
-                        <th>Paid Amount:</th>
                         <th>Charge:</th>
+                        <th>Remaining Balance:</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -374,7 +399,7 @@ export default function CreatePaymentModal({
                           >
                             <td className=" py-3">{item.procedure_name}</td>
                             <td className=" py-3">
-                              Php {numberSeparator(item.paid_amount, 0)}
+                              Php {numberSeparator(item.charge, 0)}
                             </td>
                             <td className=" py-3">
                               Php {numberSeparator(item.balance, 0)}

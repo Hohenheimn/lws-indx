@@ -1,32 +1,17 @@
-import React, { useEffect } from "react";
-import { DatePicker, Form, TimePicker, notification } from "antd";
-import { Checkbox } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import React from "react";
+import { DatePicker, Form, notification } from "antd";
 import moment from "moment";
-import Image from "next/image";
 import { AiOutlineInbox } from "react-icons/ai";
-import { AiFillMinusCircle } from "react-icons/ai";
-import { IoMdAddCircle } from "react-icons/io";
-import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
-import { arrayBuffer } from "stream/consumers";
-import { AnimateContainer } from "@components/animation";
-import { fadeIn } from "@components/animation/animation";
-import Annotate from "@components/Annotate";
 import { Button } from "@components/Button";
-import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
 import DragAndDropUpload from "@src/components/DragAndDropUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteData, postData, postDataMultipleFile } from "@utilities/api";
+import { postDataMultipleFile } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
-import {
-  getBase64,
-  getInitialValue,
-  removeNumberFormatting,
-} from "@utilities/helpers";
+import { getBase64 } from "@utilities/helpers";
 
 export default function AddMedicalGalleryModal({
   show,
@@ -188,17 +173,7 @@ export default function AddMedicalGalleryModal({
               <Input id="name" placeholder="Name" />
             </Form.Item>
 
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required!",
-                },
-              ]}
-              required={false}
-            >
+            <Form.Item label="Description" name="description" required={false}>
               <Input id="description" placeholder="Description" />
             </Form.Item>
 

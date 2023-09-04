@@ -142,7 +142,7 @@ const columns: any = [
 
 const { RangePicker } = DatePicker;
 
-export function ClinicAnalytics({}: NextPageProps) {
+export function ClinicAnalytics({ profile }: any) {
   const [FilterForm] = Form.useForm();
 
   const doctor_id = Form.useWatch("doctor_id", FilterForm);
@@ -179,23 +179,17 @@ export function ClinicAnalytics({}: NextPageProps) {
 
   return (
     <PageContainer>
-      <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
-        <h3 className="w-full lg:w-auto">Clinic Analytics</h3>
+      <div className="flex justify-between flex-col lg:flex-row items-center gap-4 flex-wrap md:flex-nowrap">
+        <h3 className="w-full lg:w-auto mr-5">Clinic Analytics</h3>
         <Form
           form={FilterForm}
           layout="vertical"
-          className=" flex flex-wrap justify-between lg:space-x-1 space-y-3 lg:space-y-0"
+          className="w-full flex justify-between flex-col lg:flex-row lg:space-x-1 space-y-3 lg:space-y-0"
         >
-          <div className="flex flex-wrap lg:space-x-1 w-full lg:w-auto  space-y-3 lg:space-y-0">
+          <div className="flex space-x-5 lg:space-x-1 lg:w-auto  lg:space-y-0 w-full">
             <Form.Item
               label=""
               name="doctor_id"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required",
-                },
-              ]}
               required={false}
               className="w-full lg:w-auto"
             >
@@ -212,12 +206,6 @@ export function ClinicAnalytics({}: NextPageProps) {
             <Form.Item
               label=""
               name="branch_id"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required",
-                },
-              ]}
               required={false}
               className="w-full lg:w-auto"
             >
@@ -248,7 +236,7 @@ export function ClinicAnalytics({}: NextPageProps) {
               />
             </aside>
             <h3 className=" text-white text-[1rem] lg:text-3xl">
-              Good Day, Dr. Lee
+              Good Day, {profile.last_name}
             </h3>
             <p className=" text-[1rem]">Have a Nice Day!</p>
           </div>

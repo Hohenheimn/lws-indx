@@ -94,9 +94,7 @@ export function AccountDetails({ patientRecord }: any) {
               <p
                 className=" font-semibold text-primary-500 hover:text-primary-400 cursor-pointer"
                 onClick={() =>
-                  router.push(
-                    "http://lws-dentist.localhost:3000/admin/settings/application-settings"
-                  )
+                  router.push("/admin/settings/application-settings")
                 }
               >
                 Update

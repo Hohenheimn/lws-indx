@@ -38,7 +38,7 @@ export default function AddScheduleModal({
 
   let [isPatientModalOpen, setIsPatientModalOpen] = React.useState(false);
 
-  let [schedType, setSchedType] = React.useState("");
+  let [schedType, setSchedType] = React.useState("patient");
 
   let [selectedBranch, setSelectedBranch] = React.useState("");
 
@@ -149,12 +149,12 @@ export default function AddScheduleModal({
 
   React.useEffect(() => {
     if (show) {
-      setSchedType(form.getFieldValue(["schedule_type"]));
+      // setSchedType(form.getFieldValue(["schedule_type"]));
       setSelectedBranch(form.getFieldValue(["branch_id"]));
     }
 
     if (!show) {
-      setSchedType("");
+      // setSchedType("");
       setSelectedBranch("");
       setSelectedDate(null);
       setSelectedDoctor("");
@@ -258,7 +258,7 @@ export default function AddScheduleModal({
           className="space-y-8"
         >
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-            <Form.Item
+            {/* <Form.Item
               label="Type of Schedule"
               name="schedule_type"
               rules={[
@@ -287,7 +287,7 @@ export default function AddScheduleModal({
                   );
                 })}
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             {schedType === "patient" && (
               <>
                 <Form.Item

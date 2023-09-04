@@ -37,6 +37,8 @@ export default function AddClinicAccountModal({
   });
   const { setIsAppLoading } = React.useContext(Context);
 
+  const account_role = Form.useWatch("account_role", form);
+
   React.useEffect(() => {
     let profPic = form.getFieldValue(["profile_picture"])
       ? form.getFieldValue(["profile_picture"]).toString()
@@ -288,6 +290,7 @@ export default function AddClinicAccountModal({
                 label="Middle Name"
                 name="middle_name"
                 className="col-span-6 lg:col-span-2"
+                initialValue={""}
               >
                 <Input id="middle_name" placeholder="Middle Name" />
               </Form.Item>
@@ -353,33 +356,37 @@ export default function AddClinicAccountModal({
                   })}
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="License Number"
-                name="license_no"
-                rules={[{ required: true, message: "This is required!" }]}
-                required={false}
-                className="col-span-6 lg:col-span-2"
-              >
-                <Input id="license_no" placeholder="License Number" />
-              </Form.Item>
-              <Form.Item
-                label="PTR Number"
-                name="ptr_no"
-                rules={[{ required: true, message: "This is required!" }]}
-                required={false}
-                className="col-span-6 lg:col-span-2"
-              >
-                <Input id="ptr_no" placeholder="PTR Number" />
-              </Form.Item>
-              <Form.Item
-                label="S2 License Number"
-                name="s2_no"
-                rules={[{ required: true, message: "This is required!" }]}
-                required={false}
-                className="col-span-6 lg:col-span-2"
-              >
-                <Input id="s2_no" placeholder="S2 License Number" />
-              </Form.Item>
+              {account_role !== "Staff" && (
+                <>
+                  <Form.Item
+                    label="License Number"
+                    name="license_no"
+                    rules={[{ required: true, message: "This is required!" }]}
+                    required={false}
+                    className="col-span-6 lg:col-span-2"
+                  >
+                    <Input id="license_no" placeholder="License Number" />
+                  </Form.Item>
+                  <Form.Item
+                    label="PTR Number"
+                    name="ptr_no"
+                    rules={[{ required: true, message: "This is required!" }]}
+                    required={false}
+                    className="col-span-6 lg:col-span-2"
+                  >
+                    <Input id="ptr_no" placeholder="PTR Number" />
+                  </Form.Item>
+                  <Form.Item
+                    label="S2 License Number"
+                    name="s2_no"
+                    rules={[{ required: true, message: "This is required!" }]}
+                    required={false}
+                    className="col-span-6 lg:col-span-2"
+                  >
+                    <Input id="s2_no" placeholder="S2 License Number" />
+                  </Form.Item>
+                </>
+              )}
             </div>
           </div>
           <div className="space-y-4">
@@ -400,7 +407,7 @@ export default function AddClinicAccountModal({
               <Form.Item
                 label="Landline Number"
                 name="landline_no"
-                rules={[{ required: true, message: "This is required!" }]}
+                initialValue={""}
                 required={false}
                 className="col-span-3 lg:col-span-1"
               >

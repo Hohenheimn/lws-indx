@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import { DatePicker, Form, notification } from "antd";
-import { data } from "autoprefixer";
-import moment from "moment";
-import { scroller } from "react-scroll";
 import Annotate from "@components/Annotate";
-import Input from "@components/Input";
 import Modal from "@components/Modal";
-import { Button } from "@src/components/Button";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
@@ -41,7 +35,7 @@ export default function AnnotationModal({
             defaultValue={SelectedAnnotate}
             UpdateToothsHandler={UpdateToothsHandler}
             image={
-              ChartView === "Standard" ||
+              ChartView === "Periodontal" ||
               ChartView === undefined ||
               ChartView === "All"
                 ? "/images/tooth-standard.png"

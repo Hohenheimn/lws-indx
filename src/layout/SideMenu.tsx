@@ -130,12 +130,14 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
       <div
         className={twMerge(
           "relative hidden md:flex flex-row transition-all",
-          isSideMenuCollapsed ? "min-w-0 max-w-0" : "max-w-full min-w-[20rem]"
+          isSideMenuCollapsed
+            ? "min-w-0 max-w-0"
+            : "max-w-full min-w-[15rem] 2xl:min-w-[20rem]"
         )}
       >
         <div className={"flex flex-col relative transition-all w-full"}>
           <div className="flex flex-col flex-auto bg-white shadow-lg w-full py-8 px-4">
-            <div className="space-y-8 flex flex-col flex-1 relative">
+            <div className="space-y-5 lg:space-y-8 flex flex-col flex-1 relative">
               <div className="items-center h-12 w-full relative">
                 <Image
                   src="/images/logo.png"

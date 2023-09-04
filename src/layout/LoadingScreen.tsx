@@ -1,6 +1,4 @@
 import React from "react";
-// import { FaTooth } from "react-icons/fa";
-// import Router from "next/router";
 import Image from "next/image";
 
 export const LoadingScreen = () => {

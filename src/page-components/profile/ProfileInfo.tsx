@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { IoPersonOutline } from "react-icons/io5";
 import { NumericFormat, PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
-import SignatureCanvas from "react-signature-canvas";
 import Avatar from "@components/Avatar";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
@@ -19,7 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
-import { getBase64, getInitialValue } from "@utilities/helpers";
+import { getBase64 } from "@utilities/helpers";
 
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),

@@ -215,6 +215,58 @@ export default function AddProcedureModal({
         >
           <div className="grid grid-cols-1 gap-4">
             <Form.Item
+              name="icon"
+              valuePropName="file"
+              getValueFromEvent={handleChange}
+              rules={[
+                {
+                  required: true,
+                  message: "This field is required",
+                },
+              ]}
+              required={false}
+              className="w-fit m-auto [&_.ant-form-item-explain]:text-center [&_.avatar]:[&.ant-form-item-has-error]:border-red-500"
+            >
+              <Uploader
+                image={image}
+                setImage={(value: any) => setImage(value)}
+                className="[&_.ant-upload]:!border-0"
+                id="icon"
+              >
+                <div className="space-y-2 text-center">
+                  <Avatar className="h-40 w-40 p-8 overflow-hidden bg-white relative border border-gray-300 avatar transition">
+                    {image.imageUrl ? (
+                      <Image
+                        src={
+                          image.imageUrl
+                            ? image.imageUrl
+                            : "/images/default_tooth.png"
+                        }
+                        alt="procedure icons"
+                        fill
+                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                        objectFit="contain"
+                        className="object-center contain h-full w-full"
+                      />
+                    ) : (
+                      <Image
+                        src={"/images/default_tooth.png"}
+                        alt="procedure icons"
+                        fill
+                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                        objectFit="contain"
+                        className="object-center contain h-full w-full"
+                      />
+                    )}
+                  </Avatar>
+                  <div className="text-casper-500">
+                    {image.imageUrl ? "Change " : "Upload "}
+                    Procedure Icon
+                  </div>
+                </div>
+              </Uploader>
+            </Form.Item>
+            <Form.Item
               label="Procedure"
               name="procedure_name"
               rules={[
@@ -272,58 +324,6 @@ export default function AddProcedureModal({
               required={false}
             >
               <Input id="color_code" placeholder="Color Code" />
-            </Form.Item>
-            <Form.Item
-              name="icon"
-              valuePropName="file"
-              getValueFromEvent={handleChange}
-              rules={[
-                {
-                  required: true,
-                  message: "This field is required",
-                },
-              ]}
-              required={false}
-              className="w-fit m-auto [&_.ant-form-item-explain]:text-center [&_.avatar]:[&.ant-form-item-has-error]:border-red-500"
-            >
-              <Uploader
-                image={image}
-                setImage={(value: any) => setImage(value)}
-                className="[&_.ant-upload]:!border-0"
-                id="icon"
-              >
-                <div className="space-y-2 text-center">
-                  <Avatar className="h-40 w-40 p-8 overflow-hidden bg-white relative border border-gray-300 avatar transition">
-                    {image.imageUrl ? (
-                      <Image
-                        src={
-                          image.imageUrl
-                            ? image.imageUrl
-                            : "/images/default_tooth.png"
-                        }
-                        alt="procedure icons"
-                        fill
-                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        objectFit="contain"
-                        className="object-center contain h-full w-full"
-                      />
-                    ) : (
-                      <Image
-                        src={"/images/default_tooth.png"}
-                        alt="procedure icons"
-                        fill
-                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        objectFit="contain"
-                        className="object-center contain h-full w-full"
-                      />
-                    )}
-                  </Avatar>
-                  <div className="text-casper-500">
-                    {image.imageUrl ? "Change " : "Upload "}
-                    Procedure Icon
-                  </div>
-                </div>
-              </Uploader>
             </Form.Item>
           </div>
           <div className="flex justify-end items-center gap-4">

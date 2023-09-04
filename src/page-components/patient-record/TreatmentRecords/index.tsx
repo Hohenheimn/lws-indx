@@ -140,7 +140,7 @@ export function TreatmentRecords({ patientRecord }: any) {
   return (
     <>
       <div className=" flex justify-start">
-        <Card className="px-8 py-4 mb-5 bg-primary-500">
+        <Card className="px-8 bg-primary-500">
           <p className="text-white">Current Remaining Balance</p>
           <h1 className="text-white my-1">
             P {numberSeparator(invoiceTotal ? invoiceTotal : 0, 0)}
@@ -153,7 +153,8 @@ export function TreatmentRecords({ patientRecord }: any) {
           </h5>
         </Card>
       </div>
-      <div className="flex flex-auto mt-8">
+
+      <div className="flex flex-auto mt-5">
         {isTabActive === "Records" && (
           <TreatmentRecordTable
             TableColumns={TableRecordColumns}
