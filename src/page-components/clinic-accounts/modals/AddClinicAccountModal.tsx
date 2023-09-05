@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
 import { format } from "date-fns";
 import { differenceInYears, parse } from "date-fns";
@@ -61,7 +61,6 @@ export default function AddClinicAccountModal({
         edit: false,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, show]);
 
   const { mutate: addAccount } = useMutation(
@@ -82,6 +81,13 @@ export default function AddClinicAccountModal({
         });
         form.resetFields();
         onClose();
+        setImage({
+          imageUrl: "",
+          error: false,
+          file: null,
+          loading: false,
+          edit: false,
+        });
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: ["account"] });
@@ -125,6 +131,13 @@ export default function AddClinicAccountModal({
         });
         form.resetFields();
         onClose();
+        setImage({
+          imageUrl: "",
+          error: false,
+          file: null,
+          loading: false,
+          edit: false,
+        });
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: ["account"] });
@@ -178,6 +191,13 @@ export default function AddClinicAccountModal({
       show={show}
       onClose={() => {
         onClose();
+        setImage({
+          imageUrl: "",
+          error: false,
+          file: null,
+          loading: false,
+          edit: false,
+        });
       }}
       {...rest}
     >
@@ -233,9 +253,13 @@ export default function AddClinicAccountModal({
             >
               <Uploader
                 image={image}
-                setImage={(value: any) => setImage(value)}
+                setImage={(value: any) => {
+                  setImage(value);
+                  form.setFieldValue("profile_picture", value.file);
+                }}
                 className="[&_.ant-upload]:!border-0"
                 id="profile_picture"
+                capture={true}
               >
                 <div className="space-y-2 text-center">
                   <Avatar className="h-40 w-40 p-8 overflow-hidden relative border border-gray-300 avatar transition">
@@ -245,7 +269,7 @@ export default function AddClinicAccountModal({
                         alt="random pics"
                         fill
                         sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        className="object-center contain h-full w-full"
+                        className="object-center contain h-full w-full object-cover"
                       />
                     ) : (
                       <IoPersonOutline className="h-full w-full text-white" />
@@ -682,7 +706,16 @@ export default function AddClinicAccountModal({
             <Button
               appearance="link"
               className="p-4 bg-transparent border-none text-casper-500 font-semibold"
-              onClick={() => onClose()}
+              onClick={() => {
+                onClose();
+                setImage({
+                  imageUrl: "",
+                  error: false,
+                  file: null,
+                  loading: false,
+                  edit: false,
+                });
+              }}
             >
               Cancel
             </Button>

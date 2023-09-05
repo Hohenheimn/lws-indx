@@ -4,8 +4,6 @@ import Modal from "@components/Modal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
-
-
 export default function AnnotationModal({
   show,
   onClose,
@@ -14,6 +12,7 @@ export default function AnnotationModal({
   form,
   ChartView,
   pageType,
+  form_id,
   ...rest
 }: any) {
   const [page, setPage] = useState(1);
@@ -29,7 +28,12 @@ export default function AnnotationModal({
   );
 
   return (
-    <Modal show={show} onClose={onClose} {...rest}>
+    <Modal
+      show={show}
+      onClose={onClose}
+      {...rest}
+      className=" overflow-visible w-full"
+    >
       <div className="space-y-4">
         <h1 className="text-center">{SelectedAnnotate?.tooth_no}</h1>
         <div className="h-full w-full m-auto">
@@ -39,8 +43,8 @@ export default function AnnotationModal({
             UpdateToothsHandler={UpdateToothsHandler}
             image={
               ChartView === "Periodontal" ||
-                ChartView === undefined ||
-                ChartView === "All"
+              ChartView === undefined ||
+              ChartView === "All"
                 ? "/images/tooth-standard.png"
                 : `/images/tooth-periodontal.png`
             }
@@ -49,7 +53,8 @@ export default function AnnotationModal({
             forModal={true}
             onClose={onClose}
             pageType={pageType}
-            formType='edit'
+            formType="edit"
+            form_id={form_id}
           />
         </div>
       </div>

@@ -4,17 +4,7 @@ import Annotation from "react-image-annotation";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@components/Button";
 
-
-
-
-
-
 import Input from "./Input";
-
-
-
-
-
 
 interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
@@ -32,9 +22,10 @@ interface AnnotateProps extends React.HTMLAttributes<HTMLDivElement> {
   }[];
   forModal?: boolean;
   setSearch?: Function;
-  pageType: string
-  formType?: string
+  pageType: string;
+  formType?: string;
   onClose?: () => void;
+  form_id?: any;
 }
 
 const Shape = ({ children, geometry, style }: any) => {
@@ -85,7 +76,7 @@ function renderHighlight({ annotation, active }: any) {
           alt="Icon"
           height={20}
           width={20}
-          className=" rounded-full flex justify-center"
+          className=" rounded-full flex justify-center aspect-square"
         />
       </div>
     </Shape>
@@ -107,12 +98,8 @@ function renderSelector({ annotation, active }: any) {
         left: `${geometry.x}%`,
         top: `${geometry.y}%`,
         transform: `translate(-50%, -50%)`,
-        // height: "10%",
-        // width: "10%",
         color: "#333",
         fontWeight: 700,
-        // padding: "1rem",
-        // zIndex: 10000000000
       }}
     ></Shape>
   );
@@ -159,6 +146,7 @@ export function Annotate({
   onClose,
   formType,
   pageType,
+  form_id,
   ...rest
 }: AnnotateProps) {
   let [annotations, setAnnotations] = React.useState<any>([]);
@@ -252,6 +240,7 @@ export function Annotate({
             left: "50%",
             transform: "translateX(-50%)",
           }}
+          className=" bg-white rounded-md shadow-md p-2 w-[60vw] lg:w-auto"
         >
           <Input
             placeholder="Search Procedure"
@@ -260,12 +249,12 @@ export function Annotate({
             }}
             className=" w-full mb-5 "
           />
-          <div className="grid grid-cols-3 gap-4 w-80">
+          <div className="w-full k grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4 lg:w-80">
             {ProceduresData?.map((itemMap, index) => (
               <div key={index}>
-                <Button
+                <div
                   key={index}
-                  appearance="primary"
+                  className=" bg-primary-500 cursor-pointer hover:bg-primary-600 flex justify-center items-center p-2 rounded-md shadow-md"
                   onClick={() => {
                     onSubmit({
                       title: itemMap.procedure_name,
@@ -289,9 +278,9 @@ export function Annotate({
                     alt="Icon"
                     height={25}
                     width={25}
-                    className=" rounded-full flex justify-center"
+                    className=" rounded-full flex justify-center aspect-square"
                   />
-                </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -327,17 +316,16 @@ export function Annotate({
         />
       </div>
       {forModal && (
-
-        <div className=" w-full flex justify-between">
-          {
-            pageType === 'view' && formType === 'edit' ? <div></div> : (
-              <div>
-                <Button appearance="primary" onClick={ResetProcedures}>
-                  Reset Procedure
-                </Button>
-              </div>
-            )
-          }
+        <div className=" w-full flex justify-between mt-5">
+          {pageType === "view" && form_id ? (
+            <div></div>
+          ) : (
+            <div>
+              <Button appearance="primary" onClick={ResetProcedures}>
+                Reset Procedure
+              </Button>
+            </div>
+          )}
           <div>
             <Button appearance="primary" onClick={onClose}>
               Close

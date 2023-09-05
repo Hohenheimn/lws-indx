@@ -24,6 +24,8 @@ import { getInitialValue } from "@utilities/helpers";
 
 
 
+
+
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
@@ -841,9 +843,9 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Landline Number"
                 name="emergency_landline_no"
-                rules={[
-                  { required: true, message: "Landline Number is required" },
-                ]}
+                // rules={[
+                //   { required: true, message: "Landline Number is required" },
+                // ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
@@ -995,14 +997,14 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
             </div>
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-full">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
                 suscipit vitae justo vel fermentum. Aliquam sed bibendum ligula.
                 Nullam dapibus libero convallis, tincidunt erat viverra,
                 molestie sem. Nam commodo tellus sed massa rutrum, et consequat
                 mauris vulputate. Curabitur feugiat quis tortor quis posuere.
                 Donec quis consectetur tellus. Maecenas mauris leo, suscipit a
                 ipsum nec, vehicula bibendum nulla. Duis iaculis dignissim
-                congue.
+                congue. */}
               </div>
               <Form.Item
                 name="patient_consent"

@@ -3,7 +3,13 @@ import { DatePicker, TimePicker, notification } from "antd";
 import Form from "antd/lib/form";
 import TextArea from "antd/lib/input/TextArea";
 import "chart.js/auto";
-import { parse, differenceInHours } from "date-fns";
+import {
+  parse,
+  differenceInHours,
+  getHours,
+  isBefore,
+  isAfter,
+} from "date-fns";
 import moment from "moment";
 import { PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
@@ -13,7 +19,9 @@ import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
-import TimeRangePicker from "@src/components/TimeRangePicker";
+import TimeRangePicker, {
+  generateTimeSlots,
+} from "@src/components/TimeRangePicker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -22,6 +30,8 @@ import scheduleType from "@utilities/global-data/scheduleType";
 import { getInitialValue } from "@utilities/helpers";
 
 import AddPatientModal from "./AddPatientModal";
+
+type BlockTime = { start: string; end: string };
 
 export default function AddScheduleModal({
   show,
@@ -39,16 +49,19 @@ export default function AddScheduleModal({
 
   const [schedType, setSchedType] = React.useState("patient");
 
-  const [selectedBranch, setSelectedBranch] = React.useState<any>("");
+  const [selectedBranch, setSelectedBranch] = React.useState<
+    | {
+        name: string;
+        schedules: { day: string; open_time: string; close_time: string }[];
+        _id: string;
+        chair_quantity: string;
+      }
+    | undefined
+  >(undefined);
 
   const [selectedDate, setSelectedDate] = React.useState<any>(null);
 
   const [selectedDoctor, setSelectedDoctor] = React.useState("");
-
-  useEffect(() => {
-    console.log(selectedBranch)
-  }, [selectedBranch])
-
 
   let { data: doctorSchedules } = useQuery(
     ["schedule-dates", selectedDoctor],
@@ -84,6 +97,9 @@ export default function AddScheduleModal({
           description: `Schedule Added`,
         });
         onClose();
+        setSelectedBranch(undefined);
+        setSelectedDate(null);
+        setSelectedDoctor("");
         form.resetFields();
       },
       onMutate: async (newData) => {
@@ -95,8 +111,9 @@ export default function AddScheduleModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["schedule"], context.previousValues);
       },
@@ -124,6 +141,9 @@ export default function AddScheduleModal({
           description: `Editing Schedule Success`,
         });
         onClose();
+        setSelectedBranch(undefined);
+        setSelectedDate(null);
+        setSelectedDoctor("");
         form.resetFields();
       },
       onMutate: async (newData) => {
@@ -138,8 +158,9 @@ export default function AddScheduleModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["schedule"], context.previousValues);
       },
@@ -150,7 +171,6 @@ export default function AddScheduleModal({
   );
 
   React.useEffect(() => {
-
     if (!show) {
       // setSchedType("");
       setSelectedDate(null);
@@ -170,7 +190,7 @@ export default function AddScheduleModal({
     }[]
   >([]);
 
-  let [isTime, setTime] = React.useState<{ start: string; end: string }[]>([]);
+  let [isTime, setTime] = React.useState<BlockTime[]>([]);
 
   React.useEffect(() => {
     if (doctorSchedules) {
@@ -197,27 +217,74 @@ export default function AddScheduleModal({
     }
   }, [doctorSchedules]);
 
+  const [dentalChairSelectOption, setDentalChairSelectOption] = useState<
+    number[]
+  >([]);
+
+  const [isOutsideRange, setOutsideRange] = useState<string[]>([]);
+
   useEffect(() => {
     if (selectedDate !== null) {
       const formattedCurrent = selectedDate.format("yyyy-MM-DD");
+      // Get time that need to block from schedule
       const getByFilter = isDoctorSchedules.filter(
         (filter) => filter.date === formattedCurrent
       );
-      setTime(() =>
-        getByFilter.map((item) => {
-          return { start: item.start_time, end: item.end_time };
-        })
-      );
+      const fromSchedule: BlockTime[] = getByFilter.map((item) => {
+        return { start: item.start_time, end: item.end_time, day: null };
+      });
+      setTime(fromSchedule);
+
+      // Get time that need to block that outside of the schedule time range
+      const selectedDateFormat = selectedDate.format("dddd");
+      let TimesOutside: string[] = [];
+      selectedBranch?.schedules?.map((itemSchedule) => {
+        if (selectedDateFormat === itemSchedule.day) {
+          const startHour = parse(
+            itemSchedule.open_time,
+            "hh:mm a",
+            new Date()
+          );
+          const closeHour = parse(
+            itemSchedule.close_time,
+            "hh:mm a",
+            new Date()
+          );
+          const timeSlot = generateTimeSlots();
+          timeSlot.map((itemTime) => {
+            const current = parse(itemTime, "hh:mm a", new Date());
+            const isOutsideRange =
+              isBefore(current, startHour) || isAfter(current, closeHour);
+            if (isOutsideRange) {
+              TimesOutside = [...TimesOutside, itemTime];
+            }
+          });
+        }
+      });
+      setOutsideRange(TimesOutside);
     }
-  }, [selectedDate]);
+    let dentalchair: number[] = [];
+    for (let i = 1; i <= Number(selectedBranch?.chair_quantity); i++) {
+      dentalchair = [...dentalchair, i];
+    }
+    setDentalChairSelectOption(dentalchair);
+  }, [selectedDate, selectedBranch]);
 
   const disabledDate = (current: any) => {
+    // selected date
     const formattedCurrent = current.format("yyyy-MM-DD");
+    const formarttedToDay = current.format("dddd");
+    if (
+      !selectedBranch?.schedules?.some((some) => some.day === formarttedToDay)
+    ) {
+      return true;
+    }
     if (
       isDoctorSchedules.some(
         (someitem) =>
           someitem.date === formattedCurrent && someitem.covered_time >= 10
-      )
+      ) ||
+      current < moment().startOf("day")
     ) {
       return true;
     }
@@ -225,7 +292,16 @@ export default function AddScheduleModal({
   };
 
   return (
-    <Modal show={show} onClose={onClose} {...rest}>
+    <Modal
+      show={show}
+      onClose={() => {
+        setSelectedBranch(undefined);
+        setSelectedDate(null);
+        setSelectedDoctor("");
+        onClose();
+      }}
+      {...rest}
+    >
       <div className="space-y-8">
         <div className="font-bold text-3xl">Add New Schedule</div>
         <Form
@@ -233,7 +309,7 @@ export default function AddScheduleModal({
           layout="vertical"
           onFinish={(values) => {
             let id = form.getFieldValue("_id");
-
+            values.schedule_type = "patient";
             values.start_time = values.time[0];
             values.end_time = values.time[1];
             delete values.time;
@@ -302,11 +378,12 @@ export default function AddScheduleModal({
                   <InfiniteAutoComplete
                     placeholder="Patient"
                     id="patient_id"
-                    api={`${process.env.REACT_APP_API_BASE_URL
-                      }/api/patient?limit=3&for_dropdown=true&page=1${getInitialValue(
-                        form,
-                        "patient_id"
-                      )}`}
+                    api={`${
+                      process.env.REACT_APP_API_BASE_URL
+                    }/api/patient?limit=3&for_dropdown=true&page=1${getInitialValue(
+                      form,
+                      "patient_id"
+                    )}`}
                     queryKey={["patient", form.getFieldValue(["patient_id"])]}
                     displayValueKey="name"
                     returnValueKey="_id"
@@ -403,6 +480,9 @@ export default function AddScheduleModal({
                     displayValueKey="name"
                     returnValueKey="_id"
                     setSelectedDetail={setSelectedBranch}
+                    onChange={(e: any) =>
+                      e === "" && setSelectedBranch(undefined)
+                    }
                   />
                 </Form.Item>
 
@@ -422,13 +502,14 @@ export default function AddScheduleModal({
                     id="dental_chair"
                     placeholder="Select chair"
                     className="border-transparent"
+                    disabled={selectedBranch === undefined}
+                    noFilter={true}
                   >
-                    <Select.Option value="Chair No. 1" key="Chair No. 1">
-                      Chair No. 1
-                    </Select.Option>
-                    <Select.Option value="Chair No. 2" key="Chair No. 2">
-                      Chair No. 2
-                    </Select.Option>
+                    {dentalChairSelectOption.map((item, index) => (
+                      <Select.Option value={`Chair No. ${item}`} key={index}>
+                        Chair No. {item}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
 
@@ -452,6 +533,7 @@ export default function AddScheduleModal({
                       setSelectedDate(value);
                     }}
                     disabledDate={disabledDate}
+                    disabled={selectedBranch === undefined}
                   />
                 </Form.Item>
                 <Form.Item
@@ -480,6 +562,9 @@ export default function AddScheduleModal({
                       form.setFieldValue("time", value);
                     }}
                     isTime={isTime}
+                    disabled={selectedBranch === undefined}
+                    blockOutSide={isOutsideRange}
+                    filterByOutSideTime={true}
                   />
                 </Form.Item>
 
@@ -517,11 +602,12 @@ export default function AddScheduleModal({
                   <InfiniteAutoComplete
                     placeholder="Doctor"
                     id="doctor_id"
-                    api={`${process.env.REACT_APP_API_BASE_URL
-                      }/api/account?limit=3&for_dropdown=true&page=1${getInitialValue(
-                        form,
-                        "doctor_id"
-                      )}`}
+                    api={`${
+                      process.env.REACT_APP_API_BASE_URL
+                    }/api/account?limit=3&for_dropdown=true&page=1${getInitialValue(
+                      form,
+                      "doctor_id"
+                    )}`}
                     queryKey={["doctor"]}
                     displayValueKey="name"
                     returnValueKey="_id"
@@ -687,7 +773,12 @@ export default function AddScheduleModal({
             <Button
               appearance="link"
               className="p-4 bg-transparent border-none text-casper-500 font-semibold"
-              onClick={() => onClose()}
+              onClick={() => {
+                setSelectedBranch(undefined);
+                setSelectedDate(null);
+                setSelectedDoctor("");
+                onClose();
+              }}
             >
               Cancel
             </Button>

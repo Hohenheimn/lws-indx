@@ -114,7 +114,7 @@ export function Select({
     <Combobox
       value={value ?? selectedValue}
       onChange={(value) => {
-        onChange(value);
+        onChange && onChange(value);
         setSelectedValue(value);
         setQuery("");
       }}

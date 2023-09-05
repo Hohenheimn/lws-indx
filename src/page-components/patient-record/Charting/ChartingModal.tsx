@@ -16,12 +16,8 @@ import { Context } from "@utilities/context/Provider";
 
 import { getAge } from "@utilities/helpers";
 
-
-
 import AnnotationModal from "./AnnotationModal";
 import { Teeth } from "./Teeth";
-
-
 
 export default function ChartingModal({
   show,
@@ -257,8 +253,9 @@ export default function ChartingModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["charting-list"], context.previousValues);
       },
@@ -309,8 +306,9 @@ export default function ChartingModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["charting-list"], context.previousValues);
       },
@@ -347,8 +345,9 @@ export default function ChartingModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["charting-list"], context.previousValues);
       },
@@ -362,7 +361,7 @@ export default function ChartingModal({
     <>
       <Modal
         show={show}
-        onClose={() => { }}
+        onClose={() => {}}
         // onClose={onClose}
         {...rest}
       >
@@ -449,7 +448,11 @@ export default function ChartingModal({
                 ]}
                 required={false}
               >
-                <Input id="chart_name" disabled={pageType === 'view' && id} placeholder="Chart Name" />
+                <Input
+                  id="chart_name"
+                  disabled={pageType === "view" && id}
+                  placeholder="Chart Name"
+                />
               </Form.Item>
 
               <Form.Item
@@ -533,7 +536,7 @@ export default function ChartingModal({
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
                   queryKey={["branch"]}
                   displayValueKey="name"
-                  disabled={pageType === 'view' && id}
+                  disabled={pageType === "view" && id}
                   returnValueKey="_id"
                 />
               </Form.Item>
@@ -554,7 +557,7 @@ export default function ChartingModal({
                   id="doctor_id"
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
                   queryKey={["doctor"]}
-                  disabled={pageType === 'view' && id}
+                  disabled={pageType === "view" && id}
                   displayValueKey="name"
                   returnValueKey="_id"
                 />
@@ -576,7 +579,7 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
@@ -584,28 +587,28 @@ export default function ChartingModal({
                         {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-standard.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-standard.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
 
                         {(ChartView === "Standard" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-periodontal.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-periodontal.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -618,35 +621,35 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
                         {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-standard.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-standard.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
 
                         {(ChartView === "Standard" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-periodontal.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-periodontal.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -662,35 +665,35 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5  lg:p-0"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
                         {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-standard.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-standard.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
 
                         {(ChartView === "Standard" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-periodontal.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-periodontal.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -703,35 +706,35 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5  lg:p-0"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
                         {(ChartView === "Periodontal" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-standard.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-standard.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
 
                         {(ChartView === "Standard" ||
                           ChartView === undefined ||
                           ChartView === "") && (
-                            <div className="w-full">
-                              <Annotate
-                                pageType={pageType}
-                                disabled={true}
-                                image={`/images/tooth-periodontal.png`}
-                                defaultValue={item}
-                              />
-                            </div>
-                          )}
+                          <div className="w-full">
+                            <Annotate
+                              pageType={pageType}
+                              disabled={true}
+                              image={`/images/tooth-periodontal.png`}
+                              defaultValue={item}
+                            />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -751,7 +754,10 @@ export default function ChartingModal({
                   required={false}
                   className="text-base"
                 >
-                  <Checkbox.Group disabled={pageType === 'view' && id} className="grid grid-cols-1 gap-2 justify-center py-4 text-lg">
+                  <Checkbox.Group
+                    disabled={pageType === "view" && id}
+                    className="grid grid-cols-1 gap-2 justify-center py-4 text-lg"
+                  >
                     <Checkbox value="Gingivits">Gingivits</Checkbox>
                     <Checkbox value="Early Periodontics">
                       Early Periodontics
@@ -773,7 +779,7 @@ export default function ChartingModal({
                   <Input
                     id="legend_periodical_screening_others"
                     placeholder="others"
-                    disabled={pageType === 'view' && id}
+                    disabled={pageType === "view" && id}
                   />
                 </Form.Item>
               </div>
@@ -784,7 +790,10 @@ export default function ChartingModal({
                   required={false}
                   className="text-base"
                 >
-                  <Checkbox.Group disabled={pageType === 'view' && id} className="grid grid-cols-1 gap-2 justify-center py-4 text-lg">
+                  <Checkbox.Group
+                    disabled={pageType === "view" && id}
+                    className="grid grid-cols-1 gap-2 justify-center py-4 text-lg"
+                  >
                     <Checkbox value="Class Molar">Class Molar</Checkbox>
                     <Checkbox value="Overjet">Overjet</Checkbox>
                     <Checkbox value="Overbite">Overbite</Checkbox>
@@ -800,7 +809,11 @@ export default function ChartingModal({
                   required={false}
                   initialValue={""}
                 >
-                  <Input id="legend_occlusions_others" disabled={pageType === 'view' && id} placeholder="others" />
+                  <Input
+                    id="legend_occlusions_others"
+                    disabled={pageType === "view" && id}
+                    placeholder="others"
+                  />
                 </Form.Item>
               </div>
               <div>
@@ -810,7 +823,10 @@ export default function ChartingModal({
                   required={false}
                   className="text-base"
                 >
-                  <Checkbox.Group disabled={pageType === 'view' && id} className="grid grid-cols-1 gap-2 justify-center py-4 text-lg">
+                  <Checkbox.Group
+                    disabled={pageType === "view" && id}
+                    className="grid grid-cols-1 gap-2 justify-center py-4 text-lg"
+                  >
                     <Checkbox value="Orthodontic">Orthodontic</Checkbox>
                     <Checkbox value="Stayplate">Stayplate</Checkbox>
                   </Checkbox.Group>
@@ -821,7 +837,11 @@ export default function ChartingModal({
                   required={false}
                   initialValue={""}
                 >
-                  <Input id="legend_appliances_others" disabled={pageType === 'view' && id} placeholder="others" />
+                  <Input
+                    id="legend_appliances_others"
+                    disabled={pageType === "view" && id}
+                    placeholder="others"
+                  />
                 </Form.Item>
               </div>
               <div>
@@ -831,7 +851,10 @@ export default function ChartingModal({
                   required={false}
                   className="text-base"
                 >
-                  <Checkbox.Group disabled={pageType === 'view' && id} className="grid grid-cols-1 gap-2 justify-center py-4 text-lg">
+                  <Checkbox.Group
+                    disabled={pageType === "view" && id}
+                    className="grid grid-cols-1 gap-2 justify-center py-4 text-lg"
+                  >
                     <Checkbox value="Clenching">Clenching</Checkbox>
                     <Checkbox value="Clicking">Clicking</Checkbox>
                     <Checkbox value="Trismus">Trismus</Checkbox>
@@ -844,7 +867,11 @@ export default function ChartingModal({
                   required={false}
                   initialValue={""}
                 >
-                  <Input id="legend_tmds_others" disabled={pageType === 'view' && id} placeholder="others" />
+                  <Input
+                    id="legend_tmds_others"
+                    disabled={pageType === "view" && id}
+                    placeholder="others"
+                  />
                 </Form.Item>
               </div>
             </div>
@@ -856,57 +883,56 @@ export default function ChartingModal({
                 required={false}
                 initialValue={""}
               >
-                <TextArea id="remarks" placeholder="Remarks" disabled={pageType === 'view' && id} />
+                <TextArea
+                  id="remarks"
+                  placeholder="Remarks"
+                  disabled={pageType === "view" && id}
+                />
               </Form.Item>
             </div>
 
-            {
-              pageType === 'view' && id ? (
-                <div className="flex justify-end items-center gap-4">
-                  <Button
-                    appearance="link"
-                    className="p-4 bg-transparent border-none text-casper-500 font-semibold"
-                    onClick={() => {
-                      setTeethLowerLeft(Teeth.LowerLeft);
-                      setTeethLowerRight(Teeth.LowerRight);
-                      setTeethUpperLeft(Teeth.UpperLeft);
-                      setTeethUpperRight(Teeth.UpperRight);
+            {pageType === "view" && id ? (
+              <div className="flex justify-end items-center gap-4">
+                <Button
+                  appearance="link"
+                  className="p-4 bg-transparent border-none text-casper-500 font-semibold"
+                  onClick={() => {
+                    setTeethLowerLeft(Teeth.LowerLeft);
+                    setTeethLowerRight(Teeth.LowerRight);
+                    setTeethUpperLeft(Teeth.UpperLeft);
+                    setTeethUpperRight(Teeth.UpperRight);
 
-                      onClose();
-                    }}
-                  >
-                    Close
-                  </Button>
+                    onClose();
+                  }}
+                >
+                  Close
+                </Button>
+              </div>
+            ) : (
+              <div className="flex justify-end items-center gap-4">
+                <Button
+                  appearance="link"
+                  className="p-4 bg-transparent border-none text-casper-500 font-semibold"
+                  onClick={() => {
+                    setTeethLowerLeft(Teeth.LowerLeft);
+                    setTeethLowerRight(Teeth.LowerRight);
+                    setTeethUpperLeft(Teeth.UpperLeft);
+                    setTeethUpperRight(Teeth.UpperRight);
 
-                </div>
-              ) : (
-                <div className="flex justify-end items-center gap-4">
-                  <Button
-                    appearance="link"
-                    className="p-4 bg-transparent border-none text-casper-500 font-semibold"
-                    onClick={() => {
-                      setTeethLowerLeft(Teeth.LowerLeft);
-                      setTeethLowerRight(Teeth.LowerRight);
-                      setTeethUpperLeft(Teeth.UpperLeft);
-                      setTeethUpperRight(Teeth.UpperRight);
-
-                      onClose();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    appearance="primary"
-                    className="max-w-[10rem]"
-                    type="submit"
-                  >
-                    Save
-                  </Button>
-                </div>
-              )
-            }
-
-
+                    onClose();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  appearance="primary"
+                  className="max-w-[10rem]"
+                  type="submit"
+                >
+                  Save
+                </Button>
+              </div>
+            )}
           </Form>
         </div>
       </Modal>
@@ -921,6 +947,7 @@ export default function ChartingModal({
         UpdateToothsHandler={UpdateToothsHandler}
         id="annotation-modal"
         pageType={pageType}
+        form_id={id}
       />
     </>
   );
