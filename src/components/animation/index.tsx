@@ -37,7 +37,7 @@ export function PageContainer({
         className={twMerge(
           "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto scroll-smooth",
           className,
-          "relative"
+          " relative"
         )}
         {...rest}
         id="main-container"

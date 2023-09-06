@@ -2,7 +2,7 @@ import React from "react";
 import { Select } from "antd";
 
 type Props = {
-  Selection: string[];
+  Selection: string[] | number[];
   id: any;
   placeholder: string;
 };

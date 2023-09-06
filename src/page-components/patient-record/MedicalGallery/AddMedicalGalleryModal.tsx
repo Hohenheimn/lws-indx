@@ -162,12 +162,12 @@ export default function AddMedicalGalleryModal({
             <Form.Item
               label="Name"
               name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required!",
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: "This is required!",
+              //   },
+              // ]}
               required={false}
             >
               <Input id="name" placeholder="Name" />

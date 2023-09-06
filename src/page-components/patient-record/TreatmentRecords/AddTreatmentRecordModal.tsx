@@ -18,7 +18,12 @@ import MultipleSelect from "@src/components/MultipleSelect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, postData, postDataNoFormData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
-import { getInitialValue, removeNumberFormatting } from "@utilities/helpers";
+import {
+  getAge,
+  getInitialValue,
+  removeNumberFormatting,
+  toothNumbers,
+} from "@utilities/helpers";
 
 export default function AddTreatmentRecordModal({
   show,
@@ -27,6 +32,8 @@ export default function AddTreatmentRecordModal({
   patientRecord,
   ...rest
 }: any) {
+  const age = getAge(patientRecord.birthdate);
+
   const queryClient = useQueryClient();
 
   const { setIsAppLoading } = React.useContext(Context);
@@ -294,7 +301,7 @@ export default function AddTreatmentRecordModal({
               required={false}
             >
               <MultipleSelect
-                Selection={["1", "2", "3", "4", "5", "6", "7", "8"]}
+                Selection={toothNumbers(age)}
                 id={"tooth_no"}
                 placeholder={"Select Tooth No."}
               />

@@ -13,7 +13,6 @@ import DeleteButton from "@src/components/DeleteButton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
-
 import { getAge } from "@utilities/helpers";
 
 import AnnotationModal from "./AnnotationModal";
@@ -42,19 +41,26 @@ export default function ChartingModal({
 
   const [showAnnotationModal, setShowAnnotationModal] = React.useState(false);
 
-  const [TeethUpperLeft, setTeethUpperLeft] = useState(Teeth.UpperLeft);
+  const [TeethUpperLeft, setTeethUpperLeft] = useState(Teeth(age).UpperLeft);
 
-  const [TeethUpperRight, setTeethUpperRight] = useState(Teeth.UpperRight);
+  const [TeethUpperRight, setTeethUpperRight] = useState(Teeth(age).UpperRight);
 
-  const [TeethLowerLeft, setTeethLowerLeft] = useState(Teeth.LowerLeft);
+  const [TeethLowerLeft, setTeethLowerLeft] = useState(Teeth(age).LowerLeft);
 
-  const [TeethLowerRight, setTeethLowerRight] = useState(Teeth.LowerRight);
+  const [TeethLowerRight, setTeethLowerRight] = useState(Teeth(age).LowerRight);
 
   const [SelectedAnnotate, setSelectedAnnotate] = useState<any>({
     annotations: [],
     tooth_position: "",
     tooth_no: 1,
   });
+
+  const resetToothNumber = () => {
+    setTeethLowerLeft(Teeth(age).LowerLeft);
+    setTeethLowerRight(Teeth(age).LowerRight);
+    setTeethUpperLeft(Teeth(age).UpperLeft);
+    setTeethUpperRight(Teeth(age).UpperRight);
+  };
 
   const [procedures, setProcedure] = useState<any>([]);
 
@@ -134,10 +140,10 @@ export default function ChartingModal({
           (someItem) => someItem.tooth_no === filterItem.tooth_no
         )
     );
-    const sorted = [...Filter, ...arrayValues].sort(
-      (a, b) => a.tooth_no - b.tooth_no
-    );
-    setArrayValues(sorted);
+    // const sorted = [...Filter, ...arrayValues].sort(
+    //   (a, b) => a.tooth_no - b.tooth_no
+    // );
+    setArrayValues([...Filter, ...arrayValues]);
   };
 
   const ChartView = Form.useWatch("chart_view", form);
@@ -230,10 +236,7 @@ export default function ChartingModal({
           description: `Adding New Chart Success`,
         });
         form.resetFields();
-        setTeethLowerLeft(Teeth.LowerLeft);
-        setTeethLowerRight(Teeth.LowerRight);
-        setTeethUpperLeft(Teeth.UpperLeft);
-        setTeethUpperRight(Teeth.UpperRight);
+        resetToothNumber();
         queryClient.invalidateQueries({
           queryKey: ["treatment-record"],
         });
@@ -283,10 +286,7 @@ export default function ChartingModal({
           description: `Chart Updated!`,
         });
         form.resetFields();
-        setTeethLowerLeft(Teeth.LowerLeft);
-        setTeethLowerRight(Teeth.LowerRight);
-        setTeethUpperLeft(Teeth.UpperLeft);
-        setTeethUpperRight(Teeth.UpperRight);
+        resetToothNumber();
         queryClient.invalidateQueries({
           queryKey: ["treatment-record"],
         });
@@ -571,7 +571,7 @@ export default function ChartingModal({
                 "blur-sm pointer-events-none"}`}
             >
               <div className="grid grid-cols-2 gap-12">
-                <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
+                <div className="flex justify-evenly lg:gap-4 flex-wrap lg:flex-nowrap">
                   {TeethUpperLeft.map((item: any, index: number) => {
                     return (
                       <div
@@ -579,7 +579,7 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
@@ -613,7 +613,7 @@ export default function ChartingModal({
                     );
                   })}
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
+                <div className="flex justify-evenly lg:gap-4 flex-wrap lg:flex-nowrap">
                   {TeethUpperRight.map((item: any, index: number) => {
                     return (
                       <div
@@ -621,7 +621,7 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
@@ -657,7 +657,7 @@ export default function ChartingModal({
               </div>
               <hr className="border-t-2 border-black" />
               <div className="grid grid-cols-2 gap-12">
-                <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
+                <div className="flex justify-evenly lg:gap-4 flex-wrap lg:flex-nowrap">
                   {TeethLowerLeft.map((item: any, index: number) => {
                     return (
                       <div
@@ -665,7 +665,7 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5  lg:p-0"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
@@ -698,7 +698,7 @@ export default function ChartingModal({
                     );
                   })}
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
+                <div className="flex justify-evenly lg:gap-4 flex-wrap lg:flex-nowrap">
                   {TeethLowerRight.map((item: any, index: number) => {
                     return (
                       <div
@@ -706,7 +706,7 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5  lg:p-0"
+                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
@@ -897,11 +897,7 @@ export default function ChartingModal({
                   appearance="link"
                   className="p-4 bg-transparent border-none text-casper-500 font-semibold"
                   onClick={() => {
-                    setTeethLowerLeft(Teeth.LowerLeft);
-                    setTeethLowerRight(Teeth.LowerRight);
-                    setTeethUpperLeft(Teeth.UpperLeft);
-                    setTeethUpperRight(Teeth.UpperRight);
-
+                    resetToothNumber();
                     onClose();
                   }}
                 >
@@ -914,11 +910,7 @@ export default function ChartingModal({
                   appearance="link"
                   className="p-4 bg-transparent border-none text-casper-500 font-semibold"
                   onClick={() => {
-                    setTeethLowerLeft(Teeth.LowerLeft);
-                    setTeethLowerRight(Teeth.LowerRight);
-                    setTeethUpperLeft(Teeth.UpperLeft);
-                    setTeethUpperRight(Teeth.UpperRight);
-
+                    resetToothNumber();
                     onClose();
                   }}
                 >

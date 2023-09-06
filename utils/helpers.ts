@@ -1,7 +1,5 @@
 import { parse, differenceInYears } from "date-fns";
 
-
-
 export function statusPalette(status: string) {
   switch (status?.toLowerCase()) {
     case "pending":
@@ -65,8 +63,8 @@ export function convertNumber(number: number) {
   return ((Math.log10(number) / 3) | 0) === 0
     ? number
     : Number(
-      (number / Math.pow(10, ((Math.log10(number) / 3) | 0) * 3)).toFixed(1)
-    ) + ["", "K", "M", "B", "T"][(Math.log10(number) / 3) | 0];
+        (number / Math.pow(10, ((Math.log10(number) / 3) | 0) * 3)).toFixed(1)
+      ) + ["", "K", "M", "B", "T"][(Math.log10(number) / 3) | 0];
 }
 
 export function contactNumberFormatter(number: string) {
@@ -165,9 +163,71 @@ export const getAge = (birthdate: string) => {
     new Date()
   );
   const age = differenceInYears(new Date(), birthday);
-  return age;
+  return Number(age);
 };
 
 export const scrollToTarget = async (ref: any) => {
   ref?.current?.scrollIntoView();
+};
+
+export const toothNumbers = (age: number) => {
+  if (age <= 10) {
+    return [
+      55,
+      54,
+      53,
+      52,
+      51,
+      61,
+      62,
+      63,
+      64,
+      65,
+      85,
+      84,
+      83,
+      82,
+      81,
+      71,
+      72,
+      73,
+      74,
+      75,
+    ];
+  } else {
+    return [
+      18,
+      17,
+      16,
+      15,
+      14,
+      13,
+      12,
+      11,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      48,
+      47,
+      46,
+      45,
+      44,
+      43,
+      42,
+      41,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+    ];
+  }
 };

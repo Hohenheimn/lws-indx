@@ -17,15 +17,6 @@ import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import { getInitialValue } from "@utilities/helpers";
 
-
-
-
-
-
-
-
-
-
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
@@ -41,6 +32,7 @@ function dataURLtoFile(dataurl: any, filename: any) {
 }
 
 export function PersonalInfo({ patientRecord, tab, pageType }: any) {
+  console.log(patientRecord);
 
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
@@ -104,8 +96,9 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["patient"], context.previousValues);
       },
@@ -178,7 +171,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="first_name" disabled={pageType === 'view'} placeholder="First Name" />
+                <Input
+                  id="first_name"
+                  disabled={pageType === "view"}
+                  placeholder="First Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Middle Name"
@@ -186,7 +183,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="middle_name" disabled={pageType === 'view'} placeholder="Middle Name" />
+                <Input
+                  id="middle_name"
+                  disabled={pageType === "view"}
+                  placeholder="Middle Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Last Name"
@@ -195,7 +196,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="last_name" disabled={pageType === 'view'} placeholder="Last Name" />
+                <Input
+                  id="last_name"
+                  disabled={pageType === "view"}
+                  placeholder="Last Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Birthdate"
@@ -206,7 +211,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   getPopupContainer={(triggerNode: any) => {
                     return triggerNode.parentNode;
                   }}
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   placeholder="Birthdate"
                   id="birthdate"
                   format="MMMM DD, YYYY"
@@ -235,7 +240,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Select placeholder="Gender" id="gender" disabled={pageType === 'view'} >
+                <Select
+                  placeholder="Gender"
+                  id="gender"
+                  disabled={pageType === "view"}
+                >
                   {gender.map((gender, index) => {
                     return (
                       <Select.Option value={gender} key={index}>
@@ -257,7 +266,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 <InfiniteSelect
                   placeholder="Civil Status"
                   id="civil_status"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/civil-status?limit=3&for_dropdown=true&page=1`}
                   getInitialValue={{
                     form: PersonalInfoForm,
@@ -271,12 +280,15 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Religion"
                 name="religion"
-
                 rules={[{ required: true, message: "Religion is required" }]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="religion" disabled={pageType === 'view'} placeholder="Religion" />
+                <Input
+                  id="religion"
+                  disabled={pageType === "view"}
+                  placeholder="Religion"
+                />
               </Form.Item>
               <Form.Item
                 label="Nationality"
@@ -288,7 +300,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 <InfiniteSelect
                   placeholder="Nationality"
                   id="nationality"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/nationality?limit=3&for_dropdown=true&page=1`}
                   getInitialValue={{
                     form: PersonalInfoForm,
@@ -316,7 +328,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="email" disabled={pageType === 'view'} placeholder="Email Address" />
+                <Input
+                  id="email"
+                  disabled={pageType === "view"}
+                  placeholder="Email Address"
+                />
               </Form.Item>
               <Form.Item
                 label="Landline Number"
@@ -330,7 +346,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 <NumericFormat
                   customInput={Input}
                   id="landline_no"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   allowNegative={false}
                   placeholder="Landline Number"
                 />
@@ -352,7 +368,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 <PatternFormat
                   customInput={Input}
                   placeholder="09XX-XXX-XXXXX"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   patternChar="*"
                   format="****-***-****"
                   allowEmptyFormatting={false}
@@ -373,7 +389,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-6"
               >
-                <Select placeholder="Select Country" id="country" disabled={pageType === 'view'} >
+                <Select
+                  placeholder="Select Country"
+                  id="country"
+                  disabled={pageType === "view"}
+                >
                   <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
               </Form.Item>
@@ -432,10 +452,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       <InfiniteSelect
                         placeholder="Province"
                         id="province"
-                        api={`${process.env.REACT_APP_API_BASE_URL
-                          }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "region"
-                          )}`}
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}`}
                         getInitialValue={{
                           form: PersonalInfoForm,
                           initialValue: "province",
@@ -443,7 +464,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         queryKey={["province", getFieldValue("region")]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(!getFieldValue("region")) || pageType === 'view'}
+                        disabled={
+                          Boolean(!getFieldValue("region")) ||
+                          pageType === "view"
+                        }
                         onChange={() => {
                           resetFields(["city", "barangay"]);
                         }}
@@ -469,10 +493,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       <InfiniteSelect
                         placeholder="City"
                         id="city"
-                        api={`${process.env.REACT_APP_API_BASE_URL
-                          }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "region"
-                          )}&province_code=${getFieldValue("province")}`}
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}&province_code=${getFieldValue("province")}`}
                         getInitialValue={{
                           form: PersonalInfoForm,
                           initialValue: "city",
@@ -480,9 +505,12 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         queryKey={["city", getFieldValue("province")]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(
-                          !getFieldValue("region") || !getFieldValue("province")
-                        ) || pageType === 'view'}
+                        disabled={
+                          Boolean(
+                            !getFieldValue("region") ||
+                              !getFieldValue("province")
+                          ) || pageType === "view"
+                        }
                         onChange={() => {
                           resetFields(["barangay"]);
                         }}
@@ -508,12 +536,13 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       <InfiniteSelect
                         placeholder="Barangay"
                         id="barangay"
-                        api={`${process.env.REACT_APP_API_BASE_URL
-                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "region"
-                          )}&province_code=${getFieldValue(
-                            "province"
-                          )}&city_code=${getFieldValue("city")}`}
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "region"
+                        )}&province_code=${getFieldValue(
+                          "province"
+                        )}&city_code=${getFieldValue("city")}`}
                         getInitialValue={{
                           form: PersonalInfoForm,
                           initialValue: "barangay",
@@ -521,11 +550,13 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         queryKey={["barangay", getFieldValue("city")]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(
-                          !getFieldValue("region") ||
-                          !getFieldValue("province") ||
-                          !getFieldValue("city")
-                        ) || pageType === 'view'}
+                        disabled={
+                          Boolean(
+                            !getFieldValue("region") ||
+                              !getFieldValue("province") ||
+                              !getFieldValue("city")
+                          ) || pageType === "view"
+                        }
                       />
                     </Form.Item>
                   );
@@ -538,7 +569,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-6"
               >
-                <Input id="street" placeholder="Add street name" disabled={pageType === 'view'} />
+                <Input
+                  id="street"
+                  placeholder="Add street name"
+                  disabled={pageType === "view"}
+                />
               </Form.Item>
               <Form.Item
                 label="Zip Code"
@@ -552,7 +587,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   id="zip_code"
                   allowNegative={false}
                   placeholder="Zip Code"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
             </div>
@@ -568,7 +603,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="occupation_position" disabled={pageType === 'view'} placeholder="Position" />
+                <Input
+                  id="occupation_position"
+                  disabled={pageType === "view"}
+                  placeholder="Position"
+                />
               </Form.Item>
               <Form.Item
                 label="Company Name"
@@ -576,7 +615,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="company_name" disabled={pageType === 'view'} placeholder="Company Name" />
+                <Input
+                  id="company_name"
+                  disabled={pageType === "view"}
+                  placeholder="Company Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Email Address"
@@ -584,7 +627,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="occupation_email" disabled={pageType === 'view'} placeholder="Email Address" />
+                <Input
+                  id="occupation_email"
+                  disabled={pageType === "view"}
+                  placeholder="Email Address"
+                />
               </Form.Item>
               <Form.Item
                 label="Landline Number"
@@ -597,7 +644,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   id="occupation_landline_no"
                   allowNegative={false}
                   placeholder="Landline Number"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
               <Form.Item
@@ -612,7 +659,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 ]}
                 required={false}
                 className="col-span-12 lg:col-span-4"
-
               >
                 <PatternFormat
                   customInput={Input}
@@ -621,7 +667,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   format="****-***-****"
                   allowEmptyFormatting={false}
                   id="occupation_mobile_no"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
               <Form.Item
@@ -634,7 +680,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   customInput={Input}
                   id="zip_code"
                   allowNegative={false}
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   placeholder="Zip Code"
                 />
               </Form.Item>
@@ -651,7 +697,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Select placeholder="Select Country" id="office_country" disabled={pageType === 'view'}>
+                <Select
+                  placeholder="Select Country"
+                  id="office_country"
+                  disabled={pageType === "view"}
+                >
                   <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
               </Form.Item>
@@ -670,10 +720,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       <InfiniteSelect
                         placeholder="Province"
                         id="office_province"
-                        api={`${process.env.REACT_APP_API_BASE_URL
-                          }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "office_region"
-                          )}`}
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "office_region"
+                        )}`}
                         getInitialValue={{
                           form: PersonalInfoForm,
                           initialValue: "office_province",
@@ -684,7 +735,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         ]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(!getFieldValue("office_country")) || pageType === 'view'}
+                        disabled={
+                          Boolean(!getFieldValue("office_country")) ||
+                          pageType === "view"
+                        }
                         onChange={() => {
                           resetFields(["office_city", "office_barangay"]);
                         }}
@@ -707,10 +761,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       <InfiniteSelect
                         placeholder="City"
                         id="office_city"
-                        api={`${process.env.REACT_APP_API_BASE_URL
-                          }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "office_region"
-                          )}&province_code=${getFieldValue("office_province")}`}
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "office_region"
+                        )}&province_code=${getFieldValue("office_province")}`}
                         getInitialValue={{
                           form: PersonalInfoForm,
                           initialValue: "office_city",
@@ -721,10 +776,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         ]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(
-
-                          !getFieldValue("office_province")
-                        ) || pageType === 'view'}
+                        disabled={
+                          Boolean(!getFieldValue("office_province")) ||
+                          pageType === "view"
+                        }
                         onChange={() => {
                           resetFields(["office_barangay"]);
                         }}
@@ -747,12 +802,13 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       <InfiniteSelect
                         placeholder="Barangay"
                         id="office_barangay"
-                        api={`${process.env.REACT_APP_API_BASE_URL
-                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "office_region"
-                          )}&province_code=${getFieldValue(
-                            "office_province"
-                          )}&city_code=${getFieldValue("office_city")}`}
+                        api={`${
+                          process.env.REACT_APP_API_BASE_URL
+                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
+                          "office_region"
+                        )}&province_code=${getFieldValue(
+                          "office_province"
+                        )}&city_code=${getFieldValue("office_city")}`}
                         getInitialValue={{
                           form: PersonalInfoForm,
                           initialValue: "office_barangay",
@@ -763,11 +819,12 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         ]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(
-
-                          !getFieldValue("office_province") ||
-                          !getFieldValue("office_city")
-                        ) || pageType === 'view'}
+                        disabled={
+                          Boolean(
+                            !getFieldValue("office_province") ||
+                              !getFieldValue("office_city")
+                          ) || pageType === "view"
+                        }
                       />
                     </Form.Item>
                   );
@@ -779,7 +836,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="office_street" placeholder="Add street name" disabled={pageType === 'view'} />
+                <Input
+                  id="office_street"
+                  placeholder="Add street name"
+                  disabled={pageType === "view"}
+                />
               </Form.Item>
               <Form.Item
                 label="Zip Code"
@@ -792,7 +853,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   id="office_zip_code"
                   allowNegative={false}
                   placeholder="Zip Code"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
             </div>
@@ -809,7 +870,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="emergency_first_name" disabled={pageType === 'view'} placeholder="First Name" />
+                <Input
+                  id="emergency_first_name"
+                  disabled={pageType === "view"}
+                  placeholder="First Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Middle Name"
@@ -817,7 +882,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="emergency_middle_name" disabled={pageType === 'view'} placeholder="Middle Name" />
+                <Input
+                  id="emergency_middle_name"
+                  disabled={pageType === "view"}
+                  placeholder="Middle Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Last Name"
@@ -826,7 +895,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="emergency_last_name" disabled={pageType === 'view'} placeholder="Last Name" />
+                <Input
+                  id="emergency_last_name"
+                  disabled={pageType === "view"}
+                  placeholder="Last Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Email Address"
@@ -838,7 +911,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="emergency_email" disabled={pageType === 'view'} placeholder="Email Address" />
+                <Input
+                  id="emergency_email"
+                  disabled={pageType === "view"}
+                  placeholder="Email Address"
+                />
               </Form.Item>
               <Form.Item
                 label="Landline Number"
@@ -854,7 +931,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   id="emergency_landline_no"
                   allowNegative={false}
                   placeholder="Landline Number"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
               <Form.Item
@@ -878,7 +955,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   format="****-***-****"
                   allowEmptyFormatting={false}
                   id="emergency_mobile_no"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
             </div>
@@ -897,7 +974,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="insurance_name" disabled={pageType === 'view'} placeholder="Dental Insurance" />
+                <Input
+                  id="insurance_name"
+                  disabled={pageType === "view"}
+                  placeholder="Dental Insurance"
+                />
               </Form.Item>
               <Form.Item
                 label="Effective Date"
@@ -915,7 +996,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   id="insurance_effective_date"
                   placeholder="Effective Date"
                   format="MMMM DD, YYYY"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                 />
               </Form.Item>
               <Form.Item
@@ -925,7 +1006,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input id="insurance_note" disabled={pageType === 'view'} placeholder="Note" />
+                <Input
+                  id="insurance_note"
+                  disabled={pageType === "view"}
+                  placeholder="Note"
+                />
               </Form.Item>
             </div>
           </div>
@@ -943,7 +1028,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               >
                 <Input
                   id="referral_name"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   placeholder="Whom may we thank for referring you?"
                 />
               </Form.Item>
@@ -968,7 +1053,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               >
                 <PatternFormat
                   customInput={Input}
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   placeholder="09XX-XXX-XXXXX"
                   patternChar="*"
                   format="****-***-****"
@@ -985,7 +1070,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               >
                 <Input
                   id="reason_for_consultation"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   placeholder="What is your reason for dental consultation?"
                 />
               </Form.Item>
@@ -1020,14 +1105,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={false}
                 className="col-span-full text-base"
               >
-                {
-                  pageType === 'edit' && (
-                    <Checkbox id="patient_consent" className="font-medium">
-                      {`Patient's Consent`}
-                    </Checkbox>
-                  )
-                }
-
+                {pageType === "edit" && (
+                  <Checkbox id="patient_consent" className="font-medium">
+                    {`Patient's Consent`}
+                  </Checkbox>
+                )}
               </Form.Item>
               {isSignatureCleared || !patientRecord?.patient_signature_path ? (
                 <Form.Item
@@ -1048,9 +1130,9 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         width: "100%",
                         height: "20rem",
                         border: "1px solid #ccc",
-                        background: pageType === 'edit' ? 'white' : '#f5f5f5',
+                        background: pageType === "edit" ? "white" : "#f5f5f5",
                         userSelect: "none",
-                        pointerEvents: pageType === 'edit' ? 'auto' : 'none'
+                        pointerEvents: pageType === "edit" ? "auto" : "none",
                       },
                     }}
                     ref={signatureCanvasRef}
@@ -1091,37 +1173,34 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   </div>
                 </Form.Item>
               )}
-
             </div>
           </div>
-          {
-            pageType === 'edit' && (
-              <>
-                <div className="col-span-full flex justify-center items-center mb-4 mt-8">
-                  <Button
-                    appearance="ghost"
-                    onClick={() => {
-                      signatureCanvasRef?.current?.clear();
-                      PersonalInfoForm.resetFields(["patient_signature_path"]);
-                      setIsSignatureCleared(true);
-                    }}
-                    className="max-w-xs p-4"
-                  >
-                    Clear Signature
-                  </Button>
-                </div>
-                <div className="flex justify-center items-center">
-                  <Button
-                    appearance="primary"
-                    type="submit"
-                    className="max-w-md py-4"
-                  >
-                    Save
-                  </Button>
-                </div>
-              </>
-            )
-          }
+          {pageType === "edit" && (
+            <>
+              <div className="col-span-full flex justify-center items-center mb-4 mt-8">
+                <Button
+                  appearance="ghost"
+                  onClick={() => {
+                    signatureCanvasRef?.current?.clear();
+                    PersonalInfoForm.resetFields(["patient_signature_path"]);
+                    setIsSignatureCleared(true);
+                  }}
+                  className="max-w-xs p-4"
+                >
+                  Clear Signature
+                </Button>
+              </div>
+              <div className="flex justify-center items-center">
+                <Button
+                  appearance="primary"
+                  type="submit"
+                  className="max-w-md py-4"
+                >
+                  Save
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </Form>
     </Card>
