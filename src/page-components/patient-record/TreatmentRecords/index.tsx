@@ -15,10 +15,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
-
-
-
-
 import AddTreatmentRecordModal from "./AddTreatmentRecordModal";
 import { BillingColumns, PaymentColumns, RecordColumns } from "./Columns";
 import CreateBillingStatementModal from "./CreateBillingStatementModal";
@@ -28,11 +24,7 @@ import TreatmentRecordTable from "./Table";
 import { SelectedTreatment, SelectedBilling, SelectedPayment } from "./types";
 import ViewPaymentModal from "./ViewPaymentModa";
 
-
-
-
-
-export function TreatmentRecords({ patientRecord, pageType }: any) {
+export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
   const [TreatmentRecordForm] = Form.useForm();
 
   const [SelectedTreatments, setSelectedTreatments] = useState<
@@ -60,13 +52,15 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
   const TableBillingColumns = BillingColumns(
     SelectedBilling,
     setSelectedBilling,
-    pageType
+    pageType,
+    currency
   );
 
   const TablePaymentColumns = PaymentColumns(
     SelectedPayment,
     setSelectedPayment,
-    pageType
+    pageType,
+    currency
   );
 
   let [
@@ -90,7 +84,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
 
   let [viewPaymentModal, setViewPaymentModal] = React.useState(false);
 
-  const tabs = ["Records", "Billings", "Payments"];
+  const tabs = ["Records", "Billings", "Payment History"];
 
   const [isTabActive, setTabActive] = useState("Records");
 
@@ -154,10 +148,14 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
         <Card className="px-8 bg-primary-500">
           <p className="text-white">Current Remaining Balance</p>
           <h1 className="text-white my-1">
-            P {numberSeparator(invoiceTotal ? invoiceTotal : 0, 0)}
+            {currency} {numberSeparator(invoiceTotal ? invoiceTotal : 0, 0)}
           </h1>
           <h5
-            className={` text-lg cursor-pointer font-semibold border-b border-white inline ${pageType === 'view' ? 'text-gray-300 pointer-events-none border-gray-300' : ' border-white text-white'}`}
+            className={` text-lg cursor-pointer font-semibold border-b border-white inline ${
+              pageType === "view"
+                ? "text-gray-300 pointer-events-none border-gray-300"
+                : " border-white text-white"
+            }`}
             onClick={() => setPayCertainAmountModalOpen(true)}
           >
             Pay Certain Amount
@@ -174,6 +172,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
             patientRecord={patientRecord}
             search={search}
             Title={<Title />}
+            currency={currency}
           />
         )}
         {isTabActive === "Billings" && (
@@ -184,9 +183,10 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
             patientRecord={patientRecord}
             search={search}
             Title={<Title />}
+            currency={currency}
           />
         )}
-        {isTabActive === "Payments" && (
+        {isTabActive === "Payment History" && (
           <TreatmentRecordTable
             TableColumns={TablePaymentColumns}
             Endpoint="patient/payment"
@@ -194,6 +194,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
             patientRecord={patientRecord}
             search={search}
             Title={<Title />}
+            currency={currency}
           />
         )}
       </div>
@@ -206,6 +207,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
         }}
         className="w-[50rem]"
         id="treatment-record-modal"
+        currency={currency}
         patientRecord={patientRecord}
         form={TreatmentRecordForm}
       />
@@ -218,6 +220,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
         className="w-[75rem]"
         id="pay-certain-amount"
         patientRecord={patientRecord}
+        currency={currency}
       />
       <CreateBillingStatementModal
         show={isCreateBillingStatementModalOpen}
@@ -229,6 +232,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
         patientRecord={patientRecord}
         SelectedTreatments={SelectedTreatments}
         setSelectedTreatments={setSelectedTreatments}
+        currency={currency}
       />
 
       <CreatePaymentModal
@@ -241,6 +245,7 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
         patientRecord={patientRecord}
         SelectedBilling={SelectedBilling}
         setSelectedBilling={setSelectedBilling}
+        currency={currency}
       />
 
       <ViewPaymentModal
@@ -251,35 +256,36 @@ export function TreatmentRecords({ patientRecord, pageType }: any) {
         id="create-payment"
         patientRecord={patientRecord}
         SelectedPayment={SelectedPayment}
+        currency={currency}
       />
 
       {(SelectedTreatments.length > 0 ||
         SelectedBilling.length > 0 ||
         SelectedPayment.length > 0) && (
-          <div className=" fixed w-full bottom-0 left-0 bg-primary-500 text-white py-3 px-10 flex justify-end items-center space-x-8">
-            <p className=" text-lg">
-              {isTabActive === "Records" && SelectedTreatments.length}
-              {isTabActive === "Payments" && SelectedPayment.length}
-              {isTabActive === "Billings" && SelectedBilling.length} Item Selected
-            </p>
+        <div className=" fixed w-full bottom-0 left-0 bg-primary-500 text-white py-3 px-10 flex justify-end items-center space-x-8">
+          <p className=" text-lg">
+            {isTabActive === "Records" && SelectedTreatments.length}
+            {isTabActive === "Payment History" && SelectedPayment.length}
+            {isTabActive === "Billings" && SelectedBilling.length} Item Selected
+          </p>
 
-            <div>
-              <Button
-                className="text-white font-semibold "
-                onClick={() => {
-                  isTabActive === "Records" &&
-                    setCreateBillingStatementModalOpen(true);
-                  isTabActive === "Billings" && setCreatePaymentModalOpen(true);
-                  isTabActive === "Payments" && setViewPaymentModal(true);
-                }}
-              >
-                {isTabActive === "Records" && "Proceed To Billing Statement"}
-                {isTabActive === "Billings" && "Pay Selected Billing"}
-                {isTabActive === "Payments" && "View Payments"}
-              </Button>
-            </div>
+          <div>
+            <Button
+              className="text-white font-semibold "
+              onClick={() => {
+                isTabActive === "Records" &&
+                  setCreateBillingStatementModalOpen(true);
+                isTabActive === "Billings" && setCreatePaymentModalOpen(true);
+                isTabActive === "Payment History" && setViewPaymentModal(true);
+              }}
+            >
+              {isTabActive === "Records" && "Proceed To Billing Statement"}
+              {isTabActive === "Billings" && "Pay Selected Billing"}
+              {isTabActive === "Payment History" && "View Payment History"}
+            </Button>
           </div>
-        )}
+        </div>
+      )}
     </>
   );
 }

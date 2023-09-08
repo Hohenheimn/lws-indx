@@ -30,6 +30,7 @@ export default function AddTreatmentRecordModal({
   onClose,
   form,
   patientRecord,
+  currecncy,
   ...rest
 }: any) {
   const age = getAge(patientRecord.birthdate);
@@ -191,7 +192,7 @@ export default function AddTreatmentRecordModal({
               className="col-span-12"
             >
               <InfiniteSelect
-                placeholder="Select Denstist"
+                placeholder="Select Dentist"
                 id="doctor_id"
                 api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
                 queryKey={["doctor"]}
@@ -323,7 +324,7 @@ export default function AddTreatmentRecordModal({
                 placeholder="Amount Charge"
                 id="amount"
                 className=" text-end"
-                prefix="₱"
+                prefix={currecncy}
                 thousandSeparator
               />
             </Form.Item>

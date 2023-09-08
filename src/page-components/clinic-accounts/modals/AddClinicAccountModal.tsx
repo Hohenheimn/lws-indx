@@ -662,7 +662,7 @@ export default function AddClinicAccountModal({
               </Form.Item>
             </div>
           </div>
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h4>Account Access</h4>
             <div className="grid grid-cols-3 gap-4" id="permissions">
               <Form.Item
@@ -701,7 +701,7 @@ export default function AddClinicAccountModal({
                 </Checkbox.Group>
               </Form.Item>
             </div>
-          </div>
+          </div> */}
           <div className="flex justify-end items-center gap-4">
             <Button
               appearance="link"

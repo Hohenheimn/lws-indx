@@ -1,31 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { AnimatePresence } from "framer-motion";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Head from "next/head";
 import Router from "next/router";
 import Script from "next/script";
 import { twMerge } from "tailwind-merge";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn, stagger } from "@components/animation/animation";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
 import { capitalizeTitle } from "@utilities/helpers";
-
-
-
 
 
 
 
 import "../../styles/globals.scss";
 import Layout from "../layout";
-
-
-
-
 
 
 
@@ -44,6 +38,27 @@ const queryClient = new QueryClient({
 });
 
 export default function App({ Component, pageProps, router }: AppProps) {
+  const [clinicLogo, setClinicLogo] = useState('')
+  const [isSubdomain, setSubdomain] = useState<string | undefined>("");
+
+  useEffect(() => {
+    if (window?.location?.origin) {
+      let getSubDomain: string | string[] = window?.location?.origin.replace(
+        "https://",
+        ""
+      );
+      if (!router.pathname.includes("/admin")) {
+        setSubdomain(undefined);
+        return;
+      }
+
+      getSubDomain = getSubDomain.replace("http://", "");
+      getSubDomain = getSubDomain.replace("https://", "");
+      getSubDomain = getSubDomain.split(".");
+      getSubDomain = getSubDomain[0];
+      setSubdomain(getSubDomain);
+    }
+  });
   
   const [isAppLoading, setIsAppLoading] = React.useState(false);
 
@@ -64,6 +79,14 @@ export default function App({ Component, pageProps, router }: AppProps) {
       document?.querySelector("body")?.classList.add('font-["Hind"]');
     }
   }
+
+  if(isSubdomain){
+      axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/setting?subdomain=${isSubdomain}`)
+  .then(response => {
+    setClinicLogo(response?.data?.clinic_logo)
+  })
+  }
+
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -94,6 +117,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
         isAppLoading={isAppLoading}
         setIsAppLoading={(show: boolean) => setIsAppLoading(show)}
         isSideMenuCollapsed={isSideMenuCollapsed}
+        clinic_logo={clinicLogo}
         setIsSideMenuCollapsed={setIsSideMenuCollapsed}
       >
         <AnimatePresence mode="wait">

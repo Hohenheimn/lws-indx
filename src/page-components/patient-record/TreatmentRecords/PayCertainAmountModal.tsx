@@ -37,6 +37,7 @@ export default function PerCertainAmountModal({
   show,
   onClose,
   patientRecord,
+  currency,
   CertainAmount,
   ...rest
 }: any) {
@@ -285,7 +286,7 @@ export default function PerCertainAmountModal({
                     customInput={Input}
                     placeholder="Amount"
                     id="amount"
-                    prefix="₱"
+                    prefix={currency}
                     thousandSeparator
                     className=" text-end"
                     disabled={
@@ -317,25 +318,27 @@ export default function PerCertainAmountModal({
                     <li className=" pb-2 border-b border-primary-500 flex justify-between">
                       <p>Certain Amount Payment</p>
                       <p className="pr-4">
-                        Php {numberSeparator(CertainAmount, 0)}
+                        {currency} {numberSeparator(CertainAmount, 0)}
                       </p>
                     </li>
                     <li className=" pb-2 border-b border-primary-500 flex justify-between">
                       <p>Total</p>
-                      <p className="pr-4">Php {numberSeparator(isTotal, 0)}</p>
+                      <p className="pr-4">
+                        {currency} {numberSeparator(isTotal, 0)}
+                      </p>
                     </li>
                     {useCreditAmount > 0 && (
                       <li className=" pb-2 border-b border-primary-500 flex justify-between">
                         <p>Credit</p>
                         <p className="pr-4">
-                          Php {numberSeparator(useCreditAmount, 0)}
+                          {currency} {numberSeparator(useCreditAmount, 0)}
                         </p>
                       </li>
                     )}
                     <li className=" pb-2 flex justify-between">
                       <p className=" font-bold">Total Remaining Balance</p>
                       <p className="pr-4">
-                        Php {numberSeparator(isBalance, 0)}
+                        {currency} {numberSeparator(isBalance, 0)}
                       </p>
                     </li>
                   </ul>

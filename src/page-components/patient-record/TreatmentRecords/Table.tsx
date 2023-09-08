@@ -10,6 +10,7 @@ export default function TreatmentRecordTable({
   Title,
   search,
   queryName,
+  currency,
 }: {
   TableColumns: any;
   Endpoint: string;
@@ -17,6 +18,7 @@ export default function TreatmentRecordTable({
   queryName: string;
   search: string;
   Title: React.ReactNode;
+  currency?: string;
 }) {
   let [page, setPage] = React.useState(1);
 

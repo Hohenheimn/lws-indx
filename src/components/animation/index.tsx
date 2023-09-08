@@ -25,7 +25,7 @@ export function PageContainer({
   variants,
   ...rest
 }: PageContainerProps) {
-  const { isSideMenuCollapsed } = React.useContext(Context);
+  const { isSideMenuCollapsed, clinic_logo } = React.useContext(Context);
 
   return (
     <>
@@ -48,7 +48,7 @@ export function PageContainer({
             className=" absolute top-[2%] md:top-[5%] left-0 px-[5%]"
           >
             <Image
-              src="/images/logo.png"
+              src={clinic_logo ? clinic_logo : "/images/logo.png"}
               alt="random pics"
               height={30}
               width={80}
@@ -78,10 +78,10 @@ export function AnimateContainer({
   return (
     <motion.div
       ref={ref}
+      variants={variants ? variants : fadeIn}
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={variants === undefined ? fadeIn : variants}
       className={twMerge(className) + " z-[9999]"}
       {...rest}
     >

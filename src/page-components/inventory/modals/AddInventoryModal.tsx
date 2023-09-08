@@ -18,6 +18,7 @@ export default function AddInventoryModal({
   show,
   onClose,
   form,
+  currency,
   ...rest
 }: any) {
   const queryClient = useQueryClient();
@@ -232,7 +233,7 @@ export default function AddInventoryModal({
                   thousandSeparator=","
                   thousandsGroupStyle="thousand"
                   id="cost_per_item"
-                  prefix="₱"
+                  prefix={currency}
                 />
               </Form.Item>
               <Form.Item

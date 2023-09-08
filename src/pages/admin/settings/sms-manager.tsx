@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
 import { AiOutlineSearch } from "react-icons/ai";
+import { BiSolidBadgeCheck } from "react-icons/bi";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
 import { twMerge } from "tailwind-merge";
@@ -21,6 +22,7 @@ import Card from "@components/Card";
 import Input from "@components/Input";
 import { Radio } from "@components/Radio";
 import { Select } from "@components/Select";
+import Modal from "@src/components/Modal";
 import AddSMSTemplate from "@src/page-components/SMSManager/AddSMSTTemplate";
 import BuySMSCreditModal from "@src/page-components/SMSManager/BuySMSCreditModal";
 import SMSSettings from "@src/page-components/SMSManager/SMSSetting";
@@ -30,25 +32,9 @@ import { fetchData } from "@utilities/api";
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-let fakeData = [
-  {
-    _id: 1,
-    name: "Birthday Template",
-    content: "Happy Birthday",
-  },
-  {
-    _id: 2,
-    name: "Follow-Up Template",
-    content: "Hi! May we follow-up your payment?",
-  },
-  {
-    _id: 3,
-    name: "Schedule Template",
-    content: "Hi! Your schedule is on",
-  },
-];
+import SuccessModalSMS from "./SuccessModalSMS";
 
-export function SMSManager({ router }: NextPageProps) {
+export function SMSManager({ router, profile }: any) {
   const routerCS = useRouter();
 
   const [showAddSMSTemplateModal, setShowAddSMSTemplateModal] = useState(false);
@@ -71,7 +57,7 @@ export function SMSManager({ router }: NextPageProps) {
 
   const columns: any = [
     {
-      title: "SMS Template Name",
+      title: "Template Name",
       dataIndex: "template_name",
       width: "20rem",
       align: "center",
@@ -102,22 +88,25 @@ export function SMSManager({ router }: NextPageProps) {
 
   return (
     <>
+      {router.query.reference_no && (
+        <SuccessModalSMS currency={profile.setting.currency} />
+      )}
       <PageContainer>
         <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
           <h3 className="basis-full xl:basis-auto whitespace-nowrap">
-            SMS Manager
+            SMS / Email Manager
           </h3>
           <div className="flex items-center justify-center xl:basis-auto basis-full">
             <div className="flex gap-x-4 items-center flex-wrap lg:flex-nowrap flex-auto">
               <div className="whitespace-nowrap font-semibold text-sm">
-                Your available SMS credits is: 500
+                Your available credits is: 500
               </div>{" "}
               <Button
                 appearance="primary"
                 className="p-3"
                 onClick={() => setShowBuySMSModal(true)}
               >
-                Buy SMS Credit
+                Buy Credit
               </Button>
             </div>
           </div>
@@ -147,7 +136,7 @@ export function SMSManager({ router }: NextPageProps) {
                 });
               }}
             >
-              SMS Settings
+              SMS / Email Settings
             </Button>
             <Button
               className="p-3"
@@ -156,7 +145,7 @@ export function SMSManager({ router }: NextPageProps) {
             >
               <div className="flex justify-center items-center">
                 <IoIosAdd className="inline-block text-2xl" />{" "}
-                <span>Add SMS Template</span>
+                <span>Add Template</span>
               </div>
             </Button>
           </div>
@@ -233,6 +222,7 @@ export function SMSManager({ router }: NextPageProps) {
       />
 
       <BuySMSCreditModal
+        profile={profile}
         show={showBuySMSModal}
         onClose={() => {
           setShowBuySMSModal(false);

@@ -94,23 +94,23 @@ export function ApplicationSettings({}: NextPageProps) {
       onSuccess: async (res) => {
         notification.success({
           message: "Application setting successfully updated",
-          description: `Application setting successfully updated`,
+          description: `Refresh to Apply Updated Logo`,
         });
         applicationSettingsForm.resetFields();
       },
-      // onMutate: async (newData) => {
-      //   await queryClient.cancelQueries({
-      //     queryKey: ["application-setting"],
-      //   });
-      //   const previousValues = queryClient.getQueryData([
-      //     "application-setting",
-      //   ]);
-      //   queryClient.setQueryData(["application-setting"], (oldData: any) =>
-      //     oldData ? [...oldData, newData] : undefined
-      //   );
+      onMutate: async (newData) => {
+        await queryClient.cancelQueries({
+          queryKey: ["application-setting"],
+        });
+        const previousValues = queryClient.getQueryData([
+          "application-setting",
+        ]);
+        queryClient.setQueryData(["application-setting"], (oldData: any) =>
+          oldData ? [...oldData, newData] : undefined
+        );
 
-      //   return { previousValues };
-      // },
+        return { previousValues };
+      },
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",

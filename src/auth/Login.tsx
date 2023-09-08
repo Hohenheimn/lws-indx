@@ -26,7 +26,7 @@ import { Context } from "@utilities/context/Provider";
 export default function Login() {
   const router = useRouter();
   const [LoginForm] = Form.useForm();
-  const { setIsAppLoading } = React.useContext(Context);
+  const { setIsAppLoading, clinic_logo } = React.useContext(Context);
   const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
   const [isSubdomain, setSubdomain] = useState("");
 
@@ -139,7 +139,7 @@ export default function Login() {
           className="hidden md:flex relative h-screen basis-full md:basis-[45%]"
         >
           <Image
-            src="/images/login-bg.png"
+            src={"/images/login-bg.png"}
             alt="random pics"
             fill
             sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
@@ -148,7 +148,7 @@ export default function Login() {
           <div className="w-full h-full relative flex justify-center items-center">
             <div className="h-28 w-full relative">
               <Image
-                src="/images/white-logo.png"
+                src={clinic_logo ? clinic_logo : "/images/white-logo.png"}
                 alt="random pics"
                 fill
                 sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
@@ -178,7 +178,7 @@ export default function Login() {
           <div className="space-y-6 md:max-w-md w-full">
             <div className="items-center h-16 w-full relative mb-16">
               <Image
-                src="/images/logo.png"
+                src={clinic_logo ? clinic_logo : "/images/logo.png"}
                 alt="random pics"
                 fill
                 sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"

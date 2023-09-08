@@ -6,6 +6,7 @@ import { destroyCookie, setCookie } from "nookies";
 import { AiFillCaretDown } from "react-icons/ai";
 import { Button } from "@components/Button";
 import Dropdown from "@components/Dropdown";
+import { Context } from "@utilities/context/Provider";
 
 type sideMenuProps = {
   label: string;
@@ -28,22 +29,25 @@ interface MobileDrawerProps extends React.HTMLAttributes<HTMLDivElement> {
   menu: Array<sideMenuProps>;
   onClose: any;
   setIsDrawerOpen: any;
+  profile: any;
 }
 
 export const MobileDrawer = ({
   menu,
   openedSubMenu,
+  profile,
   setIsDrawerOpen,
   ...rest
 }: MobileDrawerProps) => {
   const router = useRouter();
+  const { clinic_logo } = React.useContext(Context);
   return (
     <Drawer {...rest} className="block md:hidden">
       <div className="flex flex-col flex-auto bg-white shadow-lg w-full h-full py-8">
         <div className="space-y-8 flex flex-col flex-1 relative">
           <div className="items-center h-12 w-full relative">
             <Image
-              src="/images/logo.png"
+              src={clinic_logo ? clinic_logo : "/images/logo.png"}
               alt="random pics"
               fill
               sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
@@ -141,7 +145,11 @@ export const MobileDrawer = ({
               <div className="flex flex-grow-0 items-center justify-center w-full cursor-pointer text-default-text text-base space-x-4">
                 <div className="relative w-10 h-10">
                   <Image
-                    src="https://picsum.photos/500/500"
+                    src={
+                      profile?.profile_picture
+                        ? profile?.profile_picture
+                        : "https://picsum.photos/500/500"
+                    }
                     alt="random pics"
                     fill
                     sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
@@ -149,7 +157,7 @@ export const MobileDrawer = ({
                   />
                 </div>
                 <div className="truncate font-semibold max-w-[70%]">
-                  Kelscey Ortiz
+                  {profile?.first_name} {profile?.last_name}
                 </div>
                 <div>
                   <AiFillCaretDown className="text-gray-400" />

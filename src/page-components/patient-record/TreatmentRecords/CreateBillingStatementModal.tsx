@@ -33,34 +33,34 @@ import {
 
 import { SelectedTreatment } from "./types";
 
-const columns: any = [
-  {
-    title: "Procedure",
-    dataIndex: "procedure_name",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Charge",
-    dataIndex: "amount",
-    width: "10rem",
-    align: "center",
-    render: (amount: number) => {
-      if (amount) {
-        return `₱${numberSeparator(amount, 0)}`;
-      }
-    },
-  },
-];
-
 export default function CreateBillingStatementModal({
   show,
   onClose,
   patientRecord,
   SelectedTreatments,
   setSelectedTreatments,
+  currency,
   ...rest
 }: any) {
+  const columns: any = [
+    {
+      title: "Procedure",
+      dataIndex: "procedure_name",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Charge",
+      dataIndex: "amount",
+      width: "10rem",
+      align: "center",
+      render: (amount: number) => {
+        if (amount) {
+          return `${currency} ${numberSeparator(amount, 0)}`;
+        }
+      },
+    },
+  ];
   const [form] = Form.useForm();
 
   const [Treatments, setTreatments] = useState(SelectedTreatments);
@@ -316,7 +316,7 @@ export default function CreateBillingStatementModal({
               placeholder="Enter Discount Amount"
               className=" text-end"
               id="discount"
-              prefix={type_discount === "Amount" ? "₱" : ""}
+              prefix={type_discount === "Amount" ? currency : ""}
               suffix={type_discount === "Percent" ? "%" : ""}
               thousandSeparator
             />
@@ -325,26 +325,31 @@ export default function CreateBillingStatementModal({
             {vat_exclusive > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  VAT Exclusive (12%): +{numberSeparator(vat_exclusive, 0)}
+                  VAT Exclusive (12%): + {currency}{" "}
+                  {numberSeparator(vat_exclusive, 0)}
                 </p>
               </div>
             )}
             {senior_discount > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  Senior Discount (20%): -{numberSeparator(senior_discount, 0)}
+                  Senior Discount (20%): - {currency}{" "}
+                  {numberSeparator(senior_discount, 0)}
                 </p>
               </div>
             )}
             {entered_discount > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  Entered Discount: -{numberSeparator(entered_discount, 0)}
+                  Entered Discount: - {currency}{" "}
+                  {numberSeparator(entered_discount, 0)}
                 </p>
               </div>
             )}
             <div className="flex justify-end">
-              <h4>Total: {numberSeparator(isProcedureTotal, 0)}</h4>
+              <h4>
+                Total: {currency} {numberSeparator(isProcedureTotal, 0)}
+              </h4>
             </div>
           </div>
 

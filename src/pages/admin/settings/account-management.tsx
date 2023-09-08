@@ -45,8 +45,8 @@ export function ProcedureManagement({ router }: NextPageProps) {
     {
       onSuccess: async (res) => {
         notification.success({
-          message: "Clinic Account Deleted",
-          description: "Clinic account has been deleted",
+          message: "Account Deleted",
+          description: "Account has been deleted",
         });
       },
       onMutate: async (newData) => {
@@ -98,7 +98,7 @@ export function ProcedureManagement({ router }: NextPageProps) {
     <>
       <PageContainer>
         <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap mb-4">
-          <h3 className="basis-auto whitespace-nowrap">Clinic Accounts</h3>
+          <h3 className="basis-auto whitespace-nowrap">Account Management</h3>
         </div>
         <div className="flex justify-between items-center gap-4 flex-wrap">
           <div className="basis-full lg:basis-1/2">

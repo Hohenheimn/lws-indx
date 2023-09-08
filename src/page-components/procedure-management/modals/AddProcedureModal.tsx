@@ -9,6 +9,7 @@ import { Button } from "@components/Button";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import Avatar from "@src/components/Avatar";
+import { Select } from "@src/components/Select";
 import Uploader from "@src/components/Uploader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData, updateData } from "@utilities/api";
@@ -18,6 +19,7 @@ import { getBase64, removeNumberFormatting } from "@utilities/helpers";
 export default function AddProcedureModal({
   show,
   onClose,
+  currency,
   form,
   ...rest
 }: any) {
@@ -40,7 +42,7 @@ export default function AddProcedureModal({
       ...image,
       imageUrl: iconUrl,
     });
-  }, [show]);
+  }, [show, image, iconUrl]);
 
   function handleChange(info: any) {
     if (info.file.status === "uploading") {
@@ -177,6 +179,35 @@ export default function AddProcedureModal({
     }
   );
 
+  const categoryList = [
+    { category: "Condition" },
+    { category: "Restoration & Prosthetics" },
+    { category: "Surgery" },
+    { category: "Preventive" },
+    { category: "Consultation" },
+    { category: "Radiograph (Xray)" },
+    { category: "Endodontics" },
+    { category: "Orthodontics" },
+    { category: "Cosmetics" },
+    { category: "Prosthodontics" },
+    { category: "Oral Surgery" },
+    { category: "Periodontics (+ Surgery)" },
+    { category: "Others" },
+    { category: "Radiograph" },
+    { category: "Monitor" },
+    { category: "Check-up" },
+    { category: "Restoration & Fillings" },
+    { category: "Radiographs" },
+    { category: "Periatric Dentistry" },
+    { category: "Crowns" },
+    { category: "Denture" },
+    { category: "Cleaning" },
+    { category: "TMJ Treatment" },
+    { category: "Cosmetic" },
+    { category: "Trial Pontic" },
+    { category: "Orthodontic" },
+  ];
+
   return (
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
@@ -229,7 +260,8 @@ export default function AddProcedureModal({
             >
               <Uploader
                 image={image}
-                setImage={(value: any) => setImage(value)}
+                setImage={(value: any) => value && setImage(value)}
+                capture={false}
                 className="[&_.ant-upload]:!border-0"
                 id="icon"
               >
@@ -309,7 +341,7 @@ export default function AddProcedureModal({
                 thousandSeparator=","
                 thousandsGroupStyle="thousand"
                 id="cost"
-                prefix="₱"
+                prefix={currency}
               />
             </Form.Item>
             <Form.Item
@@ -324,6 +356,31 @@ export default function AddProcedureModal({
               required={false}
             >
               <Input id="color_code" placeholder="Color Code" />
+            </Form.Item>
+
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[
+                {
+                  required: true,
+                  message: "This is required!",
+                },
+              ]}
+              required={false}
+            >
+              <Select
+                id="category"
+                placeholder="Select Category"
+                className="border-transparent"
+                noFilter={true}
+              >
+                {categoryList.map((item, index) => (
+                  <Select.Option key={index} value={item.category}>
+                    {item.category}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </div>
           <div className="flex justify-end items-center gap-4">

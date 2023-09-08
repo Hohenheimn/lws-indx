@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Checkbox } from "antd";
+import { Checkbox, Tooltip } from "antd";
 import moment from "moment";
+import Link from "next/link";
+
+import { AiOutlinePrinter } from "react-icons/ai";
+
+import { BsTrash } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
-
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
-
-
-
-
 
 import {
   treatmentRecord,
@@ -17,10 +17,6 @@ import {
   Invoice,
   payment,
 } from "./types";
-
-
-
-
 
 export const RecordColumns = (
   SelectedTreatments: SelectedTreatment[],
@@ -35,7 +31,7 @@ export const RecordColumns = (
         <>
           {record.status !== "billed" && (
             <Checkbox
-              disabled={pageType === 'view'}
+              disabled={pageType === "view"}
               checked={SelectedTreatments.some(
                 (someItem) => someItem.treatment_id === record._id
               )}
@@ -133,7 +129,8 @@ export const RecordColumns = (
 export const BillingColumns = (
   SelectedBilling: SelectedBilling[],
   setSelectedBilling: Function,
-  pageType: string
+  pageType: string,
+  currency: string
 ) => {
   const columns: any = [
     {
@@ -143,7 +140,7 @@ export const BillingColumns = (
         <>
           {record.status !== "void" && record.status !== "paid" && (
             <Checkbox
-              disabled={pageType === 'view'}
+              disabled={pageType === "view"}
               checked={SelectedBilling.some(
                 (someItem) => someItem.id === record._id
               )}
@@ -207,7 +204,12 @@ export const BillingColumns = (
       align: "center",
       render: (amount: number) => {
         if (amount) {
-          return `₱${numberSeparator(amount, 0)}`;
+          return (
+            <div className=" text-end">{`${currency} ${numberSeparator(
+              amount,
+              0
+            )}`}</div>
+          );
         }
       },
     },
@@ -218,7 +220,12 @@ export const BillingColumns = (
       align: "center",
       render: (amount: number) => {
         if (amount) {
-          return `₱${numberSeparator(amount, 0)}`;
+          return (
+            <div className=" text-end">{`${currency} ${numberSeparator(
+              amount,
+              0
+            )}`}</div>
+          );
         }
       },
     },
@@ -245,7 +252,8 @@ export const BillingColumns = (
 export const PaymentColumns = (
   SelectedPayment: SelectedPayment[],
   setSelectedPayment: Function,
-  pageType: string
+  pageType: string,
+  currency: string
 ) => {
   const columns: any = [
     {
@@ -253,7 +261,7 @@ export const PaymentColumns = (
       dataIndex: "checkbox",
       render: (_: any, record: payment) => (
         <Checkbox
-          disabled={pageType === 'view'}
+          disabled={pageType === "view"}
           checked={SelectedPayment.some(
             (someItem) => someItem._id === record._id
           )}
@@ -318,8 +326,30 @@ export const PaymentColumns = (
       align: "center",
       render: (amount: number) => {
         if (amount) {
-          return `₱${numberSeparator(amount, 0)}`;
+          return `${currency} ${numberSeparator(amount, 0)}`;
         }
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      width: "5rem",
+      align: "center",
+      render: (_: any, record: any) => {
+        return (
+          <div className="w-full flex justify-center space-x-4">
+            <Link
+              href={`/admin/print?page=treament record payment&patient=${JSON.stringify(
+                record
+              )}&tableData=${JSON.stringify(record)}&currency=${currency}`}
+              target="_blank"
+            >
+              <Tooltip title="Print">
+                <AiOutlinePrinter className=" text-xl text-gray-400" />
+              </Tooltip>
+            </Link>
+          </div>
+        );
       },
     },
   ];

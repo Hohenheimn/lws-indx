@@ -10,6 +10,7 @@ export default function ViewPaymentModal({
   onClose,
   patientRecord,
   SelectedPayment,
+  currency,
   ...rest
 }: any) {
   const [total, settotal] = useState(0);
@@ -54,7 +55,7 @@ export default function ViewPaymentModal({
                   {item.procedure}
                 </td>
                 <td className=" text-center text-[16px] py-[10px]">
-                  ₱{numberSeparator(item.payment_amount, 0)}
+                  {currency} {numberSeparator(item.payment_amount, 0)}
                 </td>
               </tr>
             ))}
@@ -64,7 +65,9 @@ export default function ViewPaymentModal({
               </td>
               <td className=" text-center text-[16px] py-[10px]"></td>
               <td className=" text-center text-[16px] py-[10px]">
-                <h5>₱ {numberSeparator(total, 0)}</h5>
+                <h5>
+                  {currency} {numberSeparator(total, 0)}
+                </h5>
               </td>
             </tr>
           </tbody>

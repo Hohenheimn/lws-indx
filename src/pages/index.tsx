@@ -64,6 +64,11 @@ const menu: Array<sideMenuProps> = [
     appearance: "link",
   },
   {
+    label: "Login",
+    link: "/enter-subdomain",
+    appearance: "primary",
+  },
+  {
     label: "Register Now",
     link: "/registration",
     appearance: "primary",

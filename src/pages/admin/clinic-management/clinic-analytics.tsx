@@ -80,69 +80,68 @@ export type clinic_analytics = {
   totalMonthlyRevenue: totalMonthlyRevenue[];
 };
 
-const columns: any = [
-  {
-    title: "Date Created",
-    dataIndex: "created_at",
-    width: "10rem",
-    align: "center",
-    render: (created_at: Date) => moment(created_at).format("MMMM DD, YYYY"),
-  },
-  {
-    title: "Branch",
-    dataIndex: "branch_name",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Procedure",
-    dataIndex: "procedure_name",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Charge",
-    dataIndex: "charge_amount",
-    width: "10rem",
-    align: "center",
-    render: (amount: number) => {
-      if (amount) {
-        return `₱${numberSeparator(amount, 0)}`;
-      }
-    },
-  },
-  {
-    title: "Remaining Balance",
-    dataIndex: "remaining_balance",
-    width: "10rem",
-    align: "center",
-    render: (amount: number) => {
-      if (amount) {
-        return `₱${numberSeparator(amount, 0)}`;
-      }
-    },
-  },
-  {
-    title: "Payment Status",
-    dataIndex: "status",
-    width: "10rem",
-    align: "center",
-    render: (status: string) => (
-      <div
-        className={twMerge(
-          "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs ",
-          paymentStatusPalette(status === null ? "no payment" : status)
-        )}
-      >
-        {status}
-      </div>
-    ),
-  },
-];
-
 const { RangePicker } = DatePicker;
 
 export function ClinicAnalytics({ profile }: any) {
+  const columns: any = [
+    {
+      title: "Date Created",
+      dataIndex: "created_at",
+      width: "10rem",
+      align: "center",
+      render: (created_at: Date) => moment(created_at).format("MMMM DD, YYYY"),
+    },
+    {
+      title: "Branch",
+      dataIndex: "branch_name",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Procedure",
+      dataIndex: "procedure_name",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Charge",
+      dataIndex: "charge_amount",
+      width: "10rem",
+      align: "center",
+      render: (amount: number) => {
+        if (amount) {
+          return `${profile.setting.currency} ${numberSeparator(amount, 0)}`;
+        }
+      },
+    },
+    {
+      title: "Remaining Balance",
+      dataIndex: "remaining_balance",
+      width: "10rem",
+      align: "center",
+      render: (amount: number) => {
+        if (amount) {
+          return `${profile.setting.currency} ${numberSeparator(amount, 0)}`;
+        }
+      },
+    },
+    {
+      title: "Payment Status",
+      dataIndex: "status",
+      width: "10rem",
+      align: "center",
+      render: (status: string) => (
+        <div
+          className={twMerge(
+            "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs ",
+            paymentStatusPalette(status === null ? "no payment" : status)
+          )}
+        >
+          {status}
+        </div>
+      ),
+    },
+  ];
   const [FilterForm] = Form.useForm();
 
   const doctor_id = Form.useWatch("doctor_id", FilterForm);
@@ -253,7 +252,7 @@ export function ClinicAnalytics({ profile }: any) {
 
           <div className=" bg-white space-y-2 w-full lg:w-[49%] mb-3 lg:mb-0 p-3  lg:aspect-[3/1] shadow-md rounded-lg text-center flex flex-col justify-center items-center">
             <h3 className=" text-red-300 text-center">
-              P{" "}
+              {profile.setting.currency}{" "}
               {isNaN(clinicAnalytics?.revenue)
                 ? 0
                 : numberSeparator(clinicAnalytics?.revenue, 0)}

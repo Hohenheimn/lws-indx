@@ -40,6 +40,7 @@ export default function CreatePaymentModal({
   patientRecord,
   SelectedBilling,
   setSelectedBilling,
+  currency,
   ...rest
 }: any) {
   const [form] = Form.useForm();
@@ -356,7 +357,7 @@ export default function CreatePaymentModal({
                     customInput={Input}
                     placeholder="Amount"
                     id="amount"
-                    prefix="₱"
+                    prefix={currency}
                     className=" text-end"
                     thousandSeparator
                     disabled={mode_of_payment === "Use Credits"}
@@ -400,10 +401,10 @@ export default function CreatePaymentModal({
                           >
                             <td className=" py-3">{item.procedure_name}</td>
                             <td className=" py-3 text-end">
-                              Php {numberSeparator(item.charge, 0)}
+                              {currency} {numberSeparator(item.charge, 0)}
                             </td>
                             <td className=" py-3 text-end">
-                              Php {numberSeparator(item.balance, 0)}
+                              {currency} {numberSeparator(item.balance, 0)}
                             </td>
                           </tr>
                         )

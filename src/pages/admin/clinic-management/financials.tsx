@@ -74,70 +74,70 @@ let fakeData = [
   },
 ];
 
-const columns: any = [
-  {
-    title: "Branch",
-    dataIndex: "branch",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Assigned Doctor",
-    dataIndex: "doctor",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Invoice Number",
-    dataIndex: "invoice_number",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Date Created",
-    dataIndex: "date_created",
-    width: "15rem",
-    align: "center",
-    render: (date: Date) => format(date, "MMM dd, yyyy"),
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    width: "10rem",
-    align: "center",
-    render: (amount: number) => `₱ ${numberSeparator(amount, 0)}`,
-  },
-  {
-    title: "Mode of Payment",
-    dataIndex: "mode_of_payment",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Payment Status",
-    dataIndex: "payment_status",
-    width: "10rem",
-    align: "center",
-    render: (status: string) => {
-      return (
-        <div className="px-2">
-          <div
-            className={twMerge(
-              "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs",
-              paymentStatusPalette(status)
-            )}
-          >
-            {status}
-          </div>
-        </div>
-      );
-    },
-  },
-];
-
 const { RangePicker } = DatePicker;
 
-export function Financials({}: NextPageProps) {
+export function Financials({ profile }: any) {
+  const columns: any = [
+    {
+      title: "Branch",
+      dataIndex: "branch",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Assigned Doctor",
+      dataIndex: "doctor",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Invoice Number",
+      dataIndex: "invoice_number",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Date Created",
+      dataIndex: "date_created",
+      width: "15rem",
+      align: "center",
+      render: (date: Date) => format(date, "MMM dd, yyyy"),
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      width: "10rem",
+      align: "center",
+      render: (amount: number) =>
+        `${profile.setting.currency} ${numberSeparator(amount, 0)}`,
+    },
+    {
+      title: "Mode of Payment",
+      dataIndex: "mode_of_payment",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Payment Status",
+      dataIndex: "payment_status",
+      width: "10rem",
+      align: "center",
+      render: (status: string) => {
+        return (
+          <div className="px-2">
+            <div
+              className={twMerge(
+                "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs",
+                paymentStatusPalette(status)
+              )}
+            >
+              {status}
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
   let [search, setSearch] = React.useState("");
 
   const [FilterForm] = Form.useForm();
@@ -223,19 +223,25 @@ export function Financials({}: NextPageProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="text-center space-y-1 z-[1] overflow-hidden justify-center items-center flex flex-col">
-          <h4>₱ {numberSeparator(102500, 0)}</h4>
+          <h4>
+            {profile.setting.currency} {numberSeparator(102500, 0)}
+          </h4>
           <div className="text-base m-auto font-medium">
             Total Clinic Earnings
           </div>
         </Card>
         <Card className="text-center space-y-1 z-[1] overflow-hidden justify-center items-center flex flex-col">
-          <h4>₱ {numberSeparator(500, 0)}</h4>
+          <h4>
+            {profile.setting.currency} {numberSeparator(500, 0)}
+          </h4>
           <div className="text-base m-auto font-medium">
             Total Paid Balances
           </div>
         </Card>
         <Card className="text-center space-y-1 z-[1] overflow-hidden justify-center items-center flex flex-col">
-          <h4>₱ {numberSeparator(329, 0)}</h4>
+          <h4>
+            {profile.setting.currency} {numberSeparator(329, 0)}
+          </h4>
           <div className="text-base m-auto font-medium">
             Total Pending Balances
           </div>

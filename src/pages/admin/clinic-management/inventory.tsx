@@ -18,97 +18,82 @@ import { Context } from "@utilities/context/Provider";
 import { numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+export function Inventory({ router, profile }: any) {
+  const columnsInventory: any = [
+    {
+      title: "Item Name",
+      dataIndex: "item_name",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Remaining Quantity",
+      dataIndex: "remaining_quantity",
+      width: "15rem",
+      align: "center",
+      render: (quantity: number) => numberSeparator(quantity, 0),
+    },
+    {
+      title: "Branch Assigned",
+      dataIndex: "branch_name",
+      width: "15rem",
+      align: "center",
+    },
+    {
+      title: "Cost Per Item",
+      dataIndex: "cost_per_item",
+      width: "10rem",
+      align: "center",
+      render: (cost: number) =>
+        `${profile.setting.currency} ${numberSeparator(cost, 0)}`,
+    },
+    {
+      title: "Supplier Name",
+      dataIndex: "supplier_name",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Supplier Number",
+      dataIndex: "supplier_number",
+      width: "10rem",
+      align: "center",
+    },
+  ];
 
-
-
-const columnsInventory: any = [
-  {
-    title: "Item Name",
-    dataIndex: "item_name",
-    width: "10rem",
-    align: "center",
-  },
-  // {
-  //   title: "Serial Number",
-  //   dataIndex: "serial_number",
-  //   width: "10rem",
-  //   align: "center",
-  // },
-  {
-    title: "Remaining Quantity",
-    dataIndex: "remaining_quantity",
-    width: "15rem",
-    align: "center",
-    render: (quantity: number) => numberSeparator(quantity, 0),
-  },
-  {
-    title: "Branch Assigned",
-    dataIndex: "branch_name",
-    width: "15rem",
-    align: "center",
-  },
-  {
-    title: "Cost Per Item",
-    dataIndex: "cost_per_item",
-    width: "10rem",
-    align: "center",
-    render: (cost: number) => `₱ ${numberSeparator(cost, 0)}`,
-  },
-  {
-    title: "Supplier Name",
-    dataIndex: "supplier_name",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Supplier Number",
-    dataIndex: "supplier_number",
-    width: "10rem",
-    align: "center",
-  },
-];
-
-const UsageHistory: any = [
-  {
-    title: "Item Name",
-    dataIndex: "item_name",
-    width: "10rem",
-    align: "center",
-  },
-  // {
-  //   title: "Serial Number",
-  //   dataIndex: "serial_number",
-  //   width: "10rem",
-  //   align: "center",
-  // },
-  {
-    title: "Quantity Used",
-    dataIndex: "quantity_used",
-    width: "15rem",
-    align: "center",
-    render: (quantity: number) => numberSeparator(quantity, 0),
-  },
-  {
-    title: "Date Used",
-    dataIndex: "date_used",
-    width: "15rem",
-    align: "center",
-  },
-  {
-    title: "Used By",
-    dataIndex: "used_by",
-    width: "10rem",
-    align: "center",
-  },
-  {
-    title: "Branch Assigned",
-    dataIndex: "branch_name",
-    width: "10rem",
-    align: "center",
-  },
-];
-
-export function Inventory({ router }: NextPageProps) {
+  const UsageHistory: any = [
+    {
+      title: "Item Name",
+      dataIndex: "item_name",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Quantity Used",
+      dataIndex: "quantity_used",
+      width: "15rem",
+      align: "center",
+      render: (quantity: number) => numberSeparator(quantity, 0),
+    },
+    {
+      title: "Date Used",
+      dataIndex: "date_used",
+      width: "15rem",
+      align: "center",
+    },
+    {
+      title: "Used By",
+      dataIndex: "used_by",
+      width: "10rem",
+      align: "center",
+    },
+    {
+      title: "Branch Assigned",
+      dataIndex: "branch_name",
+      width: "10rem",
+      align: "center",
+    },
+  ];
   const [InventoryForm] = Form.useForm();
   const [FilterForm] = Form.useForm();
   const branch_id = Form.useWatch("branch_id", FilterForm);
@@ -228,7 +213,7 @@ export function Inventory({ router }: NextPageProps) {
       </div>
       <Table
         rowKey="_id"
-        columns={tableType === '1' ?  columnsInventory : UsageHistory}
+        columns={tableType === "1" ? columnsInventory : UsageHistory}
         dataSource={inventory?.data}
         showHeader={true}
         tableLayout="fixed"
@@ -311,6 +296,7 @@ export function Inventory({ router }: NextPageProps) {
         }}
         className="w-[80rem]"
         id="inventory-modal"
+        currency={profile.setting.currency}
         form={InventoryForm}
       />
     </PageContainer>

@@ -87,8 +87,8 @@ const sideMenu: Array<sideMenuProps> = [
         showSubMenu: true,
       },
       {
-        subMenuLabel: "Clinic Accounts",
-        subMenuLink: "clinic-accounts",
+        subMenuLabel: "Account Management",
+        subMenuLink: "account-management",
         showSubMenu: true,
       },
       {
@@ -121,6 +121,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
     <>
       <MobileDrawer
         open={isDrawerOpen}
+        profile={profile}
         onClose={() => setIsDrawerOpen(false)}
         setIsDrawerOpen={(value: boolean) => setIsDrawerOpen(value)}
         openedSubMenu={openedSubMenu}
@@ -138,9 +139,13 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
         <div className={"flex flex-col relative transition-all w-full"}>
           <div className="flex flex-col flex-auto bg-white shadow-lg w-full py-8 px-4">
             <div className="space-y-5 lg:space-y-8 flex flex-col flex-1 relative">
-              <div className="items-center h-12 w-full relative">
+              <div className="items-center h-16 w-full relative">
                 <Image
-                  src="/images/logo.png"
+                  src={
+                    profile.setting.clinic_logo
+                      ? profile.setting.clinic_logo
+                      : "/images/logo.png"
+                  }
                   alt="random pics"
                   fill
                   sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"

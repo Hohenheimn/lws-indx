@@ -71,6 +71,79 @@ export const fetchData = async ({ url, options }: any) => {
     });
 };
 
+export const fetchDataNoSubdomain = async ({ url, options }: any) => {
+  const token = parseCookies().a_t;
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
+  return await axios
+    .get(
+      `${options?.noBaseURL ? "" : process.env.REACT_APP_API_BASE_URL}${url}${
+        !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
+      }`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      return res.data;
+    })
+    .catch((err) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+      // notification[`${statusType(err.response.status)}`]({
+      //   message: err.response.data[0].title,
+      //   description: `${err.response.data[0].message}`,
+      // });
+      throw "Something Went Wrong";
+    });
+};
+
+export const fetchDataNoHeader = async ({ url, options }: any) => {
+  const token = parseCookies().a_t;
+
+  const subdomainCookie = parseCookies().subdomain;
+  let subdomain = "";
+  if (url.includes("?")) {
+    subdomain = `&subdomain=${subdomainCookie}`;
+  } else {
+    subdomain = `?subdomain=${subdomainCookie}`;
+  }
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
+  return await axios
+    .get(
+      `${options?.noBaseURL ? "" : process.env.REACT_APP_API_BASE_URL}${url}${
+        !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
+      }${subdomain}`
+    )
+    .then((res) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      return res.data;
+    })
+    .catch((err) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+      throw "Something Went Wrong";
+    });
+};
+
 export const postData = async ({ url, payload, options, isSubdomain }: any) => {
   const token = parseCookies().a_t;
 
@@ -137,6 +210,36 @@ export const postData = async ({ url, payload, options, isSubdomain }: any) => {
     });
 };
 
+export const postDataNoToken = async ({ url, payload, options }: any) => {
+  const token = parseCookies().a_t;
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
+  return await axios
+    .post(`${process.env.REACT_APP_API_BASE_URL}${url}`, payload)
+    .then(async (res) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      return res.data;
+    })
+    .catch((err) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      notification[`${statusType(err.response.status)}`]({
+        message: err.response.data[0].title,
+        description: err.response.data[0].message,
+      });
+
+      throw "Something Went Wrong";
+    });
+};
+
 export const postDataNoFormData = async ({ url, payload, options }: any) => {
   const token = parseCookies().a_t;
 
@@ -161,6 +264,51 @@ export const postDataNoFormData = async ({ url, payload, options }: any) => {
       `${process.env.REACT_APP_API_BASE_URL}${url}${
         !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
       }${subdomain}`,
+      payload,
+      {
+        headers: {
+          api_key: !token ? process.env.REACT_APP_API_KEY : "",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then(async (res) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      return res.data;
+    })
+    .catch((err) => {
+      if (options?.isLoading) {
+        options?.isLoading(false);
+      }
+
+      notification[`${statusType(err.response.status)}`]({
+        message: err.response.data[0].title,
+        description: err.response.data[0].message,
+      });
+
+      throw "Something Went Wrong";
+    });
+};
+
+export const postDataNoSubDomain = async ({ url, payload, options }: any) => {
+  const token = parseCookies().a_t;
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
+  if (options?.isLoading) {
+    options?.isLoading(true);
+  }
+
+  return await axios
+    .post(
+      `${process.env.REACT_APP_API_BASE_URL}${url}${
+        !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
+      }`,
       payload,
       {
         headers: {
