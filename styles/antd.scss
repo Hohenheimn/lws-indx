@@ -248,13 +248,14 @@ div.ant-select {
     }
   }
 
-  .ant-select-multiple.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+  .ant-select-multiple.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+    .ant-select-selector {
     pointer-events: none;
   }
   .ant-select-selection-item {
     @apply bg-primary-500 text-white border border-primary-300 rounded-md cursor-pointer hover:bg-primary-600;
   }
-  .ant-select-selection-item-content{
+  .ant-select-selection-item-content {
     @apply text-white;
   }
   .ant-select-selection-item-remove {
@@ -778,4 +779,39 @@ div.ant-popover {
 }
 div.ant-tabs .ant-tabs-nav .ant-tabs-ink-bar {
   @apply lg:hidden;
+}
+
+ul.styled-menu {
+  @apply px-[.5rem] 2xl:px-[1rem];
+}
+.ant-menu-item,
+.ant-menu-submenu-title {
+  padding-left: 24px !important;
+  @media (max-width: 1366px) {
+    padding-left: 15px !important;
+  }
+}
+
+.ant-menu-submenu {
+  .ant-menu-item {
+    padding-left: 40px !important;
+    @media (max-width: 1366px) {
+      padding-left: 25px !important;
+    }
+  }
+}
+
+.ant-menu-submenu .ant-menu-title-content .solo {
+  @media (max-width: 1366px) {
+    font-size: 0.7rem !important;
+  }
+}
+
+nav div.ant-tabs .ant-tabs-nav {
+  @apply m-0 shadow-none;
+}
+
+.ant-checkbox + span,
+span.ant-radio + * {
+  @apply text-[1rem];
 }

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Tabs, message, notification } from "antd";
 import { format, parseISO, differenceInYears, parse } from "date-fns";
+import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { IoPersonOutline } from "react-icons/io5";
@@ -10,7 +12,7 @@ import { AnimateContainer, PageContainer } from "@components/animation";
 import Avatar from "@components/Avatar";
 import Card from "@components/Card";
 import patientRecord from "@pagecomponents/patient-record";
-import { fadeIn } from "@src/components/animation/animation";
+import { fadeIn, fadeInUp } from "@src/components/animation/animation";
 import DeleteButton from "@src/components/DeleteButton";
 import { Radio } from "@src/components/Radio";
 import ChangeHistory from "@src/page-components/patient-record/ChangeHistory";
@@ -29,9 +31,17 @@ import { NextPageProps } from "@utilities/types/NextPageProps";
 
 interface PatientRecordProps extends NextPageProps {
   selectedPatientID: number;
+  profile: {
+    setting: {
+      currency: string;
+    };
+  };
 }
 
-export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
+export function PatientRecord({
+  selectedPatientID,
+  profile,
+}: PatientRecordProps) {
   const queryClient = useQueryClient();
 
   const [pageType, setPageType] = useState("view");
@@ -90,6 +100,28 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
     }
   );
 
+  const elementRef = useRef<any>(null);
+  const [isOutOfView, setIsOutOfView] = useState(false);
+
+  const checkOutOfView = () => {
+    if (elementRef.current) {
+      const { top, bottom } = elementRef.current.getBoundingClientRect();
+      const windowHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+      const outOfView = top > windowHeight || bottom < 50;
+      setIsOutOfView(outOfView);
+    }
+  };
+
+  useEffect(() => {
+    const main_container: any = document.querySelector(".main-container");
+    main_container.addEventListener("scroll", checkOutOfView);
+    checkOutOfView();
+    return () => {
+      window.removeEventListener("scroll", checkOutOfView);
+    };
+  }, []);
+
   if (isError) {
     return (
       <PageContainer className="flex justify-center items-center">
@@ -101,9 +133,66 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
   return (
     <>
       <PageContainer>
+        <nav
+          className={`${
+            isOutOfView ? "" : "opacity-0 pointer-events-none"
+          } duration-150 flex-wrap ease-linear z-[9999999] flex-col xs:flex-row fixed left-0 top-0 bg-white shadow-md px-5 xs:px-9 w-full pt-5 flex items-center justify-between`}
+        >
+          <div className="xs:space-x-5 flex items-center flex-col xs:flex-row">
+            <aside className=" relative h-10 aspect-square rounded-full object-cover overflow-hidden">
+              <Image
+                src={`${
+                  patient?.profile_picture ? patient?.profile_picture : "/"
+                }`}
+                fill
+                alt="picture"
+              />
+            </aside>
+            <h5>
+              {patient?.first_name} {patient?.last_name}
+            </h5>
+            <p className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
+              Age:{" "}
+              {differenceInYears(
+                new Date(),
+                new Date(patient?.birthdate)
+              ).toString()}
+            </p>
+            <p
+              onClick={() => {
+                navigator.clipboard.writeText(patient?.patient_no);
+                message.success("Copied");
+              }}
+              className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis"
+            >
+              Patient No. {patient?.patient_no}
+            </p>
+          </div>
+          <div>
+            <Radio.Group
+              onChange={(e: string) => setPageType(e)}
+              defaultValue="view"
+              className="md:max-w-md"
+            >
+              <Radio.Button value={"view"} label="View" />
+              <Radio.Button value={"edit"} label="Edit" />
+            </Radio.Group>
+          </div>
+          <Tabs
+            className=" w-full nav"
+            activeKey={`${router.query.tab ?? patientRecord()[0]?.key}`}
+            onChange={(e) => {
+              router.replace({
+                query: { ...router.query, tab: e },
+              });
+            }}
+            items={patientRecord()}
+          />
+        </nav>
+
         {!loadingPatient ? (
           <>
-            <div className=" flex justify-between w-full items-center">
+            <div className=" flex flex-col xs:flex-row justify-between w-full xs:items-center space-y-2 xs:space-y-0">
               <h3>Patient Record</h3>
               <Radio.Group
                 onChange={(e: string) => setPageType(e)}
@@ -120,83 +209,88 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
               deleteHandler={() => deletePatient()}
             />
 
-            <Card className="text-base sticky top-0 z-[999999]">
-              <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
-                <div className="flex flex-col justify-center items-center gap-4">
-                  <Avatar className="h-28 w-28 p-4 overflow-hidden relative border border-gray-300 avatar transition">
-                    {!patient?.profile_picture || isImageError ? (
-                      <IoPersonOutline className="h-full w-full text-white" />
-                    ) : (
-                      <Image
-                        src={`${patient?.profile_picture}`}
-                        alt="Patient's Picture"
-                        fill
-                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        className="object-center  h-full w-full"
-                        objectFit="cover"
-                        onError={() => {
-                          setIsImageError(true);
+            <div ref={elementRef}>
+              <Card className="text-base sticky top-0 z-[999999]">
+                <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
+                  <div className="flex flex-col justify-center items-center gap-4">
+                    <Avatar className="h-28 w-28 p-4 overflow-hidden relative border border-gray-300 avatar transition">
+                      {!patient?.profile_picture || isImageError ? (
+                        <IoPersonOutline className="h-full w-full text-white" />
+                      ) : (
+                        <Image
+                          src={`${patient?.profile_picture}`}
+                          alt="Patient's Picture"
+                          fill
+                          sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                          className="object-center  h-full w-full"
+                          objectFit="cover"
+                          onError={() => {
+                            setIsImageError(true);
+                          }}
+                        />
+                      )}
+                    </Avatar>
+                    <h5>
+                      {patient?.first_name} {patient?.last_name}
+                    </h5>
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] xs:gap-4">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-[auto_1fr] xs:gap-4">
+                      <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
+                        Patient No
+                      </div>
+                      <div
+                        className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis cursor-pointer hover:text-primary transition"
+                        onClick={() => {
+                          navigator.clipboard.writeText(patient?.patient_no);
+                          message.success("Copied");
                         }}
-                      />
-                    )}
-                  </Avatar>
-                  <h5>
-                    {patient?.first_name} {patient?.last_name}
-                  </h5>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] xs:gap-4">
-                  <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-[auto_1fr] xs:gap-4">
-                    <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
-                      Patient No
+                      >
+                        {patient?.patient_no}
+                      </div>
+                      <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
+                        Age
+                      </div>
+                      <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
+                        {differenceInYears(
+                          new Date(),
+                          new Date(patient?.birthdate)
+                        ).toString()}
+                      </div>
+                      <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
+                        Gender
+                      </div>
+                      <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
+                        {patient?.gender}
+                      </div>
                     </div>
-                    <div
-                      className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis cursor-pointer hover:text-primary transition"
-                      onClick={() => {
-                        navigator.clipboard.writeText(patient?._id);
-                        message.success("Copied");
-                      }}
-                    >
-                      {patient?._id}
-                    </div>
-                    <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
-                      Age
-                    </div>
-                    <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
-                      {differenceInYears(
-                        new Date(),
-                        new Date(patient?.birthdate)
-                      ).toString()}
-                    </div>
-                    <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
-                      Gender
-                    </div>
-                    <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
-                      {patient?.gender}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-[auto_1fr] xs:gap-4">
-                    <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
-                      Mobile Number
-                    </div>
-                    <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
-                      {patient?.mobile_no}
-                    </div>
-                    <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
-                      Email Address
-                    </div>
-                    <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
-                      {patient?.email}
-                    </div>
-                    <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
-                      Record Last Updated
-                    </div>
-                    <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
-                      {format(parseISO("2019-02-11T14:00:00"), "MMMM dd, yyyy")}
+                    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-[auto_1fr] xs:gap-4">
+                      <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
+                        Mobile Number
+                      </div>
+                      <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
+                        {patient?.mobile_no}
+                      </div>
+                      <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
+                        Email Address
+                      </div>
+                      <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
+                        {patient?.email}
+                      </div>
+                      <div className="after:content-none xs:after:content-[':'] after:pl-2 xs:after:float-right text-gray-400 xs:max-lg:text-right lg:text-left text-center whitespace-nowrap">
+                        Record Last Updated
+                      </div>
+                      <div className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
+                        {format(
+                          parseISO("2019-02-11T14:00:00"),
+                          "MMMM dd, yyyy"
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
             <Tabs
               activeKey={`${router.query.tab ?? patientRecord()[0]?.key}`}
               onChange={(e) => {
@@ -212,7 +306,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
               key={2}
               className="flex flex-col flex-auto"
             >
-              {router.query.tab === "2" && (
+              {(router.query.tab === "2" || router.query.tab === undefined) && (
                 <PersonalInfo
                   patientRecord={patient}
                   pageType={pageType}
@@ -238,6 +332,7 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
+                  currency={profile.setting.currency}
                 />
               )}
               {router.query.tab === "6" && (
@@ -245,30 +340,32 @@ export function PatientRecord({ selectedPatientID }: PatientRecordProps) {
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
+                  currency={profile.setting.currency}
                 />
               )}
-              {router.query.tab === "6" && (
+              {router.query.tab === "7" && (
                 <TreatmentRecords
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
+                  currency={profile.setting.currency}
                 />
               )}
-              {router.query.tab === "7" && (
+              {router.query.tab === "8" && (
                 <MedicalGallery
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "8" && (
+              {router.query.tab === "9" && (
                 <Prescription
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "9" && (
+              {router.query.tab === "10" && (
                 <ChangeHistory
                   patientRecord={patient}
                   pageType={pageType}

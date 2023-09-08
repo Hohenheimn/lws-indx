@@ -61,8 +61,9 @@ export function BranchManagement({ router }: NextPageProps) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["branch"], context.previousValues);
       },
@@ -177,7 +178,6 @@ export function BranchManagement({ router }: NextPageProps) {
                           appearance="link"
                           className="text-casper-500 p-2"
                           onClick={() => {
-
                             BranchForm.setFieldsValue({
                               ...selectedRow,
                               _id: selectedRow._id,

@@ -115,6 +115,7 @@ export default function AddAndUseCredit({
               placeholder="Enter Amount"
               id="amount"
               prefix={"₱"}
+              className=" text-end"
               thousandSeparator
               isAllowed={({ floatValue }: any) => {
                 if (actionType === "Add") {

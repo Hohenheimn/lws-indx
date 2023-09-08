@@ -27,6 +27,7 @@ import {
 export default function AddTreatmentPlanModal({
   show,
   onClose,
+  currency,
   form,
   patientRecord,
   pageType,
@@ -52,6 +53,41 @@ export default function AddTreatmentPlanModal({
     form.setFieldValue("estimated_cost", total);
     form.setFieldValue("total_amount", total);
   }, [treatment_plan_list]);
+
+  const UpdateValue = (index: number | string, value: any, field: string) => {
+    const cloneToUpdate = treatment_plan_list.map(
+      (item: any, indexMap: number) => {
+        if (indexMap === index && field === "procedure") {
+          const total = Number(item.tooth.length * value.cost);
+          return {
+            ...item,
+            cost: value.cost,
+            procedure_name: value.procedure_name,
+            procedure_id: value.procedure_id,
+            total: total,
+          };
+        }
+        if (indexMap === index && field === "tooth") {
+          const total = Number(value.tooth.length * item.cost);
+          return {
+            ...item,
+            tooth: value.tooth,
+            total: total,
+          };
+        }
+        if (indexMap === index && field === "cost") {
+          const total = Number(item.tooth.length * value.cost);
+          return {
+            ...item,
+            cost: value.cost,
+            total: total,
+          };
+        }
+        return item;
+      }
+    );
+    form.setFieldValue("treatment_plan_list", cloneToUpdate);
+  };
 
   useEffect(() => {
     let discount = 0;
@@ -351,7 +387,7 @@ export default function AddTreatmentPlanModal({
                               ) : null}
                               <Form.Item
                                 label="Procedure"
-                                name={[name, "procedure_id"]}
+                                name={[name, "procedure_name"]}
                                 rules={[
                                   {
                                     required: true,
@@ -366,7 +402,7 @@ export default function AddTreatmentPlanModal({
                                   id={[
                                     "treatment_plan_list",
                                     name,
-                                    "procedure_id",
+                                    "procedure_name",
                                   ].join("-")}
                                   api={`${
                                     process.env.REACT_APP_API_BASE_URL
@@ -375,8 +411,20 @@ export default function AddTreatmentPlanModal({
                                     "procedure"
                                   )}`}
                                   queryKey={["procedure"]}
+                                  returnAllValue={true}
                                   displayValueKey="name"
                                   returnValueKey="_id"
+                                  onChange={(e) => {
+                                    UpdateValue(
+                                      name,
+                                      {
+                                        cost: e.cost,
+                                        procedure_id: e._id,
+                                        procedure_name: e.name,
+                                      },
+                                      "procedure"
+                                    );
+                                  }}
                                 />
                               </Form.Item>
                               <Form.Item
@@ -404,20 +452,7 @@ export default function AddTreatmentPlanModal({
                                     return triggerNode.parentNode;
                                   }}
                                   onChange={(e) => {
-                                    let cost = removeNumberFormatting(
-                                      treatment_plan_list[name]?.cost ===
-                                        undefined
-                                        ? 0
-                                        : treatment_plan_list[name].cost
-                                    );
-                                    let toothTotal = e.length ?? 0;
-                                    const { ...rest } = treatment_plan_list;
-
-                                    let total = Number(cost * toothTotal);
-
-                                    Object.assign(rest[name], {
-                                      total,
-                                    });
+                                    UpdateValue(name, { tooth: e }, "tooth");
                                   }}
                                 >
                                   {toothNumbers(age).map((item: number) => (
@@ -445,26 +480,17 @@ export default function AddTreatmentPlanModal({
                                   placeholder="Cost"
                                   thousandSeparator=","
                                   thousandsGroupStyle="thousand"
+                                  className="text-end"
                                   id={[
                                     "treatment_plan_list",
                                     name,
                                     "cost",
                                   ].join("-")}
-                                  prefix="₱"
+                                  prefix={currency}
                                   onValueChange={({ floatValue }) => {
-                                    let treatmentList = form.getFieldValue(
-                                      "treatment_plan_list"
-                                    );
                                     let cost = floatValue ?? 0;
 
-                                    let toothTotal =
-                                      treatmentList[name]?.tooth?.length ?? 0;
-                                    const { ...rest } = treatmentList;
-
-                                    let total = Number(cost * toothTotal);
-                                    Object.assign(rest[name], {
-                                      total,
-                                    });
+                                    UpdateValue(name, { cost: cost }, "cost");
                                   }}
                                 />
                               </Form.Item>
@@ -617,7 +643,8 @@ export default function AddTreatmentPlanModal({
                       customInput={Input}
                       placeholder="Estimated Cost"
                       id="estimated_cost"
-                      prefix="₱"
+                      prefix={currency}
+                      className=" text-end"
                       readOnly
                       thousandSeparator
                       disabled={pageType === "view" && id}
@@ -659,8 +686,9 @@ export default function AddTreatmentPlanModal({
                       customInput={Input}
                       placeholder="Add Discount"
                       id="discount"
-                      prefix={discount_type === "Amount" ? "₱" : ""}
+                      prefix={discount_type === "Amount" ? currency : ""}
                       suffix={discount_type === "Percent" ? "%" : ""}
+                      className=" text-end"
                       disabled={pageType === "view" && id}
                       isAllowed={({ floatValue }: any) => {
                         if (discount_type === "Percent")
@@ -692,8 +720,8 @@ export default function AddTreatmentPlanModal({
                     placeholder="Total Amount"
                     id="total_amount"
                     thousandSeparator
-                    prefix="₱"
-                    readOnly
+                    prefix={currency}
+                    className=" text-end"
                     disabled={true}
                   />
                 </Form.Item>

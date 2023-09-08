@@ -322,6 +322,7 @@ export default function AddTreatmentRecordModal({
                 customInput={Input}
                 placeholder="Amount Charge"
                 id="amount"
+                className=" text-end"
                 prefix="₱"
                 thousandSeparator
               />

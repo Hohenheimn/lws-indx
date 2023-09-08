@@ -31,15 +31,7 @@ import {
   removeNumberFormatting,
 } from "@utilities/helpers";
 
-
-
-
-
 import AddAndUseCredit from "./AddAndUseCredit";
-
-
-
-
 
 export default function PerCertainAmountModal({
   show,
@@ -80,7 +72,7 @@ export default function PerCertainAmountModal({
     let total = Number(removeNumberFormatting(amount));
     let balance = CertainAmount - total;
     if (total >= CertainAmount) {
-      balance = 0
+      balance = 0;
     }
     setTotal(total);
     setBalance(balance);
@@ -145,8 +137,9 @@ export default function PerCertainAmountModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["payment"], context.previousValues);
       },
@@ -294,6 +287,7 @@ export default function PerCertainAmountModal({
                     id="amount"
                     prefix="₱"
                     thousandSeparator
+                    className=" text-end"
                     disabled={
                       mode_of_payment === "Use Credits" ||
                       mode_of_payment === undefined ||

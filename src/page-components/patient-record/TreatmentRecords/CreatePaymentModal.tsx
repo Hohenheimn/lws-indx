@@ -357,6 +357,7 @@ export default function CreatePaymentModal({
                     placeholder="Amount"
                     id="amount"
                     prefix="₱"
+                    className=" text-end"
                     thousandSeparator
                     disabled={mode_of_payment === "Use Credits"}
                     isAllowed={({ floatValue }: any) => {
@@ -386,8 +387,8 @@ export default function CreatePaymentModal({
                     <thead>
                       <tr className="border-b border-primary-500">
                         <th>Procedure:</th>
-                        <th>Charge:</th>
-                        <th>Remaining Balance:</th>
+                        <th className=" text-end">Charge:</th>
+                        <th className=" text-end">Remaining Balance:</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -398,10 +399,10 @@ export default function CreatePaymentModal({
                             className=" border-b border-primary-500"
                           >
                             <td className=" py-3">{item.procedure_name}</td>
-                            <td className=" py-3">
+                            <td className=" py-3 text-end">
                               Php {numberSeparator(item.charge, 0)}
                             </td>
-                            <td className=" py-3">
+                            <td className=" py-3 text-end">
                               Php {numberSeparator(item.balance, 0)}
                             </td>
                           </tr>
@@ -413,10 +414,8 @@ export default function CreatePaymentModal({
                           <p className=" font-bold">Total Amount</p>
                         </td>
                         <td className=" py-3"></td>
-                        <td className=" py-3">
-                          <p className="pr-4">
-                            Php {numberSeparator(TotalBalance, 0)}
-                          </p>
+                        <td className=" py-3 text-end">
+                          Php {numberSeparator(TotalBalance, 0)}
                         </td>
                       </tr>
                     </tbody>

@@ -10,17 +10,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
-
-
 import AddTreatmentPlanModal from "./AddTreatmentPlanModal";
 
-
-
-export function TreatmentPlan({ patientRecord, pageType }: any) {
-  const router = useRouter();
-
+export function TreatmentPlan({ patientRecord, pageType, currency }: any) {
   const SelectedRowHandler = (selectedRowRecord: any) => {
-
     TreatmentPlanForm.setFieldsValue({
       ...selectedRowRecord,
       _id: selectedRowRecord._id,
@@ -65,7 +58,7 @@ export function TreatmentPlan({ patientRecord, pageType }: any) {
         if (amount) {
           return (
             <div onClick={() => SelectedRowHandler(record)}>
-              ₱{numberSeparator(amount, 0)}
+              {currency} {numberSeparator(amount, 0)}
             </div>
           );
         }
@@ -139,8 +132,9 @@ export function TreatmentPlan({ patientRecord, pageType }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["treatment-plan"], context.previousValues);
       },
@@ -228,6 +222,7 @@ export function TreatmentPlan({ patientRecord, pageType }: any) {
           TreatmentPlanForm.resetFields();
         }}
         className="w-[75rem]"
+        currency={currency}
         id="treatment-plan-modal"
         patientRecord={patientRecord}
         form={TreatmentPlanForm}

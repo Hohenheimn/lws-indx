@@ -35,19 +35,27 @@ export default function ChartingModal({
 
   const chart_type = Form.useWatch("chart_type", form);
 
-  const chart_view = Form.useWatch("chart_view", form);
+  const chart_view: any = Form.useWatch("chart_view", form);
 
   const { setIsAppLoading } = React.useContext(Context);
 
   const [showAnnotationModal, setShowAnnotationModal] = React.useState(false);
 
-  const [TeethUpperLeft, setTeethUpperLeft] = useState(Teeth(age).UpperLeft);
+  const [TeethUpperLeft, setTeethUpperLeft] = useState(
+    Teeth(age, chart_view).UpperLeft
+  );
 
-  const [TeethUpperRight, setTeethUpperRight] = useState(Teeth(age).UpperRight);
+  const [TeethUpperRight, setTeethUpperRight] = useState(
+    Teeth(age, chart_view).UpperRight
+  );
 
-  const [TeethLowerLeft, setTeethLowerLeft] = useState(Teeth(age).LowerLeft);
+  const [TeethLowerLeft, setTeethLowerLeft] = useState(
+    Teeth(age, chart_view).LowerLeft
+  );
 
-  const [TeethLowerRight, setTeethLowerRight] = useState(Teeth(age).LowerRight);
+  const [TeethLowerRight, setTeethLowerRight] = useState(
+    Teeth(age, chart_view).LowerRight
+  );
 
   const [SelectedAnnotate, setSelectedAnnotate] = useState<any>({
     annotations: [],
@@ -56,10 +64,10 @@ export default function ChartingModal({
   });
 
   const resetToothNumber = () => {
-    setTeethLowerLeft(Teeth(age).LowerLeft);
-    setTeethLowerRight(Teeth(age).LowerRight);
-    setTeethUpperLeft(Teeth(age).UpperLeft);
-    setTeethUpperRight(Teeth(age).UpperRight);
+    setTeethLowerLeft(Teeth(age, chart_view).LowerLeft);
+    setTeethLowerRight(Teeth(age, chart_view).LowerRight);
+    setTeethUpperLeft(Teeth(age, chart_view).UpperLeft);
+    setTeethUpperRight(Teeth(age, chart_view).UpperRight);
   };
 
   const [procedures, setProcedure] = useState<any>([]);
@@ -584,9 +592,7 @@ export default function ChartingModal({
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
 
-                        {(ChartView === "Periodontal" ||
-                          ChartView === undefined ||
-                          ChartView === "") && (
+                        {ChartView === "Periodontal" && (
                           <div className="w-full">
                             <Annotate
                               pageType={pageType}
@@ -625,9 +631,7 @@ export default function ChartingModal({
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
-                        {(ChartView === "Periodontal" ||
-                          ChartView === undefined ||
-                          ChartView === "") && (
+                        {ChartView === "Periodontal" && (
                           <div className="w-full">
                             <Annotate
                               pageType={pageType}
@@ -669,9 +673,7 @@ export default function ChartingModal({
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
-                        {(ChartView === "Periodontal" ||
-                          ChartView === undefined ||
-                          ChartView === "") && (
+                        {ChartView === "Periodontal" && (
                           <div className="w-full">
                             <Annotate
                               pageType={pageType}
@@ -710,9 +712,7 @@ export default function ChartingModal({
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
-                        {(ChartView === "Periodontal" ||
-                          ChartView === undefined ||
-                          ChartView === "") && (
+                        {ChartView === "Periodontal" && (
                           <div className="w-full">
                             <Annotate
                               pageType={pageType}

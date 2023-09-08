@@ -1,5 +1,5 @@
-import React from "react";
-import { Form } from "antd";
+import React, { useEffect } from "react";
+import { Form, notification } from "antd";
 import Image from "next/image";
 import { scroller } from "react-scroll";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
@@ -11,13 +11,18 @@ import Card from "@components/Card";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
 import Uploader from "@src/components/Uploader";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchData, postData, postDataNoFormData } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
 import { getBase64 } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
 export function ApplicationSettings({}: NextPageProps) {
+  const { setIsAppLoading } = React.useContext(Context);
+  const queryClient = useQueryClient();
   const [applicationSettingsForm] = Form.useForm();
 
-  const iconUrl = applicationSettingsForm.getFieldValue("icon");
+  const iconUrl = applicationSettingsForm.getFieldValue("clinic_icon");
 
   let [image, setImage] = React.useState({
     imageUrl: iconUrl ? iconUrl : "",
@@ -60,6 +65,70 @@ export function ApplicationSettings({}: NextPageProps) {
     }
   }
 
+  const { data: applicationSetting } = useQuery(["application-setting"], () =>
+    fetchData({
+      url: `/api/user/setting`,
+    })
+  );
+
+  useEffect(() => {
+    applicationSettingsForm.setFieldsValue(applicationSetting);
+    setImage({
+      ...image,
+      imageUrl: applicationSetting?.clinic_logo,
+      edit: true,
+    });
+  }, [applicationSetting]);
+
+  const { mutate: updateApplication } = useMutation(
+    (payload: any) => {
+      return postData({
+        url: `/api/user/setting`,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Application setting successfully updated",
+          description: `Application setting successfully updated`,
+        });
+        applicationSettingsForm.resetFields();
+      },
+      // onMutate: async (newData) => {
+      //   await queryClient.cancelQueries({
+      //     queryKey: ["application-setting"],
+      //   });
+      //   const previousValues = queryClient.getQueryData([
+      //     "application-setting",
+      //   ]);
+      //   queryClient.setQueryData(["application-setting"], (oldData: any) =>
+      //     oldData ? [...oldData, newData] : undefined
+      //   );
+
+      //   return { previousValues };
+      // },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+        queryClient.setQueryData(
+          ["application-setting"],
+          context.previousValues
+        );
+      },
+      onSettled: async () => {
+        queryClient.invalidateQueries({ queryKey: ["application-setting"] });
+      },
+    }
+  );
+
   return (
     <PageContainer>
       <div className="flex justify-between items-center gap-4">
@@ -69,7 +138,7 @@ export function ApplicationSettings({}: NextPageProps) {
         form={applicationSettingsForm}
         layout="vertical"
         onFinish={(values) => {
-          console.log(values);
+          updateApplication(values);
         }}
         onFinishFailed={(data) => {
           scroller.scrollTo(data?.errorFields[0]?.name?.join("-")?.toString(), {
@@ -87,7 +156,7 @@ export function ApplicationSettings({}: NextPageProps) {
             </div>
             <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
               <Form.Item
-                name="icon"
+                name="clinic_logo"
                 valuePropName="file"
                 getValueFromEvent={handleChange}
                 rules={[
@@ -103,7 +172,7 @@ export function ApplicationSettings({}: NextPageProps) {
                   image={image}
                   setImage={(value: any) => setImage(value)}
                   className="[&_.ant-upload]:!border-0"
-                  id="icon"
+                  id="clinic_logo"
                 >
                   <div className="space-y-2 text-center">
                     <Avatar className="h-40 w-40 p-8 overflow-hidden bg-white relative border border-gray-300 avatar transition">
@@ -133,6 +202,42 @@ export function ApplicationSettings({}: NextPageProps) {
                     </div>
                   </div>
                 </Uploader>
+              </Form.Item>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
+            <div className="basis-full sm:basis-[35%] space-y-4">
+              <h5>Application Currency Suffix</h5>
+              {/* <div className="text-base">
+                Sends SMS reminder to patients who scheduled an appointment
+              </div> */}
+            </div>
+            <div className="space-y-2 flex flex-col justify-center items-center basis-full sm:basis-[40%]">
+              <Form.Item
+                label=""
+                name="currency"
+                className="w-full"
+                rules={[
+                  {
+                    required: true,
+                    message: "This is required!",
+                  },
+                ]}
+                required={false}
+                initialValue={""}
+              >
+                <Select id="currency">
+                  <Select.Option value="JPY" key="Disable">
+                    JPY
+                  </Select.Option>
+                  <Select.Option value="USD" key="Enable">
+                    USD
+                  </Select.Option>
+                  <Select.Option value="PHP" key="Disable">
+                    PHP
+                  </Select.Option>
+                </Select>
               </Form.Item>
             </div>
           </div>

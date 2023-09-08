@@ -20,7 +20,6 @@ import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import { getBase64, getInitialValue } from "@utilities/helpers";
 
-
 export default function AddPatientModal({
   show,
   onClose,
@@ -168,19 +167,23 @@ export default function AddPatientModal({
             >
               <Uploader
                 image={image}
-                setImage={(value: any) => setImage(value)}
+                setImage={(value: any) => {
+                  setImage(value);
+                  form.setFieldValue("profile_picture", value.file);
+                }}
+                capture={true}
                 className="[&_.ant-upload]:!border-0"
                 id="profile_picture"
               >
                 <div className="space-y-2 text-center">
-                  <Avatar className="h-40 w-40 p-8 overflow-hidden relative border border-gray-300 avatar transition">
+                  <Avatar className="h-40 w-40 p-8 overflow-hidden object-cover relative border border-gray-300 avatar transition">
                     {image.imageUrl && image.file ? (
                       <Image
                         src={image.imageUrl}
                         alt="random pics"
                         fill
                         sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        className="object-center contain h-full w-full"
+                        className="object-center object-cover h-full w-full"
                       />
                     ) : (
                       <IoPersonOutline className="h-full w-full text-white" />
@@ -198,7 +201,7 @@ export default function AddPatientModal({
                 label="First Name"
                 name="first_name"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
                 initialValue={""}
               >
@@ -215,8 +218,8 @@ export default function AddPatientModal({
               <Form.Item
                 label="Last Name"
                 name="last_name"
+                required={true}
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
                 className="col-span-3 lg:col-span-1"
                 initialValue={""}
               >
@@ -227,7 +230,7 @@ export default function AddPatientModal({
                 name="birthdate"
                 className="col-span-3 lg:col-span-2"
                 rules={[{ required: true, message: "Birth Month is required" }]}
-                required={false}
+                required={true}
               >
                 <DatePicker
                   getPopupContainer={(triggerNode: any) => {
@@ -287,7 +290,7 @@ export default function AddPatientModal({
                   { required: true, message: "This is required!" },
                   { type: "email", message: "Must be a valid email" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
@@ -315,7 +318,7 @@ export default function AddPatientModal({
                     message: "Please use correct format!",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <PatternFormat
@@ -336,7 +339,7 @@ export default function AddPatientModal({
                 label="Country"
                 name="country"
                 rules={[{ required: true, message: "Country is required" }]}
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
               >
                 <Select placeholder="Select Country" id="country">
@@ -381,7 +384,7 @@ export default function AddPatientModal({
               </Form.Item> */}
               <Form.Item
                 label="Province"
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -421,7 +424,7 @@ export default function AddPatientModal({
               </Form.Item>
               <Form.Item
                 label="City"
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -461,7 +464,7 @@ export default function AddPatientModal({
               </Form.Item>
               <Form.Item
                 label="Barangay"
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -504,7 +507,7 @@ export default function AddPatientModal({
                 label="Street"
                 name="street"
                 rules={[{ required: true, message: "Street is required" }]}
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
               >
                 <Input id="street" placeholder="Add street name" />

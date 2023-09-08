@@ -72,7 +72,7 @@ const sideMenu: Array<sideMenuProps> = [
     key: "2",
     subMenu: [
       {
-        subMenuLabel: "SMS Manager",
+        subMenuLabel: "SMS / Email Manager",
         subMenuLink: "sms-manager",
         showSubMenu: true,
       },
@@ -147,7 +147,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                   className="object-center object-contain"
                 />
               </div>
-              <div className="flex flex-col flex-auto overflow-auto relative ">
+              <div className="flex flex-col flex-auto overflow-auto relative">
                 <Menu
                   mode="inline"
                   selectedKeys={[
@@ -193,7 +193,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                                     data-ping="normal"
                                     data-ping-type="primary"
                                   >
-                                    <div className="flex justify-between items-center gap-4">
+                                    <div className="flex justify-between items-center gap-4 solo">
                                       <div>{subMenuLabel}</div>
                                     </div>
                                   </Menu.Item>
@@ -213,7 +213,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                           data-ping="normal"
                           data-ping-type="primary"
                         >
-                          <div className="flex justify-between items-center gap-4">
+                          <div className="flex justify-between items-center gap-4 solo">
                             <div>{label}</div>
                           </div>
                         </Menu.Item>
@@ -276,7 +276,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
           </div>
         </div>
         <div
-          className="absolute top-0 left-full z-10 bg-primary bg-opacity-70 text-white p-2 text-2xl mt-8 cursor-pointer rounded-tr-md rounded-br-md"
+          className="absolute top-0 z-0 left-full bg-primary bg-opacity-70 text-white p-2 text-2xl mt-8 cursor-pointer rounded-tr-md rounded-br-md"
           onClick={() => setIsSideMenuCollapsed((prevState: any) => !prevState)}
         >
           <RxHamburgerMenu />

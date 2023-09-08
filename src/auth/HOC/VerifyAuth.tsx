@@ -1,6 +1,6 @@
 import axios from "axios";
 import { NextPageContext } from "next";
-import { parseCookies, destroyCookie } from "nookies";
+import { parseCookies, destroyCookie, setCookie } from "nookies";
 
 // import axios from "axios";
 
@@ -58,6 +58,9 @@ export default function VerifyAuth(gssp: {
         .catch((err) => {
           profile = null;
           destroyCookie(ctx, "a_t", {
+            path: "/",
+          });
+          destroyCookie(ctx, "currency", {
             path: "/",
           });
           destroyCookie(ctx, "subdomain", {

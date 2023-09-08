@@ -314,6 +314,7 @@ export default function CreateBillingStatementModal({
             <NumericFormat
               customInput={Input}
               placeholder="Enter Discount Amount"
+              className=" text-end"
               id="discount"
               prefix={type_discount === "Amount" ? "₱" : ""}
               suffix={type_discount === "Percent" ? "%" : ""}

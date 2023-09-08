@@ -57,20 +57,10 @@ import scheduleType from "@utilities/global-data/scheduleType";
 
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-
-
-
-
-
 import PrivateRoute from "../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../auth/HOC/VerifyAuth";
 import AddPatientModal from "../../page-components/dashboard/modals/AddPatientModal";
 import AddScheduleModal from "../../page-components/dashboard/modals/AddScheduleModal";
-
-
-
-
-
 
 const highlightDate = "bg-black text-white";
 
@@ -372,8 +362,7 @@ export function Dashboard({}: NextPageProps) {
                                     </div>
 
                                     <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
-                                      
-                                      <Tooltip title='Edit'>
+                                      <Tooltip title="Edit">
                                         <BsPencilSquare
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                           onClick={() => {
@@ -417,35 +406,37 @@ export function Dashboard({}: NextPageProps) {
                                         />
                                       </Tooltip>
 
-                                      <Tooltip title='Start Consultation'>
+                                      <Tooltip title="Start Consultation">
                                         <FaTooth
                                           onClick={() =>
                                             router.push(
-                                              `/admin/patient-list/${_id}`
+                                              `/admin/patient-list/${patient_id}`
                                             )
                                           }
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                         />
                                       </Tooltip>
 
-                                     <Tooltip title='Complete'>
-                                      <BsCheckSquare
+                                      <Tooltip title="Complete">
+                                        <BsCheckSquare
                                           onClick={() =>
-                                            UpdateStatushandler("Completed", _id)
+                                            UpdateStatushandler(
+                                              "Completed",
+                                              _id
+                                            )
                                           }
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                         />
-                                     </Tooltip>
+                                      </Tooltip>
 
-                                     <Tooltip title='Cancel'>
-                                      <MdOutlineCancel
+                                      <Tooltip title="Cancel">
+                                        <MdOutlineCancel
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                           onClick={() =>
                                             UpdateStatushandler("Canceled", _id)
                                           }
                                         />
-                                     </Tooltip>
-                                     
+                                      </Tooltip>
                                     </div>
                                   </Card>
                                 </AnimateContainer>
