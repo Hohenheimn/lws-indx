@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { DatePicker, Form, Radio, TimePicker, notification } from "antd";
 import { Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { AnimatePresence } from "framer-motion";
 import moment from "moment";
 import { AiFillMinusCircle } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
 import { AnimateContainer } from "@components/animation";
-import { fadeIn } from "@components/animation/animation";
+import { down, fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
@@ -364,166 +365,168 @@ export default function AddTreatmentPlanModal({
                 {(fields, { add, remove }) => {
                   return (
                     <>
-                      {fields.map(({ name, key }) => {
-                        return (
-                          <AnimateContainer
-                            variants={fadeIn}
-                            key={key}
-                            triggerOnce={true}
-                          >
-                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
-                              {fields.length > 1 ? (
-                                <AiFillMinusCircle
-                                  className={`absolute top-0 right-0 m-2  text-3xl ${
-                                    pageType === "view" && id
-                                      ? " text-gray-400"
-                                      : "cursor-pointer text-danger"
-                                  }`}
-                                  onClick={() => {
-                                    if (pageType === "view" && id) return;
-                                    remove(name);
-                                  }}
-                                />
-                              ) : null}
-                              <Form.Item
-                                label="Procedure"
-                                name={[name, "procedure_name"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "This is required!",
-                                  },
-                                ]}
-                                required={false}
-                              >
-                                <InfiniteSelect
-                                  placeholder="Select Procedure"
-                                  disabled={pageType === "view" && id}
-                                  id={[
-                                    "treatment_plan_list",
-                                    name,
-                                    "procedure_name",
-                                  ].join("-")}
-                                  api={`${
-                                    process.env.REACT_APP_API_BASE_URL
-                                  }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
-                                    form,
-                                    "procedure"
-                                  )}`}
-                                  queryKey={["procedure"]}
-                                  returnAllValue={true}
-                                  displayValueKey="name"
-                                  returnValueKey="_id"
-                                  onChange={(e) => {
-                                    UpdateValue(
-                                      name,
-                                      {
-                                        cost: e.cost,
-                                        procedure_id: e._id,
-                                        procedure_name: e.name,
-                                      },
-                                      "procedure"
-                                    );
-                                  }}
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                label="Tooth"
-                                name={[name, "tooth"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Tooth is required",
-                                  },
-                                ]}
-                                required={false}
-                              >
-                                <Select
-                                  mode="multiple"
-                                  allowClear
-                                  placeholder="Tooth"
-                                  disabled={pageType === "view" && id}
-                                  id={[
-                                    "treatment_plan_list",
-                                    name,
-                                    "tooth",
-                                  ].join("-")}
-                                  getPopupContainer={(triggerNode: any) => {
-                                    return triggerNode.parentNode;
-                                  }}
-                                  onChange={(e) => {
-                                    UpdateValue(name, { tooth: e }, "tooth");
-                                  }}
+                      <AnimatePresence>
+                        {fields.map(({ name, key }) => {
+                          return (
+                            <AnimateContainer
+                              variants={down}
+                              key={key}
+                              triggerOnce={true}
+                            >
+                              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                                {fields.length > 1 ? (
+                                  <AiFillMinusCircle
+                                    className={`absolute top-0 right-0 m-2  text-3xl ${
+                                      pageType === "view" && id
+                                        ? " text-gray-400"
+                                        : "cursor-pointer text-danger"
+                                    }`}
+                                    onClick={() => {
+                                      if (pageType === "view" && id) return;
+                                      remove(name);
+                                    }}
+                                  />
+                                ) : null}
+                                <Form.Item
+                                  label="Procedure"
+                                  name={[name, "procedure_name"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "This is required!",
+                                    },
+                                  ]}
+                                  required={false}
                                 >
-                                  {toothNumbers(age).map((item: number) => (
-                                    <Select.Option value={item} key={item}>
-                                      {item}
-                                    </Select.Option>
-                                  ))}
-                                </Select>
-                              </Form.Item>
+                                  <InfiniteSelect
+                                    placeholder="Select Procedure"
+                                    disabled={pageType === "view" && id}
+                                    id={[
+                                      "treatment_plan_list",
+                                      name,
+                                      "procedure_name",
+                                    ].join("-")}
+                                    api={`${
+                                      process.env.REACT_APP_API_BASE_URL
+                                    }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
+                                      form,
+                                      "procedure"
+                                    )}`}
+                                    queryKey={["procedure"]}
+                                    returnAllValue={true}
+                                    displayValueKey="name"
+                                    returnValueKey="_id"
+                                    onChange={(e) => {
+                                      UpdateValue(
+                                        name,
+                                        {
+                                          cost: e.cost,
+                                          procedure_id: e._id,
+                                          procedure_name: e.name,
+                                        },
+                                        "procedure"
+                                      );
+                                    }}
+                                  />
+                                </Form.Item>
+                                <Form.Item
+                                  label="Tooth"
+                                  name={[name, "tooth"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Tooth is required",
+                                    },
+                                  ]}
+                                  required={false}
+                                >
+                                  <Select
+                                    mode="multiple"
+                                    allowClear
+                                    placeholder="Tooth"
+                                    disabled={pageType === "view" && id}
+                                    id={[
+                                      "treatment_plan_list",
+                                      name,
+                                      "tooth",
+                                    ].join("-")}
+                                    getPopupContainer={(triggerNode: any) => {
+                                      return triggerNode.parentNode;
+                                    }}
+                                    onChange={(e) => {
+                                      UpdateValue(name, { tooth: e }, "tooth");
+                                    }}
+                                  >
+                                    {toothNumbers(age).map((item: number) => (
+                                      <Select.Option value={item} key={item}>
+                                        {item}
+                                      </Select.Option>
+                                    ))}
+                                  </Select>
+                                </Form.Item>
 
-                              <Form.Item
-                                label="Cost"
-                                name={[name, "cost"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "This is required!",
-                                  },
-                                ]}
-                                required={false}
-                              >
-                                <NumericFormat
-                                  customInput={Input}
-                                  disabled={pageType === "view" && id}
-                                  placeholder="Cost"
-                                  thousandSeparator=","
-                                  thousandsGroupStyle="thousand"
-                                  className="text-end"
-                                  id={[
-                                    "treatment_plan_list",
-                                    name,
-                                    "cost",
-                                  ].join("-")}
-                                  prefix={currency}
-                                  onValueChange={({ floatValue }) => {
-                                    let cost = floatValue ?? 0;
+                                <Form.Item
+                                  label="Cost"
+                                  name={[name, "cost"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "This is required!",
+                                    },
+                                  ]}
+                                  required={false}
+                                >
+                                  <NumericFormat
+                                    customInput={Input}
+                                    disabled={pageType === "view" && id}
+                                    placeholder="Cost"
+                                    thousandSeparator=","
+                                    thousandsGroupStyle="thousand"
+                                    className="text-end"
+                                    id={[
+                                      "treatment_plan_list",
+                                      name,
+                                      "cost",
+                                    ].join("-")}
+                                    prefix={currency}
+                                    onValueChange={({ floatValue }) => {
+                                      let cost = floatValue ?? 0;
 
-                                    UpdateValue(name, { cost: cost }, "cost");
-                                  }}
-                                />
-                              </Form.Item>
+                                      UpdateValue(name, { cost: cost }, "cost");
+                                    }}
+                                  />
+                                </Form.Item>
 
-                              <Form.Item
-                                label="Total Amount"
-                                name={[name, "total"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "This is required!",
-                                  },
-                                ]}
-                                required={false}
-                              >
-                                <NumericFormat
-                                  customInput={Input}
-                                  placeholder="Total Amount"
-                                  thousandSeparator
-                                  id={[
-                                    "treatment_plan_list",
-                                    name,
-                                    "total",
-                                  ].join("-")}
-                                  prefix="₱"
-                                  readOnly
-                                  disabled={true}
-                                />
-                              </Form.Item>
-                            </div>
-                          </AnimateContainer>
-                        );
-                      })}
+                                <Form.Item
+                                  label="Total Amount"
+                                  name={[name, "total"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "This is required!",
+                                    },
+                                  ]}
+                                  required={false}
+                                >
+                                  <NumericFormat
+                                    customInput={Input}
+                                    placeholder="Total Amount"
+                                    thousandSeparator
+                                    id={[
+                                      "treatment_plan_list",
+                                      name,
+                                      "total",
+                                    ].join("-")}
+                                    prefix="₱"
+                                    readOnly
+                                    disabled={true}
+                                  />
+                                </Form.Item>
+                              </div>
+                            </AnimateContainer>
+                          );
+                        })}
+                      </AnimatePresence>
                       <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
                         <div className="blur-sm grid grid-cols-1 lg:grid-cols-4 gap-4">
                           <Form.Item

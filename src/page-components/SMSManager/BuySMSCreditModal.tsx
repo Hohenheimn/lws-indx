@@ -39,6 +39,7 @@ export default function BuySMSCreditModal({
       }
       getSubDomain = getSubDomain.replace("http://", "");
       getSubDomain = getSubDomain.replace("https://", "");
+      getSubDomain = getSubDomain.replace("www.", "");
       getSubDomain = getSubDomain.split(".");
       getSubDomain = getSubDomain[0];
       setSubdomain(getSubDomain);

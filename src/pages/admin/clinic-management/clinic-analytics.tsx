@@ -179,7 +179,7 @@ export function ClinicAnalytics({ profile }: any) {
   return (
     <PageContainer>
       <div className="flex justify-between flex-col lg:flex-row items-center gap-4 flex-wrap md:flex-nowrap">
-        <h3 className="w-full lg:w-auto mr-5">Clinic Analytics</h3>
+        <h3 className="w-full lg:w-auto mr-5">Clinic&nbsp;Analytics</h3>
         <Form
           form={FilterForm}
           layout="vertical"

@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { Form, TimePicker, notification } from "antd";
+import { AnimatePresence } from "framer-motion";
 import moment from "moment";
 import { AiFillMinusCircle } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat, PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
 import { AnimateContainer } from "@components/animation";
-import { fadeIn } from "@components/animation/animation";
+import { down, fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
@@ -430,96 +431,101 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 {(fields, { add, remove }) => {
                   return (
                     <>
-                      {fields.map(({ name, key, ...rest }) => {
-                        return (
-                          <AnimateContainer
-                            variants={fadeIn}
-                            key={key}
-                            triggerOnce={true}
-                          >
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
-                              {fields.length > 1 ? (
-                                <AiFillMinusCircle
-                                  className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
-                                  onClick={() => remove(name)}
-                                />
-                              ) : null}
-                              <Form.Item
-                                label="Days"
-                                name={[name, "day"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "This is required!",
-                                  },
-                                ]}
-                                required={false}
-                                className="col-span-2 md:col-span-1"
-                                {...rest}
-                              >
-                                <Select
-                                  placeholder="Days"
-                                  className=" z-10"
-                                  id={["schedules", name, "day"].join("-")}
+                      <AnimatePresence>
+                        {fields.map(({ name, key, ...rest }) => {
+                          return (
+                            <AnimateContainer
+                              variants={down}
+                              key={key}
+                              triggerOnce={true}
+                            >
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                                {fields.length > 1 ? (
+                                  <AiFillMinusCircle
+                                    className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
+                                    onClick={() => remove(name)}
+                                  />
+                                ) : null}
+                                <Form.Item
+                                  label="Days"
+                                  name={[name, "day"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "This is required!",
+                                    },
+                                  ]}
+                                  required={false}
+                                  className="col-span-2 md:col-span-1"
+                                  {...rest}
                                 >
-                                  {days
-                                    ?.filter(
-                                      (filterItem) =>
-                                        !schedules?.some(
-                                          (someItem: any) =>
-                                            someItem?.day === filterItem
-                                        )
-                                    )
-                                    .map((day, index) => {
-                                      return (
-                                        <Select.Option value={day} key={index}>
-                                          {day}
-                                        </Select.Option>
-                                      );
-                                    })}
-                                </Select>
-                              </Form.Item>
+                                  <Select
+                                    placeholder="Days"
+                                    className=" z-10"
+                                    id={["schedules", name, "day"].join("-")}
+                                  >
+                                    {days
+                                      ?.filter(
+                                        (filterItem) =>
+                                          !schedules?.some(
+                                            (someItem: any) =>
+                                              someItem?.day === filterItem
+                                          )
+                                      )
+                                      .map((day, index) => {
+                                        return (
+                                          <Select.Option
+                                            value={day}
+                                            key={index}
+                                          >
+                                            {day}
+                                          </Select.Option>
+                                        );
+                                      })}
+                                  </Select>
+                                </Form.Item>
 
-                              <Form.Item
-                                label="Time Range"
-                                name={[name, "time_range"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Time is required",
-                                  },
-                                ]}
-                                required={false}
-                                className="col-span-2 md:col-span-1"
-                                getValueFromEvent={(e) => {
-                                  if (e) {
-                                    if (
-                                      moment(e[0]).isSameOrAfter(moment(e[1]))
-                                    ) {
-                                      return [e[0], null];
+                                <Form.Item
+                                  label="Time Range"
+                                  name={[name, "time_range"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Time is required",
+                                    },
+                                  ]}
+                                  required={false}
+                                  className="col-span-2 md:col-span-1"
+                                  getValueFromEvent={(e) => {
+                                    if (e) {
+                                      if (
+                                        moment(e[0]).isSameOrAfter(moment(e[1]))
+                                      ) {
+                                        return [e[0], null];
+                                      }
+
+                                      return e;
                                     }
-
-                                    return e;
-                                  }
-                                }}
-                              >
-                                <TimeRangePicker
-                                  onChange={(value) => {
-                                    const { ...rest } = form.getFieldValue(
-                                      "schedules"
-                                    );
-                                    Object.assign(rest[name], {
-                                      time_range: value,
-                                    });
                                   }}
-                                  isTime={[]}
-                                  id={["schedules", name, "day"].join("-")}
-                                />
-                              </Form.Item>
-                            </div>
-                          </AnimateContainer>
-                        );
-                      })}
+                                >
+                                  <TimeRangePicker
+                                    onChange={(value) => {
+                                      const { ...rest } = form.getFieldValue(
+                                        "schedules"
+                                      );
+                                      Object.assign(rest[name], {
+                                        time_range: value,
+                                      });
+                                    }}
+                                    isTime={[]}
+                                    id={["schedules", name, "day"].join("-")}
+                                  />
+                                </Form.Item>
+                              </div>
+                            </AnimateContainer>
+                          );
+                        })}
+                      </AnimatePresence>
                       <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
                         <div className="blur-sm grid grid-cols-1 md:grid-cols-2 gap-4">
                           <Form.Item

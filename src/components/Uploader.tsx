@@ -138,7 +138,7 @@ export default function Uploader({
               </aside>
             </div>
 
-            <div className="flex w-full items-center justify-between mt-5">
+            <div className="flex w-full items-center justify-between mt-5 flex-wrap gap-y-2">
               <div>
                 {capturedImage ? (
                   <Button

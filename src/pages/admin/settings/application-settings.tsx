@@ -65,10 +65,12 @@ export function ApplicationSettings({}: NextPageProps) {
     }
   }
 
-  const { data: applicationSetting } = useQuery(["application-setting"], () =>
-    fetchData({
-      url: `/api/user/setting`,
-    })
+  const { data: applicationSetting, isLoading } = useQuery(
+    ["application-setting"],
+    () =>
+      fetchData({
+        url: `/api/user/setting`,
+      })
   );
 
   useEffect(() => {
@@ -96,20 +98,7 @@ export function ApplicationSettings({}: NextPageProps) {
           message: "Application setting successfully updated",
           description: `Refresh to Apply Updated Logo`,
         });
-        applicationSettingsForm.resetFields();
-      },
-      onMutate: async (newData) => {
-        await queryClient.cancelQueries({
-          queryKey: ["application-setting"],
-        });
-        const previousValues = queryClient.getQueryData([
-          "application-setting",
-        ]);
-        queryClient.setQueryData(["application-setting"], (oldData: any) =>
-          oldData ? [...oldData, newData] : undefined
-        );
-
-        return { previousValues };
+        queryClient.invalidateQueries({ queryKey: ["application-setting"] });
       },
       onError: (err: any, _, context: any) => {
         notification.warning({
@@ -122,9 +111,6 @@ export function ApplicationSettings({}: NextPageProps) {
           ["application-setting"],
           context.previousValues
         );
-      },
-      onSettled: async () => {
-        queryClient.invalidateQueries({ queryKey: ["application-setting"] });
       },
     }
   );

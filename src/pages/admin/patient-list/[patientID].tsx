@@ -15,6 +15,7 @@ import patientRecord from "@pagecomponents/patient-record";
 import { fadeIn, fadeInUp } from "@src/components/animation/animation";
 import DeleteButton from "@src/components/DeleteButton";
 import { Radio } from "@src/components/Radio";
+import Tab from "@src/components/Tab";
 import ChangeHistory from "@src/page-components/patient-record/ChangeHistory";
 import Charting from "@src/page-components/patient-record/Charting";
 import DentalHistory from "@src/page-components/patient-record/DentalHistory";
@@ -139,31 +140,33 @@ export function PatientRecord({
           } duration-150 flex-wrap ease-linear z-[9999999] flex-col xs:flex-row fixed left-0 top-0 bg-white shadow-md px-5 xs:px-9 w-full pt-5 flex items-center justify-between`}
         >
           <div className="xs:space-x-5 flex items-center flex-col xs:flex-row">
-            <aside className=" relative h-10 aspect-square rounded-full object-cover overflow-hidden">
-              <Image
-                src={`${
-                  patient?.profile_picture ? patient?.profile_picture : "/"
-                }`}
-                fill
-                alt="picture"
-              />
+            <aside className=" flex items-center gap-3">
+              <aside className=" relative h-10 aspect-square rounded-full object-cover overflow-hidden">
+                <Image
+                  src={`${
+                    patient?.profile_picture ? patient?.profile_picture : "/"
+                  }`}
+                  fill
+                  alt="picture"
+                />
+              </aside>
+              <h5>
+                {patient?.first_name} {patient?.last_name}
+              </h5>
+              <p className="xs:text-left text-center xs:mb-0 overflow-hidden overflow-ellipsis">
+                Age:{" "}
+                {differenceInYears(
+                  new Date(),
+                  new Date(patient?.birthdate)
+                ).toString()}
+              </p>
             </aside>
-            <h5>
-              {patient?.first_name} {patient?.last_name}
-            </h5>
-            <p className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis">
-              Age:{" "}
-              {differenceInYears(
-                new Date(),
-                new Date(patient?.birthdate)
-              ).toString()}
-            </p>
             <p
               onClick={() => {
                 navigator.clipboard.writeText(patient?.patient_no);
                 message.success("Copied");
               }}
-              className="xs:text-left text-center xs:mb-0 mb-4 overflow-hidden overflow-ellipsis"
+              className="xs:text-left text-center xs:mb-0 mb-2 overflow-hidden overflow-ellipsis"
             >
               Patient No. {patient?.patient_no}
             </p>
@@ -174,19 +177,36 @@ export function PatientRecord({
               defaultValue="view"
               className="md:max-w-md"
             >
-              <Radio.Button value={"view"} label="View" />
-              <Radio.Button value={"edit"} label="Edit" />
+              <Radio.Button
+                value={"view"}
+                label="View"
+                className=" text-[.5rem] lg:text-[1rem]"
+              />
+              <Radio.Button
+                value={"edit"}
+                label="Edit"
+                className=" text-[.5rem] lg:text-[1rem]"
+              />
             </Radio.Group>
           </div>
-          <Tabs
-            className=" w-full nav"
-            activeKey={`${router.query.tab ?? patientRecord()[0]?.key}`}
-            onChange={(e) => {
+          <Tab
+            items={[
+              `Personal Info`,
+              "Dental History",
+              "Medical History",
+              "Treatment Plan",
+              "Charting",
+              "Treatment Records",
+              "Medical Gallery",
+              "Prescription",
+              "Change History",
+            ]}
+            activeTab={router?.query.tab}
+            onClick={(value) => {
               router.replace({
-                query: { ...router.query, tab: e },
+                query: { ...router.query, tab: value },
               });
             }}
-            items={patientRecord()}
           />
         </nav>
 
@@ -291,14 +311,26 @@ export function PatientRecord({
                 </div>
               </Card>
             </div>
-            <Tabs
-              activeKey={`${router.query.tab ?? patientRecord()[0]?.key}`}
-              onChange={(e) => {
+
+            <Tab
+              className="rounded-lg shadow-lg"
+              items={[
+                `Personal Info`,
+                "Dental History",
+                "Medical History",
+                "Treatment Plan",
+                "Charting",
+                "Treatment Records",
+                "Medical Gallery",
+                "Prescription",
+                "Change History",
+              ]}
+              activeTab={router?.query.tab}
+              onClick={(value) => {
                 router.replace({
-                  query: { ...router.query, tab: e },
+                  query: { ...router.query, tab: value },
                 });
               }}
-              items={patientRecord()}
             />
 
             <AnimateContainer
@@ -306,28 +338,29 @@ export function PatientRecord({
               key={2}
               className="flex flex-col flex-auto"
             >
-              {(router.query.tab === "2" || router.query.tab === undefined) && (
+              {(router.query.tab === "Personal Info" ||
+                router.query.tab === undefined) && (
                 <PersonalInfo
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "3" && (
+              {router.query.tab === "Dental History" && (
                 <DentalHistory
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "4" && (
+              {router.query.tab === "Medical History" && (
                 <MedicalHistory
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "5" && (
+              {router.query.tab === "Treatment Plan" && (
                 <TreatmentPlan
                   patientRecord={patient}
                   pageType={pageType}
@@ -335,7 +368,7 @@ export function PatientRecord({
                   currency={profile.setting.currency}
                 />
               )}
-              {router.query.tab === "6" && (
+              {router.query.tab === "Charting" && (
                 <Charting
                   patientRecord={patient}
                   pageType={pageType}
@@ -343,7 +376,7 @@ export function PatientRecord({
                   currency={profile.setting.currency}
                 />
               )}
-              {router.query.tab === "7" && (
+              {router.query.tab === "Treatment Records" && (
                 <TreatmentRecords
                   patientRecord={patient}
                   pageType={pageType}
@@ -351,21 +384,21 @@ export function PatientRecord({
                   currency={profile.setting.currency}
                 />
               )}
-              {router.query.tab === "8" && (
+              {router.query.tab === "Medical Gallery" && (
                 <MedicalGallery
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "9" && (
+              {router.query.tab === "Prescription" && (
                 <Prescription
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
                 />
               )}
-              {router.query.tab === "10" && (
+              {router.query.tab === "Change History" && (
                 <ChangeHistory
                   patientRecord={patient}
                   pageType={pageType}

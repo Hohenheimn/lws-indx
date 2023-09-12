@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { AiFillMinusCircle } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
@@ -163,14 +165,20 @@ export default function AddPrescriptionManagementModal({
                 {(fields, { add, remove }) => {
                   return (
                     <>
-                      {fields.map(({ name, key }) => {
-                        return (
-                          <AnimateContainer
-                            variants={fadeIn}
-                            key={key}
-                            triggerOnce={true}
-                          >
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                      <AnimatePresence>
+                        {fields.map(({ name, key }) => {
+                          return (
+                            <motion.div
+                              key={key}
+                              initial={{ y: -100 }}
+                              animate={{
+                                y: 0,
+                              }}
+                              exit={{
+                                y: 100,
+                              }}
+                              className="grid grid-cols-1 lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative"
+                            >
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
                                   className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
@@ -237,10 +245,10 @@ export default function AddPrescriptionManagementModal({
                                   placeholder="Sig"
                                 />
                               </Form.Item>
-                            </div>
-                          </AnimateContainer>
-                        );
-                      })}
+                            </motion.div>
+                          );
+                        })}
+                      </AnimatePresence>
                       <div className="border border-gray-300 p-4 pt-8 rounded-md relative">
                         <div className="blur-sm grid grid-cols-1 lg:grid-cols-3 gap-4">
                           <Form.Item

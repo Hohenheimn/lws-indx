@@ -1,39 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { Space, Form, notification, Checkbox } from "antd";
 
 import { motion } from "framer-motion";
 // import { useMutation } from "react-query";
-import dynamic from "next/dynamic";
 import Image from "next/image";
-
-import { setCookie } from "nookies";
 import { BsCheckCircle } from "react-icons/bs";
 import { PatternFormat } from "react-number-format";
-import { SwapRightOutlined } from "@ant-design/icons";
-import { AnimateContainer, PageContainer } from "@components/animation";
-import {
-  fadeIn,
-  fadeInLeft,
-  fadeInRight,
-} from "@components/animation/animation";
 import { Button } from "@components/Button";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
+import { PageContainer } from "@src/components/animation";
+import SubscriptionAccount, {
+  registrationAccount,
+} from "@src/page-components/registration/SubscriptionAccount";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
-
-// import { Media } from "../../../context/Media";
 
 export default function Registration({ router }: any) {
   const [RegistrationForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);
   let [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
 
+  const [
+    registrationInfo,
+    setRegistrationInfo,
+  ] = useState<registrationAccount | null>(null);
+
   const { mutate: register } = useMutation(
     (payload: {}) =>
       postData({
-        url: "/api/pre-registration",
+        url: "/api/auth/register",
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -42,22 +39,28 @@ export default function Registration({ router }: any) {
     {
       onSuccess: () => {
         setIsSuccessModalOpen(true);
+        setRegistrationInfo(RegistrationForm.getFieldsValue());
         RegistrationForm.resetFields();
       },
-      // onError: (err: { [key: string]: string }) => {
-      //   notification.success({
-      //     key: "register",
-      //     message: err.title,
-      //     description: err.message,
-      //   });
-      // },
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+      },
     }
   );
+  return <SubscriptionAccount registrationInfo={registrationInfo} />;
+  if (registrationInfo !== null) {
+    return <SubscriptionAccount registrationInfo={registrationInfo} />;
+  }
 
   return (
     <>
       <PageContainer className="md:p-0">
-        <div className="flex items-center justify-center flex-auto overflow-hidden">
+        <div className="flex flex-auto overflow-hidden">
           <motion.div
             initial={{ x: "-100%" }}
             animate={{
@@ -65,7 +68,7 @@ export default function Registration({ router }: any) {
               transition: { duration: 1, ease: [0.6, -0.05, 0.01, 0.99] },
             }}
             exit={{ x: "-100%" }}
-            className="hidden md:flex relative h-screen basis-full md:basis-[60%] bg-primary p-[4vw]"
+            className=" hidden md:flex relative h-screen basis-full md:basis-[60%] bg-primary p-[4vw]"
           >
             <div className="w-full h-full relative">
               <Image
@@ -87,10 +90,20 @@ export default function Registration({ router }: any) {
               x: "100%",
               transition: { duration: 1, ease: [0.6, -0.05, 0.01, 0.99] },
             }}
-            className="absolute md:relative h-full w-full md:w-auto top-0 left-0 flex flex-col justify-center items-center flex-auto p-[5%] md:p-20 bg-white"
+            className=" overflow-auto h-screen flex flex-col items-center flex-auto p-[5%] md:p-20 bg-white"
           >
             <div className="space-y-6 w-full">
-              <h1 className="font-['Mulish']">Pre-Registration Form</h1>
+              <aside className=" flex justify-center">
+                <div className=" relative h-[7rem] aspect-[2/1]">
+                  <Image
+                    src="/images/logo.png"
+                    alt="random pics"
+                    className=" h-full w-full object-contain"
+                    fill
+                  />
+                </div>
+              </aside>
+              <h3 className="font-['Mulish']">Dentist Registration</h3>
               <Form
                 form={RegistrationForm}
                 layout="vertical"
@@ -107,6 +120,7 @@ export default function Registration({ router }: any) {
                       { required: true, message: "First Name is required" },
                     ]}
                     required={false}
+                    className="col-span-full"
                   >
                     <Input id="first_name" placeholder="First Name" />
                   </Form.Item>
@@ -117,20 +131,11 @@ export default function Registration({ router }: any) {
                       { required: true, message: "Last Name is required" },
                     ]}
                     required={false}
+                    className="col-span-full"
                   >
                     <Input id="last_name" placeholder="Last Name" />
                   </Form.Item>
-                  <Form.Item
-                    label="Clinic Name"
-                    name="clinic_name"
-                    rules={[
-                      { required: true, message: "Clinic Name is required" },
-                    ]}
-                    required={false}
-                    className="col-span-full"
-                  >
-                    <Input id="clinic_name" placeholder="Clinic Name" />
-                  </Form.Item>
+
                   <Form.Item
                     label="Email Address"
                     name="email_address"
@@ -142,6 +147,7 @@ export default function Registration({ router }: any) {
                       { type: "email", message: "Must be a valid email" },
                     ]}
                     required={false}
+                    className="col-span-full"
                   >
                     <Input id="email_address" placeholder="Email Address" />
                   </Form.Item>
@@ -156,6 +162,7 @@ export default function Registration({ router }: any) {
                       },
                     ]}
                     required={false}
+                    className="col-span-full"
                   >
                     <PatternFormat
                       customInput={Input}
@@ -166,6 +173,29 @@ export default function Registration({ router }: any) {
                       id="mobile_number"
                     />
                   </Form.Item>
+                  <Form.Item
+                    label="Clinic Name"
+                    name="clinic_name"
+                    rules={[
+                      { required: true, message: "Clinic Name is required" },
+                    ]}
+                    required={false}
+                    className="col-span-full"
+                  >
+                    <Input id="clinic_name" placeholder="Clinic Name" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Clinic Address"
+                    name="clinic_addess"
+                    rules={[
+                      { required: true, message: "Clinic Address is required" },
+                    ]}
+                    required={false}
+                    className="col-span-full"
+                  >
+                    <Input id="clinic_addess" placeholder="Clinic Address" />
+                  </Form.Item>
+
                   <Form.Item
                     name="terms"
                     valuePropName="checked"
@@ -221,14 +251,15 @@ export default function Registration({ router }: any) {
           <div>
             <h2 className="font-normal mb-2">Registration Successful</h2>
             <div className="text-default-secondary">
-              Your registration has been confirmed. Stay tuned for more updates.
+              Your registration has been confirmed. Your temporary password and
+              link account will send to your email.
             </div>
           </div>
           <Button
             appearance="primary"
             className="max-w-[20rem] p-4"
             onClick={() => {
-              router.push("/");
+              // router.push("/");
               setIsSuccessModalOpen(false);
             }}
           >

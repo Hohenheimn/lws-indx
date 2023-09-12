@@ -49,7 +49,7 @@ export const Button = ({
     <button
       type={type}
       className={twMerge(
-        "tracking-wider w-full border border-solid text-default-text font-normal px-8 py-2 text-base rounded-md shadow-md transition duration-300 ease-in-out relative",
+        "tracking-wider w-full border border-solid text-default-text font-normal px-3 lg:px-8 py-2 text-[.8rem] lg:text-base rounded-md shadow-md transition duration-300 ease-in-out relative",
         appearanceChecker(appearance),
         className
       )}

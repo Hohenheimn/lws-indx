@@ -78,4 +78,10 @@
   }
 }
 
+.tab-scroll {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @import "./antd.scss";
