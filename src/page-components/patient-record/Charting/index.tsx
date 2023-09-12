@@ -7,13 +7,7 @@ import Input from "@components/Input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 
-
-
-
 import ChartingModal from "./ChartingModal";
-
-
-
 
 const columns: any = [
   {
@@ -47,7 +41,6 @@ export function Charting({ patientRecord, pageType }: any) {
         url: `/api/patient/charting/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
       })
   );
-
 
   return (
     <>
@@ -131,7 +124,6 @@ export function Charting({ patientRecord, pageType }: any) {
                         }
                       );
                       setdefaultAnnotation(getProcedures);
-
                       setIsChartingModalOpen(true);
                     }}
                   />

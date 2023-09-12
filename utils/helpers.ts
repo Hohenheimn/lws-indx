@@ -167,7 +167,7 @@ export const getAge = (birthdate: string) => {
 };
 
 export const scrollToTarget = async (ref: any) => {
-  ref?.current?.scrollIntoView();
+  ref?.current?.scrollIntoView({ top: -200 });
 };
 
 export const toothNumbers = (age: number) => {

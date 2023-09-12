@@ -35,26 +35,26 @@ export default function ChartingModal({
 
   const chart_type = Form.useWatch("chart_type", form);
 
-  const chart_view: any = Form.useWatch("chart_view", form);
-
   const { setIsAppLoading } = React.useContext(Context);
 
   const [showAnnotationModal, setShowAnnotationModal] = React.useState(false);
 
+  const ChartView: string = Form.useWatch("chart_view", form);
+
   const [TeethUpperLeft, setTeethUpperLeft] = useState(
-    Teeth(age, chart_view).UpperLeft
+    Teeth(age, ChartView).UpperLeft
   );
 
   const [TeethUpperRight, setTeethUpperRight] = useState(
-    Teeth(age, chart_view).UpperRight
+    Teeth(age, ChartView).UpperRight
   );
 
   const [TeethLowerLeft, setTeethLowerLeft] = useState(
-    Teeth(age, chart_view).LowerLeft
+    Teeth(age, ChartView).LowerLeft
   );
 
   const [TeethLowerRight, setTeethLowerRight] = useState(
-    Teeth(age, chart_view).LowerRight
+    Teeth(age, ChartView).LowerRight
   );
 
   const [SelectedAnnotate, setSelectedAnnotate] = useState<any>({
@@ -64,13 +64,17 @@ export default function ChartingModal({
   });
 
   const resetToothNumber = () => {
-    setTeethLowerLeft(Teeth(age, chart_view).LowerLeft);
-    setTeethLowerRight(Teeth(age, chart_view).LowerRight);
-    setTeethUpperLeft(Teeth(age, chart_view).UpperLeft);
-    setTeethUpperRight(Teeth(age, chart_view).UpperRight);
+    setTeethLowerLeft(Teeth(age, ChartView).LowerLeft);
+    setTeethLowerRight(Teeth(age, ChartView).LowerRight);
+    setTeethUpperLeft(Teeth(age, ChartView).UpperLeft);
+    setTeethUpperRight(Teeth(age, ChartView).UpperRight);
   };
 
   const [procedures, setProcedure] = useState<any>([]);
+
+  useEffect(() => {
+    resetToothNumber();
+  }, [ChartView]);
 
   useEffect(() => {
     const upper_left = TeethUpperLeft.filter(
@@ -153,8 +157,6 @@ export default function ChartingModal({
     // );
     setArrayValues([...Filter, ...arrayValues]);
   };
-
-  const ChartView = Form.useWatch("chart_view", form);
 
   React.useEffect(() => {
     form.setFieldsValue({
@@ -574,8 +576,7 @@ export default function ChartingModal({
             <hr className="border-t-2" />
 
             <div
-              className={`space-y-8 ${(chart_type === "" ||
-                chart_view === "") &&
+              className={`space-y-8 ${(chart_type === "" || ChartView === "") &&
                 "blur-sm pointer-events-none"}`}
             >
               <div className="grid grid-cols-2 gap-12">

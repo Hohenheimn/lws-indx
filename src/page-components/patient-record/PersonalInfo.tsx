@@ -32,8 +32,6 @@ function dataURLtoFile(dataurl: any, filename: any) {
 }
 
 export function PersonalInfo({ patientRecord, tab, pageType }: any) {
-  console.log(patientRecord);
-
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
   const [PersonalInfoForm] = Form.useForm();

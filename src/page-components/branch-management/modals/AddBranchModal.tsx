@@ -22,6 +22,12 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
 
+  const schedules = Form.useWatch("schedules", form);
+
+  useEffect(() => {
+    console.log(schedules);
+  }, [schedules]);
+
   const { mutate: addBranch } = useMutation(
     (payload: any) => {
       return postData({
@@ -453,15 +459,24 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                               >
                                 <Select
                                   placeholder="Days"
+                                  className=" z-10"
                                   id={["schedules", name, "day"].join("-")}
                                 >
-                                  {days.map((day, index) => {
-                                    return (
-                                      <Select.Option value={day} key={index}>
-                                        {day}
-                                      </Select.Option>
-                                    );
-                                  })}
+                                  {days
+                                    ?.filter(
+                                      (filterItem) =>
+                                        !schedules?.some(
+                                          (someItem: any) =>
+                                            someItem?.day === filterItem
+                                        )
+                                    )
+                                    .map((day, index) => {
+                                      return (
+                                        <Select.Option value={day} key={index}>
+                                          {day}
+                                        </Select.Option>
+                                      );
+                                    })}
                                 </Select>
                               </Form.Item>
 

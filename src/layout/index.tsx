@@ -49,7 +49,7 @@ export const Layout = ({
           className
         )}
       >
-        <div className="flex flex-auto border border-black">
+        <div className="flex flex-auto">
           {profile && subdomain && (
             <SideMenu openMenus={openMenus} profile={profile} />
           )}

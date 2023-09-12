@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import {
   addMinutes,
   format,
@@ -170,6 +170,9 @@ export default function TimeRangePicker({
             className="w-full absolute top-[110%] grid grid-cols-2 gap-3"
           >
             <ul className=" bg-white rounded-md shadow-md max-h-[15rem] overflow-auto border border-gray-300">
+              <li className=" py-2 px-5 sticky top-0 bg-white shadow-sm">
+                <p className=" font-bold text-primary-500">Start: {start}</p>
+              </li>
               {timeSlots.map((time) => (
                 <li
                   key={time}
@@ -181,6 +184,7 @@ export default function TimeRangePicker({
                     time
                   ) && "pointer-events-none bg-gray-200 border-gray-300"}`}
                   onClick={() => {
+                    if (end === time) return;
                     setStart(time);
                   }}
                 >
@@ -188,7 +192,10 @@ export default function TimeRangePicker({
                 </li>
               ))}
             </ul>
-            <ul className=" bg-white rounded-md shadow-md max-h-[15rem] overflow-auto border border-gray-300">
+            <ul className=" bg-white relative rounded-md shadow-md max-h-[15rem] overflow-auto border border-gray-300">
+              <li className=" py-2 px-5 sticky top-0 bg-white shadow-sm">
+                <p className=" font-bold text-primary-500">End {end}</p>
+              </li>
               {timeSlots.map((time) => (
                 <li
                   key={time}
@@ -199,7 +206,10 @@ export default function TimeRangePicker({
                     "bg-primary-500 text-white"} ${disabledTimeArray.includes(
                     time
                   ) && "pointer-events-none bg-gray-200 border-gray-300"}`}
-                  onClick={() => setEnd(time)}
+                  onClick={() => {
+                    if (time === start) return;
+                    setEnd(time);
+                  }}
                 >
                   {time}
                 </li>

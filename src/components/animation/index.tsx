@@ -82,7 +82,7 @@ export function AnimateContainer({
       initial="initial"
       animate="animate"
       exit="exit"
-      className={twMerge(className) + " z-[9999]"}
+      className={twMerge(className)}
       {...rest}
     >
       {children}

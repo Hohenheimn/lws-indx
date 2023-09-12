@@ -1,6 +1,6 @@
 export const Teeth = (age: number, chart_view: string) => {
   if (chart_view === "Standard" || chart_view === "") {
-    if (age <= 10) {
+    if (age <= 18) {
       // children
       return {
         UpperLeft: [
@@ -286,7 +286,7 @@ export const Teeth = (age: number, chart_view: string) => {
       };
     }
   } else {
-    if (age <= 10) {
+    if (age <= 18) {
       // children
       return {
         UpperLeft: [

@@ -192,8 +192,8 @@ export function PatientRecord({
 
         {!loadingPatient ? (
           <>
-            <div className=" flex flex-col xs:flex-row justify-between w-full xs:items-center space-y-2 xs:space-y-0">
-              <h3>Patient Record</h3>
+            <div className=" flex flex-col xs:flex-row justify-between w-full xs:items-center space-y-2 xs:space-y-0 flex-wrap">
+              <h3 className=" sm:mb-0 mb-5">Patient Record</h3>
               <Radio.Group
                 onChange={(e: string) => setPageType(e)}
                 defaultValue="view"

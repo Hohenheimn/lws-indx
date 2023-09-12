@@ -815,3 +815,7 @@ nav div.ant-tabs .ant-tabs-nav {
 span.ant-radio + * {
   @apply text-[1rem];
 }
+
+div.ant-select.ant-select-multiple .ant-select-selector {
+  @apply overflow-auto;
+}

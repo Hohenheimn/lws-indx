@@ -27,6 +27,9 @@ const DragAndDropUpload = ({ children, id, ...rest }: Props) => {
   };
 
   const beforeUpload = (file: any) => {
+    // if (file.size > 2000000) {
+    //   message.error("File must be 5mb only");
+    // }
     const applicationType = file?.name.split(".").pop();
     const allowedFile =
       file.type === "image/jpg" ||

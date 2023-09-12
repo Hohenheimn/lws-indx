@@ -18,8 +18,26 @@ import { capitalizeTitle } from "@utilities/helpers";
 
 
 
+
+
+
+
+
+
+
+
+
 import "../../styles/globals.scss";
 import Layout from "../layout";
+
+
+
+
+
+
+
+
+
 
 
 
@@ -54,6 +72,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
 
       getSubDomain = getSubDomain.replace("http://", "");
       getSubDomain = getSubDomain.replace("https://", "");
+      getSubDomain = getSubDomain.replace("www.", "");
       getSubDomain = getSubDomain.split(".");
       getSubDomain = getSubDomain[0];
       setSubdomain(getSubDomain);
