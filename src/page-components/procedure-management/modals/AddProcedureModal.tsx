@@ -34,15 +34,28 @@ export default function AddProcedureModal({
     error: false,
     file: null,
     loading: false,
-    edit: false,
   });
 
-  useEffect(() => {
-    setImage({
-      ...image,
-      imageUrl: iconUrl,
-    });
-  }, [show, image, iconUrl]);
+  React.useEffect(() => {
+    let icon = form.getFieldValue(["icon"])
+      ? form.getFieldValue(["icon"]).toString()
+      : "";
+    if (show && icon)
+      setImage({
+        ...image,
+        imageUrl: icon,
+      });
+
+    if (!show) {
+      form.resetFields();
+      setImage({
+        imageUrl: "",
+        error: false,
+        file: null,
+        loading: false,
+      });
+    }
+  }, [form, show]);
 
   function handleChange(info: any) {
     if (info.file.status === "uploading") {
@@ -50,7 +63,6 @@ export default function AddProcedureModal({
         ...image,
         loading: true,
         file: null,
-        edit: false,
       });
     }
 
@@ -59,7 +71,6 @@ export default function AddProcedureModal({
         ...image,
         loading: false,
         error: true,
-        edit: false,
       });
     }
 
@@ -70,7 +81,6 @@ export default function AddProcedureModal({
           imageUrl,
           loading: false,
           file: info.file,
-          edit: true,
         });
       });
       return info.file.originFileObj;
@@ -100,7 +110,6 @@ export default function AddProcedureModal({
           error: false,
           file: null,
           loading: false,
-          edit: false,
         });
         onClose();
       },
@@ -151,7 +160,6 @@ export default function AddProcedureModal({
           error: false,
           file: null,
           loading: false,
-          edit: false,
         });
         onClose();
       },
@@ -221,14 +229,14 @@ export default function AddProcedureModal({
             let id = form.getFieldValue("_id");
             values.cost = removeNumberFormatting(values.cost);
             values.icon = values.icon;
-            if (!image.edit) {
+            if (typeof values.icon !== "object") {
               delete values.icon;
             }
-
             if (!id) {
               addProcedure(values);
             } else {
               values.id = id;
+
               editProcedure(values);
             }
           }}
@@ -267,29 +275,18 @@ export default function AddProcedureModal({
               >
                 <div className="space-y-2 text-center">
                   <Avatar className="h-40 w-40 p-8 overflow-hidden bg-white relative border border-gray-300 avatar transition">
-                    {image.imageUrl ? (
-                      <Image
-                        src={
-                          image.imageUrl
-                            ? image.imageUrl
-                            : "/images/default_tooth.png"
-                        }
-                        alt="procedure icons"
-                        fill
-                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        objectFit="contain"
-                        className="object-center contain h-full w-full"
-                      />
-                    ) : (
-                      <Image
-                        src={"/images/default_tooth.png"}
-                        alt="procedure icons"
-                        fill
-                        sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        objectFit="contain"
-                        className="object-center contain h-full w-full"
-                      />
-                    )}
+                    <Image
+                      src={
+                        image.imageUrl
+                          ? image.imageUrl
+                          : "/images/default_tooth.png"
+                      }
+                      alt="procedure icons"
+                      fill
+                      sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                      objectFit="contain"
+                      className="object-center contain h-full w-full"
+                    />
                   </Avatar>
                   <div className="text-casper-500">
                     {image.imageUrl ? "Change " : "Upload "}
@@ -393,7 +390,6 @@ export default function AddProcedureModal({
                   error: false,
                   file: null,
                   loading: false,
-                  edit: false,
                 });
                 form.setFieldValue("icon", "");
                 onClose();

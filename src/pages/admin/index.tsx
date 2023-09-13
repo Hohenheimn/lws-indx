@@ -410,7 +410,7 @@ export function Dashboard({}: NextPageProps) {
                                         <FaTooth
                                           onClick={() =>
                                             router.push(
-                                              `/admin/patient-list/${patient_id}`
+                                              `/admin/patient-list/${patient_id}?tab=Personal Info`
                                             )
                                           }
                                           className="align-middle cursor-pointer hover:text-secondary transition"

@@ -33,7 +33,6 @@ export default function AddClinicAccountModal({
     error: false,
     file: null,
     loading: false,
-    edit: false,
   });
   const { setIsAppLoading } = React.useContext(Context);
 
@@ -47,7 +46,6 @@ export default function AddClinicAccountModal({
     if (show && profPic)
       setImage({
         ...image,
-        edit: true,
         imageUrl: profPic,
       });
 
@@ -58,7 +56,6 @@ export default function AddClinicAccountModal({
         error: false,
         file: null,
         loading: false,
-        edit: false,
       });
     }
   }, [form, show]);
@@ -86,7 +83,6 @@ export default function AddClinicAccountModal({
           error: false,
           file: null,
           loading: false,
-          edit: false,
         });
       },
       onMutate: async (newData) => {
@@ -136,7 +132,6 @@ export default function AddClinicAccountModal({
           error: false,
           file: null,
           loading: false,
-          edit: false,
         });
       },
       onMutate: async (newData) => {
@@ -165,11 +160,11 @@ export default function AddClinicAccountModal({
 
   function handleChange(info: any) {
     if (info.file.status === "uploading") {
-      return setImage({ ...image, loading: true, file: null, edit: false });
+      return setImage({ ...image, loading: true, file: null });
     }
 
     if (info.file.status === "error") {
-      return setImage({ ...image, loading: false, error: true, edit: false });
+      return setImage({ ...image, loading: false, error: true });
     }
 
     if (info.file.status === "done") {
@@ -179,7 +174,6 @@ export default function AddClinicAccountModal({
           imageUrl,
           loading: false,
           file: info.file,
-          edit: false,
         });
       });
       return info.file.originFileObj;
@@ -196,7 +190,6 @@ export default function AddClinicAccountModal({
           error: false,
           file: null,
           loading: false,
-          edit: false,
         });
       }}
       {...rest}
@@ -217,7 +210,7 @@ export default function AddClinicAccountModal({
             values.permissions = JSON.stringify(values.permissions);
             values.civil_status = "";
 
-            if (image.edit) {
+            if (typeof values.profile_picture !== "object") {
               delete values.profile_picture;
             }
 
@@ -713,7 +706,6 @@ export default function AddClinicAccountModal({
                   error: false,
                   file: null,
                   loading: false,
-                  edit: false,
                 });
               }}
             >

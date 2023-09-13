@@ -201,7 +201,11 @@ export function PatientRecord({
               "Prescription",
               "Change History",
             ]}
-            activeTab={router?.query.tab}
+            activeTab={
+              router?.query.tab === undefined
+                ? "Personal Info"
+                : router?.query.tab
+            }
             onClick={(value) => {
               router.replace({
                 query: { ...router.query, tab: value },

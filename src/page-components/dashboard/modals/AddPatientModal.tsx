@@ -36,6 +36,7 @@ export default function AddPatientModal({
     file: null,
     loading: false,
   });
+
   const { setIsAppLoading } = React.useContext(Context);
 
   React.useEffect(() => {

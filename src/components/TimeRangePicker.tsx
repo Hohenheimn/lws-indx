@@ -167,9 +167,9 @@ export default function TimeRangePicker({
             animate="animate"
             exit="exit"
             variants={fadeIn}
-            className="w-full absolute top-[110%] grid grid-cols-2 gap-3"
+            className="w-full absolute top-[110%] grid grid-cols-2 gap-3 bg-white p-3 rounded-lg shadow-md"
           >
-            <ul className=" bg-white rounded-md shadow-md max-h-[15rem] overflow-auto border border-gray-300">
+            <ul className=" bg-white rounded-md max-h-[15rem] overflow-auto border border-gray-300">
               <li className=" py-2 px-5 sticky top-0 bg-white shadow-sm">
                 <p className=" font-bold text-primary-500">Start: {start}</p>
               </li>

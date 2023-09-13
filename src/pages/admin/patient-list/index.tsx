@@ -112,7 +112,9 @@ export function PatientList({ profile, router }: any) {
         return (
           <Avatar
             className="h-14 w-14 p-2 overflow-hidden relative border border-gray-300 avatar transition"
-            onClick={() => router.push(`/admin/patient-list/${_id}`)}
+            onClick={() =>
+              router.push(`/admin/patient-list/${_id}?tab=Personal Info`)
+            }
           >
             {!profile_picture ? (
               <IoPersonOutline className="h-full w-full text-white" />
@@ -136,7 +138,11 @@ export function PatientList({ profile, router }: any) {
       align: "center",
       render: ({ first_name, _id }: any) => {
         return (
-          <div onClick={() => router.push(`/admin/patient-list/${_id}`)}>
+          <div
+            onClick={() =>
+              router.push(`/admin/patient-list/${_id}?tab=Personal Info`)
+            }
+          >
             {first_name}
           </div>
         );
@@ -148,7 +154,11 @@ export function PatientList({ profile, router }: any) {
       align: "center",
       render: ({ last_name, _id }: any) => {
         return (
-          <div onClick={() => router.push(`/admin/patient-list/${_id}`)}>
+          <div
+            onClick={() =>
+              router.push(`/admin/patient-list/${_id}?tab=Personal Info`)
+            }
+          >
             {last_name}
           </div>
         );
@@ -162,7 +172,9 @@ export function PatientList({ profile, router }: any) {
         return (
           <div
             className="whitespace-nowrap"
-            onClick={() => router.push(`/admin/patient-list/${_id}`)}
+            onClick={() =>
+              router.push(`/admin/patient-list/${_id}?tab=Personal Info`)
+            }
           >
             {patient_no}
           </div>
@@ -175,7 +187,11 @@ export function PatientList({ profile, router }: any) {
       align: "center",
       render: ({ email, _id }: any) => {
         return (
-          <div onClick={() => router.push(`/admin/patient-list/${_id}`)}>
+          <div
+            onClick={() =>
+              router.push(`/admin/patient-list/${_id}?tab=Personal Info`)
+            }
+          >
             {email}
           </div>
         );
@@ -187,7 +203,11 @@ export function PatientList({ profile, router }: any) {
       align: "center",
       render: ({ mobile_no, _id }: any) => {
         return (
-          <div onClick={() => router.push(`/admin/patient-list/${_id}`)}>
+          <div
+            onClick={() =>
+              router.push(`/admin/patient-list/${_id}?tab=Personal Info`)
+            }
+          >
             {mobile_no}
           </div>
         );

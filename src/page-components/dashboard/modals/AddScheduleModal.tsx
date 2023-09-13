@@ -571,9 +571,9 @@ export default function AddScheduleModal({
                 <Form.Item
                   label="Remarks"
                   name="remarks"
-                  // rules={[{ required: true, message: "Remarks is required" }]}
                   required={false}
                   className="col-span-4"
+                  initialValue={""}
                 >
                   <TextArea
                     id="remarks"
