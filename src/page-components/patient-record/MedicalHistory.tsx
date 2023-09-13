@@ -233,7 +233,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                   name="clinic_country"
                   rules={[{ required: true, message: "Country is required" }]}
                   required={false}
-                  className="col-span-12 lg:col-span-6"
+                  className="col-span-12 lg:col-span-4"
                 >
                   <Select
                     disabled={pageType === "view"}
@@ -245,49 +245,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     </Select.Option>
                   </Select>
                 </Form.Item>
-                <Form.Item
-                  label="Region"
-                  required={false}
-                  className="col-span-12 lg:col-span-6"
-                  shouldUpdate={(prev, curr) => {
-                    return true;
-                  }}
-                >
-                  {({ getFieldValue, resetFields }) => {
-                    return (
-                      <Form.Item
-                        name="clinic_region"
-                        rules={[
-                          { required: true, message: "Region is required" },
-                        ]}
-                      >
-                        <InfiniteSelect
-                          placeholder="Region"
-                          id="clinic_region"
-                          api={`${process.env.REACT_APP_API_BASE_URL}/api/location/region?limit=3&for_dropdown=true&page=1`}
-                          getInitialValue={{
-                            form: MedicalHistoryForm,
-                            initialValue: "clinic_region",
-                          }}
-                          queryKey={[
-                            "clinic_region",
-                            getFieldValue("clinic_country"),
-                          ]}
-                          displayValueKey="name"
-                          returnValueKey="_id"
-                          disabled={Boolean(!getFieldValue("clinic_country"))}
-                          onChange={() => {
-                            resetFields([
-                              "clinic_province",
-                              "clinic_city",
-                              "clinic_barangay",
-                            ]);
-                          }}
-                        />
-                      </Form.Item>
-                    );
-                  }}
-                </Form.Item>
+
                 <Form.Item
                   label="Province"
                   required={false}
@@ -307,18 +265,14 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                         <InfiniteSelect
                           placeholder="Province"
                           id="clinic_province"
-                          api={`${
-                            process.env.REACT_APP_API_BASE_URL
-                          }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "clinic_region"
-                          )}`}
+                          api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
                           getInitialValue={{
                             form: MedicalHistoryForm,
                             initialValue: "clinic_province",
                           }}
                           queryKey={[
                             "clinic_province",
-                            getFieldValue("clinic_region"),
+                            getFieldValue("clinic_country"),
                           ]}
                           displayValueKey="name"
                           returnValueKey="_id"
@@ -355,9 +309,9 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                           id="clinic_city"
                           api={`${
                             process.env.REACT_APP_API_BASE_URL
-                          }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "clinic_region"
-                          )}&province_code=${getFieldValue("clinic_province")}`}
+                          }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                            "clinic_province"
+                          )}`}
                           getInitialValue={{
                             form: MedicalHistoryForm,
                             initialValue: "clinic_city",
@@ -401,9 +355,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                           id="clinic_barangay"
                           api={`${
                             process.env.REACT_APP_API_BASE_URL
-                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                            "clinic_region"
-                          )}&province_code=${getFieldValue(
+                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
                             "clinic_province"
                           )}&city_code=${getFieldValue("clinic_city")}`}
                           getInitialValue={{
@@ -431,7 +383,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                   name="clinic_street"
                   rules={[{ required: true, message: "Street is required" }]}
                   required={false}
-                  className="col-span-12 lg:col-span-8"
+                  className="col-span-12 lg:col-span-4"
                 >
                   <Input
                     id="clinic_street"

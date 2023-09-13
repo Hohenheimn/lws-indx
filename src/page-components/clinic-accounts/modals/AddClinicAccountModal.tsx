@@ -473,42 +473,7 @@ export default function AddClinicAccountModal({
                   <Select.Option value="Philippines">Philippines</Select.Option>
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="Region"
-                required={false}
-                className="col-span-full lg:col-span-1"
-                shouldUpdate={(prev, curr) => {
-                  return true;
-                }}
-              >
-                {({ getFieldValue, resetFields }) => {
-                  return (
-                    <Form.Item
-                      name="region"
-                      rules={[
-                        { required: true, message: "Region is required" },
-                      ]}
-                    >
-                      <InfiniteSelect
-                        placeholder="Region"
-                        id="region"
-                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/region?limit=3&for_dropdown=true&page=1`}
-                        getInitialValue={{
-                          form,
-                          initialValue: "region",
-                        }}
-                        queryKey={["region", getFieldValue("country")]}
-                        displayValueKey="name"
-                        returnValueKey="_id"
-                        disabled={Boolean(!getFieldValue("country"))}
-                        onChange={() => {
-                          resetFields(["province", "city", "barangay"]);
-                        }}
-                      />
-                    </Form.Item>
-                  );
-                }}
-              </Form.Item>
+
               <Form.Item
                 label="Province"
                 required={false}
@@ -528,19 +493,15 @@ export default function AddClinicAccountModal({
                       <InfiniteSelect
                         placeholder="Province"
                         id="province"
-                        api={`${
-                          process.env.REACT_APP_API_BASE_URL
-                        }/api/location/province?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                          "region"
-                        )}`}
+                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
                         getInitialValue={{
                           form,
                           initialValue: "province",
                         }}
-                        queryKey={["province", getFieldValue("region")]}
+                        queryKey={["province"]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(!getFieldValue("region"))}
+                        disabled={Boolean(!getFieldValue("country"))}
                         onChange={() => {
                           resetFields(["city", "barangay"]);
                         }}
@@ -568,9 +529,9 @@ export default function AddClinicAccountModal({
                         id="city"
                         api={`${
                           process.env.REACT_APP_API_BASE_URL
-                        }/api/location/city?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                          "region"
-                        )}&province_code=${getFieldValue("province")}`}
+                        }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                          "province"
+                        )}`}
                         getInitialValue={{
                           form,
                           initialValue: "province",
@@ -578,9 +539,7 @@ export default function AddClinicAccountModal({
                         queryKey={["city", getFieldValue("province")]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(
-                          !getFieldValue("region") || !getFieldValue("province")
-                        )}
+                        disabled={Boolean(!getFieldValue("province"))}
                         onChange={() => {
                           resetFields(["barangay"]);
                         }}
@@ -608,9 +567,7 @@ export default function AddClinicAccountModal({
                         id="barangay"
                         api={`${
                           process.env.REACT_APP_API_BASE_URL
-                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&region_code=${getFieldValue(
-                          "region"
-                        )}&province_code=${getFieldValue(
+                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
                           "province"
                         )}&city_code=${getFieldValue("city")}`}
                         getInitialValue={{
@@ -621,9 +578,7 @@ export default function AddClinicAccountModal({
                         displayValueKey="name"
                         returnValueKey="_id"
                         disabled={Boolean(
-                          !getFieldValue("region") ||
-                            !getFieldValue("province") ||
-                            !getFieldValue("city")
+                          !getFieldValue("province") || !getFieldValue("city")
                         )}
                       />
                     </Form.Item>
