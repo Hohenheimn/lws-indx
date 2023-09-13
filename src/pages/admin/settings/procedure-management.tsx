@@ -159,14 +159,14 @@ export function ProcedureManagement({ router, profile }: any) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 10;
+              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 10;
               // let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}
-                  style={{
-                    flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
-                  }}
+                  // style={{
+                  //   flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                  // }}
                 />
               );
             },

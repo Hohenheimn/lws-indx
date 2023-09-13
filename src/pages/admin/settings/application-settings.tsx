@@ -4,13 +4,15 @@ import Image from "next/image";
 import { scroller } from "react-scroll";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
 import VerifyAuth from "@auth/HOC/VerifyAuth";
-import { PageContainer } from "@components/animation";
+import { AnimateContainer, PageContainer } from "@components/animation";
 import Avatar from "@components/Avatar";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
+import { fadeIn } from "@src/components/animation/animation";
 import Uploader from "@src/components/Uploader";
+import LoadingScreen from "@src/layout/LoadingScreen";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData, postDataNoFormData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -117,6 +119,15 @@ export function ApplicationSettings({}: NextPageProps) {
 
   return (
     <PageContainer>
+      {isLoading && (
+        <AnimateContainer
+          variants={fadeIn}
+          rootMargin="0px"
+          className="fixed h-screen w-full top-0 left-0 z-[9999] bg-black bg-opacity-80 flex justify-center items-center"
+        >
+          <LoadingScreen />
+        </AnimateContainer>
+      )}
       <div className="flex justify-between items-center gap-4">
         <h3 className="basis-auto whitespace-nowrap">Application Settings</h3>
       </div>

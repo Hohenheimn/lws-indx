@@ -30,7 +30,7 @@ export function ProcedureManagement({ router }: NextPageProps) {
     ["account", page, search],
     () =>
       fetchData({
-        url: `/api/account?limit=5&page=${page}&search=${search}`,
+        url: `/api/account?limit=10&page=${page}&search=${search}`,
       })
   );
 
@@ -130,7 +130,7 @@ export function ProcedureManagement({ router }: NextPageProps) {
           tableLayout="fixed"
           loading={isAccountLoading}
           pagination={{
-            pageSize: 5,
+            pageSize: 10,
             hideOnSinglePage: true,
             showSizeChanger: false,
             total: account?.meta?.total,
@@ -138,14 +138,14 @@ export function ProcedureManagement({ router }: NextPageProps) {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               // let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}
-                  style={{
-                    flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
-                  }}
+                  // style={{
+                  //   flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                  // }}
                 />
               );
             },

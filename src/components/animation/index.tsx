@@ -35,7 +35,7 @@ export function PageContainer({
         animate="animate"
         exit="exit"
         className={twMerge(
-          "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 space-y-4 overflow-auto scroll-smooth main-container",
+          "py-[10%] md:py-[5%] px-[5%] flex flex-col flex-1 overflow-auto scroll-smooth space-y-4 lg:space-y-7 main-container",
           className,
           " relative"
         )}

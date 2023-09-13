@@ -351,7 +351,6 @@ export function PatientList({ profile, router }: any) {
             columns={columns}
             dataSource={patients?.data}
             showHeader={true}
-            className="md:mt-6"
             tableLayout="fixed"
             loading={isPatientsLoading}
             components={{

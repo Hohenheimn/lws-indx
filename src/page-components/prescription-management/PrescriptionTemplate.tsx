@@ -33,7 +33,7 @@ export function PrescriptionTemplate() {
     ["prescription", page, search],
     () =>
       fetchData({
-        url: `/api/prescription?limit=5&page=${page}&search=${search}`,
+        url: `/api/prescription?limit=10&page=${page}&search=${search}`,
       })
   );
 
@@ -132,7 +132,7 @@ export function PrescriptionTemplate() {
           tableLayout="fixed"
           loading={isProceduresLoading}
           pagination={{
-            pageSize: 5,
+            pageSize: 10,
             hideOnSinglePage: true,
             showSizeChanger: false,
             total: prescription?.meta?.total,
@@ -140,14 +140,14 @@ export function PrescriptionTemplate() {
           }}
           components={{
             table: ({ ...rest }: any) => {
-              let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
+              // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;
               // let tableFlexGrow = 1;
               return (
                 <table
                   {...rest}
-                  style={{
-                    flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
-                  }}
+                  // style={{
+                  //   flex: `${tableFlexGrow ? tableFlexGrow : 1} 1 auto`,
+                  // }}
                 />
               );
             },

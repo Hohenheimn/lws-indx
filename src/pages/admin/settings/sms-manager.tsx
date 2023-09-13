@@ -26,13 +26,12 @@ import Modal from "@src/components/Modal";
 import AddSMSTemplate from "@src/page-components/SMSManager/AddSMSTTemplate";
 import BuySMSCreditModal from "@src/page-components/SMSManager/BuySMSCreditModal";
 import SMSSettings from "@src/page-components/SMSManager/SMSSetting";
+import SuccessModalSMS from "@src/page-components/SMSManager/SuccessModalSMS";
 import colors from "@styles/theme";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
-
-import SuccessModalSMS from "./SuccessModalSMS";
 
 export function SMSManager({ router, profile }: any) {
   const routerCS = useRouter();
@@ -76,7 +75,7 @@ export function SMSManager({ router, profile }: any) {
     ["sms-template", page, search],
     () =>
       fetchData({
-        url: `/api/sms-manager?limit=5&page=${page}&search=${search}`,
+        url: `/api/sms-manager?limit=10&page=${page}&search=${search}`,
       })
   );
 
@@ -158,9 +157,10 @@ export function SMSManager({ router, profile }: any) {
           showHeader={true}
           tableLayout="fixed"
           pagination={{
-            pageSize: 5,
+            pageSize: 10,
             hideOnSinglePage: true,
             showSizeChanger: false,
+            total: smsTemplate?.meta?.total,
             onChange: (page) => setPage(page),
           }}
           loading={smsTemplateIsLoading}

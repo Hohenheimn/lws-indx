@@ -10,11 +10,13 @@ import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
 import VerifyAuth from "@auth/HOC/VerifyAuth";
-import { PageContainer } from "@components/animation";
+import { AnimateContainer, PageContainer } from "@components/animation";
+import { fadeIn } from "@src/components/animation/animation";
 import DoughnutChart from "@src/components/Charts/DounutChart";
 import HorizontalProgressLine from "@src/components/Charts/HorizontalProgessLine";
 import LineChart from "@src/components/Charts/LineChart";
 import { InfiniteSelect } from "@src/components/InfiniteSelect";
+import LoadingScreen from "@src/layout/LoadingScreen";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
@@ -162,7 +164,7 @@ export function ClinicAnalytics({ profile }: any) {
 
   let [page, setPage] = React.useState(1);
 
-  let { data } = useQuery(
+  let { data, isLoading } = useQuery(
     ["clinic-analytics", branch_id, doctor_id, dateRange.from, dateRange.to],
     () =>
       fetchData({
@@ -178,6 +180,15 @@ export function ClinicAnalytics({ profile }: any) {
 
   return (
     <PageContainer>
+      {isLoading && (
+        <AnimateContainer
+          variants={fadeIn}
+          rootMargin="0px"
+          className="fixed h-screen w-full top-0 left-0 z-[9999] bg-black bg-opacity-80 flex justify-center items-center"
+        >
+          <LoadingScreen />
+        </AnimateContainer>
+      )}
       <div className="flex justify-between flex-col lg:flex-row items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="w-full lg:w-auto mr-5">Clinic&nbsp;Analytics</h3>
         <Form

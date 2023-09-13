@@ -16,7 +16,6 @@ import { deleteData, fetchData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-
 export function BranchManagement({ router }: NextPageProps) {
   const [BranchForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);
@@ -30,7 +29,7 @@ export function BranchManagement({ router }: NextPageProps) {
     ["branch", page, search],
     () =>
       fetchData({
-        url: `/api/branch?limit=5&page=${page}&search=${search}`,
+        url: `/api/branch?limit=10&page=${page}&search=${search}`,
       })
   );
 
@@ -136,7 +135,7 @@ export function BranchManagement({ router }: NextPageProps) {
           tableLayout="fixed"
           loading={isBranchesLoading}
           pagination={{
-            pageSize: 5,
+            pageSize: 10,
             hideOnSinglePage: true,
             showSizeChanger: false,
             total: branch?.meta?.total,
