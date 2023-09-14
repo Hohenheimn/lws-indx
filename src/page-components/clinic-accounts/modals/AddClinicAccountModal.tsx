@@ -21,6 +21,7 @@ import accountRole from "@utilities/global-data/accountRole";
 import gender from "@utilities/global-data/gender";
 import { getBase64, getInitialValue } from "@utilities/helpers";
 
+
 export default function AddClinicAccountModal({
   show,
   onClose,
@@ -207,7 +208,8 @@ export default function AddClinicAccountModal({
           layout="vertical"
           onFinish={(values) => {
             let id = form.getFieldValue("_id");
-            values.permissions = JSON.stringify(values.permissions);
+            // values.permissions = JSON.stringify(values.permissions);
+            values.permissions = [];
             values.civil_status = "";
 
             if (typeof values.profile_picture !== "object") {

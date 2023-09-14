@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchDataNoSubdomain } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
+
 export type registrationAccount = {
   clinic_addess: string;
   clinic_name: string;
@@ -20,6 +21,17 @@ export type registrationAccount = {
   terms: boolean;
 };
 
+type accountSubs = {
+  amount: number;
+  doctor_account_no: string;
+  name: string;
+  patient_record_no: string;
+  sms_credit: string;
+  storage: string;
+  type: string;
+  _id: string;
+};
+
 type Props = {
   registrationInfo: registrationAccount | null;
 };
@@ -27,10 +39,10 @@ type Props = {
 export default function SubscriptionAccount({ registrationInfo }: Props) {
   let { data: accountSubscription } = useQuery(["account-subscription"], () =>
     fetchDataNoSubdomain({
-      url: `/api/subscriptions`,
+      url: `/api/subscriptions?type=Subscription`,
     })
   );
-
+  const accountPackage: accountSubs[] = accountSubscription;
   return (
     <PageContainer className="md:p-0">
       <div className=" flex flex-col w-full items-center h-screen overflow-auto">
@@ -47,109 +59,48 @@ export default function SubscriptionAccount({ registrationInfo }: Props) {
           </aside>
           <h2>Select subscription that fits your needs.</h2>
           <ul className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <li className=" p-5 lg:p-10 shadow-lg  duration-75 ease-linear bg-white space-y-5 rounded-md">
-              <h4>Single Account</h4>
-              <p className=" text-[1rem] text-gray-400">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque
-                modi tempore voluptate velit? Earum, ipsum.
-              </p>
-              <h1>PHP {numberSeparator(1000, 2)}</h1>
-              <h5>Recommended for</h5>
-              <p className=" text-[1rem] text-gray-400">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Dolorum ipsa ducimus eligendi esse repellendus atque.
-              </p>
-              <Button appearance="primary">GET STARTED</Button>
-              <hr />
-              <ul className=" space-y-2">
-                <li>
-                  <h5>Subscription Includes:</h5>
-                </li>
-                <li className=" flex pl-[1.5rem] relative">
-                  <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
-                  <p className=" text-[1rem] ">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora, numquam?
-                  </p>
-                </li>
-                <li className=" flex pl-[1.5rem] relative">
-                  <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
-                  <p className=" text-[1rem] ">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora, numquam?
-                  </p>
-                </li>
-              </ul>
-            </li>
-            <li className=" p-5 lg:p-10 shadow-lg  duration-75 ease-linear bg-white space-y-5 rounded-md">
-              <h4>Single Account</h4>
-              <p className=" text-[1rem] text-gray-400">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque
-                modi tempore voluptate velit? Earum, ipsum.
-              </p>
-              <h1>PHP {numberSeparator(1000, 2)}</h1>
-              <h5>Recommended for</h5>
-              <p className=" text-[1rem] text-gray-400">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Dolorum ipsa ducimus eligendi esse repellendus atque.
-              </p>
-              <Button appearance="primary">GET STARTED</Button>
-              <hr />
-              <ul className=" space-y-2">
-                <li>
-                  <h5>Subscription Includes:</h5>
-                </li>
-                <li className=" flex pl-[1.5rem] relative">
-                  <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
-                  <p className=" text-[1rem] ">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora, numquam?
-                  </p>
-                </li>
-                <li className=" flex pl-[1.5rem] relative">
-                  <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
-                  <p className=" text-[1rem] ">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora, numquam?
-                  </p>
-                </li>
-              </ul>
-            </li>
-            <li className=" p-5 lg:p-10 shadow-lg  duration-75 ease-linear bg-white space-y-5 rounded-md">
-              <h4>Single Account</h4>
-              <p className=" text-[1rem] text-gray-400">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque
-                modi tempore voluptate velit? Earum, ipsum.
-              </p>
-              <h1>PHP {numberSeparator(1000, 2)}</h1>
-              <h5>Recommended for</h5>
-              <p className=" text-[1rem] text-gray-400">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Dolorum ipsa ducimus eligendi esse repellendus atque.
-              </p>
-              <Button appearance="primary">GET STARTED</Button>
-
-              <hr />
-              <ul className=" space-y-2">
-                <li>
-                  <h5>Subscription Includes:</h5>
-                </li>
-                <li className=" flex pl-[1.5rem] relative">
-                  <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
-                  <p className=" text-[1rem] ">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora, numquam?
-                  </p>
-                </li>
-                <li className=" flex pl-[1.5rem] relative">
-                  <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
-                  <p className=" text-[1rem] ">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora, numquam?
-                  </p>
-                </li>
-              </ul>
-            </li>
+            {accountPackage?.map((item, index) => (
+              <li
+                key={index}
+                className=" p-5 lg:p-10 shadow-lg  duration-75 ease-linear bg-white space-y-5 rounded-md"
+              >
+                <h4>{item.name}</h4>
+                {/* <p className=" text-[1rem] text-gray-400">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Itaque modi tempore voluptate velit? Earum, ipsum.
+                </p> */}
+                <h1>PHP {numberSeparator(item.amount, 2)}</h1>
+                {/* <h5>Recommended for</h5> */}
+                {/* <p className=" text-[1rem] text-gray-400">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                  Dolorum ipsa ducimus eligendi esse repellendus atque.
+                </p> */}
+                <Button appearance="primary">GET STARTED</Button>
+                <hr />
+                <ul className=" space-y-2">
+                  <li>
+                    <h5>Subscription Includes:</h5>
+                  </li>
+                  <li className=" flex pl-[1.5rem] relative">
+                    <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
+                    <p className=" text-[1rem] ">
+                      Patient Record No.:{" "}
+                      {numberSeparator(item.patient_record_no, 0)}
+                    </p>
+                  </li>
+                  <li className=" flex pl-[1.5rem] relative">
+                    <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
+                    <p className=" text-[1rem] ">
+                      SMS Credit: {numberSeparator(item.sms_credit, 0)}
+                    </p>
+                  </li>
+                  <li className=" flex pl-[1.5rem] relative">
+                    <BsCheck className=" text-gray-400  text-[1rem] absolute left-1 top-1" />
+                    <p className=" text-[1rem] ">Storage: {item.storage}</p>
+                  </li>
+                </ul>
+              </li>
+            ))}
           </ul>
         </div>
         <footer className=" w-full">

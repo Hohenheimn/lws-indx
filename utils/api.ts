@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 
+
 export const sample = {};
 
 const statusType = (status: any) => {
@@ -80,9 +81,7 @@ export const fetchDataNoSubdomain = async ({ url, options }: any) => {
 
   return await axios
     .get(
-      `${options?.noBaseURL ? "" : process.env.REACT_APP_API_BASE_URL}${url}${
-        !token ? `?api_key=${process.env.REACT_APP_API_KEY}` : ""
-      }`,
+      `${options?.noBaseURL ? "" : process.env.REACT_APP_API_BASE_URL}${url}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

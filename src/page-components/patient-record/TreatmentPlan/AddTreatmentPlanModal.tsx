@@ -25,6 +25,7 @@ import {
   toothNumbers,
 } from "@utilities/helpers";
 
+
 export default function AddTreatmentPlanModal({
   show,
   onClose,
@@ -517,7 +518,7 @@ export default function AddTreatmentPlanModal({
                                       name,
                                       "total",
                                     ].join("-")}
-                                    prefix="₱"
+                                    prefix={currency}
                                     readOnly
                                     disabled={true}
                                   />
@@ -577,14 +578,14 @@ export default function AddTreatmentPlanModal({
                               placeholder="Cost"
                               thousandSeparator=","
                               thousandsGroupStyle="thousand"
-                              prefix="₱"
+                              prefix={currency}
                             />
                           </Form.Item>
                           <Form.Item label="Total Amount" required={false}>
                             <NumericFormat
                               customInput={Input}
                               placeholder="Total Amount"
-                              prefix="₱"
+                              prefix={currency}
                               readOnly
                             />
                           </Form.Item>

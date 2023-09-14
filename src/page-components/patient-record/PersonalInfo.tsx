@@ -17,6 +17,7 @@ import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import { getInitialValue } from "@utilities/helpers";
 
+
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
@@ -40,7 +41,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
   let [isSignatureCleared, setIsSignatureCleared] = React.useState(false);
 
   React.useEffect(() => {
-    if (tab === "2") {
+    if (tab === "Personal Info") {
       PersonalInfoForm.setFieldsValue({
         ...patientRecord,
         entry_date: moment(patientRecord?.created_at).isValid()
@@ -385,7 +386,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 name="country"
                 rules={[{ required: true, message: "Country is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
               >
                 <Select
                   placeholder="Select Country"
@@ -399,7 +400,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Province"
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
                 }}
@@ -423,7 +424,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         queryKey={["province"]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={pageType === "view"}
+                        disabled={
+                          Boolean(!getFieldValue("country")) ||
+                          pageType === "view"
+                        }
                         onChange={() => {
                           resetFields(["city", "barangay"]);
                         }}
@@ -435,7 +439,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="City"
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
                 }}
@@ -478,7 +482,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Barangay"
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
                 }}
@@ -521,7 +525,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 name="street"
                 rules={[{ required: true, message: "Street is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
               >
                 <Input
                   id="street"
@@ -534,7 +538,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 name="zip_code"
                 rules={[{ required: true, message: "Zip Code is required" }]}
                 required={false}
-                className="col-span-12 lg:col-span-6"
+                className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
                   customInput={Input}
@@ -724,6 +728,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         displayValueKey="name"
                         returnValueKey="_id"
                         disabled={
+                          Boolean(!getFieldValue("office_country")) ||
                           Boolean(!getFieldValue("office_province")) ||
                           pageType === "view"
                         }
@@ -766,7 +771,8 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                         returnValueKey="_id"
                         disabled={
                           Boolean(
-                            !getFieldValue("office_province") ||
+                            !getFieldValue("office_country") ||
+                              !getFieldValue("office_province") ||
                               !getFieldValue("office_city")
                           ) || pageType === "view"
                         }

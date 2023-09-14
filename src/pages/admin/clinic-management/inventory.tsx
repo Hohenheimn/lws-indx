@@ -18,6 +18,7 @@ import { Context } from "@utilities/context/Provider";
 import { numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
+
 export function Inventory({ router, profile }: any) {
   const columnsInventory: any = [
     {
@@ -158,7 +159,7 @@ export function Inventory({ router, profile }: any) {
         <h3 className="basis-auto whitespace-nowrap">
           {tableType === "1" ? "Inventory" : "Usage History"}
         </h3>
-
+        {/* 
         <Radio.Group
           onChange={(e: string) => setTableType(`${e}`)}
           defaultValue="1"
@@ -166,7 +167,7 @@ export function Inventory({ router, profile }: any) {
         >
           <Radio.Button value={"1"} label="Item List" />
           <Radio.Button value={"2"} label="Usage History" />
-        </Radio.Group>
+        </Radio.Group> */}
       </div>
 
       <div className="flex justify-between items-center gap-4 flex-wrap">

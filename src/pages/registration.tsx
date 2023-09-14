@@ -14,8 +14,9 @@ import SubscriptionAccount, {
   registrationAccount,
 } from "@src/page-components/registration/SubscriptionAccount";
 import { useMutation } from "@tanstack/react-query";
-import { postData } from "@utilities/api";
+import { postData, postDataNoToken } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
+
 
 export default function Registration({ router }: any) {
   const [RegistrationForm] = Form.useForm();
@@ -29,7 +30,7 @@ export default function Registration({ router }: any) {
 
   const { mutate: register } = useMutation(
     (payload: {}) =>
-      postData({
+      postDataNoToken({
         url: "/api/auth/register",
         payload,
         options: {
@@ -52,7 +53,6 @@ export default function Registration({ router }: any) {
       },
     }
   );
-  return <SubscriptionAccount registrationInfo={registrationInfo} />;
   if (registrationInfo !== null) {
     return <SubscriptionAccount registrationInfo={registrationInfo} />;
   }
@@ -108,6 +108,7 @@ export default function Registration({ router }: any) {
                 form={RegistrationForm}
                 layout="vertical"
                 onFinish={(values) => {
+                  delete values.terms;
                   register(values);
                 }}
                 className="w-full"
@@ -194,6 +195,21 @@ export default function Registration({ router }: any) {
                     className="col-span-full"
                   >
                     <Input id="clinic_addess" placeholder="Clinic Address" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Index Url"
+                    name="indx_url"
+                    rules={[
+                      { required: true, message: "Index Url is required" },
+                      {
+                        pattern: /^[a-zA-Z-_]+$/,
+                        message: "Index Url must not have an space",
+                      },
+                    ]}
+                    required={false}
+                    className="col-span-full"
+                  >
+                    <Input id="indx_url" placeholder="Index Url" />
                   </Form.Item>
 
                   <Form.Item
