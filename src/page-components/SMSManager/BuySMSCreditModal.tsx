@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchData,
   fetchDataNoSubdomain,
+  payment_base_url,
   postDataMultipleFile,
   postDataNoFormData,
   postDataNoSubDomain,
@@ -70,7 +71,7 @@ export default function BuySMSCreditModal({
             values.clinic_url = isSubdomain;
             setIsAppLoading(true);
             router.push(
-              `https://staging-api.indxhealth.com/api/ipay88?email=${values.email}&subscription_id=${values.subscription_id}&contact_no=${values.contact_no}&clinic_url=${values.clinic_url}`
+              `${payment_base_url}?email=${values.email}&subscription_id=${values.subscription_id}&contact_no=${values.contact_no}&clinic_url=${values.clinic_url}`
             );
             // subscripton(values);
           }}

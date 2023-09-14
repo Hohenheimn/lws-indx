@@ -3,7 +3,6 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 
-
 export const sample = {};
 
 const statusType = (status: any) => {
@@ -25,6 +24,8 @@ const statusType = (status: any) => {
 
   return "info";
 };
+
+export const payment_base_url = "https://staging-api.indxhealth.com/api/ipay88";
 
 export const fetchData = async ({ url, options }: any) => {
   const token = parseCookies().a_t;

@@ -1,15 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { BsCheck, BsInstagram, BsLinkedin } from "react-icons/bs";
 import { FaFacebookF } from "react-icons/fa";
 import { AnimateContainer, PageContainer } from "@src/components/animation";
 import { fadeIn } from "@src/components/animation/animation";
 import { Button } from "@src/components/Button";
 import { useQuery } from "@tanstack/react-query";
-import { fetchDataNoSubdomain } from "@utilities/api";
+import { fetchDataNoSubdomain, payment_base_url } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
-
 
 export type registrationAccount = {
   clinic_addess: string;
@@ -18,6 +18,7 @@ export type registrationAccount = {
   first_name: string;
   last_name: string;
   mobile_number: string;
+  indx_url: string;
   terms: boolean;
 };
 
@@ -37,6 +38,7 @@ type Props = {
 };
 
 export default function SubscriptionAccount({ registrationInfo }: Props) {
+  const router = useRouter();
   let { data: accountSubscription } = useQuery(["account-subscription"], () =>
     fetchDataNoSubdomain({
       url: `/api/subscriptions?type=Subscription`,
@@ -75,7 +77,16 @@ export default function SubscriptionAccount({ registrationInfo }: Props) {
                   Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                   Dolorum ipsa ducimus eligendi esse repellendus atque.
                 </p> */}
-                <Button appearance="primary">GET STARTED</Button>
+                <Button
+                  appearance="primary"
+                  onClick={() => {
+                    router.push(
+                      `${payment_base_url}?email=${registrationInfo?.email_address}&subscription_id=${item._id}&contact_no=${registrationInfo?.mobile_number}&clinic_url=${registrationInfo?.indx_url}`
+                    );
+                  }}
+                >
+                  GET STARTED
+                </Button>
                 <hr />
                 <ul className=" space-y-2">
                   <li>

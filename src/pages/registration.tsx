@@ -31,7 +31,7 @@ export default function Registration({ router }: any) {
   const { mutate: register } = useMutation(
     (payload: {}) =>
       postDataNoToken({
-        url: "/api/auth/register",
+        url: `/api/auth/register?api_key=${process.env.REACT_APP_API_KEY}`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
