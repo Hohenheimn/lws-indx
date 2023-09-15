@@ -12,7 +12,7 @@ import { fetchDataNoSubdomain, payment_base_url } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
 export type registrationAccount = {
-  clinic_addess: string;
+  clinic_address: string;
   clinic_name: string;
   email_address: string;
   first_name: string;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { motion } from "framer-motion";
 import moment from "moment";
 import { scroller } from "react-scroll";
 import Annotate from "@components/Annotate";
@@ -9,9 +10,13 @@ import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
+import { fadeIn } from "@src/components/animation/animation";
 import DeleteButton from "@src/components/DeleteButton";
+import { Radio } from "@src/components/Radio";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { deleteData, postData } from "@utilities/api";
+
 import { Context } from "@utilities/context/Provider";
 import { getAge } from "@utilities/helpers";
 
@@ -367,6 +372,21 @@ export default function ChartingModal({
     }
   );
 
+  const [missingToothNo, setMissingToothNo] = useState<number[]>([]);
+
+  const [missingToothOpt, setMIssingToothOpt] = useState(false);
+
+  const addMissingToothHandler = (toothNo: number) => {
+    if (missingToothNo.includes(toothNo)) {
+      const filter = missingToothNo.filter(
+        (filterItem) => filterItem !== toothNo
+      );
+      setMissingToothNo(filter);
+    } else {
+      setMissingToothNo([...missingToothNo, toothNo]);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -573,6 +593,17 @@ export default function ChartingModal({
                 />
               </Form.Item>
             </div>
+
+            <div
+              onClick={() => setMIssingToothOpt(!missingToothOpt)}
+              className={` ${
+                missingToothOpt
+                  ? "bg-primary-500 rounded-md hover:bg-primary-600 text-white"
+                  : " bg-gray-300 rounded-md hover:bg-gray-400"
+              } inline-block  px-5 py-2 duration-300 cursor-pointer`}
+            >
+              Missing Tooth
+            </div>
             <hr className="border-t-2" />
 
             <div
@@ -585,12 +616,28 @@ export default function ChartingModal({
                     return (
                       <div
                         onClick={() => {
+                          if (missingToothOpt) {
+                            addMissingToothHandler(item.tooth_no);
+                            return;
+                          }
+                          if (missingToothNo.includes(item.tooth_no)) return;
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
+                        className={`${!missingToothOpt &&
+                          !missingToothNo.includes(item.tooth_no) &&
+                          "md:hover:scale-110"}   duration-300 relative space-y-2 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto`}
                         key={index}
                       >
+                        {missingToothNo.includes(item.tooth_no) && (
+                          <motion.div
+                            variants={fadeIn}
+                            initial="initial"
+                            animate="animate"
+                            className=" absolute top-0 left-0 w-full h-full bg-[#8585856b] z-10"
+                          ></motion.div>
+                        )}
+
                         <h5 className="text-center">{item.tooth_no}</h5>
 
                         {ChartView === "Periodontal" && (

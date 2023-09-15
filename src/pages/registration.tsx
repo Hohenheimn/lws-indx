@@ -17,7 +17,6 @@ import { useMutation } from "@tanstack/react-query";
 import { postData, postDataNoToken } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
-
 export default function Registration({ router }: any) {
   const [RegistrationForm] = Form.useForm();
   const { setIsAppLoading } = React.useContext(Context);
@@ -108,7 +107,7 @@ export default function Registration({ router }: any) {
                 form={RegistrationForm}
                 layout="vertical"
                 onFinish={(values) => {
-                  delete values.terms;
+                  // delete values.terms;
                   register(values);
                 }}
                 className="w-full"
@@ -187,14 +186,14 @@ export default function Registration({ router }: any) {
                   </Form.Item>
                   <Form.Item
                     label="Clinic Address"
-                    name="clinic_addess"
+                    name="clinic_address"
                     rules={[
                       { required: true, message: "Clinic Address is required" },
                     ]}
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="clinic_addess" placeholder="Clinic Address" />
+                    <Input id="clinic_address" placeholder="Clinic Address" />
                   </Form.Item>
                   <Form.Item
                     label="Index Url"
