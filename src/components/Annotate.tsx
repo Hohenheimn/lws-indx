@@ -33,7 +33,7 @@ const Shape = ({ children, geometry, style }: any) => {
     <div
       style={{
         ...style,
-        height: `10%`,
+        aspectRatio: "1/1",
         width: `10%`,
         minHeight: ".6rem",
         minWidth: ".6rem",
@@ -68,16 +68,18 @@ function renderHighlight({ annotation, active }: any) {
         transform: `translate(-50%, -50%)`,
         color: "#333",
         fontWeight: 700,
+        width: "10% !important",
+        aspectRation: "1/1 !important",
       }}
     >
       <div className="text-[100%]">
-        <Image
+        {/* <Image
           src={annotation.data.icon}
           alt="Icon"
           height={20}
           width={20}
           className=" rounded-full flex justify-center aspect-square"
-        />
+        /> */}
       </div>
     </Shape>
   );
@@ -226,7 +228,7 @@ export function Annotate({
         style={{
           left: `${geometry.x}%`,
           top: `${geometry.y}%`,
-          height: `10%`,
+          aspectRatio: "1/1",
           width: `10%`,
           borderRadius: geometry.type === "POINT" ? "100%" : 0,
           position: "absolute",
@@ -254,7 +256,8 @@ export function Annotate({
               <div key={index}>
                 <div
                   key={index}
-                  className=" bg-primary-500 cursor-pointer hover:bg-primary-600 flex justify-center items-center p-2 rounded-md shadow-md"
+                  style={{ backgroundColor: itemMap.color_code }}
+                  className={`  cursor-pointer  flex justify-center items-center p-2 rounded-md shadow-md`}
                   onClick={() => {
                     onSubmit({
                       title: itemMap.procedure_name,
@@ -262,18 +265,15 @@ export function Annotate({
                       color: itemMap.color_code,
                       annotation: annotation,
                       id: itemMap._id,
-                      icon:
-                        itemMap.icon === undefined || itemMap.icon === null
-                          ? "/images/default_tooth.png"
-                          : itemMap.icon,
+                      icon: itemMap.icon
+                        ? itemMap.icon
+                        : "/images/default_tooth.png",
                     });
                   }}
                 >
                   <Image
                     src={
-                      itemMap.icon === undefined || itemMap.icon === null
-                        ? "/images/default_tooth.png"
-                        : itemMap.icon
+                      itemMap.icon ? itemMap.icon : "/images/default_tooth.png"
                     }
                     alt="Icon"
                     height={25}
@@ -293,7 +293,7 @@ export function Annotate({
     <div className=" flex flex-col items-center">
       <div
         className={twMerge(
-          "h-full w-full [&>div]:h-full [&>div]:w-full max-h-[20rem] max-w-[20rem]",
+          "h-full w-full [&>div]:h-full [&>div]:w-full max-w-[20rem]",
           className
         )}
         {...rest}

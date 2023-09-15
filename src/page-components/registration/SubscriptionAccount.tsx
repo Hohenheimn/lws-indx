@@ -38,6 +38,7 @@ type Props = {
 };
 
 export default function SubscriptionAccount({ registrationInfo }: Props) {
+  console.log(registrationInfo);
   const router = useRouter();
   let { data: accountSubscription } = useQuery(["account-subscription"], () =>
     fetchDataNoSubdomain({

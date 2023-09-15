@@ -84,6 +84,10 @@ export function ProfileInfo({ profile, tab }: any) {
     if (tab === "1") {
       DoctorInfoForm.setFieldsValue({
         ...profile,
+        middle_name:
+          !profile.middle_name || profile.middle_name === null
+            ? ""
+            : profile.middle_name,
         entry_date: moment(profile?.created_at).isValid()
           ? moment(profile?.created_at)
           : undefined,

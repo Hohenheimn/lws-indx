@@ -95,7 +95,7 @@ export function SMSManager({ router, profile }: any) {
           <h3 className="basis-full xl:basis-auto whitespace-nowrap">
             SMS / Email Manager
           </h3>
-          <div className="flex items-center justify-center xl:basis-auto basis-full">
+          {/* <div className="flex items-center justify-center xl:basis-auto basis-full">
             <div className="flex gap-x-4 items-center flex-wrap lg:flex-nowrap flex-auto">
               <div className="whitespace-nowrap font-semibold text-sm">
                 Your available credits is: 500
@@ -108,7 +108,7 @@ export function SMSManager({ router, profile }: any) {
                 Buy Credit
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="flex justify-between items-center gap-4 flex-wrap mb-4">
           <div className="basis-full lg:basis-1/2">

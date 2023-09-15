@@ -624,9 +624,9 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className={`${!missingToothOpt &&
+                        className={` ${!missingToothOpt &&
                           !missingToothNo.includes(item.tooth_no) &&
-                          "md:hover:scale-110"}   duration-300 relative space-y-2 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto`}
+                          "md:hover:scale-110"} flex flex-col justify-between duration-300 relative space-y-2 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto`}
                         key={index}
                       >
                         {missingToothNo.includes(item.tooth_no) && (
@@ -645,7 +645,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/tooth-standard.png`}
+                              image={`/images/periodontal${item.tooth_no}.png`}
                               defaultValue={item}
                             />
                           </div>
@@ -675,7 +675,7 @@ export default function ChartingModal({
                           setShowAnnotationModal(true);
                           setSelectedAnnotate(item);
                         }}
-                        className="space-y-2 md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
+                        className="space-y-2 flex flex-col justify-between md:hover:scale-110 transition cursor-pointer z-10 p-5 lg:p-0 w-[48%] lg:w-auto"
                         key={index}
                       >
                         <h5 className="text-center">{item.tooth_no}</h5>
@@ -684,7 +684,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/tooth-standard.png`}
+                              image={`/images/periodontal${item.tooth_no}.png`}
                               defaultValue={item}
                             />
                           </div>
@@ -726,7 +726,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/tooth-standard.png`}
+                              image={`/images/periodontal${item.tooth_no}.png`}
                               defaultValue={item}
                             />
                           </div>
@@ -765,7 +765,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/tooth-standard.png`}
+                              image={`/images/periodontal${item.tooth_no}.png`}
                               defaultValue={item}
                             />
                           </div>

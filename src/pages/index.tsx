@@ -70,7 +70,8 @@ const menu: Array<sideMenuProps> = [
   },
   {
     label: "Register Now",
-    link: "/registration",
+    // link: "/registration",
+    link: "/pre-register",
     appearance: "primary",
   },
 ];

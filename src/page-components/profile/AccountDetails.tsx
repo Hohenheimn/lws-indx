@@ -11,7 +11,7 @@ import ManagePaymentInfo from "./Actions/ManagePaymentInfo";
 
 const li = "flex justify-between space-x-2 items-center";
 
-export function AccountDetails({ patientRecord }: any) {
+export function AccountDetails({ patientRecord, profile, myProfile }: any) {
   const router = useRouter();
   const [toShow, setToShow] = React.useState("");
 
@@ -24,7 +24,7 @@ export function AccountDetails({ patientRecord }: any) {
               <p className=" font-semibold">Member Since:</p>
               <p className=" font-semibold">May 3, 2021</p>
             </li>
-            <li className={li}>
+            {/* <li className={li}>
               <p className=" font-semibold">
                 Account Status: <span className=" font-bold">Active</span>
               </p>
@@ -33,8 +33,8 @@ export function AccountDetails({ patientRecord }: any) {
                   Unsubscribe
                 </Button>
               </div>
-            </li>
-            <li className={li}>
+            </li> */}
+            {/* <li className={li}>
               <p className=" font-semibold">
                 Account Type: <span className=" font-bold">Basic</span>
               </p>
@@ -44,7 +44,7 @@ export function AccountDetails({ patientRecord }: any) {
               >
                 Change Plan
               </p>
-            </li>
+            </li> */}
             <li className={li}>
               <p className=" font-semibold">Password</p>
               <p
@@ -54,7 +54,7 @@ export function AccountDetails({ patientRecord }: any) {
                 Change Password
               </p>
             </li>
-            <li className={li}>
+            {/* <li className={li}>
               <p className=" font-semibold">
                 Your available SMS Credit is:{" "}
                 <span className=" font-bold">500</span>
@@ -67,8 +67,8 @@ export function AccountDetails({ patientRecord }: any) {
               >
                 Buy SMS Credits
               </p>
-            </li>
-            <li className={li}>
+            </li> */}
+            {/* <li className={li}>
               <p className=" font-semibold">Manage Payment Info</p>
               <p
                 className=" font-semibold text-primary-500 hover:text-primary-400 cursor-pointer"
@@ -76,8 +76,8 @@ export function AccountDetails({ patientRecord }: any) {
               >
                 Update
               </p>
-            </li>
-            <li className={li}>
+            </li> */}
+            {/* <li className={li}>
               <p className=" font-semibold">
                 Next Billing Date Is{" "}
                 <span className=" font-bold">May 15 2021</span>
@@ -88,7 +88,7 @@ export function AccountDetails({ patientRecord }: any) {
               >
                 Billing Details
               </p>
-            </li>
+            </li> */}
             <li className={li}>
               <p className=" font-semibold">Application Settings</p>
               <p
@@ -106,7 +106,7 @@ export function AccountDetails({ patientRecord }: any) {
 
       {toShow === "change plan" && <ChangePlan onBack={() => setToShow("")} />}
       {toShow === "change password" && (
-        <ChangePasswordAD onBack={() => setToShow("")} />
+        <ChangePasswordAD onBack={() => setToShow("")} profile={profile} />
       )}
       {toShow === "manage payment" && (
         <ManagePaymentInfo onBack={() => setToShow("")} />

@@ -1,16 +1,79 @@
 import React from "react";
-import { Form } from "antd";
+import { Form, notification } from "antd";
 import { IoIosArrowForward } from "react-icons/io";
 import { scroller } from "react-scroll";
 import { Button } from "@src/components/Button";
 import Card from "@src/components/Card";
 import Input from "@src/components/Input";
+import { useMutation } from "@tanstack/react-query";
+import { postDataNoFormData, postDataNoSubDomain } from "@utilities/api";
+import { Context } from "@utilities/context/Provider";
 
 type Props = {
   onBack: () => void;
+  profile: any;
 };
 
-export default function ChangePaswordAD({ onBack }: Props) {
+export default function ChangePaswordAD({ onBack, profile }: Props) {
+  const { setIsAppLoading } = React.useContext(Context);
+  const { mutate: changePassword } = useMutation(
+    (payload: FormData) => {
+      return postDataNoFormData({
+        url: `/api/user/change-password`,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Changing password Success",
+        });
+        form.resetFields();
+      },
+
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+      },
+    }
+  );
+
+  const { mutate: generatePassword } = useMutation(
+    (payload: any) => {
+      return postDataNoSubDomain({
+        url: `/api/auth/generate-password?api_key=${process.env.REACT_APP_API_KEY}`,
+        payload,
+        options: {
+          isLoading: (show: boolean) => setIsAppLoading(show),
+        },
+      });
+    },
+    {
+      onSuccess: async (res) => {
+        notification.success({
+          message: "Temporary password sent successfully",
+        });
+        form.resetFields();
+      },
+
+      onError: (err: any, _, context: any) => {
+        notification.warning({
+          message: "Something Went Wrong",
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
+        });
+      },
+    }
+  );
+
   const [form] = Form.useForm();
   return (
     <Card className="flex-auto md:p-12 p-6">
@@ -29,7 +92,8 @@ export default function ChangePaswordAD({ onBack }: Props) {
         form={form}
         layout="vertical"
         onFinish={(values) => {
-          console.log(values);
+          values.email = profile.email;
+          changePassword(values);
         }}
         onFinishFailed={(data) => {
           scroller.scrollTo(data?.errorFields[0]?.name?.join("-")?.toString(), {
@@ -49,7 +113,7 @@ export default function ChangePaswordAD({ onBack }: Props) {
           ]}
           required={false}
         >
-          <Input id="current_password" placeholder="Current Password" />
+          <Input id="password" type="password" placeholder="Current Password" />
         </Form.Item>
         <Form.Item
           name="new_password"
@@ -61,25 +125,42 @@ export default function ChangePaswordAD({ onBack }: Props) {
           ]}
           required={false}
         >
-          <Input id="new_password" placeholder="New Password" />
+          <Input id="new_password" type="password" placeholder="New Password" />
         </Form.Item>
         <Form.Item
           name="confirm_password"
           rules={[
-            {
-              required: true,
-              message: "This is required!",
-            },
+            { required: true, message: "Please confirm your new password" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("new_password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  "The two passwords you entered do not match"
+                );
+              },
+            }),
           ]}
           required={false}
         >
-          <Input id="confirm_password" placeholder="Confirm Password" />
+          <Input
+            id="confirm_password"
+            type="password"
+            placeholder="Confirm Password"
+          />
         </Form.Item>
 
         <p className=" text-center text-gray-300 py-5">or</p>
         <div className=" flex justify-center items-center flex-col">
           <div>
-            <Button appearance="primary" className=" mb-3">
+            <Button
+              appearance="primary"
+              className=" mb-3"
+              onClick={() =>
+                generatePassword({ email: "jomaritiu16@gmail.com" })
+              }
+            >
               Generate Temporary Password
             </Button>
           </div>
