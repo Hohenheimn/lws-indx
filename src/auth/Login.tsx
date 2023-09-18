@@ -4,8 +4,9 @@ import { Space, Form, notification } from "antd";
 import { motion } from "framer-motion";
 // import { useMutation } from "react-query";
 // import { postData } from "@utilities/api";
-import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { setCookie } from "nookies";
@@ -18,9 +19,10 @@ import {
 } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import Input from "@components/Input";
+import LoadingScreen from "@src/layout/LoadingScreen";
+// import { Media } from "../../../context/Media";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "@utilities/api";
-// import { Media } from "../../../context/Media";
 import { Context } from "@utilities/context/Provider";
 
 export default function Login() {
@@ -79,7 +81,7 @@ export default function Login() {
     }
   );
 
-  const { mutate: SendEmail } = useMutation(
+  const { mutate: SendEmail, isLoading } = useMutation(
     (payload) =>
       postData({
         url: `/api/auth/forget-password`,
@@ -119,12 +121,24 @@ export default function Login() {
     //mutate
     const Payload: any = {
       email: LoginForm.getFieldValue("email"),
+      subdomain: isSubdomain,
     };
     SendEmail(Payload);
   };
 
   return (
     <PageContainer className="md:p-0">
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <AnimateContainer
+            variants={fadeIn}
+            rootMargin="0px"
+            className="fixed h-screen w-full top-0 left-0 z-[9999] bg-black bg-opacity-80 flex justify-center items-center"
+          >
+            <LoadingScreen />
+          </AnimateContainer>
+        )}
+      </AnimatePresence>
       <div className="flex items-center justify-center flex-auto h-full">
         <motion.div
           initial={{ x: "-100%" }}
@@ -219,13 +233,13 @@ export default function Login() {
                   <Input id="password" placeholder="Password" type="password" />
                 </Form.Item>
               </div>
-              <Button
-                appearance="link"
-                className="!text-primary-500 mt-2"
+              <div
+                className="!text-primary-500 cursor-pointer hover:underline mt-2 inline-block"
                 onClick={SendEmailHandler}
               >
                 Forgot password?
-              </Button>
+              </div>
+
               <div className="space-y-4 mt-10">
                 <Button appearance="secondary" type="submit" className="py-4">
                   LOG IN

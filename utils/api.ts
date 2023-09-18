@@ -293,7 +293,12 @@ export const postDataNoFormData = async ({ url, payload, options }: any) => {
     });
 };
 
-export const postDataNoSubDomain = async ({ url, payload, options }: any) => {
+export const postDataNoSubDomain = async ({
+  url,
+  payload,
+  options,
+  isSubdomain,
+}: any) => {
   const token = parseCookies().a_t;
 
   if (options?.isLoading) {

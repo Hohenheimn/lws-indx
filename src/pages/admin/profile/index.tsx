@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@utilities/api";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-export function ProfilePage({ profile: myProfile }: any) {
+export function ProfilePage({ profile: myProfile, subdomain }: any) {
   let [isImageError, setIsImageError] = React.useState(false);
   const router = useRouter();
 

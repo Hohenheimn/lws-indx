@@ -32,7 +32,7 @@ export default function ChangePassword({ router }: any) {
   const { setIsAppLoading } = React.useContext(Context);
   let [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
 
-  const [subdomain, setSubdomain] = useState("");
+  const [isSubdomain, setSubdomain] = useState("");
 
   useEffect(() => {
     if (window?.location?.origin) {
@@ -48,15 +48,15 @@ export default function ChangePassword({ router }: any) {
     }
   });
 
-  const { mutate: ChangePassword } = useMutation(
+  const { mutate: ChangePasswordMutate } = useMutation(
     (payload) =>
       postData({
-        url: `/api/user/change-password`,
+        url: `/api/auth/change-password`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
-        subdomain,
+        isSubdomain,
       }),
     {
       onSuccess: async (res) => {
@@ -130,7 +130,7 @@ export default function ChangePassword({ router }: any) {
                   values.token = token;
                   values.email = email;
 
-                  ChangePassword(values);
+                  ChangePasswordMutate(values);
                 }}
                 className="w-full"
               >
@@ -142,6 +142,11 @@ export default function ChangePassword({ router }: any) {
                       {
                         required: true,
                         message: "New Password is required",
+                      },
+                      {
+                        pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+                        message:
+                          "Must be 6 character and at least one capital letter with numbers",
                       },
                     ]}
                     required={false}
@@ -164,6 +169,11 @@ export default function ChangePassword({ router }: any) {
                       {
                         required: true,
                         message: "Mandatory field required!",
+                      },
+                      {
+                        pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+                        message:
+                          "Must be 6 character and at least one capital letter with numbers",
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
@@ -225,4 +235,22 @@ export default function ChangePassword({ router }: any) {
       </Modal>
     </>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  // const router = useRouter();
+  const token = context.query.token;
+  if (!token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+  return {
+    props: {
+      token: token,
+    },
+  };
 }

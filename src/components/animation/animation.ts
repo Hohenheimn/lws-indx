@@ -5,7 +5,7 @@ export const stagger = {
       delayChildren: 5,
       staggerChildren: 4,
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   animate: {
@@ -14,13 +14,13 @@ export const stagger = {
       delayChildren: 5,
       staggerChildren: 4,
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
       delayChildren: 5,
       staggerChildren: 4,
       duration: 0.6,
@@ -36,13 +36,13 @@ export const pageTransition = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
 };
@@ -57,15 +57,15 @@ export const fadeInUp = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   exit: {
     y: 60,
     opacity: 0,
-    transition: {
-      type: "cubic-bezier",
-    },
+    // transition: {
+    //   type: "cubic-bezier",
+    // },
   },
 };
 
@@ -79,14 +79,14 @@ export const fadeInLeft = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   exit: {
     x: -60,
     opacity: 0,
     transition: {
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
 };
@@ -101,15 +101,15 @@ export const fadeInRight = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   exit: {
     x: 60,
     opacity: 0,
-    transition: {
-      type: "cubic-bezier",
-    },
+    // transition: {
+    //   type: "cubic-bezier",
+    // },
   },
 };
 
@@ -121,14 +121,14 @@ export const fadeIn = {
     opacity: 1,
     transition: {
       duration: 0.3,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
   exit: {
     opacity: 0,
     transition: {
       duration: 0.3,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
   },
 };
@@ -152,15 +152,15 @@ export const zoomIn = {
     opacity: 1,
     transition: {
       duration: 0.6,
-      type: "cubic-bezier",
+      // type: "cubic-bezier",
     },
     scale: 1,
   },
   exit: {
     opacity: 0,
-    transition: {
-      type: "cubic-bezier",
-    },
+    // transition: {
+    //   type: "cubic-bezier",
+    // },
     scale: 0,
   },
 };
@@ -171,11 +171,10 @@ export const countdownTimer = {
     opacity: 0,
   },
   animate: {
-    y: 0,
+    y: "0%",
     opacity: 1,
     transition: {
       duration: 0.3,
-      type: "cubic-bezier",
     },
   },
   exit: {

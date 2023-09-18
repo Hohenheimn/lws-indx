@@ -80,7 +80,7 @@ export function AnimateContainer({
       ref={ref}
       variants={variants ? variants : fadeIn}
       initial="initial"
-      animate="animate"
+      animate={inView ? "animate" : "exit"}
       exit="exit"
       className={twMerge(className)}
       {...rest}

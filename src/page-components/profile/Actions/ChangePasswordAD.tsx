@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, notification } from "antd";
+import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
 import { IoIosArrowForward } from "react-icons/io";
 import { scroller } from "react-scroll";
 import { Button } from "@src/components/Button";
 import Card from "@src/components/Card";
 import Input from "@src/components/Input";
 import { useMutation } from "@tanstack/react-query";
-import { postDataNoFormData, postDataNoSubDomain } from "@utilities/api";
+import {
+  postData,
+  postDataNoFormData,
+  postDataNoSubDomain,
+} from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
 type Props = {
@@ -16,30 +22,55 @@ type Props = {
 
 export default function ChangePaswordAD({ onBack, profile }: Props) {
   const { setIsAppLoading } = React.useContext(Context);
-  const { mutate: changePassword } = useMutation(
-    (payload: FormData) => {
-      return postDataNoFormData({
+  const [isSubdomain, setSubdomain] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (window?.location?.origin) {
+      let getSubDomain: string | string[] = window?.location?.origin.replace(
+        "https://",
+        ""
+      );
+      getSubDomain = getSubDomain.replace("http://", "");
+      getSubDomain = getSubDomain.replace("https://", "");
+      getSubDomain = getSubDomain.split(".");
+      getSubDomain = getSubDomain[0];
+      setSubdomain(getSubDomain);
+    }
+  });
+
+  const { mutate: ChangePassword } = useMutation(
+    (payload) =>
+      postData({
         url: `/api/user/change-password`,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
-      });
-    },
+        isSubdomain,
+      }),
     {
       onSuccess: async (res) => {
+        router.push("/");
         notification.success({
-          message: "Changing password Success",
+          key: "change password",
+          message: "Change Password Successful",
+          description: `It's nice to see you`,
         });
-        form.resetFields();
+        destroyCookie(undefined, "a_t", { path: "/" });
+        destroyCookie(undefined, "subdomain", { path: "/" });
+        router.reload();
+        notification.success({
+          message: "Logout Succesful",
+          description: "All done! Have a nice day!",
+        });
       },
-
-      onError: (err: any, _, context: any) => {
+      onError: () => {
         notification.warning({
-          message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
+          key: "login",
+          message: `Something went wrong`,
+          description: ``,
         });
       },
     }
@@ -53,6 +84,7 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
         },
+        isSubdomain,
       });
     },
     {
@@ -61,6 +93,13 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
           message: "Temporary password sent successfully",
         });
         form.resetFields();
+        destroyCookie(undefined, "a_t", { path: "/" });
+        destroyCookie(undefined, "subdomain", { path: "/" });
+        router.reload();
+        notification.success({
+          message: "Logout Succesful",
+          description: "All done! Have a nice day!",
+        });
       },
 
       onError: (err: any, _, context: any) => {
@@ -93,7 +132,7 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
         layout="vertical"
         onFinish={(values) => {
           values.email = profile.email;
-          changePassword(values);
+          ChangePassword(values);
         }}
         onFinishFailed={(data) => {
           scroller.scrollTo(data?.errorFields[0]?.name?.join("-")?.toString(), {
@@ -103,7 +142,7 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
         }}
         className="space-y-4"
       >
-        <Form.Item
+        {/* <Form.Item
           name="current_password"
           rules={[
             {
@@ -114,10 +153,15 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
           required={false}
         >
           <Input id="password" type="password" placeholder="Current Password" />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
-          name="new_password"
+          name="password"
           rules={[
+            {
+              pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+              message:
+                "Must be 6 character and at least one capital letter with numbers",
+            },
             {
               required: true,
               message: "This is required!",
@@ -125,15 +169,20 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
           ]}
           required={false}
         >
-          <Input id="new_password" type="password" placeholder="New Password" />
+          <Input id="password" type="password" placeholder="New Password" />
         </Form.Item>
         <Form.Item
           name="confirm_password"
           rules={[
+            {
+              pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+              message:
+                "Must be 6 character and at least one capital letter with numbers",
+            },
             { required: true, message: "Please confirm your new password" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("new_password") === value) {
+                if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
@@ -158,7 +207,10 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
               appearance="primary"
               className=" mb-3"
               onClick={() =>
-                generatePassword({ email: "jomaritiu16@gmail.com" })
+                generatePassword({
+                  email: profile.email,
+                  subdomain: isSubdomain,
+                })
               }
             >
               Generate Temporary Password
