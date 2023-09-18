@@ -45,7 +45,7 @@ export default function AnnotationModal({
               ChartView === "Periodontal" ||
               ChartView === undefined ||
               ChartView === "All"
-                ? `/images/periodontal${SelectedAnnotate?.tooth_no}.png`
+                ? `/images/teeth_periodontal/${SelectedAnnotate?.tooth_no}.png`
                 : `/images/tooth-periodontal.png`
             }
             ProceduresData={proceduresList?.data}

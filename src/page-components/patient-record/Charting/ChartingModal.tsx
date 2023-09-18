@@ -3,6 +3,7 @@ import { Checkbox, DatePicker, Form, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { motion } from "framer-motion";
 import moment from "moment";
+import Image from "next/image";
 import { scroller } from "react-scroll";
 import Annotate from "@components/Annotate";
 import { Button } from "@components/Button";
@@ -14,7 +15,6 @@ import { fadeIn } from "@src/components/animation/animation";
 import DeleteButton from "@src/components/DeleteButton";
 import { Radio } from "@src/components/Radio";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { deleteData, postData } from "@utilities/api";
 
 import { Context } from "@utilities/context/Provider";
@@ -252,6 +252,7 @@ export default function ChartingModal({
         });
         form.resetFields();
         resetToothNumber();
+        setMissingToothNo([]);
         queryClient.invalidateQueries({
           queryKey: ["treatment-record"],
         });
@@ -305,6 +306,7 @@ export default function ChartingModal({
         queryClient.invalidateQueries({
           queryKey: ["treatment-record"],
         });
+        setMissingToothNo([]);
         onClose();
       },
       onMutate: async (newData) => {
@@ -345,6 +347,7 @@ export default function ChartingModal({
           description: "Chart has been deleted",
         });
         onClose();
+        setMissingToothNo([]);
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({
@@ -484,7 +487,6 @@ export default function ChartingModal({
                   placeholder="Chart Name"
                 />
               </Form.Item>
-
               <Form.Item
                 label="Date Created"
                 name="created_at"
@@ -500,7 +502,6 @@ export default function ChartingModal({
                   disabled={true}
                 />
               </Form.Item>
-
               <Form.Item
                 label="Chart Type"
                 name="chart_type"
@@ -548,7 +549,6 @@ export default function ChartingModal({
                   </Select.Option>
                 </Select>
               </Form.Item>
-
               <Form.Item
                 label="Branch"
                 name="branch_id"
@@ -570,7 +570,6 @@ export default function ChartingModal({
                   returnValueKey="_id"
                 />
               </Form.Item>
-
               <Form.Item
                 label="Doctor"
                 name="doctor_id"
@@ -637,7 +636,6 @@ export default function ChartingModal({
                             className=" absolute top-0 left-0 w-full h-full bg-[#8585856b] z-10"
                           ></motion.div>
                         )}
-
                         <h5 className="text-center">{item.tooth_no}</h5>
 
                         {ChartView === "Periodontal" && (
@@ -645,12 +643,11 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/periodontal${item.tooth_no}.png`}
+                              image={`/images/teeth_periodontal/${`${item.tooth_no}`}.png`}
                               defaultValue={item}
                             />
                           </div>
                         )}
-
                         {(ChartView === "Standard" ||
                           ChartView === undefined ||
                           ChartView === "") && (
@@ -684,7 +681,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/periodontal${item.tooth_no}.png`}
+                              image={`/images/teeth_periodontal/${`${item.tooth_no}`}.png`}
                               defaultValue={item}
                             />
                           </div>
@@ -726,7 +723,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/periodontal${item.tooth_no}.png`}
+                              image={`/images/teeth_periodontal/${`${item.tooth_no}`}.png`}
                               defaultValue={item}
                             />
                           </div>
@@ -765,7 +762,7 @@ export default function ChartingModal({
                             <Annotate
                               pageType={pageType}
                               disabled={true}
-                              image={`/images/periodontal${item.tooth_no}.png`}
+                              image={`/images/teeth_periodontal/${`${item.tooth_no}`}.png`}
                               defaultValue={item}
                             />
                           </div>
@@ -947,6 +944,7 @@ export default function ChartingModal({
                   onClick={() => {
                     resetToothNumber();
                     onClose();
+                    setMissingToothNo([]);
                   }}
                 >
                   Close
@@ -960,6 +958,7 @@ export default function ChartingModal({
                   onClick={() => {
                     resetToothNumber();
                     onClose();
+                    setMissingToothNo([]);
                   }}
                 >
                   Cancel
@@ -980,6 +979,7 @@ export default function ChartingModal({
         show={showAnnotationModal}
         onClose={() => {
           setShowAnnotationModal(false);
+          setMissingToothNo([]);
         }}
         ChartView={ChartView}
         className="w-full"

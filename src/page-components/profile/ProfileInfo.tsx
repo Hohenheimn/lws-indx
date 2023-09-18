@@ -392,12 +392,6 @@ export function ProfileInfo({ profile, tab }: any) {
             <Form.Item
               label="Landline Number"
               name="landline_no"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required!",
-                },
-              ]}
               required={false}
               className="col-span-3 lg:col-span-1"
             >

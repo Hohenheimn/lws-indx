@@ -1,4 +1,4 @@
-import { parse, differenceInYears } from "date-fns";
+import { parse, differenceInYears, isValid } from "date-fns";
 
 export function statusPalette(status: string) {
   switch (status?.toLowerCase()) {
@@ -157,11 +157,14 @@ export function getBase64(img: any, callback: any) {
 }
 
 export const getAge = (birthdate: string) => {
-  const birthday = parse(
+  let birthday = parse(
     birthdate,
     "EEE MMM dd yyyy HH:mm:ss 'GMT'xx",
     new Date()
   );
+  if (!isValid(birthday)) {
+    birthday = parse(birthdate, "MMMM dd, yyyy", new Date());
+  }
   const age = differenceInYears(new Date(), birthday);
   return Number(age);
 };
