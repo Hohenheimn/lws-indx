@@ -5,7 +5,8 @@ import DatePicker from "antd/lib/date-picker";
 import Table from "antd/lib/table/Table";
 import "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
+import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -13,66 +14,36 @@ import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
 import VerifyAuth from "@auth/HOC/VerifyAuth";
-import { PageContainer } from "@components/animation";
+import { AnimateContainer, PageContainer } from "@components/animation";
 import Card from "@components/Card";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
+import { fadeIn } from "@src/components/animation/animation";
 import { InfiniteSelect } from "@src/components/InfiniteSelect";
+import LoadingScreen from "@src/layout/LoadingScreen";
 import colors from "@styles/theme";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
 import { numberSeparator, paymentStatusPalette } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-const randomNumber = () => {
-  return Math.random() * (100 - 1);
+type financials = {
+  pending_balance: number;
+  revenue: number;
+  paid_amount: number;
+  patient_invoices: invoices[];
 };
 
-let fakeData = [
-  {
-    branch: "Branch 1",
-    doctor: "Doctor 1",
-    invoice_number: 1,
-    date_created: new Date("11/22/2021"),
-    amount: 20000,
-    mode_of_payment: "Credit",
-    payment_status: "pending",
-  },
-  {
-    branch: "Branch 2",
-    doctor: "Doctor 2",
-    invoice_number: 2,
-    date_created: new Date("12/22/2021"),
-    amount: 20000,
-    mode_of_payment: "Debit",
-    payment_status: "paid",
-  },
-  {
-    branch: "Branch 3",
-    doctor: "Doctor 3",
-    invoice_number: 3,
-    date_created: new Date("01/22/2022"),
-    amount: 20000,
-    mode_of_payment: "GCash",
-    payment_status: "partial payment",
-  },
-  {
-    branch: "Branch 4",
-    doctor: "Doctor 4",
-    invoice_number: 4,
-    date_created: new Date("02/22/2022"),
-    amount: 20000,
-    mode_of_payment: "Credit",
-    payment_status: "pending",
-  },
-  {
-    branch: "Branch 5",
-    doctor: "Doctor 5",
-    invoice_number: 5,
-    date_created: new Date("03/22/2022"),
-    amount: 20000,
-    mode_of_payment: "Checque",
-    payment_status: "pending",
-  },
-];
+type invoices = {
+  _id: string;
+  invoince_no: null | string | number;
+  branch_name: string;
+  doctor_name: string;
+  created_at: string;
+  mode_of_payment: null | string;
+  status: string;
+  amount: number;
+};
 
 const { RangePicker } = DatePicker;
 
@@ -80,28 +51,30 @@ export function Financials({ profile }: any) {
   const columns: any = [
     {
       title: "Branch",
-      dataIndex: "branch",
+      dataIndex: "branch_name",
       width: "10rem",
       align: "center",
     },
     {
       title: "Assigned Doctor",
-      dataIndex: "doctor",
+      dataIndex: "doctor_name",
       width: "10rem",
       align: "center",
     },
     {
       title: "Invoice Number",
-      dataIndex: "invoice_number",
+      dataIndex: "invoince_no",
       width: "10rem",
       align: "center",
     },
     {
       title: "Date Created",
-      dataIndex: "date_created",
+      dataIndex: "created_at",
       width: "15rem",
       align: "center",
-      render: (date: Date) => format(date, "MMM dd, yyyy"),
+      render: (date: any) => {
+        return format(parseISO(date), "MMM dd, yyyy");
+      },
     },
     {
       title: "Amount",
@@ -153,6 +126,8 @@ export function Financials({ profile }: any) {
 
   const [status, setStatus] = useState("");
 
+  let [page, setPage] = React.useState(1);
+
   const handleDateChange = (dates: any, dateStrings: any) => {
     setDateRange({
       from: dateStrings[0],
@@ -160,8 +135,41 @@ export function Financials({ profile }: any) {
     });
   };
 
+  let { data, isLoading } = useQuery(
+    [
+      "financials",
+      branch_id,
+      doctor_id,
+      dateRange.from,
+      dateRange.to,
+      status,
+      search,
+    ],
+    () =>
+      fetchData({
+        url: `/api/financial/list?limit=5&page=${page}&keyword=${search}&status=${status}&doctor_id=${
+          doctor_id ? doctor_id : ""
+        }&branch_id=${branch_id ? branch_id : ""}&date_from=${
+          dateRange.from
+        }&date_to=${dateRange.to}`,
+      })
+  );
+
+  const financials: financials = data;
+
   return (
     <PageContainer>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <AnimateContainer
+            variants={fadeIn}
+            rootMargin="0px"
+            className="fixed h-screen w-full top-0 left-0 z-[9999] bg-black bg-opacity-80 flex justify-center items-center"
+          >
+            <LoadingScreen />
+          </AnimateContainer>
+        )}
+      </AnimatePresence>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="basis-auto whitespace-nowrap">Financials</h3>
       </div>
@@ -175,13 +183,8 @@ export function Financials({ profile }: any) {
           <Form.Item
             label=""
             name="doctor_id"
-            rules={[
-              {
-                required: true,
-                message: "This is required",
-              },
-            ]}
             required={false}
+            initialValue={""}
             className="w-full lg:w-auto"
           >
             <InfiniteSelect
@@ -197,14 +200,9 @@ export function Financials({ profile }: any) {
           <Form.Item
             label=""
             name="branch_id"
-            rules={[
-              {
-                required: true,
-                message: "This is required",
-              },
-            ]}
             required={false}
             className="w-full lg:w-auto"
+            initialValue={""}
           >
             <InfiniteSelect
               placeholder="Select Branch"
@@ -224,7 +222,8 @@ export function Financials({ profile }: any) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="text-center space-y-1 z-[1] overflow-hidden justify-center items-center flex flex-col">
           <h4>
-            {profile.setting.currency} {numberSeparator(102500, 0)}
+            {profile.setting.currency}{" "}
+            {financials?.revenue ? numberSeparator(financials?.revenue, 0) : 0}
           </h4>
           <div className="text-base m-auto font-medium">
             Total Clinic Earnings
@@ -232,7 +231,10 @@ export function Financials({ profile }: any) {
         </Card>
         <Card className="text-center space-y-1 z-[1] overflow-hidden justify-center items-center flex flex-col">
           <h4>
-            {profile.setting.currency} {numberSeparator(500, 0)}
+            {profile.setting.currency}{" "}
+            {financials?.paid_amount
+              ? numberSeparator(financials?.paid_amount, 0)
+              : 0}
           </h4>
           <div className="text-base m-auto font-medium">
             Total Paid Balances
@@ -240,7 +242,10 @@ export function Financials({ profile }: any) {
         </Card>
         <Card className="text-center space-y-1 z-[1] overflow-hidden justify-center items-center flex flex-col">
           <h4>
-            {profile.setting.currency} {numberSeparator(329, 0)}
+            {profile.setting.currency}{" "}
+            {financials?.pending_balance
+              ? numberSeparator(financials?.pending_balance, 0)
+              : 0}
           </h4>
           <div className="text-base m-auto font-medium">
             Total Pending Balances
@@ -276,13 +281,16 @@ export function Financials({ profile }: any) {
         id="tab"
         rowKey="invoice_number"
         columns={columns}
-        dataSource={fakeData}
+        dataSource={financials?.patient_invoices}
         showHeader={true}
         tableLayout="fixed"
         pagination={{
           pageSize: 5,
           hideOnSinglePage: true,
           showSizeChanger: false,
+          // total: financials?.patient_invoices?.total,
+          total: 5,
+          onChange: (page) => setPage(page),
         }}
       />
     </PageContainer>
