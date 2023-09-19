@@ -92,23 +92,19 @@ export function Financials({ profile }: any) {
     },
     {
       title: "Payment Status",
-      dataIndex: "payment_status",
+      dataIndex: "status",
       width: "10rem",
       align: "center",
-      render: (status: string) => {
-        return (
-          <div className="px-2">
-            <div
-              className={twMerge(
-                "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs",
-                paymentStatusPalette(status)
-              )}
-            >
-              {status}
-            </div>
-          </div>
-        );
-      },
+      render: (status: string) => (
+        <div
+          className={twMerge(
+            "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs ",
+            paymentStatusPalette(status === null ? "no payment" : status)
+          )}
+        >
+          {status}
+        </div>
+      ),
     },
   ];
   let [search, setSearch] = React.useState("");
@@ -144,6 +140,7 @@ export function Financials({ profile }: any) {
       dateRange.to,
       status,
       search,
+      page,
     ],
     () =>
       fetchData({
@@ -155,12 +152,33 @@ export function Financials({ profile }: any) {
       })
   );
 
+  let { data: invoices, isLoading: invoicesLoading } = useQuery(
+    [
+      "financials-invoices-list",
+      branch_id,
+      doctor_id,
+      dateRange.from,
+      dateRange.to,
+      status,
+      search,
+      page,
+    ],
+    () =>
+      fetchData({
+        url: `/api/financial/patient-invoice-list?limit=5&page=${page}&keyword=${search}&status=${status}&doctor_id=${
+          doctor_id ? doctor_id : ""
+        }&branch_id=${branch_id ? branch_id : ""}&date_from=${
+          dateRange.from
+        }&date_to=${dateRange.to}`,
+      })
+  );
+  const invoicesData: invoices[] = invoices?.data;
   const financials: financials = data;
 
   return (
     <PageContainer>
       <AnimatePresence mode="wait">
-        {isLoading && (
+        {(isLoading || invoicesLoading) && (
           <AnimateContainer
             variants={fadeIn}
             rootMargin="0px"
@@ -281,15 +299,14 @@ export function Financials({ profile }: any) {
         id="tab"
         rowKey="invoice_number"
         columns={columns}
-        dataSource={financials?.patient_invoices}
+        dataSource={invoicesData}
         showHeader={true}
         tableLayout="fixed"
         pagination={{
           pageSize: 5,
           hideOnSinglePage: true,
           showSizeChanger: false,
-          // total: financials?.patient_invoices?.total,
-          total: 5,
+          total: invoices?.meta?.total,
           onChange: (page) => setPage(page),
         }}
       />

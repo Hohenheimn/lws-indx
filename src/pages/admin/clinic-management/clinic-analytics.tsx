@@ -65,20 +65,6 @@ export type clinic_analytics = {
   };
   topProcedures: topProcedures[];
   patientByLocation: patientByLocation[];
-  patientBalanceList: {
-    data: patientBalanceList[];
-    current_page: number;
-    first_page_url: string;
-    from: number;
-    last_page: number;
-    last_page_url: string;
-    next_page_url: string;
-    path: string;
-    per_page: number;
-    prev_page_url: any;
-    to: number;
-    total: number;
-  };
   totalMonthlyRevenue: totalMonthlyRevenue[];
 };
 
@@ -105,27 +91,21 @@ export function ClinicAnalytics({ profile }: any) {
       width: "10rem",
       align: "center",
     },
-    {
-      title: "Charge",
-      dataIndex: "charge_amount",
-      width: "10rem",
-      align: "center",
-      render: (amount: number) => {
-        if (amount) {
-          return `${profile.setting.currency} ${numberSeparator(amount, 0)}`;
-        }
-      },
-    },
+    // {
+    //   title: "Charge",
+    //   dataIndex: "charge",
+    //   width: "10rem",
+    //   align: "center",
+    //   render: (amount: number) =>
+    //     `${profile.setting.currency} ${numberSeparator(amount, 2)}`,
+    // },
     {
       title: "Remaining Balance",
-      dataIndex: "remaining_balance",
+      dataIndex: "balance",
       width: "10rem",
       align: "center",
-      render: (amount: number) => {
-        if (amount) {
-          return `${profile.setting.currency} ${numberSeparator(amount, 0)}`;
-        }
-      },
+      render: (balance: number) =>
+        `${profile.setting.currency} ${numberSeparator(balance, 2)}`,
     },
     {
       title: "Payment Status",
@@ -165,7 +145,14 @@ export function ClinicAnalytics({ profile }: any) {
   let [page, setPage] = React.useState(1);
 
   let { data, isLoading } = useQuery(
-    ["clinic-analytics", branch_id, doctor_id, dateRange.from, dateRange.to],
+    [
+      "clinic-analytics",
+      branch_id,
+      doctor_id,
+      dateRange.from,
+      dateRange.to,
+      page,
+    ],
     () =>
       fetchData({
         url: `/api/clinic-analytics?limit=5&page=${page}&doctor_id=${
@@ -176,11 +163,32 @@ export function ClinicAnalytics({ profile }: any) {
       })
   );
 
+  let { data: patientBalanceList, isLoading: tableLoading } = useQuery(
+    [
+      "clinic-analytics-patient-balance-list",
+      branch_id,
+      doctor_id,
+      dateRange.from,
+      dateRange.to,
+      page,
+    ],
+    () =>
+      fetchData({
+        url: `/api/clinic-analytics/patient-balance-list?limit=5&page=${page}&doctor_id=${
+          doctor_id ? doctor_id : ""
+        }&branch_id=${branch_id ? branch_id : ""}&date_from=${
+          dateRange.from
+        }&date_to=${dateRange.to}`,
+      })
+  );
+
   const clinicAnalytics: clinic_analytics = data;
+
+  const patientBalanceData: patientBalanceList[] = patientBalanceList?.data;
 
   return (
     <PageContainer>
-      {isLoading && (
+      {(isLoading || tableLoading) && (
         <AnimateContainer
           variants={fadeIn}
           rootMargin="0px"
@@ -342,7 +350,7 @@ export function ClinicAnalytics({ profile }: any) {
       <Table
         rowKey="_id"
         columns={columns}
-        dataSource={clinicAnalytics?.patientBalanceList?.data}
+        dataSource={patientBalanceData}
         showHeader={true}
         tableLayout="fixed"
         loading={false}
@@ -357,7 +365,7 @@ export function ClinicAnalytics({ profile }: any) {
           pageSize: 5,
           hideOnSinglePage: true,
           showSizeChanger: false,
-          total: clinicAnalytics?.patientBalanceList?.total,
+          total: patientBalanceList?.meta?.total,
           onChange: (page) => setPage(page),
         }}
         components={{
