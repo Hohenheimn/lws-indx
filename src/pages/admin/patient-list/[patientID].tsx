@@ -234,7 +234,7 @@ export function PatientRecord({
             />
 
             <div ref={elementRef}>
-              <Card className="text-base sticky top-0 z-[999999]">
+              <Card className="text-base sticky top-0">
                 <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <Avatar className="h-28 w-28 p-4 overflow-hidden relative border border-gray-300 avatar transition">

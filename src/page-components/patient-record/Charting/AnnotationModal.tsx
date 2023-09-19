@@ -32,7 +32,7 @@ export default function AnnotationModal({
       show={show}
       onClose={onClose}
       {...rest}
-      className=" overflow-visible w-full"
+      className=" w-full overflow-visible"
     >
       <div className="space-y-4">
         <h1 className="text-center">{SelectedAnnotate?.tooth_no}</h1>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Annotation from "react-image-annotation";
 import { twMerge } from "tailwind-merge";
@@ -38,7 +38,7 @@ const Shape = ({ children, geometry, style }: any) => {
         minHeight: ".6rem",
         minWidth: ".6rem",
         borderRadius: geometry.type === "POINT" ? "100%" : 0,
-        overflow: "hidden",
+        // overflow: "hidden",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -217,10 +217,45 @@ export function Annotate({
       );
     }
   }
+  const elementRef: any = useRef(null);
+  const [isPositionIndicator, setPositionIndicator] = useState(0);
+  const [position, setPosition] = useState<any>({
+    position: "absolute",
+    top: "120%",
+    left: "50%",
+    transform: "translateX(-50%)",
+  });
 
-  function renderEditor({ annotation }: any) {
+  useEffect(() => {
+    const windowHeight = window.innerHeight;
+    const elementRect = elementRef?.current?.getBoundingClientRect();
+    const HandlerScroll = () => {
+      if (elementRect?.bottom >= windowHeight) {
+        setPosition({
+          position: "absolute",
+          bottom: "120%",
+          left: "50%",
+          transform: "translateX(-50%)",
+        });
+      } else {
+        setPosition({
+          position: "absolute",
+          top: "120%",
+          left: "50%",
+          transform: "translateX(-50%)",
+        });
+      }
+    };
+    window.addEventListener("scroll", HandlerScroll);
+    HandlerScroll();
+    return () => {
+      window.removeEventListener("scroll", HandlerScroll);
+    };
+  }, [isPositionIndicator]);
+
+  const renderEditor = ({ annotation }: any) => {
     const { geometry } = annotation;
-
+    setPositionIndicator(geometry);
     if (!geometry) return null;
 
     return (
@@ -236,12 +271,8 @@ export function Annotate({
         }}
       >
         <div
-          style={{
-            position: "absolute",
-            top: "120%",
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
+          ref={elementRef}
+          style={position}
           className=" bg-white rounded-md shadow-md p-2 w-[60vw] lg:w-auto"
         >
           <Input
@@ -287,32 +318,34 @@ export function Annotate({
         </div>
       </div>
     );
-  }
+  };
   return (
-    <div className=" flex flex-col items-center">
-      <div
-        className={twMerge(
-          "h-full w-full [&>div]:h-full [&>div]:w-full max-w-[20rem]",
-          className
-        )}
-        {...rest}
-      >
-        <Annotation
-          src={image}
-          alt="Tooth"
-          annotations={annotations}
-          type={"POINT"}
-          value={annotation}
-          onChange={onChange}
-          renderEditor={renderEditor}
-          renderContent={RenderContent}
-          disableOverlay
-          renderHighlight={renderHighlight}
-          renderSelector={renderSelector}
-          className="h-full"
-          disableAnnotation={disabled}
-          activeAnnotation={[1]}
-        />
+    <div>
+      <div className=" flex flex-col items-center">
+        <div
+          className={twMerge(
+            "h-full w-full [&>div]:h-full [&>div]:w-full max-w-[5rem] lg:max-w-[20rem]",
+            className
+          )}
+          {...rest}
+        >
+          <Annotation
+            src={image}
+            alt="Tooth"
+            annotations={annotations}
+            type={"POINT"}
+            value={annotation}
+            onChange={onChange}
+            renderEditor={renderEditor}
+            renderContent={RenderContent}
+            disableOverlay
+            className={` w-full h-auto`}
+            renderHighlight={renderHighlight}
+            renderSelector={renderSelector}
+            disableAnnotation={disabled}
+            activeAnnotation={[1]}
+          />
+        </div>
       </div>
       {forModal && (
         <div className=" w-full flex justify-between mt-5">
