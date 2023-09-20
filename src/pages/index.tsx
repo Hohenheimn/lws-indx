@@ -286,7 +286,8 @@ export function Website({ router }: any) {
                       <Button
                         appearance="blumine"
                         className="w-full max-w-xs py-4"
-                        onClick={() => router.push("/registration")}
+                        // onClick={() => router.push("/registration")}
+                        onClick={() => router.push("/pre-register")}
                       >
                         Register Now
                       </Button>

@@ -27,8 +27,6 @@ export default function PrivateRoute(Component: any) {
     ...rest
   }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const restrictedPages = ["/", "raffle-pick"];
-    const allowedSubDomain = ["lws-dentist", "ampong-clinic", "indx-dental"];
 
     if (subdomain && profile) {
       return (

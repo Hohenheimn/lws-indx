@@ -18,9 +18,14 @@ import { Context } from "@utilities/context/Provider";
 type Props = {
   onBack: () => void;
   profile: any;
+  firstLogin?: boolean;
 };
 
-export default function ChangePaswordAD({ onBack, profile }: Props) {
+export default function ChangePaswordAD({
+  onBack,
+  profile,
+  firstLogin,
+}: Props) {
   const { setIsAppLoading } = React.useContext(Context);
   const [isSubdomain, setSubdomain] = useState("");
 
@@ -114,6 +119,89 @@ export default function ChangePaswordAD({ onBack, profile }: Props) {
   );
 
   const [form] = Form.useForm();
+
+  if (firstLogin) {
+    return (
+      <section className=" w-full">
+        <h4 className="mb-3">Change Password</h4>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={(values) => {
+            values.email = profile.email;
+            ChangePassword(values);
+          }}
+          onFinishFailed={(data) => {
+            scroller.scrollTo(
+              data?.errorFields[0]?.name?.join("-")?.toString(),
+              {
+                smooth: true,
+                offset: -50,
+              }
+            );
+          }}
+          className="space-y-4"
+        >
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+                message:
+                  "Must be 6 character and at least one capital letter with numbers",
+              },
+              {
+                required: true,
+                message: "This is required!",
+              },
+            ]}
+            required={false}
+          >
+            <Input id="password" type="password" placeholder="New Password" />
+          </Form.Item>
+          <Form.Item
+            name="confirm_password"
+            rules={[
+              {
+                pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+                message:
+                  "Must be 6 character and at least one capital letter with numbers",
+              },
+              { required: true, message: "Please confirm your new password" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "The two passwords you entered do not match"
+                  );
+                },
+              }),
+            ]}
+            required={false}
+          >
+            <Input
+              id="confirm_password"
+              type="password"
+              placeholder="Confirm Password"
+            />
+          </Form.Item>
+
+          <div className="flex justify-end items-center gap-4">
+            <Button
+              appearance="primary"
+              className="max-w-[10rem]"
+              type="submit"
+            >
+              Save
+            </Button>
+          </div>
+        </Form>
+      </section>
+    );
+  }
+
   return (
     <Card className="flex-auto md:p-12 p-6">
       <h4 className="mb-3">Change Password</h4>

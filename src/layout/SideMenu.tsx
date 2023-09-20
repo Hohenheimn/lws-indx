@@ -9,6 +9,9 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
+import Modal from "@src/components/Modal";
+
+import ChangePaswordAD from "@src/page-components/profile/Actions/ChangePasswordAD";
 import { Context } from "@utilities/context/Provider";
 
 import MobileDrawer from "./MobileDrawer";
@@ -107,6 +110,7 @@ const sideMenu: Array<sideMenuProps> = [
 ];
 
 export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
+  console.log(profile);
   const router = useRouter();
   const {
     isDrawerOpen,
@@ -119,6 +123,15 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
 
   return (
     <>
+      {!profile.is_password_changed && (
+        <Modal show={true} onClose={() => {}} className=" w-[40rem]">
+          <ChangePaswordAD
+            onBack={() => {}}
+            profile={profile}
+            firstLogin={true}
+          />
+        </Modal>
+      )}
       <MobileDrawer
         open={isDrawerOpen}
         profile={profile}
