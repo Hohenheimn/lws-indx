@@ -33,14 +33,9 @@ export default function ChangePaswordAD({
 
   useEffect(() => {
     if (window?.location?.origin) {
-      let getSubDomain: string | string[] = window?.location?.origin.replace(
-        "https://",
-        ""
-      );
-      getSubDomain = getSubDomain.replace("http://", "");
-      getSubDomain = getSubDomain.replace("https://", "");
-      getSubDomain = getSubDomain.split(".");
-      getSubDomain = getSubDomain[0];
+      let getSubDomain: string | string[] = window?.location?.hostname.split(
+        "."
+      )[0];
       setSubdomain(getSubDomain);
     }
   });
@@ -57,7 +52,6 @@ export default function ChangePaswordAD({
       }),
     {
       onSuccess: async (res) => {
-        router.push("/");
         notification.success({
           key: "change password",
           message: "Change Password Successful",
@@ -65,7 +59,9 @@ export default function ChangePaswordAD({
         });
         destroyCookie(undefined, "a_t", { path: "/" });
         destroyCookie(undefined, "subdomain", { path: "/" });
-        router.reload();
+        router.push(
+          `http://${isSubdomain}.localhost:3000/admin?email=${profile.email}`
+        );
         notification.success({
           message: "Logout Succesful",
           description: "All done! Have a nice day!",

@@ -33,15 +33,14 @@ export default function Login() {
   const [isSubdomain, setSubdomain] = useState("");
 
   useEffect(() => {
+    LoginForm.setFieldValue("email", router?.query?.email);
+  }, [router?.query?.email]);
+
+  useEffect(() => {
     if (window?.location?.origin) {
-      let getSubDomain: string | string[] = window?.location?.origin.replace(
-        "https://",
-        ""
-      );
-      getSubDomain = getSubDomain.replace("http://", "");
-      getSubDomain = getSubDomain.replace("https://", "");
-      getSubDomain = getSubDomain.split(".");
-      getSubDomain = getSubDomain[0];
+      let getSubDomain: string | string[] = window?.location?.hostname.split(
+        "."
+      )[0];
       setSubdomain(getSubDomain);
     }
   });
@@ -64,7 +63,8 @@ export default function Login() {
         setCookie(null, "subdomain", isSubdomain, {
           path: "/",
         });
-        router.reload();
+        router.push("/");
+        // router.reload();
         notification.success({
           key: "login",
           message: "Login Successful",
@@ -74,7 +74,7 @@ export default function Login() {
       onError: () => {
         notification.warning({
           key: "login",
-          message: `Incorrect Username or Password`,
+          message: `Incorrect Email or Password`,
           description: `Kindly check your credentials`,
         });
       },
@@ -218,7 +218,7 @@ export default function Login() {
                   ]}
                   required={false}
                 >
-                  <Input id="username" placeholder="Username" />
+                  <Input id="email" placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                   name="password"

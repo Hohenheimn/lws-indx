@@ -8,7 +8,7 @@ type ggspTypes = {
   profile: any;
   openMenus: string;
   subdomain: string;
-  domainExist: boolean;
+  pathname: string;
 };
 
 export default function VerifyAuth(gssp: {
@@ -16,6 +16,8 @@ export default function VerifyAuth(gssp: {
 }) {
   return async (ctx: any) => {
     const { req, res } = ctx;
+
+    const pathname = req.url;
 
     let profile = req?.profile ?? null;
 
@@ -25,22 +27,6 @@ export default function VerifyAuth(gssp: {
       req.headers.host.split(".").length > 1
         ? req.headers.host.split(".")[0]
         : null;
-
-    let domainExist: boolean = true;
-
-    await axios
-      .post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/domain-checker?api_key=${process.env.REACT_APP_API_KEY}`,
-        {
-          domain: subdomain,
-        }
-      )
-      .then((response) => {
-        domainExist = response.data;
-      })
-      .catch((error) => {
-        domainExist = false;
-      });
 
     if (token) {
       await axios
@@ -70,6 +56,11 @@ export default function VerifyAuth(gssp: {
         });
     }
 
-    return await gssp(ctx, { profile, openMenus, subdomain, domainExist });
+    return await gssp(ctx, {
+      profile,
+      openMenus,
+      subdomain,
+      pathname,
+    });
   };
 }

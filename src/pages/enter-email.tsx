@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Space, Form, notification, Checkbox } from "antd";
 
 import axios from "axios";
 // import { useMutation } from "react-query";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { setCookie } from "nookies";
@@ -21,6 +22,7 @@ import {
 import { Button } from "@components/Button";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
+import LoadingScreen from "@src/layout/LoadingScreen";
 import { useMutation } from "@tanstack/react-query";
 import { postData, postDataNoToken } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -30,10 +32,7 @@ import { Context } from "@utilities/context/Provider";
 export default function EnterSubdomain() {
   const router = useRouter();
   const [checkDomain] = Form.useForm();
-  const { setIsAppLoading } = React.useContext(Context);
-  let [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
-
-  const accountid = Form.useWatch("domain", checkDomain);
+  const [isLoading, setLoading] = useState(false);
 
   const { mutate: checkAccountID } = useMutation(
     (payload: {}) =>
@@ -41,23 +40,25 @@ export default function EnterSubdomain() {
         url: `/api/domain-checker?api_key=${process.env.REACT_APP_API_KEY}`,
         payload,
         options: {
-          isLoading: (show: boolean) => setIsAppLoading(show),
+          isLoading: (show: boolean) => setLoading(show),
         },
       }),
     {
       onSuccess: (res) => {
         if (res) {
-          router.push(`http://${accountid}.staging.indxhealth.com/admin`);
+          router.push(
+            `http://${res.indx_url}.staging.indxhealth/admin?email=${res.email}`
+          );
         } else {
-          notification.success({
+          notification.warning({
             key: "check-account-id",
-            message: "Invalid Account ID",
-            description: "Account ID does not exist",
+            message: "Invalid Email",
+            description: "Email does not exist",
           });
         }
       },
       onError: (err: { [key: string]: string }) => {
-        notification.success({
+        notification.warning({
           key: "check-account-id",
           message: err.title,
           description: err.message,
@@ -68,6 +69,17 @@ export default function EnterSubdomain() {
 
   return (
     <>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <AnimateContainer
+            variants={fadeIn}
+            rootMargin="0px"
+            className="fixed h-screen w-full top-0 left-0 z-[9999] bg-black bg-opacity-80 flex justify-center items-center"
+          >
+            <LoadingScreen />
+          </AnimateContainer>
+        )}
+      </AnimatePresence>
       <PageContainer className="md:p-0">
         <div className="flex items-center justify-center flex-auto overflow-hidden">
           <motion.div
@@ -102,7 +114,7 @@ export default function EnterSubdomain() {
             className="absolute md:relative h-full w-full md:w-auto top-0 left-0 flex flex-col justify-center items-center flex-auto p-[5%] md:p-20 bg-white"
           >
             <div className="space-y-6 w-full">
-              <h1 className="font-['Mulish']">Enter Account ID</h1>
+              <h1 className="font-['Mulish']">Enter your Email</h1>
               <Form
                 form={checkDomain}
                 layout="vertical"
@@ -113,16 +125,16 @@ export default function EnterSubdomain() {
               >
                 <div>
                   <Form.Item
-                    name="domain"
+                    name="email"
                     rules={[
                       {
                         required: true,
-                        message: "Enter Account ID to proceed",
+                        message: "Enter email to proceed",
                       },
                     ]}
                     required={false}
                   >
-                    <Input id="domain" placeholder="Account ID" />
+                    <Input id="email" placeholder="Email" />
                   </Form.Item>
                 </div>
                 <div className="space-y-4 mt-10">

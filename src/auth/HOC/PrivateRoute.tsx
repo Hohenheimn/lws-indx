@@ -13,8 +13,8 @@ type AuthProps = {
   profile: any;
   openMenus: string;
   subdomain: string;
-  domainExist: boolean;
   router: typeof Router;
+  pathname: string;
 };
 
 export default function PrivateRoute(Component: any) {
@@ -23,7 +23,7 @@ export default function PrivateRoute(Component: any) {
     router,
     openMenus,
     subdomain,
-    domainExist,
+    pathname,
     ...rest
   }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -47,16 +47,16 @@ export default function PrivateRoute(Component: any) {
       );
     }
 
-    if (domainExist && !profile) {
-      return <Login {...rest} />;
-    }
+    // if (!profile) {
+    return <Login {...rest} />;
+    // }
 
-    return (
-      <div className=" h-screen w-screen flex justify-center items-center flex-col bg-primary-500">
-        <BiError className=" text-6xl text-danger-500 mb-5" />
-        <h1 className=" text-white text-3xl">Subdomain Do not Exist</h1>
-      </div>
-    );
+    // return (
+    //   <div className=" h-screen w-screen flex justify-center items-center flex-col bg-primary-500">
+    //     <BiError className=" text-6xl text-danger-500 mb-5" />
+    //     <h1 className=" text-white text-3xl">Subdomain Do not Exist</h1>
+    //   </div>
+    // );
   };
 
   return Auth;

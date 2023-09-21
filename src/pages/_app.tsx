@@ -7,20 +7,30 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import Router from "next/router";
 import Script from "next/script";
+import { BiError } from "react-icons/bi";
 import { twMerge } from "tailwind-merge";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn, stagger } from "@components/animation/animation";
+
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { capitalizeTitle } from "@utilities/helpers";
-
-
-
-
-
-
-
 
 
 
@@ -30,6 +40,15 @@ import { capitalizeTitle } from "@utilities/helpers";
 
 import "../../styles/globals.scss";
 import Layout from "../layout";
+
+
+
+
+
+
+
+
+
 
 
 
@@ -62,20 +81,12 @@ export default function App({ Component, pageProps, router }: AppProps) {
   const [isSubdomain, setSubdomain] = useState<string | undefined>("");
 
   useEffect(() => {
-    if (window?.location?.origin) {
-      let getSubDomain: string | string[] = window?.location?.origin.replace(
-        "https://",
-        ""
-      );
+    if (window?.location) {
+      let getSubDomain: string | string[] = window?.location?.hostname.split('.')[0]
       if (!router.pathname.includes("/admin")) {
         setSubdomain(undefined);
         return;
       }
-
-      getSubDomain = getSubDomain.replace("http://", "");
-      getSubDomain = getSubDomain.replace("https://", "");
-      getSubDomain = getSubDomain.split(".");
-      getSubDomain = getSubDomain[0];
       setSubdomain(getSubDomain);
     }
   });
@@ -104,8 +115,17 @@ export default function App({ Component, pageProps, router }: AppProps) {
       axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/setting?subdomain=${isSubdomain}`)
   .then(response => {
     setClinicLogo(response?.data?.clinic_logo)
-  })
-  }
+  }).catch(error => {
+  
+  })}
+  
+  
+//   return (
+//     <div className=" h-screen w-screen flex justify-center items-center flex-col bg-primary-500">
+//       <BiError className=" text-6xl text-danger-500 mb-5" />
+//       <h1 className=" text-white text-3xl">Subdomain Do not Exist</h1>
+//     </div>
+//   );
 
 
   return (

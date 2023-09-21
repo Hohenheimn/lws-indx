@@ -3,6 +3,7 @@ import { Space, Form, notification, Menu, Card } from "antd";
 
 import { Input as Inp } from "antd";
 import { Drawer } from "antd";
+import axios from "axios";
 import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -40,6 +41,7 @@ import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "@utilities/api";
+
 import { Context } from "@utilities/context/Provider";
 
 import Layout from "../layout";
@@ -65,7 +67,7 @@ const menu: Array<sideMenuProps> = [
   },
   {
     label: "Login",
-    link: "/enter-subdomain",
+    link: "/enter-email",
     appearance: "primary",
   },
   {
@@ -902,13 +904,30 @@ export function Website({ router }: any) {
   );
 }
 
-export const getServerSideProps = ({ req }: any) => {
+export const getServerSideProps = async ({ req }: any) => {
   let subdomain =
     req.headers.host.split(".").length > 1
       ? req.headers.host.split(".")[0]
       : null;
 
-  if (subdomain && subdomain === "lws-dentist") {
+  let domainExist = true;
+  await axios
+    .post(
+      `${process.env.REACT_APP_API_BASE_URL}/api/domain-checker?api_key=${process.env.REACT_APP_API_KEY}`,
+      {
+        email: subdomain,
+      }
+    )
+    .then((response) => {
+      if (response.data) {
+        domainExist = true;
+      }
+    })
+    .catch((error) => {
+      domainExist = false;
+    });
+
+  if (domainExist) {
     return {
       redirect: {
         permanent: false,
