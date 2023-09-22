@@ -144,7 +144,7 @@ export function ProfileInfo({ profile, tab }: any) {
       },
     }
   );
-
+  const country = Form.useWatch("country", DoctorInfoForm);
   return (
     <Card className="flex-auto">
       <Form
@@ -156,7 +156,7 @@ export function ProfileInfo({ profile, tab }: any) {
           values.civil_status = "";
           values.id = id;
           values.account_role = profile.account_role;
-          if (!image.edit) {
+          if (typeof values.profile_picture !== "object") {
             delete values.profile_picture;
           }
 
@@ -188,9 +188,13 @@ export function ProfileInfo({ profile, tab }: any) {
             >
               <Uploader
                 image={image}
-                setImage={(value: any) => setImage(value)}
+                setImage={(value: any) => {
+                  setImage(value);
+                  DoctorInfoForm.setFieldValue("profile_picture", value.file);
+                }}
                 className="[&_.ant-upload]:!border-0"
                 id="profile_picture"
+                capture={true}
               >
                 <div className="space-y-2 text-center">
                   <Avatar className="h-40 w-40 p-8 overflow-hidden relative border border-gray-300 avatar transition">
@@ -434,182 +438,216 @@ export function ProfileInfo({ profile, tab }: any) {
           <div className="grid grid-cols-3 gap-4">
             <Form.Item
               label="Country"
-              name="country"
-              rules={[
-                {
-                  required: true,
-                  message: "Country is required",
-                },
-              ]}
               required={false}
               className="col-span-full lg:col-span-1"
+              shouldUpdate={(prev, curr) => {
+                return true;
+              }}
             >
-              <Select placeholder="Select Country" id="country">
-                <Select.Option value="Philippines">Philippines</Select.Option>
-              </Select>
+              {({ getFieldValue, resetFields }) => {
+                return (
+                  <Form.Item
+                    name="country"
+                    rules={[{ required: true, message: "Country is required" }]}
+                  >
+                    <InfiniteSelect
+                      placeholder="Country"
+                      id="country"
+                      api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true&page=1`}
+                      getInitialValue={{
+                        form: DoctorInfoForm,
+                        initialValue: "country",
+                      }}
+                      queryKey={["country"]}
+                      displayValueKey="name"
+                      returnValueKey="_id"
+                      onChange={() => {
+                        resetFields(["city", "barangay", "province"]);
+                      }}
+                    />
+                  </Form.Item>
+                );
+              }}
             </Form.Item>
 
-            <Form.Item
-              label="Province"
-              required={false}
-              className="col-span-full lg:col-span-1"
-              shouldUpdate={(prev, curr) => {
-                return true;
-              }}
-            >
-              {({ getFieldValue, resetFields }) => {
-                return (
-                  <Form.Item
-                    name="province"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Province is required",
-                      },
-                    ]}
-                  >
-                    <InfiniteSelect
-                      placeholder="Province"
-                      id="province"
-                      api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
-                      getInitialValue={{
-                        form: DoctorInfoForm,
-                        initialValue: "province",
-                      }}
-                      queryKey={["province", getFieldValue("country")]}
-                      displayValueKey="name"
-                      returnValueKey="_id"
-                      disabled={Boolean(!getFieldValue("country"))}
-                      onChange={() => {
-                        resetFields(["city", "barangay"]);
-                      }}
-                    />
-                  </Form.Item>
-                );
-              }}
-            </Form.Item>
-            <Form.Item
-              label="City"
-              required={false}
-              className="col-span-full lg:col-span-1"
-              shouldUpdate={(prev, curr) => {
-                return true;
-              }}
-            >
-              {({ getFieldValue, resetFields }) => {
-                return (
-                  <Form.Item
-                    name="city"
-                    rules={[
-                      {
-                        required: true,
-                        message: "City is required",
-                      },
-                    ]}
-                  >
-                    <InfiniteSelect
-                      placeholder="City"
-                      id="city"
-                      api={`${
-                        process.env.REACT_APP_API_BASE_URL
-                      }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                        "province"
-                      )}`}
-                      getInitialValue={{
-                        form: DoctorInfoForm,
-                        initialValue: "province",
-                      }}
-                      queryKey={["city", getFieldValue("province")]}
-                      displayValueKey="name"
-                      returnValueKey="_id"
-                      disabled={Boolean(
-                        !getFieldValue("country") || !getFieldValue("province")
-                      )}
-                      onChange={() => {
-                        resetFields(["barangay"]);
-                      }}
-                    />
-                  </Form.Item>
-                );
-              }}
-            </Form.Item>
-            <Form.Item
-              label="Barangay"
-              required={false}
-              className="col-span-full lg:col-span-1"
-              shouldUpdate={(prev, curr) => {
-                return true;
-              }}
-            >
-              {({ getFieldValue, resetFields }) => {
-                return (
-                  <Form.Item
-                    name="barangay"
-                    rules={[
-                      {
-                        required: true,
-                        message: "City is required",
-                      },
-                    ]}
-                  >
-                    <InfiniteSelect
-                      placeholder="Barangay"
-                      id="barangay"
-                      api={`${
-                        process.env.REACT_APP_API_BASE_URL
-                      }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                        "province"
-                      )}&city_code=${getFieldValue("city")}`}
-                      getInitialValue={{
-                        form: DoctorInfoForm,
-                        initialValue: "barangay",
-                      }}
-                      queryKey={["barangay", getFieldValue("city")]}
-                      displayValueKey="name"
-                      returnValueKey="_id"
-                      disabled={Boolean(
-                        !getFieldValue("country") ||
-                          !getFieldValue("province") ||
-                          !getFieldValue("city")
-                      )}
-                    />
-                  </Form.Item>
-                );
-              }}
-            </Form.Item>
-            <Form.Item
-              label="Street"
-              name="street"
-              rules={[
-                {
-                  required: true,
-                  message: "Street is required",
-                },
-              ]}
-              required={false}
-              className="col-span-full lg:col-span-1"
-            >
-              <Input id="street" placeholder="Add street name" />
-            </Form.Item>
-            <Form.Item
-              label="Zip Code"
-              name="zip_code"
-              rules={[
-                {
-                  required: true,
-                  message: "Zip Code is required",
-                },
-              ]}
-              required={false}
-              className="col-span-full lg:col-span-1"
-            >
-              <NumericFormat
-                customInput={Input}
-                id="zip_code"
-                allowNegative={false}
-                placeholder="Zip Code"
-              />
-            </Form.Item>
+            {country === "Philippines" ||
+            country === "174" ||
+            country === undefined ||
+            country === "" ? (
+              <>
+                <Form.Item
+                  label="Province"
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                  shouldUpdate={(prev, curr) => {
+                    return true;
+                  }}
+                >
+                  {({ getFieldValue, resetFields }) => {
+                    return (
+                      <Form.Item
+                        name="province"
+                        rules={[
+                          { required: true, message: "Province is required" },
+                        ]}
+                      >
+                        <InfiniteSelect
+                          placeholder="Province"
+                          id="province"
+                          api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
+                          getInitialValue={{
+                            form: DoctorInfoForm,
+                            initialValue: "province",
+                          }}
+                          queryKey={["province", getFieldValue("country")]}
+                          displayValueKey="name"
+                          returnValueKey="_id"
+                          disabled={Boolean(!getFieldValue("country"))}
+                          onChange={() => {
+                            resetFields(["city", "barangay"]);
+                          }}
+                        />
+                      </Form.Item>
+                    );
+                  }}
+                </Form.Item>
+                <Form.Item
+                  label="City"
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                  shouldUpdate={(prev, curr) => {
+                    return true;
+                  }}
+                >
+                  {({ getFieldValue, resetFields }) => {
+                    return (
+                      <Form.Item
+                        name="city"
+                        rules={[
+                          { required: true, message: "City is required" },
+                        ]}
+                      >
+                        <InfiniteSelect
+                          placeholder="City"
+                          id="city"
+                          api={`${
+                            process.env.REACT_APP_API_BASE_URL
+                          }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                            "province"
+                          )}`}
+                          getInitialValue={{
+                            form: DoctorInfoForm,
+                            initialValue: "city",
+                          }}
+                          queryKey={["city", getFieldValue("province")]}
+                          displayValueKey="name"
+                          returnValueKey="_id"
+                          disabled={Boolean(
+                            !getFieldValue("country") ||
+                              !getFieldValue("province")
+                          )}
+                          onChange={() => {
+                            resetFields(["barangay"]);
+                          }}
+                        />
+                      </Form.Item>
+                    );
+                  }}
+                </Form.Item>
+                <Form.Item
+                  label="Barangay"
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                  shouldUpdate={(prev, curr) => {
+                    return true;
+                  }}
+                >
+                  {({ getFieldValue, resetFields }) => {
+                    return (
+                      <Form.Item
+                        name="barangay"
+                        rules={[
+                          { required: true, message: "City is required" },
+                        ]}
+                      >
+                        <InfiniteSelect
+                          placeholder="Barangay"
+                          id="barangay"
+                          api={`${
+                            process.env.REACT_APP_API_BASE_URL
+                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                            "province"
+                          )}&city_code=${getFieldValue("city")}`}
+                          getInitialValue={{
+                            form: DoctorInfoForm,
+                            initialValue: "barangay",
+                          }}
+                          queryKey={["barangay", getFieldValue("city")]}
+                          displayValueKey="name"
+                          returnValueKey="_id"
+                          disabled={Boolean(
+                            !getFieldValue("country") ||
+                              !getFieldValue("province") ||
+                              !getFieldValue("city")
+                          )}
+                        />
+                      </Form.Item>
+                    );
+                  }}
+                </Form.Item>
+                <Form.Item
+                  label="Street"
+                  name="street"
+                  rules={[{ required: true, message: "Street is required" }]}
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                >
+                  <Input id="street" placeholder="Add street name" />
+                </Form.Item>
+                <Form.Item
+                  label="Zip Code"
+                  name="zip_code"
+                  rules={[{ required: true, message: "Zip Code is required" }]}
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                >
+                  <NumericFormat
+                    customInput={Input}
+                    id="zip_code"
+                    allowNegative={false}
+                    placeholder="Zip Code"
+                  />
+                </Form.Item>
+              </>
+            ) : (
+              <>
+                <Form.Item
+                  label="Address"
+                  name="address"
+                  rules={[{ required: true, message: "Address is required" }]}
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                >
+                  <Input id="street" placeholder="Add full address" />
+                </Form.Item>
+                <Form.Item
+                  label="Postal Code"
+                  name="postal_code"
+                  rules={[
+                    { required: true, message: "Postal Code is required" },
+                  ]}
+                  required={false}
+                  className="col-span-full lg:col-span-1"
+                >
+                  <NumericFormat
+                    customInput={Input}
+                    id="zip_code"
+                    allowNegative={false}
+                    placeholder="Postal Code"
+                  />
+                </Form.Item>
+              </>
+            )}
           </div>
         </div>
         <div className="flex justify-end items-center gap-4">

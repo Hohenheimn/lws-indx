@@ -4,8 +4,11 @@ import {
   format,
   startOfDay,
   parse,
+  isAfter,
   differenceInMinutes,
   isValid,
+  setMinutes,
+  setHours,
   addHours,
 } from "date-fns";
 import { AnimatePresence } from "framer-motion";
@@ -23,6 +26,7 @@ type Props = {
   disabled?: boolean;
   blockOutSide?: string[];
   filterByOutSideTime?: boolean;
+  autoTimeEndRange?: number;
 };
 
 const convertTo24HourFormat = (time12Hour: string) => {
@@ -69,6 +73,7 @@ export default function TimeRangePicker({
   disabled,
   blockOutSide,
   filterByOutSideTime,
+  autoTimeEndRange,
   ...rest
 }: Props) {
   const disabledTimeArray = disabledTime(
@@ -103,12 +108,23 @@ export default function TimeRangePicker({
     };
   });
 
+  const today = new Date();
+  const endOfDay = setMinutes(setHours(today, 23), 30);
+
   useEffect(() => {
     if (start === "") return;
     const selectedTime = parse(start, "hh:mm a", new Date());
-    const oneHourLater = addHours(selectedTime, 1);
-    if (isValid(oneHourLater)) {
-      setEnd(format(oneHourLater, "hh:mm a"));
+    const addHoursRange = addHours(
+      selectedTime,
+      autoTimeEndRange ? autoTimeEndRange : 1
+    );
+    const isOverADay = isAfter(addHoursRange, endOfDay);
+    if (isValid(addHoursRange)) {
+      if (isOverADay) {
+        setEnd("11:30 PM");
+      } else {
+        setEnd(format(addHoursRange, "hh:mm a"));
+      }
     } else {
       setEnd("");
     }
@@ -141,12 +157,12 @@ export default function TimeRangePicker({
   }, [show]);
 
   return (
-    <div className=" flex gap-3 relative z-10" ref={Container}>
+    <div className=" flex gap-3 relative z-20" ref={Container}>
       <Input
         {...rest}
         disabled={disabled}
         id={id}
-        placeholder="time"
+        placeholder="Time"
         value={
           restValue?.value?.length > 0
             ? restValue?.value[0] +

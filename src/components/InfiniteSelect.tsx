@@ -72,8 +72,8 @@ export function InfiniteSelect({
       });
     },
     getNextPageParam: (lastPage, pages) => {
-      if (pages.slice(-1).pop().links.next) {
-        return pages.slice(-1).pop().links.next;
+      if (pages?.slice(-1)?.pop()?.links?.next) {
+        return pages?.slice(-1)?.pop()?.links?.next;
       }
     },
     // enabled: getInitialValue

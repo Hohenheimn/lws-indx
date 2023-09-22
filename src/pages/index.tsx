@@ -198,7 +198,7 @@ export function Website({ router }: any) {
               onClick={() => router.push("#hero")}
             />
           </div>
-          <div className="hidden md:flex gap-20 items-center">
+          <div className="hidden md:flex gap-3 items-center">
             {menu.map(({ label, link, appearance }, index) => (
               <div key={index}>
                 <Button

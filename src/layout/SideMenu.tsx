@@ -1,5 +1,5 @@
-import React from "react";
-import { notification, Menu } from "antd";
+import React, { useState } from "react";
+import { notification, Menu, MenuProps } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { destroyCookie, setCookie } from "nookies";
@@ -109,6 +109,8 @@ const sideMenu: Array<sideMenuProps> = [
   },
 ];
 
+const rootSubmenuKeys = ["sub1", "sub2", "sub4"];
+
 export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
   const router = useRouter();
   const {
@@ -119,6 +121,18 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
   } = React.useContext(Context);
   let [isImageError, setIsImageError] = React.useState(false);
   let openedSubMenu = openMenus ? JSON.parse(openMenus) : [];
+
+  const [openKeys, setOpenKeys] = useState<any>([]);
+
+  const handleSubMenuOpenChange = (keys: any) => {
+    if (keys.length === 0) {
+      // Close all submenus if no submenus are open
+      setOpenKeys([]);
+    } else {
+      // Keep the last opened submenu open
+      setOpenKeys([keys[keys.length - 1]]);
+    }
+  };
 
   return (
     <>
@@ -175,12 +189,14 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                   ]}
                   defaultOpenKeys={openedSubMenu}
                   className="styled-menu"
-                  onOpenChange={(e) =>
+                  onOpenChange={(e) => {
+                    handleSubMenuOpenChange(e);
                     setCookie(null, "om", JSON.stringify(e), {
                       path: "/",
                       expires: 0,
-                    })
-                  }
+                    });
+                  }}
+                  openKeys={openKeys}
                 >
                   {sideMenu.map(
                     ({ show, subMenu, link, label, disabled, key }) => {

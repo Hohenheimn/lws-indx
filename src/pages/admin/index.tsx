@@ -91,6 +91,14 @@ export function Dashboard({}: NextPageProps) {
     })
   );
 
+  const { data: patients, isFetching: isPatientsLoading } = useQuery(
+    ["all-patient"],
+    () =>
+      fetchData({
+        url: `/api/patient`,
+      })
+  );
+
   const scheduleDates = schedules?.map((item: any) => item.date);
 
   const {
@@ -197,7 +205,11 @@ export function Dashboard({}: NextPageProps) {
             <Button
               className="p-3 w-full"
               onClick={() => setIsScheduleModalOpen(true)}
-              appearance="primary"
+              appearance={
+                isPatientsLoading || patients?.length <= 0
+                  ? "disabled"
+                  : "primary"
+              }
             >
               <div className="flex justify-center items-center">
                 <IoIosAdd className="inline-block text-2xl" />{" "}

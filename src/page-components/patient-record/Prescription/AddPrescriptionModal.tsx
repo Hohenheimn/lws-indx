@@ -7,7 +7,7 @@ import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
 import { AnimateContainer } from "@components/animation";
-import { fadeIn } from "@components/animation/animation";
+import { down, fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
@@ -16,9 +16,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { getInitialValue } from "@utilities/helpers";
-
-
-
 
 export default function AddPrescriptionModal({
   show,
@@ -73,8 +70,9 @@ export default function AddPrescriptionModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["prescription"], context.previousValues);
       },
@@ -116,8 +114,9 @@ export default function AddPrescriptionModal({
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["prescription"], context.previousValues);
       },
@@ -176,12 +175,13 @@ export default function AddPrescriptionModal({
               <InfiniteSelect
                 placeholder="Prescription Template"
                 id="prescription_id"
-                api={`${process.env.REACT_APP_API_BASE_URL
-                  }/api/prescription?limit=3&for_dropdown=true&page=1${getInitialValue(
-                    form,
-                    "prescription_id"
-                  )}`}
-                disabled={pageType === 'view' && id}
+                api={`${
+                  process.env.REACT_APP_API_BASE_URL
+                }/api/prescription?limit=3&for_dropdown=true&page=1${getInitialValue(
+                  form,
+                  "prescription_id"
+                )}`}
+                disabled={pageType === "view" && id}
                 queryKey={["prescription_id"]}
                 displayValueKey="name"
                 returnValueKey="_id"
@@ -218,17 +218,21 @@ export default function AddPrescriptionModal({
                       {fields.map(({ name, key }) => {
                         return (
                           <AnimateContainer
-                            variants={fadeIn}
+                            variants={down}
                             key={key}
                             triggerOnce={true}
                           >
                             <div className="grid grid-cols-1 z-[99] lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
-                                  className={`absolute top-0 right-0 m-2  text-3xl ${pageType === 'view' && id ? ' text-gray-400' : 'cursor-pointer text-danger'}`}
+                                  className={`absolute top-0 right-0 m-2  text-3xl ${
+                                    pageType === "view" && id
+                                      ? " text-gray-400"
+                                      : "cursor-pointer text-danger"
+                                  }`}
                                   onClick={() => {
-                                    if (pageType === 'view' && id) return
-                                    remove(name)
+                                    if (pageType === "view" && id) return;
+                                    remove(name);
                                   }}
                                 />
                               ) : null}
@@ -249,7 +253,7 @@ export default function AddPrescriptionModal({
                                   id={["medicines", name, "medicine_id"].join(
                                     "-"
                                   )}
-                                  disabled={pageType === 'view' && id}
+                                  disabled={pageType === "view" && id}
                                   api={`${process.env.REACT_APP_API_BASE_URL}/api/medicine?limit=3&for_dropdown=true&page=1`}
                                   queryKey={["medicineList"]}
                                   displayValueKey="name"
@@ -274,7 +278,7 @@ export default function AddPrescriptionModal({
                                   customInput={Input}
                                   thousandSeparator=","
                                   thousandsGroupStyle="thousand"
-                                  disabled={pageType === 'view' && id}
+                                  disabled={pageType === "view" && id}
                                 />
                               </Form.Item>
                               <Form.Item
@@ -292,7 +296,7 @@ export default function AddPrescriptionModal({
                                 <Input
                                   id={["medicines", name, "sig"].join("-")}
                                   placeholder="Sig"
-                                  disabled={pageType === 'view' && id}
+                                  disabled={pageType === "view" && id}
                                 />
                               </Form.Item>
                             </div>
@@ -338,13 +342,21 @@ export default function AddPrescriptionModal({
                           </Form.Item>
                         </div>
                         <div
-                          className={`absolute top-0 left-0 h-full w-full flex justify-center items-center ${pageType === 'view' && id ? '' : 'cursor-pointer'} `}
+                          className={`absolute top-0 left-0 h-full w-full flex justify-center items-center ${
+                            pageType === "view" && id ? "" : "cursor-pointer"
+                          } `}
                           onClick={() => {
-                            if (pageType === 'view' && id) return
-                            add()
+                            if (pageType === "view" && id) return;
+                            add();
                           }}
                         >
-                          <IoMdAddCircle className={`text-7xl ${pageType === 'view' && id ? 'text-gray-400' : 'text-primary'}`} />
+                          <IoMdAddCircle
+                            className={`text-7xl ${
+                              pageType === "view" && id
+                                ? "text-gray-400"
+                                : "text-primary"
+                            }`}
+                          />
                         </div>
                       </div>
                     </>
@@ -360,7 +372,7 @@ export default function AddPrescriptionModal({
                 <TextArea
                   id="additional_instructions"
                   placeholder="Additional Instructions"
-                  disabled={pageType === 'view' && id}
+                  disabled={pageType === "view" && id}
                   rows={8}
                 />
               </Form.Item>
@@ -375,17 +387,19 @@ export default function AddPrescriptionModal({
                 setPrescriptionTemplateDetail(undefined);
               }}
             >
-              {pageType === 'view' && id ? 'Close' : 'Cancel'}
+              {pageType === "view" && id ? "Close" : "Cancel"}
             </Button>
-            {
-              pageType === 'view' && id ? <div></div> : <Button
+            {pageType === "view" && id ? (
+              <div></div>
+            ) : (
+              <Button
                 appearance="primary"
                 className="max-w-[10rem]"
                 type="submit"
               >
                 Save
               </Button>
-            }
+            )}
           </div>
         </Form>
       </div>

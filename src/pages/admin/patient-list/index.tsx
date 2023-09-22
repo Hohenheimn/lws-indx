@@ -337,12 +337,12 @@ export function PatientList({ profile, router }: any) {
               onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
-          <div className="basis-full lg:basis-auto flex gap-4">
+          {/* <div className="basis-full lg:basis-auto flex gap-4">
             <Radio.Group defaultValue="my_patients">
               <Radio.Button value="my_patients" label="My Patients" />
-              {/* <Radio.Button value="shared_patients" label="Shared Patients" /> */}
+              <Radio.Button value="shared_patients" label="Shared Patients" />
             </Radio.Group>
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-col flex-auto">
           <Table

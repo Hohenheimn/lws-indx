@@ -1,5 +1,7 @@
 import React from "react";
+import { parseISO, format } from "date-fns";
 import { useRouter } from "next/router";
+
 import { Button } from "@components/Button";
 
 import Card from "@components/Card";
@@ -14,6 +16,8 @@ const li = "flex justify-between space-x-2 items-center";
 export function AccountDetails({ patientRecord, profile, myProfile }: any) {
   const router = useRouter();
   const [toShow, setToShow] = React.useState("");
+  const parsedDate = parseISO(profile.created_at);
+  const formattedDate = format(parsedDate, "MMM dd, yyyy");
 
   return (
     <>
@@ -22,7 +26,7 @@ export function AccountDetails({ patientRecord, profile, myProfile }: any) {
           <ul className=" w-full space-y-8">
             <li className={li}>
               <p className=" font-semibold">Member Since:</p>
-              <p className=" font-semibold">May 3, 2021</p>
+              <p className=" font-semibold">{formattedDate}</p>
             </li>
             {/* <li className={li}>
               <p className=" font-semibold">

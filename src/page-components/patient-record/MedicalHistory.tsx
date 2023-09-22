@@ -162,6 +162,8 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
     }
   );
 
+  const clinic_country = Form.useWatch("clinic_country", MedicalHistoryForm);
+
   return (
     <Card className="flex-auto md:p-12 p-6">
       <Form
@@ -230,182 +232,249 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
               <div className="grid grid-cols-12 gap-4">
                 <Form.Item
                   label="Country"
-                  name="clinic_country"
-                  rules={[{ required: true, message: "Country is required" }]}
                   required={false}
                   className="col-span-12 lg:col-span-4"
+                  shouldUpdate={(prev, curr) => {
+                    return true;
+                  }}
                 >
-                  <Select
-                    disabled={pageType === "view"}
-                    placeholder="Select Country"
-                    id="clinic_country"
-                  >
-                    <Select.Option value="Philippines">
-                      Philippines
-                    </Select.Option>
-                  </Select>
+                  {({ getFieldValue, resetFields }) => {
+                    return (
+                      <Form.Item
+                        name="clinic_country"
+                        rules={[
+                          { required: true, message: "Country is required" },
+                        ]}
+                      >
+                        <InfiniteSelect
+                          placeholder="Country"
+                          id="clinic_country"
+                          api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true&page=1`}
+                          getInitialValue={{
+                            form: MedicalHistoryForm,
+                            initialValue: "clinic_country",
+                          }}
+                          queryKey={["clinic_country"]}
+                          displayValueKey="name"
+                          disabled={pageType === "view"}
+                          returnValueKey="_id"
+                          onChange={() => {
+                            resetFields([
+                              "clinic_city",
+                              "clinic_barangay",
+                              "clinic_province",
+                            ]);
+                          }}
+                        />
+                      </Form.Item>
+                    );
+                  }}
                 </Form.Item>
 
-                <Form.Item
-                  label="Province"
-                  required={false}
-                  className="col-span-12 lg:col-span-4"
-                  shouldUpdate={(prev, curr) => {
-                    return true;
-                  }}
-                >
-                  {({ getFieldValue, resetFields }) => {
-                    return (
-                      <Form.Item
-                        name="clinic_province"
-                        rules={[
-                          { required: true, message: "Province is required" },
-                        ]}
-                      >
-                        <InfiniteSelect
-                          placeholder="Province"
-                          id="clinic_province"
-                          api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
-                          getInitialValue={{
-                            form: MedicalHistoryForm,
-                            initialValue: "clinic_province",
-                          }}
-                          queryKey={[
-                            "clinic_province",
-                            getFieldValue("clinic_country"),
-                          ]}
-                          displayValueKey="name"
-                          returnValueKey="_id"
-                          disabled={
-                            Boolean(!getFieldValue("clinic_country")) ||
-                            pageType === "view"
-                          }
-                          onChange={() => {
-                            resetFields(["clinic_city", "clinic_barangay"]);
-                          }}
-                        />
-                      </Form.Item>
-                    );
-                  }}
-                </Form.Item>
-                <Form.Item
-                  label="City"
-                  required={false}
-                  className="col-span-12 lg:col-span-4"
-                  shouldUpdate={(prev, curr) => {
-                    return true;
-                  }}
-                >
-                  {({ getFieldValue, resetFields }) => {
-                    return (
-                      <Form.Item
-                        name="clinic_city"
-                        rules={[
-                          { required: true, message: "City is required" },
-                        ]}
-                      >
-                        <InfiniteSelect
-                          placeholder="City"
-                          id="clinic_city"
-                          api={`${
-                            process.env.REACT_APP_API_BASE_URL
-                          }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                            "clinic_province"
-                          )}`}
-                          getInitialValue={{
-                            form: MedicalHistoryForm,
-                            initialValue: "clinic_city",
-                          }}
-                          queryKey={[
-                            "clinic_city",
-                            getFieldValue("clinic_province"),
-                          ]}
-                          displayValueKey="name"
-                          returnValueKey="_id"
-                          disabled={Boolean(
-                            pageType === "view" ||
-                              !getFieldValue("clinic_province")
-                          )}
-                          onChange={() => {
-                            resetFields(["clinic_barangay"]);
-                          }}
-                        />
-                      </Form.Item>
-                    );
-                  }}
-                </Form.Item>
-                <Form.Item
-                  label="Barangay"
-                  required={false}
-                  className="col-span-12 lg:col-span-4"
-                  shouldUpdate={(prev, curr) => {
-                    return true;
-                  }}
-                >
-                  {({ getFieldValue, resetFields }) => {
-                    return (
-                      <Form.Item
-                        name="clinic_barangay"
-                        rules={[
-                          { required: true, message: "City is required" },
-                        ]}
-                      >
-                        <InfiniteSelect
-                          placeholder="Barangay"
-                          id="clinic_barangay"
-                          api={`${
-                            process.env.REACT_APP_API_BASE_URL
-                          }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                            "clinic_province"
-                          )}&city_code=${getFieldValue("clinic_city")}`}
-                          getInitialValue={{
-                            form: MedicalHistoryForm,
-                            initialValue: "clinic_barangay",
-                          }}
-                          queryKey={[
-                            "clinic_barangay",
-                            getFieldValue("clinic_city"),
-                          ]}
-                          displayValueKey="name"
-                          returnValueKey="_id"
-                          disabled={Boolean(
-                            pageType === "view" ||
-                              !getFieldValue("clinic_province") ||
-                              !getFieldValue("clinic_city")
-                          )}
-                        />
-                      </Form.Item>
-                    );
-                  }}
-                </Form.Item>
-                <Form.Item
-                  label="Street"
-                  name="clinic_street"
-                  rules={[{ required: true, message: "Street is required" }]}
-                  required={false}
-                  className="col-span-12 lg:col-span-4"
-                >
-                  <Input
-                    id="clinic_street"
-                    disabled={pageType === "view"}
-                    placeholder="Add street name"
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Zip Code"
-                  name="clinic_zip_code"
-                  rules={[{ required: true, message: "Zip Code is required" }]}
-                  required={false}
-                  className="col-span-12 lg:col-span-4"
-                >
-                  <NumericFormat
-                    customInput={Input}
-                    id="clinic_zip_code"
-                    allowNegative={false}
-                    placeholder="Zip Code"
-                    disabled={pageType === "view"}
-                  />
-                </Form.Item>
+                {clinic_country === "Philippines" ||
+                clinic_country === "174" ||
+                clinic_country === undefined ||
+                clinic_country === "" ? (
+                  <>
+                    <Form.Item
+                      label="Province"
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                      shouldUpdate={(prev, curr) => {
+                        return true;
+                      }}
+                    >
+                      {({ getFieldValue, resetFields }) => {
+                        return (
+                          <Form.Item
+                            name="clinic_province"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Province is required",
+                              },
+                            ]}
+                          >
+                            <InfiniteSelect
+                              placeholder="Province"
+                              id="clinic_province"
+                              api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
+                              getInitialValue={{
+                                form: MedicalHistoryForm,
+                                initialValue: "clinic_province",
+                              }}
+                              queryKey={[
+                                "clinic_province",
+                                getFieldValue("clinic_country"),
+                              ]}
+                              displayValueKey="name"
+                              returnValueKey="_id"
+                              disabled={
+                                Boolean(!getFieldValue("clinic_country")) ||
+                                pageType === "view"
+                              }
+                              onChange={() => {
+                                resetFields(["clinic_city", "clinic_barangay"]);
+                              }}
+                            />
+                          </Form.Item>
+                        );
+                      }}
+                    </Form.Item>
+                    <Form.Item
+                      label="City"
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                      shouldUpdate={(prev, curr) => {
+                        return true;
+                      }}
+                    >
+                      {({ getFieldValue, resetFields }) => {
+                        return (
+                          <Form.Item
+                            name="clinic_city"
+                            rules={[
+                              { required: true, message: "City is required" },
+                            ]}
+                          >
+                            <InfiniteSelect
+                              placeholder="City"
+                              id="clinic_city"
+                              api={`${
+                                process.env.REACT_APP_API_BASE_URL
+                              }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                                "clinic_province"
+                              )}`}
+                              getInitialValue={{
+                                form: MedicalHistoryForm,
+                                initialValue: "clinic_city",
+                              }}
+                              queryKey={[
+                                "clinic_city",
+                                getFieldValue("clinic_province"),
+                              ]}
+                              displayValueKey="name"
+                              returnValueKey="_id"
+                              disabled={Boolean(
+                                pageType === "view" ||
+                                  !getFieldValue("clinic_province")
+                              )}
+                              onChange={() => {
+                                resetFields(["clinic_barangay"]);
+                              }}
+                            />
+                          </Form.Item>
+                        );
+                      }}
+                    </Form.Item>
+                    <Form.Item
+                      label="Barangay"
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                      shouldUpdate={(prev, curr) => {
+                        return true;
+                      }}
+                    >
+                      {({ getFieldValue, resetFields }) => {
+                        return (
+                          <Form.Item
+                            name="clinic_barangay"
+                            rules={[
+                              { required: true, message: "City is required" },
+                            ]}
+                          >
+                            <InfiniteSelect
+                              placeholder="Barangay"
+                              id="clinic_barangay"
+                              api={`${
+                                process.env.REACT_APP_API_BASE_URL
+                              }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                                "clinic_province"
+                              )}&city_code=${getFieldValue("clinic_city")}`}
+                              getInitialValue={{
+                                form: MedicalHistoryForm,
+                                initialValue: "clinic_barangay",
+                              }}
+                              queryKey={[
+                                "clinic_barangay",
+                                getFieldValue("clinic_city"),
+                              ]}
+                              displayValueKey="name"
+                              returnValueKey="_id"
+                              disabled={Boolean(
+                                pageType === "view" ||
+                                  !getFieldValue("clinic_province") ||
+                                  !getFieldValue("clinic_city")
+                              )}
+                            />
+                          </Form.Item>
+                        );
+                      }}
+                    </Form.Item>
+                    <Form.Item
+                      label="Street"
+                      name="clinic_street"
+                      rules={[
+                        { required: true, message: "Street is required" },
+                      ]}
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                    >
+                      <Input
+                        id="clinic_street"
+                        disabled={pageType === "view"}
+                        placeholder="Add street name"
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="Zip Code"
+                      name="clinic_zip_code"
+                      rules={[
+                        { required: true, message: "Zip Code is required" },
+                      ]}
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                    >
+                      <NumericFormat
+                        customInput={Input}
+                        id="clinic_zip_code"
+                        allowNegative={false}
+                        placeholder="Zip Code"
+                        disabled={pageType === "view"}
+                      />
+                    </Form.Item>
+                  </>
+                ) : (
+                  <>
+                    <Form.Item
+                      label="Address"
+                      name="clinic_address"
+                      rules={[
+                        { required: true, message: "Address is required" },
+                      ]}
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                    >
+                      <Input id="street" placeholder="Add full address" />
+                    </Form.Item>
+                    <Form.Item
+                      label="Postal Code"
+                      name="clinic_postal_code"
+                      rules={[
+                        { required: true, message: "Postal Code is required" },
+                      ]}
+                      required={false}
+                      className="col-span-12 lg:col-span-4"
+                    >
+                      <NumericFormat
+                        customInput={Input}
+                        id="zip_code"
+                        allowNegative={false}
+                        placeholder="Postal Code"
+                      />
+                    </Form.Item>
+                  </>
+                )}
               </div>
             </div>
             <hr />

@@ -14,8 +14,8 @@ import Input from "@components/Input";
 import Modal from "@components/Modal";
 import { Select } from "@components/Select";
 import TimeRangePicker from "@src/components/TimeRangePicker";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData } from "@utilities/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import days from "@utilities/global-data/days";
 
@@ -24,10 +24,6 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
   const { setIsAppLoading } = React.useContext(Context);
 
   const schedules = Form.useWatch("schedules", form);
-
-  useEffect(() => {
-    console.log(schedules);
-  }, [schedules]);
 
   const { mutate: addBranch } = useMutation(
     (payload: any) => {
@@ -120,6 +116,8 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
     dentalchair = [...dentalchair, i];
   }
 
+  const country = Form.useWatch("country", form);
+
   return (
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
@@ -139,7 +137,6 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
               };
             });
             values.schedules = JSON.stringify(values.schedules);
-
             if (!id) {
               addBranch(values);
             } else {
@@ -232,18 +229,6 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
             <div className="grid grid-cols-3 gap-4">
               <Form.Item
                 label="Country"
-                name="country"
-                rules={[{ required: true, message: "Country is required" }]}
-                required={false}
-                className="col-span-full lg:col-span-1"
-              >
-                <Select placeholder="Select Country" id="country">
-                  <Select.Option value="Philippines">Philippines</Select.Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item
-                label="Province"
                 required={false}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
@@ -253,134 +238,211 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 {({ getFieldValue, resetFields }) => {
                   return (
                     <Form.Item
-                      name="province"
+                      name="country"
                       rules={[
-                        { required: true, message: "Province is required" },
+                        { required: true, message: "Country is required" },
                       ]}
                     >
                       <InfiniteSelect
-                        placeholder="Province"
-                        id="province"
-                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
+                        placeholder="Country"
+                        id="country"
+                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true&page=1`}
                         getInitialValue={{
                           form,
-                          initialValue: "province",
+                          initialValue: "country",
                         }}
-                        queryKey={["province", getFieldValue("country")]}
+                        queryKey={["country"]}
                         displayValueKey="name"
                         returnValueKey="_id"
-                        disabled={Boolean(!getFieldValue("country"))}
                         onChange={() => {
-                          resetFields(["city", "barangay"]);
+                          resetFields(["city", "barangay", "province"]);
                         }}
                       />
                     </Form.Item>
                   );
                 }}
               </Form.Item>
-              <Form.Item
-                label="City"
-                required={false}
-                className="col-span-full lg:col-span-1"
-                shouldUpdate={(prev, curr) => {
-                  return true;
-                }}
-              >
-                {({ getFieldValue, resetFields }) => {
-                  return (
-                    <Form.Item
-                      name="city"
-                      rules={[{ required: true, message: "City is required" }]}
-                    >
-                      <InfiniteSelect
-                        placeholder="City"
-                        id="city"
-                        api={`${
-                          process.env.REACT_APP_API_BASE_URL
-                        }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                          "province"
-                        )}`}
-                        getInitialValue={{
-                          form,
-                          initialValue: "city",
-                        }}
-                        queryKey={["city", getFieldValue("province")]}
-                        displayValueKey="name"
-                        returnValueKey="_id"
-                        disabled={Boolean(
-                          !getFieldValue("country") ||
-                            !getFieldValue("province")
-                        )}
-                        onChange={() => {
-                          resetFields(["barangay"]);
-                        }}
-                      />
-                    </Form.Item>
-                  );
-                }}
-              </Form.Item>
-              <Form.Item
-                label="Barangay"
-                required={false}
-                className="col-span-full lg:col-span-1"
-                shouldUpdate={(prev, curr) => {
-                  return true;
-                }}
-              >
-                {({ getFieldValue, resetFields }) => {
-                  return (
-                    <Form.Item
-                      name="barangay"
-                      rules={[{ required: true, message: "City is required" }]}
-                    >
-                      <InfiniteSelect
-                        placeholder="Barangay"
-                        id="barangay"
-                        api={`${
-                          process.env.REACT_APP_API_BASE_URL
-                        }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                          "province"
-                        )}&city_code=${getFieldValue("city")}`}
-                        getInitialValue={{
-                          form,
-                          initialValue: "barangay",
-                        }}
-                        queryKey={["barangay", getFieldValue("city")]}
-                        displayValueKey="name"
-                        returnValueKey="_id"
-                        disabled={Boolean(
-                          !getFieldValue("country") ||
-                            !getFieldValue("province") ||
-                            !getFieldValue("city")
-                        )}
-                      />
-                    </Form.Item>
-                  );
-                }}
-              </Form.Item>
-              <Form.Item
-                label="Street"
-                name="street"
-                rules={[{ required: true, message: "Street is required" }]}
-                required={false}
-                className="col-span-full lg:col-span-1"
-              >
-                <Input id="street" placeholder="Add street name" />
-              </Form.Item>
-              <Form.Item
-                label="Zip Code"
-                name="zip_code"
-                rules={[{ required: true, message: "Zip Code is required" }]}
-                required={false}
-                className="col-span-full lg:col-span-1"
-              >
-                <NumericFormat
-                  customInput={Input}
-                  id="zip_code"
-                  allowNegative={false}
-                  placeholder="Zip Code"
-                />
-              </Form.Item>
+
+              {country === "Philippines" ||
+              country === "174" ||
+              country === undefined ||
+              country === "" ? (
+                <>
+                  <Form.Item
+                    label="Province"
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                    shouldUpdate={(prev, curr) => {
+                      return true;
+                    }}
+                  >
+                    {({ getFieldValue, resetFields }) => {
+                      return (
+                        <Form.Item
+                          name="province"
+                          rules={[
+                            { required: true, message: "Province is required" },
+                          ]}
+                        >
+                          <InfiniteSelect
+                            placeholder="Province"
+                            id="province"
+                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
+                            getInitialValue={{
+                              form,
+                              initialValue: "province",
+                            }}
+                            queryKey={["province", getFieldValue("country")]}
+                            displayValueKey="name"
+                            returnValueKey="_id"
+                            disabled={Boolean(!getFieldValue("country"))}
+                            onChange={() => {
+                              resetFields(["city", "barangay"]);
+                            }}
+                          />
+                        </Form.Item>
+                      );
+                    }}
+                  </Form.Item>
+                  <Form.Item
+                    label="City"
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                    shouldUpdate={(prev, curr) => {
+                      return true;
+                    }}
+                  >
+                    {({ getFieldValue, resetFields }) => {
+                      return (
+                        <Form.Item
+                          name="city"
+                          rules={[
+                            { required: true, message: "City is required" },
+                          ]}
+                        >
+                          <InfiniteSelect
+                            placeholder="City"
+                            id="city"
+                            api={`${
+                              process.env.REACT_APP_API_BASE_URL
+                            }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                              "province"
+                            )}`}
+                            getInitialValue={{
+                              form,
+                              initialValue: "city",
+                            }}
+                            queryKey={["city", getFieldValue("province")]}
+                            displayValueKey="name"
+                            returnValueKey="_id"
+                            disabled={Boolean(
+                              !getFieldValue("country") ||
+                                !getFieldValue("province")
+                            )}
+                            onChange={() => {
+                              resetFields(["barangay"]);
+                            }}
+                          />
+                        </Form.Item>
+                      );
+                    }}
+                  </Form.Item>
+                  <Form.Item
+                    label="Barangay"
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                    shouldUpdate={(prev, curr) => {
+                      return true;
+                    }}
+                  >
+                    {({ getFieldValue, resetFields }) => {
+                      return (
+                        <Form.Item
+                          name="barangay"
+                          rules={[
+                            { required: true, message: "City is required" },
+                          ]}
+                        >
+                          <InfiniteSelect
+                            placeholder="Barangay"
+                            id="barangay"
+                            api={`${
+                              process.env.REACT_APP_API_BASE_URL
+                            }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
+                              "province"
+                            )}&city_code=${getFieldValue("city")}`}
+                            getInitialValue={{
+                              form,
+                              initialValue: "barangay",
+                            }}
+                            queryKey={["barangay", getFieldValue("city")]}
+                            displayValueKey="name"
+                            returnValueKey="_id"
+                            disabled={Boolean(
+                              !getFieldValue("country") ||
+                                !getFieldValue("province") ||
+                                !getFieldValue("city")
+                            )}
+                          />
+                        </Form.Item>
+                      );
+                    }}
+                  </Form.Item>
+                  <Form.Item
+                    label="Street"
+                    name="street"
+                    rules={[{ required: true, message: "Street is required" }]}
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                  >
+                    <Input id="street" placeholder="Add street name" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Zip Code"
+                    name="zip_code"
+                    rules={[
+                      { required: true, message: "Zip Code is required" },
+                    ]}
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                  >
+                    <NumericFormat
+                      customInput={Input}
+                      id="zip_code"
+                      allowNegative={false}
+                      placeholder="Zip Code"
+                    />
+                  </Form.Item>
+                </>
+              ) : (
+                <>
+                  <Form.Item
+                    label="Address"
+                    name="address"
+                    rules={[{ required: true, message: "Address is required" }]}
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                  >
+                    <Input id="street" placeholder="Add full address" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Postal Code"
+                    name="postal_code"
+                    rules={[
+                      { required: true, message: "Postal Code is required" },
+                    ]}
+                    required={false}
+                    className="col-span-full lg:col-span-1"
+                  >
+                    <NumericFormat
+                      customInput={Input}
+                      id="zip_code"
+                      allowNegative={false}
+                      placeholder="Postal Code"
+                    />
+                  </Form.Item>
+                </>
+              )}
             </div>
           </div>
 
@@ -399,7 +461,10 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                               key={key}
                               triggerOnce={true}
                             >
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                              <div
+                                style={{ zIndex: 999 - name }}
+                                className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative"
+                              >
                                 {fields.length > 1 ? (
                                   <AiFillMinusCircle
                                     className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
@@ -479,6 +544,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                                     }}
                                     isTime={[]}
                                     id={["schedules", name, "day"].join("-")}
+                                    autoTimeEndRange={8}
                                   />
                                 </Form.Item>
                               </div>

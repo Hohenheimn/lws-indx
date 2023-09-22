@@ -67,45 +67,50 @@ export function ChangeHistory({ patientRecord }: any) {
   );
 
   return (
-    <Card className="flex-auto p-0">
-      <div className="space-y-8 h-full flex flex-col">
-        <div className="space-y-4 md:p-12 p-6 !pb-0">
-          <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
-            <h4 className="basis-full md:basis-auto">Change History</h4>
-          </div>
-          <div className="flex justify-between align-middle gap-4">
-            <div className="basis-1/2">
-              <Input
-                placeholder="Search"
-                prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
-                className="rounded-full text-base shadow-none"
-                onChange={(e: any) => setSearch(e.target.value)}
-              />
+    <div className="space-y-8 h-full flex flex-col">
+      <div className="flex flex-auto">
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={changeHistory?.data}
+          showHeader={true}
+          tableLayout="fixed"
+          loading={changeHistoryLoading}
+          title={() => (
+            <div className="space-y-4 md:p-12 p-6 !pb-0">
+              <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
+                <h4 className="basis-full md:basis-auto">Change History</h4>
+              </div>
+              <div className="flex justify-between align-middle gap-4">
+                <div className="basis-1/2">
+                  <Input
+                    placeholder="Search"
+                    prefix={
+                      <AiOutlineSearch className="text-lg text-casper-500" />
+                    }
+                    className="rounded-full text-base shadow-none"
+                    onChange={(e: any) => setSearch(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <RangePicker
+                    onChange={handleDateChange}
+                    format="YYYY-MM-DD"
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <RangePicker onChange={handleDateChange} format="YYYY-MM-DD" />
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-auto">
-          <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={changeHistory?.data}
-            showHeader={true}
-            tableLayout="fixed"
-            loading={changeHistoryLoading}
-            pagination={{
-              pageSize: 5,
-              hideOnSinglePage: true,
-              showSizeChanger: false,
-              onChange: (page) => setPage(page),
-            }}
-            className="[&.ant-table]:!rounded-none"
-          />
-        </div>
+          )}
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+            showSizeChanger: false,
+            onChange: (page) => setPage(page),
+          }}
+          className="[&.ant-table]:!rounded-none"
+        />
       </div>
-    </Card>
+    </div>
   );
 }
 
