@@ -38,6 +38,8 @@ export default function AddClinicAccountModal({
 
   const account_role = Form.useWatch("account_role", form);
 
+  const id = form.getFieldValue("_id");
+
   React.useEffect(() => {
     let profPic = form.getFieldValue(["profile_picture"])
       ? form.getFieldValue(["profile_picture"]).toString()
@@ -198,7 +200,9 @@ export default function AddClinicAccountModal({
     >
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-bold text-3xl">Add Clinic Account</div>
+          <div className="font-bold text-3xl">
+            {id ? "Update" : "Add"} Clinic Account
+          </div>
           <div className="text-base">
             <div className="text-casper-500">Entry Date</div>
             <div>{format(new Date(), "MM/dd/yyyy")}</div>
@@ -208,7 +212,6 @@ export default function AddClinicAccountModal({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            let id = form.getFieldValue("_id");
             // values.permissions = JSON.stringify(values.permissions);
             values.permissions = [];
             values.civil_status = "";

@@ -121,8 +121,7 @@ export default function AddPatientModal({
     }
   }
 
-  const [country, setCountry] = useState<any>(undefined);
-
+  const country = Form.useWatch("country", form);
   return (
     <Modal
       show={show}

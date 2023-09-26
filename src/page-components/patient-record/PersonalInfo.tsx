@@ -407,13 +407,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                           form: PersonalInfoForm,
                           initialValue: "country",
                         }}
+                        initialValue={patientRecord?.country}
                         queryKey={["country"]}
                         displayValueKey="name"
                         returnValueKey="_id"
                         disabled={pageType === "view"}
-                        onChange={() => {
-                          resetFields(["city", "barangay", "province"]);
-                        }}
                       />
                     </Form.Item>
                   );
@@ -435,12 +433,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   >
                     {({ getFieldValue, resetFields }) => {
                       return (
-                        <Form.Item
-                          name="province"
-                          rules={[
-                            { required: true, message: "Province is required" },
-                          ]}
-                        >
+                        <Form.Item name="province">
                           <InfiniteSelect
                             placeholder="Province"
                             id="province"
@@ -449,6 +442,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                               form: PersonalInfoForm,
                               initialValue: "province",
                             }}
+                            initialValue={patientRecord?.province}
                             queryKey={["province"]}
                             displayValueKey="name"
                             returnValueKey="_id"
@@ -592,7 +586,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     required={false}
                     className="col-span-12 lg:col-span-4"
                   >
-                    <Input id="street" placeholder="Add full address" />
+                    <Input
+                      id="street"
+                      placeholder="Add full address"
+                      disabled={pageType === "view"}
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Postal Code"
@@ -607,6 +605,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       customInput={Input}
                       id="zip_code"
                       allowNegative={false}
+                      disabled={pageType === "view"}
                       placeholder="Postal Code"
                     />
                   </Form.Item>
@@ -737,6 +736,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                           form: PersonalInfoForm,
                           initialValue: "office_country",
                         }}
+                        initialValue={patientRecord?.office_country}
                         queryKey={["office_country"]}
                         displayValueKey="name"
                         disabled={pageType === "view"}
@@ -912,7 +912,11 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     required={false}
                     className="col-span-12 lg:col-span-4"
                   >
-                    <Input id="street" placeholder="Add full address" />
+                    <Input
+                      id="street"
+                      placeholder="Add full address"
+                      disabled={pageType === "view"}
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Postal Code"
@@ -927,6 +931,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       customInput={Input}
                       id="zip_code"
                       allowNegative={false}
+                      disabled={pageType === "view"}
                       placeholder="Postal Code"
                     />
                   </Form.Item>

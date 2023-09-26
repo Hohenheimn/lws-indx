@@ -20,6 +20,7 @@ interface InfiniteSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   noData?: string;
   setSelectedDetail?: Function;
   returnAllValue?: boolean;
+  initialValue?: string;
 }
 
 export function InfiniteSelect({
@@ -33,6 +34,7 @@ export function InfiniteSelect({
   CustomizedOption,
   getInitialValue,
   setSelectedDetail,
+  initialValue,
   ...rest
 }: InfiniteSelectProps) {
   let [search, setSearch] = React.useState("");
@@ -42,15 +44,25 @@ export function InfiniteSelect({
     api.split("?").length <= 1
       ? `${api}?search=${search}`
       : `${api}&search=${search}`;
-  let initialValueParameterAPI =
-    searchParameterAPI +
-    (getFieldInitialValue
-      ? getFieldInitialValue(
-          getInitialValue?.form,
-          getInitialValue?.initialValue ?? ""
-        )
-      : "");
 
+  let initialValueParameterAPI = "";
+
+  if (initialValue) {
+    if (searchParameterAPI.includes("?")) {
+      initialValueParameterAPI = `${searchParameterAPI}&initial_value=${initialValue}`;
+    } else {
+      initialValueParameterAPI = `${searchParameterAPI}?initial_value=${initialValue}`;
+    }
+  } else {
+    initialValueParameterAPI =
+      searchParameterAPI +
+      (getFieldInitialValue
+        ? getFieldInitialValue(
+            getInitialValue?.form,
+            getInitialValue?.initialValue ?? ""
+          )
+        : "");
+  }
   const { ref: listRef, inView: listRefInView } = useInView({
     triggerOnce: false,
     rootMargin: "0px",
@@ -88,7 +100,9 @@ export function InfiniteSelect({
 
   React.useEffect(() => {
     let dataLength = listData?.pages?.length ?? 0;
-    if (dataLength > 0 && initialFetch) setInitialFetch(false);
+    if (dataLength > 0 && initialFetch) {
+      setInitialFetch(false);
+    }
   }, [initialFetch, listData?.pages]);
 
   React.useEffect(() => {

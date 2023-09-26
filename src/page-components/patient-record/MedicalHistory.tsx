@@ -174,7 +174,6 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
           values.family_disease_history = JSON.stringify(
             values.family_disease_history
           );
-
           editMedicalHistory(values);
         }}
         onFinishFailed={(data) => {
@@ -455,7 +454,11 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       required={false}
                       className="col-span-12 lg:col-span-4"
                     >
-                      <Input id="street" placeholder="Add full address" />
+                      <Input
+                        id="clinic_address"
+                        disabled={pageType === "view"}
+                        placeholder="Add full address"
+                      />
                     </Form.Item>
                     <Form.Item
                       label="Postal Code"
@@ -468,7 +471,8 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     >
                       <NumericFormat
                         customInput={Input}
-                        id="zip_code"
+                        id="clinic_postal_code"
+                        disabled={pageType === "view"}
                         allowNegative={false}
                         placeholder="Postal Code"
                       />
@@ -792,6 +796,12 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
               <Form.Item
                 label="8. Other Sickness"
                 name="other_sickness"
+                rules={[
+                  {
+                    required: true,
+                    message: "Change is required",
+                  },
+                ]}
                 required={false}
                 className="col-span-12"
               >

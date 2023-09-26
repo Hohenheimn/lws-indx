@@ -458,7 +458,7 @@ export function ProfileInfo({ profile, tab }: any) {
                         form: DoctorInfoForm,
                         initialValue: "country",
                       }}
-                      queryKey={["country"]}
+                      queryKey={["country", getFieldValue("country")]}
                       displayValueKey="name"
                       returnValueKey="_id"
                       onChange={() => {

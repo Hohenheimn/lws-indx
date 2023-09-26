@@ -20,7 +20,10 @@ import { Context } from "@utilities/context/Provider";
 import days from "@utilities/global-data/days";
 
 export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
+  let id = form.getFieldValue("_id");
+
   const queryClient = useQueryClient();
+
   const { setIsAppLoading } = React.useContext(Context);
 
   const schedules = Form.useWatch("schedules", form);
@@ -122,13 +125,14 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
     <Modal show={show} onClose={onClose} {...rest}>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-bold text-3xl">Add Clinic Branch</div>
+          <div className="font-bold text-3xl">
+            {!id ? "Add" : "Update"} Clinic Branch
+          </div>
         </div>
         <Form
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            let id = form.getFieldValue("_id");
             values.schedules = values.schedules.map((item: any) => {
               return {
                 day: item.day,
@@ -251,7 +255,8 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                           form,
                           initialValue: "country",
                         }}
-                        queryKey={["country"]}
+                        queryKey={["country", getFieldValue("country")]}
+                        initialValue={getFieldValue("country")}
                         displayValueKey="name"
                         returnValueKey="_id"
                         onChange={() => {
