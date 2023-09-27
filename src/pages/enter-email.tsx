@@ -47,7 +47,7 @@ export default function EnterSubdomain() {
       onSuccess: (res) => {
         if (res) {
           router.push(
-            `http://${res.indx_url}.staging.indxhealth/admin?email=${res.email}`
+            `http://${res.indx_url}.staging.indxhealth.com/admin?email=${res.email}`
           );
         } else {
           notification.warning({
