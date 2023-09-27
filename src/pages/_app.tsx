@@ -38,8 +38,10 @@ import { capitalizeTitle } from "@utilities/helpers";
 
 
 
+
 import "../../styles/globals.scss";
 import Layout from "../layout";
+
 
 
 
@@ -82,7 +84,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
 
   useEffect(() => {
     if (window?.location) {
-      let getSubDomain: string | string[] = window?.location?.hostname.split('.')[0]
+      let getSubDomain: string | string[] = window?.location?.hostname
+      .replace("www.", "")
+      .split(".")[0];
       if (!router.pathname.includes("/admin")) {
         setSubdomain(undefined);
         return;

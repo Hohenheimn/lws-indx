@@ -38,9 +38,9 @@ export default function Login() {
 
   useEffect(() => {
     if (window?.location?.origin) {
-      let getSubDomain: string | string[] = window?.location?.hostname.split(
-        "."
-      )[0];
+      let getSubDomain: string | string[] = window?.location?.hostname
+        .replace("www.", "")
+        .split(".")[0];
       setSubdomain(getSubDomain);
     }
   });
