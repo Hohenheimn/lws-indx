@@ -60,7 +60,7 @@ export default function ChangePaswordAD({
         destroyCookie(undefined, "a_t", { path: "/" });
         destroyCookie(undefined, "subdomain", { path: "/" });
         router.push(
-          `http://${isSubdomain}.localhost:3000/admin?email=${profile.email}`
+          `http://${isSubdomain}.staging.indxhealth.com/admin?email=${profile.email}`
         );
         notification.success({
           message: "Logout Succesful",
