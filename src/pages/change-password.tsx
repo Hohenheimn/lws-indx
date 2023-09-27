@@ -36,18 +36,12 @@ export default function ChangePassword({ router }: any) {
 
   useEffect(() => {
     if (window?.location?.origin) {
-      let getSubDomain: string | string[] = window?.location?.origin.replace(
-        "https://",
-        ""
-      );
-      getSubDomain = getSubDomain.replace("http://", "");
-      getSubDomain = getSubDomain.replace("https://", "");
-      getSubDomain = getSubDomain.split(".");
-      getSubDomain = getSubDomain[0];
+      let getSubDomain: string | string[] = window?.location?.hostname
+        .replace("www.", "")
+        .split(".")[0];
       setSubdomain(getSubDomain);
     }
   });
-
   const { mutate: ChangePasswordMutate } = useMutation(
     (payload) =>
       postData({

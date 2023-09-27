@@ -54,6 +54,9 @@ type sideMenuProps = {
   appearance: string;
 };
 
+const registerUrl = "/pre-register";
+// const registerUrl = '/registration'
+
 const menu: Array<sideMenuProps> = [
   {
     label: "About Indx",
@@ -72,8 +75,7 @@ const menu: Array<sideMenuProps> = [
   },
   {
     label: "Register Now",
-    // link: "/registration",
-    link: "/pre-register",
+    link: registerUrl,
     appearance: "primary",
   },
 ];
@@ -289,7 +291,7 @@ export function Website({ router }: any) {
                         appearance="blumine"
                         className="w-full max-w-xs py-4"
                         // onClick={() => router.push("/registration")}
-                        onClick={() => router.push("/pre-register")}
+                        onClick={() => router.push(registerUrl)}
                       >
                         Register Now
                       </Button>
@@ -634,7 +636,7 @@ export function Website({ router }: any) {
                 <Button
                   appearance="primary"
                   className="bg-white text-primary md:w-auto mt-8 p-4 px-8 hover:bg-white hover:scale-105 font-medium"
-                  onClick={() => router.push("/registration")}
+                  onClick={() => router.push(registerUrl)}
                 >
                   Register Now
                 </Button>
