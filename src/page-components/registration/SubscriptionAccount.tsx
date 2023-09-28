@@ -34,11 +34,11 @@ type accountSubs = {
 };
 
 type Props = {
-  registrationInfo: registrationAccount | null;
+  profile: any;
+  subdomain: string;
 };
 
-export default function SubscriptionAccount({ registrationInfo }: Props) {
-  console.log(registrationInfo);
+export default function SubscriptionAccount({ profile, subdomain }: Props) {
   const router = useRouter();
   let { data: accountSubscription } = useQuery(["account-subscription"], () =>
     fetchDataNoSubdomain({
@@ -48,18 +48,18 @@ export default function SubscriptionAccount({ registrationInfo }: Props) {
   const accountPackage: accountSubs[] = accountSubscription;
   return (
     <PageContainer className="md:p-0">
-      <div className=" flex flex-col w-full items-center h-screen overflow-auto">
-        <div className="w-11/12 flex flex-col items-center pt-10 space-y-10 mb-10">
-          <aside className=" flex justify-center">
-            <div className=" relative h-[7rem] aspect-[2/1] ">
-              <Image
-                src="/images/logo.png"
-                alt="random pics"
-                className=" h-full w-full object-contain"
-                fill
-              />
-            </div>
-          </aside>
+      <div className=" flex flex-col w-full items-center justify-between h-screen overflow-auto pt-5">
+        <aside className=" flex justify-center">
+          <div className=" relative h-[7rem] aspect-[2/1] ">
+            <Image
+              src="/images/logo.png"
+              alt="random pics"
+              className=" h-full w-full object-contain"
+              fill
+            />
+          </div>
+        </aside>
+        <section className=" w-11/12 flex flex-col items-center pt-10 space-y-10 mb-10">
           <h2>Select subscription that fits your needs.</h2>
           <ul className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {accountPackage?.map((item, index) => (
@@ -82,7 +82,14 @@ export default function SubscriptionAccount({ registrationInfo }: Props) {
                   appearance="primary"
                   onClick={() => {
                     router.push(
-                      `${payment_base_url}?email=${registrationInfo?.email_address}&subscription_id=${item._id}&contact_no=${registrationInfo?.mobile_number}&clinic_url=${registrationInfo?.indx_url}`
+                      `${payment_base_url}?email=${
+                        profile?.email
+                      }&subscription_id=${
+                        item._id
+                      }&contact_no=${profile?.mobile_no.replaceAll(
+                        "-",
+                        ""
+                      )}&clinic_url=${subdomain}`
                     );
                   }}
                 >
@@ -114,7 +121,7 @@ export default function SubscriptionAccount({ registrationInfo }: Props) {
               </li>
             ))}
           </ul>
-        </div>
+        </section>
         <footer className=" w-full">
           <AnimateContainer variants={fadeIn} rootMargin="0px 0px">
             <div className="p-8 pt-0 flex justify-center items-center gap-8 flex-none !mt-4 !m-0">

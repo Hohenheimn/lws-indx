@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 // import { fetchData } from "@utilities/api";
 // import { useQuery } from "react-query";
+import Image from "next/image";
+
 import Router from "next/router";
 
+import { parseCookies } from "nookies";
 import { BiError } from "react-icons/bi";
+import Modal from "@src/components/Modal";
+
+import ChangePaswordAD from "@src/page-components/profile/Actions/ChangePasswordAD";
+
+import SubscriptionAccount from "@src/page-components/registration/SubscriptionAccount";
 
 import Layout from "../../layout";
 import Login from "../Login";
@@ -15,6 +23,7 @@ type AuthProps = {
   subdomain: string;
   router: typeof Router;
   pathname: string;
+  userToken: any;
 };
 
 export default function PrivateRoute(Component: any) {
@@ -24,10 +33,36 @@ export default function PrivateRoute(Component: any) {
     openMenus,
     subdomain,
     pathname,
+    userToken,
     ...rest
   }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const accountSubscribe = true;
+    const accountType: string = "sub-account";
 
+    if (!accountSubscribe && accountType === "main-account" && userToken) {
+      return <SubscriptionAccount profile={profile} subdomain={subdomain} />;
+    }
+
+    if (!accountSubscribe && accountType === "sub-account" && userToken) {
+      return (
+        <section className=" w-screen h-screen flex justify-center items-center flex-col bg-primary text-white">
+          <Image
+            src={"/images/white-logo.png"}
+            alt="random pics"
+            width={300}
+            height={100}
+            className="object-center mb-10"
+          />
+          <h2 className=" text-white mb-3">Hello!</h2>
+          <p className=" text-[1.5rem] w-10/12 max-w-[40rem] text-center">
+            As you are currently logged in as a sub-account user, please reach
+            out to the account owner as it appears that the subscription has
+            lapsed.
+          </p>
+        </section>
+      );
+    }
     if (subdomain && profile) {
       return (
         <Layout
@@ -47,16 +82,27 @@ export default function PrivateRoute(Component: any) {
       );
     }
 
-    // if (!profile) {
+    if (!profile?.is_password_changed && userToken) {
+      return (
+        <section className=" w-screen h-screen bg-primary">
+          <Modal show={true} onClose={() => {}} className=" w-[40rem]">
+            <Image
+              src={"/images/logo.png"}
+              alt="random pics"
+              width={200}
+              height={100}
+              className="object-center mb-10"
+            />
+            <ChangePaswordAD
+              onBack={() => {}}
+              profile={profile}
+              firstLogin={true}
+            />
+          </Modal>
+        </section>
+      );
+    }
     return <Login {...rest} />;
-    // }
-
-    // return (
-    //   <div className=" h-screen w-screen flex justify-center items-center flex-col bg-primary-500">
-    //     <BiError className=" text-6xl text-danger-500 mb-5" />
-    //     <h1 className=" text-white text-3xl">Subdomain Do not Exist</h1>
-    //   </div>
-    // );
   };
 
   return Auth;

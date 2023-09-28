@@ -8,11 +8,15 @@ type ggspTypes = {
   profile: any;
   openMenus: string;
   subdomain: string;
+  userToken: string;
   pathname: string;
 };
 
 export default function VerifyAuth(gssp: {
-  (ctx: NextPageContext, { profile, openMenus, subdomain }: ggspTypes): {};
+  (
+    ctx: NextPageContext,
+    { profile, openMenus, subdomain, userToken }: ggspTypes
+  ): {};
 }) {
   return async (ctx: any) => {
     const { req, res } = ctx;
@@ -23,6 +27,7 @@ export default function VerifyAuth(gssp: {
 
     let openMenus = req?.cookies?.om ?? null;
     let token = await parseCookies(ctx).a_t;
+    const userToken = token ? token : "";
     let subdomain =
       req.headers.host.split(".").length > 1
         ? req.headers.host.split(".")[0]
@@ -61,6 +66,7 @@ export default function VerifyAuth(gssp: {
       openMenus,
       subdomain,
       pathname,
+      userToken,
     });
   };
 }

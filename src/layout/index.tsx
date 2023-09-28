@@ -1,11 +1,15 @@
 import React from "react";
 import { AnimatePresence } from "framer-motion";
+import { useRouter } from "next/router";
 import { FaHome, FaUser } from "react-icons/fa";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
+
+import SuccessModalSMS from "@src/page-components/SMSManager/SuccessModalSMS";
+
 import { Context } from "@utilities/context/Provider";
 
 import LoadingScreen from "./LoadingScreen";
@@ -13,7 +17,7 @@ import SideMenu from "./SideMenu";
 
 interface LayoutProps {
   children: React.ReactNode;
-  profile?: string;
+  profile?: any;
   openMenus?: string;
   router?: any;
   subdomain?: string;
@@ -29,9 +33,12 @@ export const Layout = ({
   className,
 }: LayoutProps) => {
   const { setIsDrawerOpen, isAppLoading } = React.useContext(Context);
-
+  const routerCS = useRouter();
   return (
     <>
+      {routerCS.query.reference_no && (
+        <SuccessModalSMS currency={profile.setting.currency} />
+      )}
       <AnimatePresence mode="wait">
         {isAppLoading && (
           <AnimateContainer

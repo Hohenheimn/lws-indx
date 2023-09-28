@@ -26,11 +26,6 @@ export default function Registration({ router }: any) {
 
   const [isSubscription, setSubscription] = useState<boolean>(false);
 
-  const [
-    registrationInfo,
-    setRegistrationInfo,
-  ] = useState<registrationAccount | null>(null);
-
   const { mutate: register, isLoading } = useMutation(
     (payload: {}) =>
       postDataNoToken({
@@ -47,7 +42,6 @@ export default function Registration({ router }: any) {
         RegistrationForm.resetFields();
       },
       onError: (err: any, _, context: any) => {
-        setRegistrationInfo(null);
         notification.warning({
           message: "Something Went Wrong",
           description: `${
@@ -57,8 +51,23 @@ export default function Registration({ router }: any) {
       },
     }
   );
+
   if (isSubscription) {
-    return <SubscriptionAccount registrationInfo={registrationInfo} />;
+    return (
+      <section className=" w-screen h-screen flex justify-center items-center flex-col bg-primary text-white">
+        <Image
+          src={"/images/white-logo.png"}
+          alt="random pics"
+          width={300}
+          height={100}
+          className="object-center mb-10"
+        />
+        <h2 className=" text-white mb-3">Thank you for the registration </h2>
+        <p className=" text-[1.5rem] text-center">
+          Please check your email for the link and credentials of your account
+        </p>
+      </section>
+    );
   }
 
   return (
@@ -122,7 +131,7 @@ export default function Registration({ router }: any) {
                 layout="vertical"
                 onFinish={(values) => {
                   // delete values.terms;
-                  setRegistrationInfo(RegistrationForm.getFieldsValue());
+
                   register(values);
                 }}
                 className="w-full"

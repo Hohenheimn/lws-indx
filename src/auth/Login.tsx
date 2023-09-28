@@ -63,8 +63,12 @@ export default function Login() {
         setCookie(null, "subdomain", isSubdomain, {
           path: "/",
         });
-        router.push("/");
-        // router.reload();
+        if (router?.query?.email) {
+          router.push("/");
+        } else {
+          router.reload();
+        }
+
         notification.success({
           key: "login",
           message: "Login Successful",

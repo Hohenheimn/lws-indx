@@ -1,4 +1,5 @@
 import React from "react";
+import { parse, format, isValid } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import { BiSolidBadgeCheck, BiSolidErrorAlt } from "react-icons/bi";
@@ -39,8 +40,9 @@ export default function SuccessModalSMS({ currency }: any) {
         url: `/api/payment/${router.query.reference_no}?api_key=${process.env.REACT_APP_API_KEY}`,
       })
   );
-
   const payment: payment = receipt;
+  const date = parse(payment?.payment_date, "yyyy-MM-dd", new Date());
+  const dateFormatted = isValid(date) ? format(date, "MMM dd yyyy") : "";
 
   if (isError) {
     return (
@@ -91,7 +93,7 @@ export default function SuccessModalSMS({ currency }: any) {
 
       <div className=" w-full flex flex-col items-center space-y-0">
         <p className=" text-gray-400 text-[1rem]">Payment Date</p>
-        <h3>{payment?.payment_date}</h3>
+        <h3>{dateFormatted}</h3>
       </div>
 
       <div className=" w-full flex flex-col items-center space-y-0">

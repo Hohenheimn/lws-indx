@@ -136,15 +136,6 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
 
   return (
     <>
-      {!profile.is_password_changed && (
-        <Modal show={true} onClose={() => {}} className=" w-[40rem]">
-          <ChangePaswordAD
-            onBack={() => {}}
-            profile={profile}
-            firstLogin={true}
-          />
-        </Modal>
-      )}
       <MobileDrawer
         open={isDrawerOpen}
         profile={profile}

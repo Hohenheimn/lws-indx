@@ -11,59 +11,12 @@ import { BiError } from "react-icons/bi";
 import { twMerge } from "tailwind-merge";
 import { AnimateContainer } from "@components/animation";
 import { fadeIn, stagger } from "@components/animation/animation";
-
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { capitalizeTitle } from "@utilities/helpers";
-
-
-
-
-
-
-
 
 import "../../styles/globals.scss";
 import Layout from "../layout";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const AppProvider = dynamic(() => import("@utilities/context/Provider"));
@@ -122,15 +75,6 @@ export default function App({ Component, pageProps, router }: AppProps) {
   }).catch(error => {
   
   })}
-  
-  
-//   return (
-//     <div className=" h-screen w-screen flex justify-center items-center flex-col bg-primary-500">
-//       <BiError className=" text-6xl text-danger-500 mb-5" />
-//       <h1 className=" text-white text-3xl">Subdomain Do not Exist</h1>
-//     </div>
-//   );
-
 
   return (
     <QueryClientProvider client={queryClient}>

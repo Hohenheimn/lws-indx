@@ -87,9 +87,6 @@ export function SMSManager({ router, profile }: any) {
 
   return (
     <>
-      {router.query.reference_no && (
-        <SuccessModalSMS currency={profile.setting.currency} />
-      )}
       <PageContainer>
         <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
           <h3 className="basis-full xl:basis-auto whitespace-nowrap">
