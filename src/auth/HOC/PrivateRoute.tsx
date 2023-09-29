@@ -4,9 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 import Router from "next/router";
-
-import { parseCookies } from "nookies";
-import { BiError } from "react-icons/bi";
 import Modal from "@src/components/Modal";
 
 import ChangePaswordAD from "@src/page-components/profile/Actions/ChangePasswordAD";
@@ -15,7 +12,6 @@ import SubscriptionAccount from "@src/page-components/registration/SubscriptionA
 
 import Layout from "../../layout";
 import Login from "../Login";
-import Restricted from "../Restricted";
 
 type AuthProps = {
   profile: any;
@@ -37,14 +33,20 @@ export default function PrivateRoute(Component: any) {
     ...rest
   }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const accountSubscribe = true;
-    const accountType: string = "sub-account";
 
-    if (!accountSubscribe && accountType === "main-account" && userToken) {
+    if (
+      !profile?.is_subscribed &&
+      profile.account_role === "admin" &&
+      userToken
+    ) {
       return <SubscriptionAccount profile={profile} subdomain={subdomain} />;
     }
 
-    if (!accountSubscribe && accountType === "sub-account" && userToken) {
+    if (
+      !profile?.is_subscribed &&
+      profile.account_role !== "admin" &&
+      userToken
+    ) {
       return (
         <section className=" w-screen h-screen flex justify-center items-center flex-col bg-primary text-white">
           <Image

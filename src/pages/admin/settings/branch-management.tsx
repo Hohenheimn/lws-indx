@@ -92,8 +92,8 @@ export function BranchManagement({ router }: NextPageProps) {
       align: "center",
     },
     {
-      title: "City",
-      dataIndex: "city",
+      title: "Chair Quantity",
+      dataIndex: "chair_quantity",
       width: "10rem",
       align: "center",
     },

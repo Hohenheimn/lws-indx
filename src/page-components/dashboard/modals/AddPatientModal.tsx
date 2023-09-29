@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DatePicker, Form, notification } from "antd";
 import { format } from "date-fns";
 import { differenceInYears, parse } from "date-fns";
@@ -26,10 +26,10 @@ export default function AddPatientModal({
   form,
   isScheduleModalOpen,
   ScheduleForm,
+  profile,
   ...rest
 }: any) {
   const queryClient = useQueryClient();
-
   let [image, setImage] = React.useState({
     imageUrl: "",
     error: false,
@@ -38,6 +38,10 @@ export default function AddPatientModal({
   });
 
   const { setIsAppLoading } = React.useContext(Context);
+
+  useEffect(() => {
+    form.setFieldValue("country", profile?.country ? profile?.country : "");
+  }, [profile, show]);
 
   React.useEffect(() => {
     if (!show) {
@@ -361,7 +365,7 @@ export default function AddPatientModal({
                           form,
                           initialValue: "country",
                         }}
-                        queryKey={["country"]}
+                        queryKey={["country", country]}
                         displayValueKey="name"
                         returnValueKey="_id"
                         onChange={(name) => {

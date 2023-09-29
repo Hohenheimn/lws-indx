@@ -28,6 +28,17 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
 
   const schedules = Form.useWatch("schedules", form);
 
+  useEffect(() => {
+    if (schedules?.length <= 0) {
+      form.setFieldValue("schedules", [
+        {
+          day: "Monday",
+          time_range: ["08:00 AM", "04:00 AM"],
+        },
+      ]);
+    }
+  }, [schedules]);
+
   const { mutate: addBranch } = useMutation(
     (payload: any) => {
       return postData({
@@ -454,7 +465,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
           <div className="space-y-4">
             <h4>Clinic Schedule</h4>
             <div className="grid grid-cols-1 gap-4">
-              <Form.List name="schedules" initialValue={[{}]}>
+              <Form.List name="schedules" initialValue={[]}>
                 {(fields, { add, remove }) => {
                   return (
                     <>
@@ -468,11 +479,11 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                             >
                               <div
                                 style={{ zIndex: 999 - name }}
-                                className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative"
+                                className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-300 p-4 pt-4 rounded-md relative"
                               >
                                 {fields.length > 1 ? (
                                   <AiFillMinusCircle
-                                    className="absolute top-0 right-0 m-2 text-danger text-3xl cursor-pointer"
+                                    className="absolute top-0 right-3 m-2 text-danger text-3xl cursor-pointer"
                                     onClick={() => remove(name)}
                                   />
                                 ) : null}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
 import { differenceInYears, parse } from "date-fns";
 import moment from "moment";
@@ -79,7 +79,7 @@ export function ProfileInfo({ profile, tab }: any) {
       return info.file.originFileObj;
     }
   }
-
+  const country = Form.useWatch("country", DoctorInfoForm);
   React.useEffect(() => {
     if (tab === "1") {
       DoctorInfoForm.setFieldsValue({
@@ -97,6 +97,7 @@ export function ProfileInfo({ profile, tab }: any) {
         age: moment(profile?.birthdate).isValid()
           ? moment().diff(moment(profile?.birthdate), "years")
           : undefined,
+        country: profile?.country ? profile?.country : "174",
       });
     }
 
@@ -144,7 +145,6 @@ export function ProfileInfo({ profile, tab }: any) {
       },
     }
   );
-  const country = Form.useWatch("country", DoctorInfoForm);
   return (
     <Card className="flex-auto">
       <Form

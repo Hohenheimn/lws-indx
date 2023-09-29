@@ -25,7 +25,6 @@ import {
   toothNumbers,
 } from "@utilities/helpers";
 
-
 export default function AddTreatmentPlanModal({
   show,
   onClose,
@@ -374,10 +373,10 @@ export default function AddTreatmentPlanModal({
                               key={key}
                               triggerOnce={true}
                             >
-                              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 border border-gray-300 p-4 pt-4 rounded-md relative">
                                 {fields.length > 1 ? (
                                   <AiFillMinusCircle
-                                    className={`absolute top-0 right-0 m-2  text-3xl ${
+                                    className={`absolute top-0 right-3 m-2  text-3xl ${
                                       pageType === "view" && id
                                         ? " text-gray-400"
                                         : "cursor-pointer text-danger"

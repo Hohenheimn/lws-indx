@@ -37,6 +37,7 @@ export default function AddScheduleModal({
   show,
   onClose,
   form,
+  profile,
   ...rest
 }: any) {
   const queryClient = useQueryClient();
@@ -799,6 +800,7 @@ export default function AddScheduleModal({
         className="w-[80rem]"
         id="patient-modal"
         form={RegistrationForm}
+        profile={profile}
       />
     </Modal>
   );

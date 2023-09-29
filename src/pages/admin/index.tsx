@@ -43,19 +43,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import {
-  deleteData,
-  fetchData,
-  postData,
-  postDataNoFormData,
-  updateData,
-} from "@utilities/api";
+import { fetchData, postDataNoFormData } from "@utilities/api";
 
 import { Context } from "@utilities/context/Provider";
-
-import scheduleType from "@utilities/global-data/scheduleType";
-
-import { NextPageProps } from "@utilities/types/NextPageProps";
 
 import PrivateRoute from "../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../auth/HOC/VerifyAuth";
@@ -64,7 +54,7 @@ import AddScheduleModal from "../../page-components/dashboard/modals/AddSchedule
 
 const highlightDate = "bg-black text-white";
 
-export function Dashboard({}: NextPageProps) {
+export function Dashboard({ profile }: any) {
   const router = useRouter();
 
   const [isCalendarType, setCalendarType] = useState("simple");
@@ -498,6 +488,7 @@ export function Dashboard({}: NextPageProps) {
         setIsPatientModalOpen={(isOpen: boolean) =>
           setIsPatientModalOpen(isOpen)
         }
+        profile={profile}
       />
       <AddPatientModal
         show={isPatientModalOpen}
@@ -507,6 +498,7 @@ export function Dashboard({}: NextPageProps) {
         id="patient-modal"
         form={RegistrationForm}
         ScheduleForm={ScheduleForm}
+        profile={profile}
       />
     </>
   );
