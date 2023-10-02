@@ -14,59 +14,16 @@ import { BsCheckCircle } from "react-icons/bs";
 import { PatternFormat } from "react-number-format";
 import { SwapRightOutlined } from "@ant-design/icons";
 import { AnimateContainer, PageContainer } from "@components/animation";
-import {
-  fadeIn,
-  fadeInLeft,
-  fadeInRight,
-} from "@components/animation/animation";
-import { Button } from "@components/Button";
-import Input from "@components/Input";
-import Modal from "@components/Modal";
+import { fadeIn } from "@components/animation/animation";
 import LoadingScreen from "@src/layout/LoadingScreen";
-import { useMutation } from "@tanstack/react-query";
-import { postData, postDataNoToken } from "@utilities/api";
-import { Context } from "@utilities/context/Provider";
+import EnterEmail from "@src/page-components/forgot-password/EnterEmail";
+import Recover from "@src/page-components/forgot-password/Recover";
 
 // import { Media } from "../../../context/Media";
 
 export default function ForgotPassword() {
-  const router = useRouter();
-  const [checkDomain] = Form.useForm();
   const [isLoading, setLoading] = useState(false);
-
-  const { mutate: checkEmail } = useMutation(
-    (payload: any) =>
-      postDataNoToken({
-        url: `/api/domain-checker?api_key=${process.env.REACT_APP_API_KEY}`,
-        payload,
-        options: {
-          isLoading: (show: boolean) => setLoading(show),
-        },
-      }),
-    {
-      onSuccess: (res) => {
-        if (res) {
-          router.push(
-            `http://${res.indx_url}.staging.indxhealth.com/admin?email=${res.email}`
-          );
-        } else {
-          notification.warning({
-            key: "check-account-id",
-            message: "Invalid Email",
-            description: "Email does not exist",
-          });
-        }
-      },
-      onError: (err: { [key: string]: string }) => {
-        notification.warning({
-          key: "check-account-id",
-          message: err.title,
-          description: err.message,
-        });
-      },
-    }
-  );
-
+  const router = useRouter();
   return (
     <>
       <AnimatePresence mode="wait">
@@ -94,43 +51,10 @@ export default function ForgotPassword() {
             }}
             className="absolute md:relative h-full w-full md:w-auto top-0 left-0 flex flex-col justify-center items-center flex-auto p-[5%] md:p-20 bg-white"
           >
-            <div className="space-y-6 w-full">
-              <div>
-                <h2 className="font-['Mulish'] mb-2">Enter your Email</h2>
-                <p className=" text-[1rem]">
-                  Please enter your email or mobile number to search for your
-                  account.
-                </p>
-              </div>
-              <Form
-                form={checkDomain}
-                layout="vertical"
-                onFinish={(values) => {
-                  checkEmail(values);
-                }}
-                className="w-full"
-              >
-                <div>
-                  <Form.Item
-                    name="email"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Enter email to proceed",
-                      },
-                    ]}
-                    required={false}
-                  >
-                    <Input id="email" placeholder="Email" />
-                  </Form.Item>
-                </div>
-                <div className="space-y-4 mt-10">
-                  <Button className="py-4" appearance="blumine" type="submit">
-                    Next
-                  </Button>
-                </div>
-              </Form>
-            </div>
+            {router.query.recovery === undefined && (
+              <EnterEmail setLoading={setLoading} />
+            )}
+            {router.query.recovery && <Recover setLoading={setLoading} />}
           </motion.div>
           <motion.div
             initial={{ x: "100%" }}

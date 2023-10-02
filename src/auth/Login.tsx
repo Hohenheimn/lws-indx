@@ -239,7 +239,8 @@ export default function Login() {
               </div>
               <div
                 className="!text-primary-500 cursor-pointer hover:underline mt-2 inline-block"
-                onClick={SendEmailHandler}
+                // onClick={SendEmailHandler}
+                onClick={() => router.push("/forgot-password")}
               >
                 Forgot password?
               </div>

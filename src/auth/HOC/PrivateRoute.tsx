@@ -36,7 +36,7 @@ export default function PrivateRoute(Component: any) {
 
     if (
       !profile?.is_subscribed &&
-      profile.account_role === "admin" &&
+      profile?.account_role === "admin" &&
       userToken
     ) {
       return <SubscriptionAccount profile={profile} subdomain={subdomain} />;
@@ -44,7 +44,7 @@ export default function PrivateRoute(Component: any) {
 
     if (
       !profile?.is_subscribed &&
-      profile.account_role !== "admin" &&
+      profile?.account_role !== "admin" &&
       userToken
     ) {
       return (
