@@ -34,37 +34,37 @@ export default function PrivateRoute(Component: any) {
   }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-    if (
-      !profile?.is_subscribed &&
-      profile?.account_role === "admin" &&
-      userToken
-    ) {
-      return <SubscriptionAccount profile={profile} subdomain={subdomain} />;
-    }
+    // if (
+    //   !profile?.is_subscribed &&
+    //   profile?.account_role === "admin" &&
+    //   userToken
+    // ) {
+    //   return <SubscriptionAccount profile={profile} subdomain={subdomain} />;
+    // }
 
-    if (
-      !profile?.is_subscribed &&
-      profile?.account_role !== "admin" &&
-      userToken
-    ) {
-      return (
-        <section className=" w-screen h-screen flex justify-center items-center flex-col bg-primary text-white">
-          <Image
-            src={"/images/white-logo.png"}
-            alt="random pics"
-            width={300}
-            height={100}
-            className="object-center mb-10"
-          />
-          <h2 className=" text-white mb-3">Hello!</h2>
-          <p className=" text-[1.5rem] w-10/12 max-w-[40rem] text-center">
-            As you are currently logged in as a sub-account user, please reach
-            out to the account owner as it appears that the subscription has
-            lapsed.
-          </p>
-        </section>
-      );
-    }
+    // if (
+    //   !profile?.is_subscribed &&
+    //   profile?.account_role !== "admin" &&
+    //   userToken
+    // ) {
+    //   return (
+    //     <section className=" w-screen h-screen flex justify-center items-center flex-col bg-primary text-white">
+    //       <Image
+    //         src={"/images/white-logo.png"}
+    //         alt="random pics"
+    //         width={300}
+    //         height={100}
+    //         className="object-center mb-10"
+    //       />
+    //       <h2 className=" text-white mb-3">Hello!</h2>
+    //       <p className=" text-[1.5rem] w-10/12 max-w-[40rem] text-center">
+    //         As you are currently logged in as a sub-account user, please reach
+    //         out to the account owner as it appears that the subscription has
+    //         lapsed.
+    //       </p>
+    //     </section>
+    //   );
+    // }
     if (subdomain && profile) {
       return (
         <Layout
