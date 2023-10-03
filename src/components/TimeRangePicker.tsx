@@ -13,6 +13,7 @@ import {
 } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
+import { GoCircleSlash } from "react-icons/go";
 import { scrollToTarget } from "@utilities/helpers";
 
 import { fadeIn } from "./animation/animation";
@@ -158,24 +159,37 @@ export default function TimeRangePicker({
 
   return (
     <div className=" flex gap-3 relative z-20" ref={Container}>
-      <Input
-        {...rest}
-        disabled={disabled}
-        id={id}
-        placeholder="Time"
-        value={
-          restValue?.value?.length > 0
-            ? restValue?.value[0] +
-              `${
-                restValue?.value[0] === "" && restValue?.value[1] === ""
-                  ? ""
-                  : " - "
-              }` +
-              restValue?.value[1]
-            : ""
-        }
-        onClick={() => setShow(true)}
-      />
+      <div className=" w-full relative">
+        <Input
+          {...rest}
+          disabled={disabled}
+          id={id}
+          placeholder="Time"
+          value={
+            restValue?.value?.length > 0
+              ? restValue?.value[0] +
+                `${
+                  restValue?.value[0] === "" && restValue?.value[1] === ""
+                    ? ""
+                    : " - "
+                }` +
+                restValue?.value[1]
+              : ""
+          }
+          onClick={() => setShow(true)}
+        />
+        {restValue?.value.length > 0 && (
+          <GoCircleSlash
+            onClick={() => {
+              onChange([]);
+              setStart("");
+              setEnd("");
+            }}
+            className=" absolute top-[50%] text-lg text-gray-300 hover:text-gray-400 cursor-pointer translate-y-[-50%] right-2 "
+          />
+        )}
+      </div>
+
       <AnimatePresence>
         {show && (
           <motion.div

@@ -245,9 +245,9 @@ export default function AddPatientModal({
                   placeholder="Birthdate"
                   id="birthdate"
                   format="MMMM DD, YYYY"
-                  defaultPickerValue={moment().subtract(3, "year")}
+                  defaultPickerValue={moment().subtract(0, "year")}
                   disabledDate={(current) => {
-                    return current && current >= moment().subtract(3, "year");
+                    return current && current >= moment().subtract(0, "year");
                   }}
                   onChange={(dob, dobString) => {
                     const date = parse(dobString, "MMMM dd, yyyy", new Date());

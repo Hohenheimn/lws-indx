@@ -33,7 +33,27 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
       form.setFieldValue("schedules", [
         {
           day: "Monday",
-          time_range: ["08:00 AM", "04:00 AM"],
+          time_range: ["08:00 AM", "05:00 PM"],
+        },
+        {
+          day: "Tuesday",
+          time_range: ["08:00 AM", "05:00 PM"],
+        },
+        {
+          day: "Wednesday",
+          time_range: ["08:00 AM", "05:00 PM"],
+        },
+        {
+          day: "Thursday",
+          time_range: ["08:00 AM", "05:00 PM"],
+        },
+        {
+          day: "Friday",
+          time_range: ["08:00 AM", "05:00 PM"],
+        },
+        {
+          day: "Saturday",
+          time_range: ["08:00 AM", "05:00 PM"],
         },
       ]);
     }
