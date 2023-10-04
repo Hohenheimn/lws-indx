@@ -150,7 +150,7 @@ export default function AddPrescriptionManagementModal({
               label="Prescription Name"
               name="name"
               rules={[{ required: true, message: "This is required!" }]}
-              required={false}
+              required={true}
             >
               <Input id="name" placeholder="Prescription Name" />
             </Form.Item>
@@ -194,7 +194,7 @@ export default function AddPrescriptionManagementModal({
                                     message: "Medicine is required",
                                   },
                                 ]}
-                                required={false}
+                                required={true}
                                 className="col-span-3 lg:col-span-1"
                               >
                                 <InfiniteSelect
@@ -217,7 +217,7 @@ export default function AddPrescriptionManagementModal({
                                     message: "Quantity is required",
                                   },
                                 ]}
-                                required={false}
+                                required={true}
                                 className="col-span-3 lg:col-span-1"
                               >
                                 <NumericFormat
@@ -237,7 +237,7 @@ export default function AddPrescriptionManagementModal({
                                     message: "Sig is required",
                                   },
                                 ]}
-                                required={false}
+                                required={true}
                                 className="col-span-3 lg:col-span-1"
                               >
                                 <Input
@@ -253,7 +253,7 @@ export default function AddPrescriptionManagementModal({
                         <div className="blur-sm grid grid-cols-1 lg:grid-cols-3 gap-4">
                           <Form.Item
                             label="Medicine"
-                            required={false}
+                            required={true}
                             className="col-span-3 lg:col-span-1"
                           >
                             <InfiniteSelect
@@ -267,7 +267,7 @@ export default function AddPrescriptionManagementModal({
                           </Form.Item>
                           <Form.Item
                             label="Quantity"
-                            required={false}
+                            required={true}
                             className="col-span-3 lg:col-span-1"
                           >
                             <NumericFormat
@@ -279,7 +279,7 @@ export default function AddPrescriptionManagementModal({
                           </Form.Item>
                           <Form.Item
                             label="Sig"
-                            required={false}
+                            required={true}
                             className="col-span-3 lg:col-span-1"
                           >
                             <Input placeholder="Sig" />
@@ -300,7 +300,7 @@ export default function AddPrescriptionManagementModal({
                 label="Additional Instructions"
                 name="additional_instructions"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
               >
                 <TextArea
                   id="additional_instructions"

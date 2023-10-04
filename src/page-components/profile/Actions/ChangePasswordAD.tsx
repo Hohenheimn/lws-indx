@@ -67,13 +67,13 @@ export default function ChangePaswordAD({
           description: "All done! Have a nice day!",
         });
       },
-      onError: () => {
-        notification.warning({
-          key: "login",
-          message: `Something went wrong`,
-          description: ``,
-        });
-      },
+      // onError: () => {
+      //   notification.warning({
+      //     key: "login",
+      //     message: `Something went wrong`,
+      //     description: ``,
+      //   });
+      // },
     }
   );
 
@@ -138,6 +138,27 @@ export default function ChangePaswordAD({
           }}
           className="space-y-4"
         >
+          <Form.Item
+            name="current_password"
+            rules={[
+              {
+                pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+                message:
+                  "Must be 6 character and at least one capital letter with numbers",
+              },
+              {
+                required: true,
+                message: "This is required!",
+              },
+            ]}
+            required={false}
+          >
+            <Input
+              id="current_password"
+              type="password"
+              placeholder="Current Password"
+            />
+          </Form.Item>
           <Form.Item
             name="password"
             rules={[
@@ -226,9 +247,14 @@ export default function ChangePaswordAD({
         }}
         className="space-y-4"
       >
-        {/* <Form.Item
+        <Form.Item
           name="current_password"
           rules={[
+            {
+              pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+              message:
+                "Must be 6 character and at least one capital letter with numbers",
+            },
             {
               required: true,
               message: "This is required!",
@@ -236,8 +262,12 @@ export default function ChangePaswordAD({
           ]}
           required={false}
         >
-          <Input id="password" type="password" placeholder="Current Password" />
-        </Form.Item> */}
+          <Input
+            id="current_password"
+            type="password"
+            placeholder="Current Password"
+          />
+        </Form.Item>
         <Form.Item
           name="password"
           rules={[

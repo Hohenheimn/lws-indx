@@ -198,7 +198,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 label="Branch Name"
                 name="name"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Input id="name" placeholder="Branch Name" />
@@ -213,7 +213,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                     message: "Please use correct format!",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <PatternFormat
@@ -232,7 +232,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                   { required: true, message: "This is required!" },
                   { type: "email", message: "Must be a valid email" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
@@ -241,7 +241,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 label="Chair Quantity"
                 name="chair_quantity"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Select
@@ -264,7 +264,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
             <div className="grid grid-cols-3 gap-4">
               <Form.Item
                 label="Country"
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -306,7 +306,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                 <>
                   <Form.Item
                     label="Province"
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -342,7 +342,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                   </Form.Item>
                   <Form.Item
                     label="City"
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -385,7 +385,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                   </Form.Item>
                   <Form.Item
                     label="Barangay"
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -428,7 +428,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                     label="Street"
                     name="street"
                     rules={[{ required: true, message: "Street is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <Input id="street" placeholder="Add street name" />
@@ -439,7 +439,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                     rules={[
                       { required: true, message: "Zip Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
@@ -456,7 +456,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                     label="Address"
                     name="address"
                     rules={[{ required: true, message: "Address is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <Input id="street" placeholder="Add full address" />
@@ -467,7 +467,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                     rules={[
                       { required: true, message: "Postal Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
@@ -516,7 +516,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                                       message: "This is required!",
                                     },
                                   ]}
-                                  required={false}
+                                  required={true}
                                   className="col-span-2 md:col-span-1"
                                   {...rest}
                                 >
@@ -555,7 +555,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                                       message: "Time is required",
                                     },
                                   ]}
-                                  required={false}
+                                  required={true}
                                   className="col-span-2 md:col-span-1"
                                   getValueFromEvent={(e) => {
                                     if (e) {
@@ -592,7 +592,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                         <div className="blur-sm grid grid-cols-1 md:grid-cols-2 gap-4">
                           <Form.Item
                             label="Days"
-                            required={false}
+                            required={true}
                             {...rest}
                             className="col-span-2 md:col-span-1"
                           >
@@ -608,7 +608,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                           </Form.Item>
                           <Form.Item
                             label="Time Range"
-                            required={false}
+                            required={true}
                             className="col-span-2 md:col-span-1"
                           >
                             <TimePicker format="HH:mm" minuteStep={15} />

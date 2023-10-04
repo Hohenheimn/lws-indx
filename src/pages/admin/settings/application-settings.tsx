@@ -19,7 +19,8 @@ import { Context } from "@utilities/context/Provider";
 import { getBase64 } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-export function ApplicationSettings({}: NextPageProps) {
+export function ApplicationSettings({ profile }: any) {
+  console.log(profile);
   const { setIsAppLoading } = React.useContext(Context);
   const queryClient = useQueryClient();
   const [applicationSettingsForm] = Form.useForm();

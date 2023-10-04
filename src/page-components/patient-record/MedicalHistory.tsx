@@ -201,7 +201,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       message: "Name of Physician is required",
                     },
                   ]}
-                  required={false}
+                  required={true}
                   className="col-span-12 md:col-span-6"
                 >
                   <Input
@@ -213,7 +213,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                 <Form.Item
                   label="Specialty (if Applicable)"
                   name="specialty"
-                  required={false}
+                  required={true}
                   className="col-span-12 md:col-span-6"
                 >
                   <Input
@@ -231,7 +231,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
               <div className="grid grid-cols-12 gap-4">
                 <Form.Item
                   label="Country"
-                  required={false}
+                  required={true}
                   className="col-span-12 lg:col-span-4"
                   shouldUpdate={(prev, curr) => {
                     return true;
@@ -277,7 +277,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                   <>
                     <Form.Item
                       label="Province"
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                       shouldUpdate={(prev, curr) => {
                         return true;
@@ -322,7 +322,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     </Form.Item>
                     <Form.Item
                       label="City"
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                       shouldUpdate={(prev, curr) => {
                         return true;
@@ -368,7 +368,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     </Form.Item>
                     <Form.Item
                       label="Barangay"
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                       shouldUpdate={(prev, curr) => {
                         return true;
@@ -416,7 +416,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       rules={[
                         { required: true, message: "Street is required" },
                       ]}
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                     >
                       <Input
@@ -431,7 +431,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       rules={[
                         { required: true, message: "Zip Code is required" },
                       ]}
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                     >
                       <NumericFormat
@@ -451,7 +451,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       rules={[
                         { required: true, message: "Address is required" },
                       ]}
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                     >
                       <Input
@@ -466,7 +466,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       rules={[
                         { required: true, message: "Postal Code is required" },
                       ]}
-                      required={false}
+                      required={true}
                       className="col-span-12 lg:col-span-4"
                     >
                       <NumericFormat
@@ -500,7 +500,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       message: "Referred to this Clinic by is required",
                     },
                   ]}
-                  required={false}
+                  required={true}
                   className="col-span-12 lg:col-span-6"
                 >
                   <Input
@@ -518,7 +518,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                       message: "Date of the Last Medical Exam is required",
                     },
                   ]}
-                  required={false}
+                  required={true}
                   className="col-span-12 lg:col-span-6"
                 >
                   <DatePicker
@@ -546,7 +546,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     message: "Allergies is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12"
               >
                 <Input
@@ -564,7 +564,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     message: "Medications is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12"
               >
                 <Input
@@ -591,7 +591,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                           message: "Change is required",
                         },
                       ]}
-                      required={false}
+                      required={true}
                       className="col-span-12"
                     >
                       <Radio.Group
@@ -618,7 +618,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                                 message: "Explanation is required",
                               },
                             ]}
-                            required={false}
+                            required={true}
                           >
                             <Input
                               id="change_explanation"
@@ -650,7 +650,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                           message: "Hospitalized is required",
                         },
                       ]}
-                      required={false}
+                      required={true}
                       className="col-span-12"
                     >
                       <Radio.Group
@@ -677,7 +677,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                                 message: "This is required",
                               },
                             ]}
-                            required={false}
+                            required={true}
                           >
                             <Input
                               id="hospitalized_reason"
@@ -711,7 +711,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                           message: "Medication is required",
                         },
                       ]}
-                      required={false}
+                      required={true}
                       className="lg:justify-self-end"
                     >
                       <Radio.Group
@@ -779,7 +779,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     message: "Change is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12"
               >
                 <Radio.Group
@@ -802,7 +802,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     message: "Change is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12"
               >
                 <Input

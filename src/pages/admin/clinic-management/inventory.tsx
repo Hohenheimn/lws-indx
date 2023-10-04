@@ -18,7 +18,6 @@ import { Context } from "@utilities/context/Provider";
 import { numberSeparator } from "@utilities/helpers";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
-
 export function Inventory({ router, profile }: any) {
   const columnsInventory: any = [
     {
@@ -295,7 +294,7 @@ export function Inventory({ router, profile }: any) {
           setIsInventoryModalOpen(false);
           InventoryForm.resetFields();
         }}
-        className="w-[80rem]"
+        className="w-[40rem]"
         id="inventory-modal"
         currency={profile.setting.currency}
         form={InventoryForm}

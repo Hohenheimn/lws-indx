@@ -357,6 +357,7 @@ export const postDataMultipleFile = async ({ url, payload, options }: any) => {
   } else {
     subdomain = `?subdomain=${subdomainCookie}`;
   }
+  console.log(payload);
   return await axios
     .post(
       `${process.env.REACT_APP_API_BASE_URL}${url}${

@@ -4,6 +4,7 @@ import Table from "antd/lib/table";
 import Image from "next/image";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
+import { IoIosAdd } from "react-icons/io";
 import { IoPersonOutline } from "react-icons/io5";
 import { scroller } from "react-scroll";
 import PrivateRoute from "@auth/HOC/PrivateRoute";
@@ -16,12 +17,18 @@ import { Radio } from "@components/Radio";
 import { InfiniteSelect } from "@src/components/InfiniteSelect";
 import Modal from "@src/components/Modal";
 import { Select } from "@src/components/Select";
+import AddPatientModal from "@src/page-components/dashboard/modals/AddPatientModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData, postDataNoFormData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import { NextPageProps } from "@utilities/types/NextPageProps";
 
 export function PatientList({ profile, router }: any) {
+  let [isPatientModalOpen, setIsPatientModalOpen] = React.useState(false);
+  let [isScheduleModalOpen, setIsScheduleModalOpen] = React.useState(false);
+  const [RegistrationForm] = Form.useForm();
+  const [ScheduleForm] = Form.useForm();
+
   let [search, setSearch] = React.useState("");
   let [page, setPage] = React.useState(1);
   const { setIsAppLoading } = React.useContext(Context);
@@ -337,6 +344,18 @@ export function PatientList({ profile, router }: any) {
               onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
+          <div>
+            <Button
+              className="p-3 w-full"
+              appearance="primary"
+              onClick={() => setIsPatientModalOpen(true)}
+            >
+              <div className="flex justify-center items-center">
+                <IoIosAdd className="inline-block text-2xl" />{" "}
+                <span>Add New Patient</span>
+              </div>
+            </Button>
+          </div>
           {/* <div className="basis-full lg:basis-auto flex gap-4">
             <Radio.Group defaultValue="my_patients">
               <Radio.Button value="my_patients" label="My Patients" />
@@ -383,6 +402,16 @@ export function PatientList({ profile, router }: any) {
           />
         </div>
       </PageContainer>
+      <AddPatientModal
+        show={isPatientModalOpen}
+        isScheduleModalOpen={isScheduleModalOpen}
+        onClose={() => setIsPatientModalOpen(false)}
+        className="w-[80rem]"
+        id="patient-modal"
+        form={RegistrationForm}
+        ScheduleForm={ScheduleForm}
+        profile={profile}
+      />
     </>
   );
 }

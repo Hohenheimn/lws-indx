@@ -479,7 +479,7 @@ export default function ChartingModal({
                     message: "This is required!",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <Input
                   id="chart_name"
@@ -487,11 +487,7 @@ export default function ChartingModal({
                   placeholder="Chart Name"
                 />
               </Form.Item>
-              <Form.Item
-                label="Date Created"
-                name="created_at"
-                required={false}
-              >
+              <Form.Item label="Date Created" name="created_at" required={true}>
                 <DatePicker
                   getPopupContainer={(triggerNode: any) => {
                     return triggerNode.parentNode;
@@ -511,7 +507,7 @@ export default function ChartingModal({
                     message: "This is required!",
                   },
                 ]}
-                required={false}
+                required={true}
                 initialValue={""}
               >
                 <Select
@@ -534,7 +530,7 @@ export default function ChartingModal({
                     message: "Chart view is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 initialValue={""}
               >
                 <Select
@@ -558,7 +554,7 @@ export default function ChartingModal({
                     message: "This is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <InfiniteSelect
                   placeholder="Select Clinic"
@@ -579,7 +575,7 @@ export default function ChartingModal({
                     message: "This is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <InfiniteSelect
                   placeholder="Select Denstist"
@@ -796,7 +792,7 @@ export default function ChartingModal({
                 <h4 className=" font-semibold text-lg">Periodical Screening</h4>
                 <Form.Item
                   name="legend_periodical_screening"
-                  required={false}
+                  required={true}
                   className="text-base"
                 >
                   <Checkbox.Group
@@ -818,7 +814,7 @@ export default function ChartingModal({
                 <Form.Item
                   label=""
                   name="legend_periodical_screening_others"
-                  required={false}
+                  required={true}
                   initialValue={""}
                 >
                   <Input
@@ -832,7 +828,7 @@ export default function ChartingModal({
                 <h4 className=" font-semibold text-lg">Occlusions</h4>
                 <Form.Item
                   name="legend_occlusions"
-                  required={false}
+                  required={true}
                   className="text-base"
                 >
                   <Checkbox.Group
@@ -851,7 +847,7 @@ export default function ChartingModal({
                 <Form.Item
                   label=""
                   name="legend_occlusions_others"
-                  required={false}
+                  required={true}
                   initialValue={""}
                 >
                   <Input
@@ -865,7 +861,7 @@ export default function ChartingModal({
                 <h4 className=" font-semibold text-lg">Appliances</h4>
                 <Form.Item
                   name="legend_appliances"
-                  required={false}
+                  required={true}
                   className="text-base"
                 >
                   <Checkbox.Group
@@ -879,7 +875,7 @@ export default function ChartingModal({
                 <Form.Item
                   label=""
                   name="legend_appliances_others"
-                  required={false}
+                  required={true}
                   initialValue={""}
                 >
                   <Input
@@ -893,7 +889,7 @@ export default function ChartingModal({
                 <h4 className=" font-semibold text-lg">TMDs</h4>
                 <Form.Item
                   name="legend_tmds"
-                  required={false}
+                  required={true}
                   className="text-base"
                 >
                   <Checkbox.Group
@@ -909,7 +905,7 @@ export default function ChartingModal({
                 <Form.Item
                   label=""
                   name="legend_tmds_others"
-                  required={false}
+                  required={true}
                   initialValue={""}
                 >
                   <Input
@@ -922,12 +918,7 @@ export default function ChartingModal({
             </div>
 
             <div className="grid grid-cols-1">
-              <Form.Item
-                label="Remark"
-                name="remarks"
-                required={false}
-                initialValue={""}
-              >
+              <Form.Item label="Remark" name="remarks" initialValue={""}>
                 <TextArea
                   id="remarks"
                   placeholder="Remarks"

@@ -11,8 +11,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
-
-
 export function DentalHistory({ patientRecord, tab, pageType }: any) {
   const queryClient = useQueryClient();
   const [DentalHistoryForm] = Form.useForm();
@@ -59,8 +57,9 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["dental-history"], context.previousValues);
       },
@@ -105,10 +104,14 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Previous Dentist is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 md:col-span-6"
               >
-                <Input id="previous_dentist" disabled={pageType === 'view'} placeholder="Previous Dentist" />
+                <Input
+                  id="previous_dentist"
+                  disabled={pageType === "view"}
+                  placeholder="Previous Dentist"
+                />
               </Form.Item>
               <Form.Item
                 label="Last Dentist Visit"
@@ -116,7 +119,7 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Last Dentist Visit is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 md:col-span-6"
               >
                 <DatePicker
@@ -126,7 +129,7 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
                   disabledDate={(current) => {
                     return current > moment();
                   }}
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   id="last_visit_date"
                   placeholder="Last Dentist Visit"
                   format="MMMM DD, YYYY"
@@ -141,13 +144,13 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
                     message: "Reason for Last Visit is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12"
               >
                 <InfiniteSelect
                   placeholder="Select Reason for Visit"
                   id="last_visit_reason"
-                  disabled={pageType === 'view'}
+                  disabled={pageType === "view"}
                   api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
                   queryKey={["procedure"]}
                   displayValueKey="name"
@@ -163,10 +166,14 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
                     message: "Chief Complaint is required",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12"
               >
-                <Input id="chief_complaint" disabled={pageType === 'view'} placeholder="Chief Complaint" />
+                <Input
+                  id="chief_complaint"
+                  disabled={pageType === "view"}
+                  placeholder="Chief Complaint"
+                />
               </Form.Item>
             </div>
           </div>
@@ -176,10 +183,13 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
             </div>
             <Form.Item
               name="dental_issues"
-              required={false}
+              required={true}
               className="col-span-full text-base"
             >
-              <Checkbox.Group disabled={pageType === 'view'} className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center py-4 lg:px-[10%] text-lg">
+              <Checkbox.Group
+                disabled={pageType === "view"}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center py-4 lg:px-[10%] text-lg"
+              >
                 <Checkbox value="bad_breath">Bad Breath</Checkbox>
                 <Checkbox value="food_collection_between_teeth">
                   Food Collection between Teeth
@@ -212,20 +222,17 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
               </Checkbox.Group>
             </Form.Item>
           </div>
-          {
-            pageType === 'edit' && (
-              <div className="flex justify-center items-center">
-                <Button
-                  appearance={!isLoading ? "primary" : "disabled"}
-                  type="submit"
-                  className="max-w-md py-4"
-                >
-                  Save
-                </Button>
-              </div>
-            )
-          }
-
+          {pageType === "edit" && (
+            <div className="flex justify-center items-center">
+              <Button
+                appearance={!isLoading ? "primary" : "disabled"}
+                type="submit"
+                className="max-w-md py-4"
+              >
+                Save
+              </Button>
+            </div>
+          )}
         </div>
       </Form>
     </Card>

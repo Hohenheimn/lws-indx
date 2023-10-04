@@ -41,6 +41,9 @@ export default function AddClinicAccountModal({
   const id = form.getFieldValue("_id");
 
   React.useEffect(() => {
+    if (form.getFieldValue("account_role") === "admin") {
+      form.setFieldValue("account_role", "Doctor");
+    }
     let profPic = form.getFieldValue(["profile_picture"])
       ? form.getFieldValue(["profile_picture"]).toString()
       : "";
@@ -247,7 +250,7 @@ export default function AddClinicAccountModal({
                   message: "This field is required",
                 },
               ]}
-              required={false}
+              required={true}
               className="w-fit m-auto [&_.ant-form-item-explain]:text-center [&_.avatar]:[&.ant-form-item-has-error]:border-red-500"
             >
               <Uploader
@@ -284,7 +287,7 @@ export default function AddClinicAccountModal({
               label="Account Type"
               name="account_role"
               rules={[{ required: true, message: "This is required!" }]}
-              required={false}
+              required={true}
             >
               <Select placeholder="Account Type" id="account_role">
                 {accountRole.map((role, index) => {
@@ -304,7 +307,7 @@ export default function AddClinicAccountModal({
                 label="First Name"
                 name="first_name"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-6 lg:col-span-2"
               >
                 <Input id="first_name" placeholder="First Name" />
@@ -321,7 +324,7 @@ export default function AddClinicAccountModal({
                 label="Last Name"
                 name="last_name"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-6 lg:col-span-2"
               >
                 <Input id="last_name" placeholder="Last Name" />
@@ -331,7 +334,7 @@ export default function AddClinicAccountModal({
                 name="birthdate"
                 className="col-span-6 lg:col-span-3"
                 rules={[{ required: true, message: "Birth Month is required" }]}
-                required={false}
+                required={true}
               >
                 <DatePicker
                   getPopupContainer={(triggerNode: any) => {
@@ -357,7 +360,7 @@ export default function AddClinicAccountModal({
                 label="Age"
                 name="age"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-6 lg:col-span-1"
               >
                 <Input id="age" placeholder="Age" disabled={true} />
@@ -366,7 +369,7 @@ export default function AddClinicAccountModal({
                 label="Gender"
                 name="gender"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-6 lg:col-span-2"
               >
                 <Select placeholder="Gender" id="gender">
@@ -384,8 +387,6 @@ export default function AddClinicAccountModal({
                   <Form.Item
                     label="License Number"
                     name="license_no"
-                    rules={[{ required: true, message: "This is required!" }]}
-                    required={false}
                     className="col-span-6 lg:col-span-2"
                   >
                     <Input id="license_no" placeholder="License Number" />
@@ -393,8 +394,6 @@ export default function AddClinicAccountModal({
                   <Form.Item
                     label="PTR Number"
                     name="ptr_no"
-                    rules={[{ required: true, message: "This is required!" }]}
-                    required={false}
                     className="col-span-6 lg:col-span-2"
                   >
                     <Input id="ptr_no" placeholder="PTR Number" />
@@ -402,8 +401,6 @@ export default function AddClinicAccountModal({
                   <Form.Item
                     label="S2 License Number"
                     name="s2_no"
-                    rules={[{ required: true, message: "This is required!" }]}
-                    required={false}
                     className="col-span-6 lg:col-span-2"
                   >
                     <Input id="s2_no" placeholder="S2 License Number" />
@@ -422,7 +419,7 @@ export default function AddClinicAccountModal({
                   { required: true, message: "This is required!" },
                   { type: "email", message: "Must be a valid email" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
@@ -431,7 +428,7 @@ export default function AddClinicAccountModal({
                 label="Landline Number"
                 name="landline_no"
                 initialValue={""}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <NumericFormat
@@ -451,17 +448,26 @@ export default function AddClinicAccountModal({
                     message: "Please use correct format!",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
-                <PatternFormat
-                  customInput={Input}
-                  placeholder="09XX-XXX-XXXXX"
-                  patternChar="*"
-                  format="****-***-****"
-                  allowEmptyFormatting={false}
-                  id="mobile_no"
-                />
+                {country === "174" ? (
+                  <PatternFormat
+                    customInput={Input}
+                    placeholder={"09XX-XXX-XXXXX"}
+                    patternChar="*"
+                    format="****-***-****"
+                    allowEmptyFormatting={false}
+                    id="mobile_no"
+                  />
+                ) : (
+                  <NumericFormat
+                    customInput={Input}
+                    id="mobile_no"
+                    allowNegative={false}
+                    placeholder="Mobile no"
+                  />
+                )}
               </Form.Item>
             </div>
           </div>
@@ -470,7 +476,7 @@ export default function AddClinicAccountModal({
             <div className="grid grid-cols-3 gap-4">
               <Form.Item
                 label="Country"
-                required={false}
+                required={true}
                 className="col-span-full lg:col-span-1"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -511,7 +517,7 @@ export default function AddClinicAccountModal({
                 <>
                   <Form.Item
                     label="Province"
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -547,7 +553,7 @@ export default function AddClinicAccountModal({
                   </Form.Item>
                   <Form.Item
                     label="City"
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -587,7 +593,7 @@ export default function AddClinicAccountModal({
                   </Form.Item>
                   <Form.Item
                     label="Barangay"
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -629,7 +635,7 @@ export default function AddClinicAccountModal({
                     label="Street"
                     name="street"
                     rules={[{ required: true, message: "Street is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <Input id="street" placeholder="Add street name" />
@@ -640,7 +646,7 @@ export default function AddClinicAccountModal({
                     rules={[
                       { required: true, message: "Zip Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
@@ -657,7 +663,7 @@ export default function AddClinicAccountModal({
                     label="Address"
                     name="address"
                     rules={[{ required: true, message: "Address is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <Input id="street" placeholder="Add full address" />
@@ -668,7 +674,7 @@ export default function AddClinicAccountModal({
                     rules={[
                       { required: true, message: "Postal Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
@@ -687,7 +693,7 @@ export default function AddClinicAccountModal({
             <div className="grid grid-cols-3 gap-4" id="permissions">
               <Form.Item
                 name="permissions"
-                required={false}
+                required={true}
                 className="col-span-full text-base"
               >
                 <Checkbox.Group className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4 text-base">

@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { differenceInYears, parse } from "date-fns";
 import moment from "moment";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { IoPersonOutline } from "react-icons/io5";
 import { NumericFormat, PatternFormat } from "react-number-format";
 import { scroller } from "react-scroll";
@@ -29,6 +30,7 @@ export default function AddPatientModal({
   profile,
   ...rest
 }: any) {
+  const router = useRouter();
   const queryClient = useQueryClient();
   let [image, setImage] = React.useState({
     imageUrl: "",
@@ -66,6 +68,10 @@ export default function AddPatientModal({
       }),
     {
       onSuccess: async (res) => {
+        if (router.pathname.includes("admin/patient-list")) {
+          router.push(`/admin/patient-list/${res._id}?tab=Personal Info`);
+        }
+
         notification.success({
           message: "Registration Successful",
           description: `Registration Successful`,
@@ -262,7 +268,7 @@ export default function AddPatientModal({
                 label="Age"
                 name="age"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Input id="age" placeholder="Age" disabled={true} />
@@ -271,7 +277,7 @@ export default function AddPatientModal({
                 label="Gender"
                 name="gender"
                 rules={[{ required: true, message: "This is required!" }]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <Select placeholder="Gender" id="gender">
@@ -320,21 +326,31 @@ export default function AddPatientModal({
                 rules={[
                   { required: true, message: "This is required!" },
                   {
-                    pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                    pattern:
+                      country === "174" ? /^(09)\d{2}-\d{3}-\d{4}$/ : /^\d+$/,
                     message: "Please use correct format!",
                   },
                 ]}
                 required={true}
                 className="col-span-3 lg:col-span-1"
               >
-                <PatternFormat
-                  customInput={Input}
-                  placeholder="09XX-XXX-XXXXX"
-                  patternChar="*"
-                  format="****-***-****"
-                  allowEmptyFormatting={false}
-                  id="mobile_no"
-                />
+                {country === "174" ? (
+                  <PatternFormat
+                    customInput={Input}
+                    placeholder={"09XX-XXX-XXXXX"}
+                    patternChar="*"
+                    format="****-***-****"
+                    allowEmptyFormatting={false}
+                    id="mobile_no"
+                  />
+                ) : (
+                  <NumericFormat
+                    customInput={Input}
+                    id="mobile_no"
+                    allowNegative={false}
+                    placeholder="Mobile no"
+                  />
+                )}
               </Form.Item>
             </div>
           </div>

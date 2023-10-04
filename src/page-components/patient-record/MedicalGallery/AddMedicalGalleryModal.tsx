@@ -33,47 +33,6 @@ export default function AddMedicalGalleryModal({
     });
   }, [show]);
 
-  let [image, setImage] = React.useState({
-    imageUrl: "",
-    error: false,
-    file: null,
-    loading: false,
-    edit: false,
-  });
-
-  function handleChange(info: any) {
-    if (info.file.status === "uploading") {
-      return setImage({
-        ...image,
-        loading: true,
-        file: null,
-        edit: false,
-      });
-    }
-
-    if (info.file.status === "error") {
-      return setImage({
-        ...image,
-        loading: false,
-        error: true,
-        edit: false,
-      });
-    }
-
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (imageUrl: string) => {
-        setImage({
-          ...image,
-          imageUrl,
-          loading: false,
-          file: info.file,
-          edit: false,
-        });
-      });
-      return info.file.originFileObj;
-    }
-  }
-
   const { mutate: addMedicalGallery } = useMutation(
     (payload: FormData) => {
       return postDataMultipleFile({
@@ -134,16 +93,16 @@ export default function AddMedicalGalleryModal({
             delete values.created_at;
             addMedicalGallery(values);
           }}
-          onFinishFailed={(data) => {
-            scroller.scrollTo(
-              data?.errorFields[0]?.name?.join("-")?.toString(),
-              {
-                smooth: true,
-                offset: -50,
-                containerId: rest?.id,
-              }
-            );
-          }}
+          // onFinishFailed={(data) => {
+          //   scroller.scrollTo(
+          //     data?.errorFields[0]?.name?.join("-")?.toString(),
+          //     {
+          //       smooth: true,
+          //       offset: -50,
+          //       containerId: rest?.id,
+          //     }
+          //   );
+          // }}
           className="space-y-12"
         >
           <div className="grid grid-cols-1 gap-4">
@@ -168,12 +127,22 @@ export default function AddMedicalGalleryModal({
               //     message: "This is required!",
               //   },
               // ]}
-              required={false}
+              required={true}
             >
               <Input id="name" placeholder="Name" />
             </Form.Item>
 
-            <Form.Item label="Description" name="description" required={false}>
+            <Form.Item
+              label="Description"
+              rules={[
+                {
+                  required: true,
+                  message: "This is required!",
+                },
+              ]}
+              name="description"
+              required={true}
+            >
               <Input id="description" placeholder="Description" />
             </Form.Item>
 
@@ -186,7 +155,7 @@ export default function AddMedicalGalleryModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <Select placeholder="Category" id="category">
                 <Select.Option value={"Before and After"}>
@@ -212,7 +181,7 @@ export default function AddMedicalGalleryModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <DragAndDropUpload id="galleries">
                 <div className=" w-full flex justify-center flex-col items-center">

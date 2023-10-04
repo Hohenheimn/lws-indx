@@ -169,7 +169,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="First Name"
                 name="first_name"
                 rules={[{ required: true, message: "First Name is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -181,7 +181,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Middle Name"
                 name="middle_name"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -194,7 +194,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Last Name"
                 name="last_name"
                 rules={[{ required: true, message: "Last Name is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -229,7 +229,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Age"
                 name="age"
                 rules={[{ required: true, message: "Age is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input id="age" placeholder="Age" disabled={true} />
@@ -238,7 +238,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Gender"
                 name="gender"
                 rules={[{ required: true, message: "Gender is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Select
@@ -261,7 +261,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Civil Status is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <InfiniteSelect
@@ -282,7 +282,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Religion"
                 name="religion"
                 rules={[{ required: true, message: "Religion is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -295,7 +295,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Nationality"
                 name="nationality"
                 rules={[{ required: true, message: "Nationality is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <InfiniteSelect
@@ -326,7 +326,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   { type: "email", message: "Must be a valid email" },
                   { required: true, message: "Email Address is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -341,7 +341,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Landline Number is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -363,18 +363,28 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
-                <PatternFormat
-                  customInput={Input}
-                  placeholder="09XX-XXX-XXXXX"
-                  disabled={pageType === "view"}
-                  patternChar="*"
-                  format="****-***-****"
-                  allowEmptyFormatting={false}
-                  id="mobile_no"
-                />
+                {country === "174" ? (
+                  <PatternFormat
+                    customInput={Input}
+                    placeholder="09XX-XXX-XXXXX"
+                    disabled={pageType === "view"}
+                    patternChar="*"
+                    format="****-***-****"
+                    allowEmptyFormatting={false}
+                    id="mobile_no"
+                  />
+                ) : (
+                  <NumericFormat
+                    customInput={Input}
+                    id="mobile_no"
+                    allowNegative={false}
+                    disabled={pageType === "view"}
+                    placeholder="Mobile no"
+                  />
+                )}
               </Form.Item>
             </div>
           </div>
@@ -385,7 +395,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Country"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -425,7 +435,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 <>
                   <Form.Item
                     label="Province"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -460,7 +470,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   </Form.Item>
                   <Form.Item
                     label="City"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -505,7 +515,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   </Form.Item>
                   <Form.Item
                     label="Barangay"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -550,7 +560,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     label="Street"
                     name="street"
                     rules={[{ required: true, message: "Street is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -565,7 +575,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     rules={[
                       { required: true, message: "Zip Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -583,7 +593,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     label="Address"
                     name="address"
                     rules={[{ required: true, message: "Address is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -598,7 +608,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     rules={[
                       { required: true, message: "Postal Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -621,7 +631,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Position"
                 name="occupation_position"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -633,7 +643,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Company Name"
                 name="company_name"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -645,7 +655,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Email Address"
                 name="occupation_email"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -657,7 +667,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Landline Number"
                 name="occupation_landline_no"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -678,7 +688,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <PatternFormat
@@ -694,7 +704,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Zip Code"
                 name="zip_code"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -714,7 +724,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Country"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -761,7 +771,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 <>
                   <Form.Item
                     label="Province"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -795,7 +805,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   </Form.Item>
                   <Form.Item
                     label="City"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -837,7 +847,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   </Form.Item>
                   <Form.Item
                     label="Barangay"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -879,7 +889,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   <Form.Item
                     label="Street"
                     name="office_street"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -891,7 +901,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   <Form.Item
                     label="Zip Code"
                     name="office_zip_code"
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -909,7 +919,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     label="Address"
                     name="office_address"
                     rules={[{ required: true, message: "Address is required" }]}
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -924,7 +934,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     rules={[
                       { required: true, message: "Postal Code is required" },
                     ]}
-                    required={false}
+                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -948,7 +958,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="First Name"
                 name="emergency_first_name"
                 rules={[{ required: true, message: "First Name is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -960,7 +970,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Middle Name"
                 name="emergency_middle_name"
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -973,7 +983,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Last Name"
                 name="emergency_last_name"
                 rules={[{ required: true, message: "Last Name is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -989,7 +999,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   { type: "email", message: "Must be a valid email" },
                   { required: true, message: "Email Address is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1004,7 +1014,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 // rules={[
                 //   { required: true, message: "Landline Number is required" },
                 // ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -1026,7 +1036,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <PatternFormat
@@ -1052,7 +1062,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Dental Insurance is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1067,7 +1077,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Effective Date is required" },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <DatePicker
@@ -1084,7 +1094,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Note"
                 name="insurance_note"
                 // rules={[{ required: true, message: "Note is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1104,7 +1114,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="Whom may we thank for referring you?"
                 name="referral_name"
                 // rules={[{ required: true, message: "Referral is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-6"
               >
                 <Input
@@ -1129,7 +1139,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     },
                   }),
                 ]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-6"
               >
                 <PatternFormat
@@ -1146,7 +1156,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 label="What is your reason for dental consultation?"
                 name="reason_for_consultation"
                 // rules={[{ required: true, message: "Reason is required" }]}
-                required={false}
+                required={true}
                 className="col-span-12 lg:col-span-6"
               >
                 <Input
@@ -1183,7 +1193,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     message: "Must accept patient's consent to submit.",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-full text-base"
               >
                 {pageType === "edit" && (

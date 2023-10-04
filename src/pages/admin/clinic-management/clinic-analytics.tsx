@@ -254,7 +254,7 @@ export function ClinicAnalytics({ profile }: any) {
               />
             </aside>
             <h3 className=" text-white text-[1rem] lg:text-3xl">
-              Good Day, {profile.last_name}
+              Good Day, Dr.{profile.last_name}
             </h3>
             <p className=" text-[1rem]">Have a Nice Day!</p>
           </div>

@@ -178,7 +178,7 @@ export default function TimeRangePicker({
           }
           onClick={() => setShow(true)}
         />
-        {restValue?.value.length > 0 && (
+        {restValue?.value?.length > 0 && (
           <GoCircleSlash
             onClick={() => {
               onChange([]);

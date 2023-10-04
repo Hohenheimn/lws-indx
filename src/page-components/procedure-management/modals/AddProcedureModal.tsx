@@ -263,7 +263,7 @@ export default function AddProcedureModal({
                   message: "This field is required",
                 },
               ]}
-              required={false}
+              required={true}
               className="w-fit m-auto [&_.ant-form-item-explain]:text-center [&_.avatar]:[&.ant-form-item-has-error]:border-red-500"
             >
               <Uploader
@@ -304,7 +304,7 @@ export default function AddProcedureModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <Input id="procedure_name" placeholder="Procedure" />
             </Form.Item>
@@ -317,7 +317,7 @@ export default function AddProcedureModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <Input id="abbreviation" placeholder="Abbreviation" />
             </Form.Item>
@@ -330,7 +330,7 @@ export default function AddProcedureModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <NumericFormat
                 customInput={Input}
@@ -350,7 +350,7 @@ export default function AddProcedureModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <Input id="color_code" placeholder="Color Code" />
             </Form.Item>
@@ -364,7 +364,7 @@ export default function AddProcedureModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <Select
                 id="category"

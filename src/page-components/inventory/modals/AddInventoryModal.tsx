@@ -156,7 +156,7 @@ export default function AddInventoryModal({
                     message: "Item Name is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <Input id="item_name" placeholder="Item Name" />
               </Form.Item>
@@ -169,7 +169,7 @@ export default function AddInventoryModal({
                     message: "Serial Number is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <Input id="serial_number" placeholder="Serial Number" />
               </Form.Item> */}
@@ -182,7 +182,7 @@ export default function AddInventoryModal({
                     message: "Remaining Quantity is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <NumericFormat
                   customInput={Input}
@@ -201,7 +201,7 @@ export default function AddInventoryModal({
                     message: "Branch Assigned is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <InfiniteSelect
                   placeholder="Branch Assigned"
@@ -225,7 +225,7 @@ export default function AddInventoryModal({
                     message: "Cost Per Item is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <NumericFormat
                   customInput={Input}
@@ -245,7 +245,7 @@ export default function AddInventoryModal({
                     message: "Supplier Name is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <Input id="supplier_name" placeholder="Supplier Name" />
               </Form.Item>
@@ -259,7 +259,7 @@ export default function AddInventoryModal({
                     message: "Please use correct format!",
                   },
                 ]}
-                required={false}
+                required={true}
                 className="col-span-3 lg:col-span-1"
               >
                 <PatternFormat

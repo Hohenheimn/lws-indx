@@ -323,7 +323,7 @@ export default function AddTreatmentPlanModal({
                     message: "Treatment Plan Name is required",
                   },
                 ]}
-                required={false}
+                required={true}
               >
                 <Input
                   id="treatment_plan_name"
@@ -396,7 +396,7 @@ export default function AddTreatmentPlanModal({
                                       message: "This is required!",
                                     },
                                   ]}
-                                  required={false}
+                                  required={true}
                                 >
                                   <InfiniteSelect
                                     placeholder="Select Procedure"
@@ -438,7 +438,7 @@ export default function AddTreatmentPlanModal({
                                       message: "Tooth is required",
                                     },
                                   ]}
-                                  required={false}
+                                  required={true}
                                 >
                                   <Select
                                     mode="multiple"
@@ -474,7 +474,7 @@ export default function AddTreatmentPlanModal({
                                       message: "This is required!",
                                     },
                                   ]}
-                                  required={false}
+                                  required={true}
                                 >
                                   <NumericFormat
                                     customInput={Input}
@@ -506,7 +506,7 @@ export default function AddTreatmentPlanModal({
                                       message: "This is required!",
                                     },
                                   ]}
-                                  required={false}
+                                  required={true}
                                 >
                                   <NumericFormat
                                     customInput={Input}
@@ -537,7 +537,7 @@ export default function AddTreatmentPlanModal({
                                 message: "This is required!",
                               },
                             ]}
-                            required={false}
+                            required={true}
                           >
                             <InfiniteSelect
                               placeholder="Select Procedure"
@@ -560,7 +560,7 @@ export default function AddTreatmentPlanModal({
                                 message: "Tooth is required",
                               },
                             ]}
-                            required={false}
+                            required={true}
                           >
                             <Select
                               mode="multiple"
@@ -571,7 +571,7 @@ export default function AddTreatmentPlanModal({
                               }}
                             ></Select>
                           </Form.Item>
-                          <Form.Item label="Cost" required={false}>
+                          <Form.Item label="Cost" required={true}>
                             <NumericFormat
                               customInput={Input}
                               placeholder="Cost"
@@ -580,7 +580,7 @@ export default function AddTreatmentPlanModal({
                               prefix={currency}
                             />
                           </Form.Item>
-                          <Form.Item label="Total Amount" required={false}>
+                          <Form.Item label="Total Amount" required={true}>
                             <NumericFormat
                               customInput={Input}
                               placeholder="Total Amount"
@@ -619,7 +619,7 @@ export default function AddTreatmentPlanModal({
                     label="Notes"
                     name="notes"
                     // rules={[{ required: true, message: "Notes is required" }]}
-                    required={false}
+                    required={true}
                     className="basis-1/2"
                     initialValue={""}
                   >
@@ -640,7 +640,7 @@ export default function AddTreatmentPlanModal({
                         message: "This is required!",
                       },
                     ]}
-                    required={false}
+                    required={true}
                   >
                     <NumericFormat
                       customInput={Input}
@@ -658,7 +658,7 @@ export default function AddTreatmentPlanModal({
                     <p className="mb-1">Choose Type of Discount</p>
                     <Form.Item
                       name="discount_type"
-                      required={false}
+                      required={true}
                       className="text-base"
                       initialValue={""}
                     >
@@ -681,7 +681,7 @@ export default function AddTreatmentPlanModal({
                         message: "This is required!",
                       },
                     ]}
-                    required={false}
+                    required={true}
                     initialValue={0}
                     className="basis-1/2"
                   >
@@ -709,7 +709,7 @@ export default function AddTreatmentPlanModal({
                 <hr className="my-4 mx-0 border-t-2" />
                 <Form.Item
                   label="Total Amount"
-                  required={false}
+                  required={true}
                   name="total_amount"
                   rules={[
                     {

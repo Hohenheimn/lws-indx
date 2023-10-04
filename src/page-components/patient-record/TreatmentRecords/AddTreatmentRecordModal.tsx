@@ -165,7 +165,7 @@ export default function AddTreatmentRecordModal({
             <Form.Item
               label="Chart Name"
               name="chart_id"
-              required={false}
+              required={true}
               initialValue={""}
               className="col-span-12"
             >
@@ -188,7 +188,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-12"
             >
               <InfiniteSelect
@@ -210,7 +210,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-12"
             >
               <InfiniteSelect
@@ -232,7 +232,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-12"
             >
               <Select placeholder="Select Surface" id="surface">
@@ -251,7 +251,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
               initialValue={0}
             >
               <NumericFormat
@@ -272,7 +272,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <InfiniteSelect
                 placeholder="Select Procedure"
@@ -299,7 +299,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <MultipleSelect
                 Selection={toothNumbers(age)}
@@ -317,7 +317,7 @@ export default function AddTreatmentRecordModal({
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <NumericFormat
                 customInput={Input}

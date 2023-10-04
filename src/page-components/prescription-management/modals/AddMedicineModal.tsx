@@ -138,7 +138,7 @@ export default function AddPrescriptionManagementModal({
               label="Generic Name"
               name="generic_name"
               rules={[{ required: true, message: "This is required!" }]}
-              required={false}
+              required={true}
             >
               <Input id="generic_name" placeholder="Generic Name" />
             </Form.Item>
@@ -146,7 +146,7 @@ export default function AddPrescriptionManagementModal({
               label="Brand Name"
               name="brand_name"
               rules={[{ required: true, message: "This is required!" }]}
-              required={false}
+              required={true}
             >
               <Input id="brand_name" placeholder="Brand Name" />
             </Form.Item>
@@ -154,7 +154,7 @@ export default function AddPrescriptionManagementModal({
               label="Dosage"
               name="dosage"
               rules={[{ required: true, message: "This is required!" }]}
-              required={false}
+              required={true}
             >
               <Input id="dosage" placeholder="Dosage" />
             </Form.Item>

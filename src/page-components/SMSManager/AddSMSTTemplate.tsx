@@ -15,8 +15,6 @@ import {
 } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
-
-
 export default function AddSMSTemplate({
   show,
   onClose,
@@ -198,6 +196,7 @@ export default function AddSMSTemplate({
           className="space-y-5"
         >
           <Form.Item
+            label="SMS Template Name"
             name="template_name"
             rules={[
               {
@@ -205,19 +204,20 @@ export default function AddSMSTemplate({
                 message: "This is required!",
               },
             ]}
-            required={false}
+            required={true}
           >
             <Input id="template_name" placeholder="SMS Template Name" />
           </Form.Item>
           <Form.Item
             name="message_content"
+            label="Message Content"
             rules={[
               {
                 required: true,
                 message: "This is required!",
               },
             ]}
-            required={false}
+            required={true}
           >
             <TextArea
               id="message_content"

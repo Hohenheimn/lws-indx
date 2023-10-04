@@ -227,7 +227,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-6 lg:col-span-2"
               initialValue=""
             >
@@ -250,7 +250,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-6 lg:col-span-2"
               initialValue=""
             >
@@ -270,7 +270,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "Birth Month is required",
                 },
               ]}
-              required={false}
+              required={true}
             >
               <DatePicker
                 getPopupContainer={(triggerNode: any) => {
@@ -301,7 +301,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-6 lg:col-span-1"
             >
               <Input id="age" placeholder="Age" disabled={true} />
@@ -315,7 +315,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "This is required!",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-6 lg:col-span-2"
             >
               <Select placeholder="Gender" id="gender">
@@ -331,12 +331,6 @@ export function ProfileInfo({ profile, tab }: any) {
             <Form.Item
               label="License Number"
               name="license_no"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required!",
-                },
-              ]}
               required={false}
               className="col-span-6 lg:col-span-2"
             >
@@ -345,12 +339,6 @@ export function ProfileInfo({ profile, tab }: any) {
             <Form.Item
               label="PTR Number"
               name="ptr_no"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required!",
-                },
-              ]}
               required={false}
               className="col-span-6 lg:col-span-2"
             >
@@ -359,12 +347,6 @@ export function ProfileInfo({ profile, tab }: any) {
             <Form.Item
               label="S2 License Number"
               name="s2_no"
-              rules={[
-                {
-                  required: true,
-                  message: "This is required!",
-                },
-              ]}
               required={false}
               className="col-span-6 lg:col-span-2"
             >
@@ -388,7 +370,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "Must be a valid email",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-3 lg:col-span-1"
             >
               <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
@@ -419,17 +401,26 @@ export function ProfileInfo({ profile, tab }: any) {
                   message: "Please use correct format!",
                 },
               ]}
-              required={false}
+              required={true}
               className="col-span-3 lg:col-span-1"
             >
-              <PatternFormat
-                customInput={Input}
-                placeholder="09XX-XXX-XXXXX"
-                patternChar="*"
-                format="****-***-****"
-                allowEmptyFormatting={false}
-                id="mobile_no"
-              />
+              {country === "174" ? (
+                <PatternFormat
+                  customInput={Input}
+                  placeholder="09XX-XXX-XXXXX"
+                  patternChar="*"
+                  format="****-***-****"
+                  allowEmptyFormatting={false}
+                  id="mobile_no"
+                />
+              ) : (
+                <NumericFormat
+                  customInput={Input}
+                  id="mobile_no"
+                  allowNegative={false}
+                  placeholder="Mobile no"
+                />
+              )}
             </Form.Item>
           </div>
         </div>
@@ -438,7 +429,7 @@ export function ProfileInfo({ profile, tab }: any) {
           <div className="grid grid-cols-3 gap-4">
             <Form.Item
               label="Country"
-              required={false}
+              required={true}
               className="col-span-full lg:col-span-1"
               shouldUpdate={(prev, curr) => {
                 return true;
@@ -449,6 +440,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   <Form.Item
                     name="country"
                     rules={[{ required: true, message: "Country is required" }]}
+                    required={true}
                   >
                     <InfiniteSelect
                       placeholder="Country"
@@ -477,7 +469,7 @@ export function ProfileInfo({ profile, tab }: any) {
               <>
                 <Form.Item
                   label="Province"
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                   shouldUpdate={(prev, curr) => {
                     return true;
@@ -490,6 +482,7 @@ export function ProfileInfo({ profile, tab }: any) {
                         rules={[
                           { required: true, message: "Province is required" },
                         ]}
+                        required={true}
                       >
                         <InfiniteSelect
                           placeholder="Province"
@@ -513,7 +506,7 @@ export function ProfileInfo({ profile, tab }: any) {
                 </Form.Item>
                 <Form.Item
                   label="City"
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                   shouldUpdate={(prev, curr) => {
                     return true;
@@ -523,6 +516,7 @@ export function ProfileInfo({ profile, tab }: any) {
                     return (
                       <Form.Item
                         name="city"
+                        required={true}
                         rules={[
                           { required: true, message: "City is required" },
                         ]}
@@ -556,7 +550,7 @@ export function ProfileInfo({ profile, tab }: any) {
                 </Form.Item>
                 <Form.Item
                   label="Barangay"
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                   shouldUpdate={(prev, curr) => {
                     return true;
@@ -566,6 +560,7 @@ export function ProfileInfo({ profile, tab }: any) {
                     return (
                       <Form.Item
                         name="barangay"
+                        required={true}
                         rules={[
                           { required: true, message: "City is required" },
                         ]}
@@ -599,7 +594,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   label="Street"
                   name="street"
                   rules={[{ required: true, message: "Street is required" }]}
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                 >
                   <Input id="street" placeholder="Add street name" />
@@ -608,7 +603,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   label="Zip Code"
                   name="zip_code"
                   rules={[{ required: true, message: "Zip Code is required" }]}
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                 >
                   <NumericFormat
@@ -625,7 +620,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   label="Address"
                   name="address"
                   rules={[{ required: true, message: "Address is required" }]}
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                 >
                   <Input id="street" placeholder="Add full address" />
@@ -636,7 +631,7 @@ export function ProfileInfo({ profile, tab }: any) {
                   rules={[
                     { required: true, message: "Postal Code is required" },
                   ]}
-                  required={false}
+                  required={true}
                   className="col-span-full lg:col-span-1"
                 >
                   <NumericFormat
