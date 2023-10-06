@@ -1,3 +1,3 @@
-const gender = [`Male`, `Female`];
+const gender = [`Male`, `Female`, `Prefer Not to Disclose`];
 
 export default gender;

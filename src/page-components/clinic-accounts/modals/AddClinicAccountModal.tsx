@@ -643,10 +643,6 @@ export default function AddClinicAccountModal({
                   <Form.Item
                     label="Zip Code"
                     name="zip_code"
-                    rules={[
-                      { required: true, message: "Zip Code is required" },
-                    ]}
-                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
@@ -654,6 +650,14 @@ export default function AddClinicAccountModal({
                       id="zip_code"
                       allowNegative={false}
                       placeholder="Zip Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>
@@ -671,17 +675,21 @@ export default function AddClinicAccountModal({
                   <Form.Item
                     label="Postal Code"
                     name="postal_code"
-                    rules={[
-                      { required: true, message: "Postal Code is required" },
-                    ]}
-                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
                       customInput={Input}
-                      id="zip_code"
+                      id="postal_code"
                       allowNegative={false}
                       placeholder="Postal Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox, Form, Popover, notification } from "antd";
 import Table from "antd/lib/table";
 import Image from "next/image";
@@ -40,7 +40,7 @@ export function PatientList({ profile, router }: any) {
         url: `/api/patient?limit=5&page=${page}&search=${search}`,
       })
   );
-  const [patientsID, setPatientsID] = useState<string[]>([]);
+  const [patientsID, setPatientsID] = useState<React.Key[]>([]);
 
   const { mutate: sendMessage } = useMutation(
     (payload: any) => {
@@ -89,28 +89,6 @@ export function PatientList({ profile, router }: any) {
   );
 
   const columns: any = [
-    {
-      title: "",
-      width: "5rem",
-      align: "center",
-      render: ({ _, _id }: any) => {
-        return (
-          <Checkbox
-            checked={patientsID.includes(_id)}
-            onChange={(e) => {
-              // Handle checkbox change event here
-              if (!patientsID.includes(_id)) {
-                setPatientsID([...patientsID, _id]);
-              }
-              if (patientsID.includes(_id)) {
-                const fitler = patientsID.filter((filter) => filter !== _id);
-                setPatientsID(fitler);
-              }
-            }}
-          />
-        );
-      },
-    },
     {
       title: "",
       width: "5rem",
@@ -225,6 +203,12 @@ export function PatientList({ profile, router }: any) {
   const [show, setShow] = useState(false);
 
   const [sendMessageForm] = Form.useForm();
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+      setPatientsID(selectedRowKeys);
+    },
+  };
 
   return (
     <>
@@ -372,6 +356,10 @@ export function PatientList({ profile, router }: any) {
             showHeader={true}
             tableLayout="fixed"
             loading={isPatientsLoading}
+            rowSelection={{
+              type: "checkbox",
+              ...rowSelection,
+            }}
             components={{
               table: ({ ...rest }: any) => {
                 // let tableFlexGrow = rest?.children[2]?.props?.data?.length / 5;

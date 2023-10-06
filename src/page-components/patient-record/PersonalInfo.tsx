@@ -11,10 +11,11 @@ import Card from "@components/Card";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
+import religion from "@utilities/global-data/religion";
 import { getInitialValue } from "@utilities/helpers";
 
 function dataURLtoFile(dataurl: any, filename: any) {
@@ -285,11 +286,19 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 required={true}
                 className="col-span-12 lg:col-span-4"
               >
-                <Input
+                <Select
                   id="religion"
                   disabled={pageType === "view"}
                   placeholder="Religion"
-                />
+                >
+                  {religion.map((item, index) => {
+                    return (
+                      <Select.Option value={item} key={index}>
+                        {item}
+                      </Select.Option>
+                    );
+                  })}
+                </Select>
               </Form.Item>
               <Form.Item
                 label="Nationality"
@@ -358,9 +367,12 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                 rules={[
                   { required: true, message: "Mobile Number is required" },
                   {
-                    pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                    pattern:
+                      country === "174" ? /^(09)\d{2}-\d{3}-\d{4}$/ : /\d+/g,
                     message:
-                      "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
+                      country === "174"
+                        ? "Please use correct format!\n\nFormat:09XX-XXX-XXXXX"
+                        : "Please enter a number",
                   },
                 ]}
                 required={true}
@@ -572,10 +584,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   <Form.Item
                     label="Zip Code"
                     name="zip_code"
-                    rules={[
-                      { required: true, message: "Zip Code is required" },
-                    ]}
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -583,6 +591,14 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       id="zip_code"
                       allowNegative={false}
                       placeholder="Zip Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                       disabled={pageType === "view"}
                     />
                   </Form.Item>
@@ -605,18 +621,23 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   <Form.Item
                     label="Postal Code"
                     name="postal_code"
-                    rules={[
-                      { required: true, message: "Postal Code is required" },
-                    ]}
                     required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
                       customInput={Input}
-                      id="zip_code"
+                      id="postal_code"
                       allowNegative={false}
                       disabled={pageType === "view"}
                       placeholder="Postal Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>
@@ -667,7 +688,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Landline Number"
                 name="occupation_landline_no"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -704,7 +724,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Zip Code"
                 name="zip_code"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -713,6 +732,14 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   allowNegative={false}
                   disabled={pageType === "view"}
                   placeholder="Zip Code"
+                  isAllowed={(values) => {
+                    const { floatValue } = values;
+                    if (Number(floatValue) > Number(9999999999)) {
+                      return false;
+                    } else {
+                      return true;
+                    }
+                  }}
                 />
               </Form.Item>
             </div>
@@ -901,7 +928,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   <Form.Item
                     label="Zip Code"
                     name="office_zip_code"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -910,6 +936,14 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       allowNegative={false}
                       placeholder="Zip Code"
                       disabled={pageType === "view"}
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>
@@ -931,18 +965,22 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   <Form.Item
                     label="Postal Code"
                     name="office_postal_code"
-                    rules={[
-                      { required: true, message: "Postal Code is required" },
-                    ]}
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
                       customInput={Input}
-                      id="zip_code"
+                      id="postal_code"
                       allowNegative={false}
                       disabled={pageType === "view"}
                       placeholder="Postal Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>
@@ -1011,10 +1049,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Landline Number"
                 name="emergency_landline_no"
-                // rules={[
-                //   { required: true, message: "Landline Number is required" },
-                // ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -1093,8 +1127,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Note"
                 name="insurance_note"
-                // rules={[{ required: true, message: "Note is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1113,8 +1145,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Whom may we thank for referring you?"
                 name="referral_name"
-                // rules={[{ required: true, message: "Referral is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-6"
               >
                 <Input
@@ -1139,7 +1169,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     },
                   }),
                 ]}
-                required={true}
                 className="col-span-12 lg:col-span-6"
               >
                 <PatternFormat
@@ -1155,8 +1184,6 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="What is your reason for dental consultation?"
                 name="reason_for_consultation"
-                // rules={[{ required: true, message: "Reason is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-6"
               >
                 <Input

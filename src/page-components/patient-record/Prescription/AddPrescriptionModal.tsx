@@ -222,14 +222,10 @@ export default function AddPrescriptionModal({
                             key={key}
                             triggerOnce={true}
                           >
-                            <div className="grid grid-cols-1 z-[99] lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-8 rounded-md relative">
+                            <div className="grid grid-cols-1 z-[99] lg:grid-cols-3 gap-4 border border-gray-300 p-4 pt-4 rounded-md relative">
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
-                                  className={`absolute top-0 right-0 m-2  text-3xl ${
-                                    pageType === "view" && id
-                                      ? " text-gray-400"
-                                      : "cursor-pointer text-danger"
-                                  }`}
+                                  className="absolute top-0 z-10 right-3 m-2 text-danger text-3xl cursor-pointer"
                                   onClick={() => {
                                     if (pageType === "view" && id) return;
                                     remove(name);

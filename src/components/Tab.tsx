@@ -18,7 +18,7 @@ export default function Tab({ items, onClick, activeTab, className }: Props) {
     setTab(OverWidth);
   }, []);
   return (
-    <nav className={`tab-scroll bg-white w-full p-5 ${className}`}>
+    <nav className={`tab-scroll bg-white w-full ${className}`}>
       <motion.div className=" w-full overflow-auto" ref={tabContainer}>
         <motion.ul
           drag="x"

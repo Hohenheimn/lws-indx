@@ -436,10 +436,6 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                   <Form.Item
                     label="Zip Code"
                     name="zip_code"
-                    rules={[
-                      { required: true, message: "Zip Code is required" },
-                    ]}
-                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
@@ -447,6 +443,14 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                       id="zip_code"
                       allowNegative={false}
                       placeholder="Zip Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>
@@ -464,17 +468,21 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                   <Form.Item
                     label="Postal Code"
                     name="postal_code"
-                    rules={[
-                      { required: true, message: "Postal Code is required" },
-                    ]}
-                    required={true}
                     className="col-span-full lg:col-span-1"
                   >
                     <NumericFormat
                       customInput={Input}
-                      id="zip_code"
+                      id="postal_code"
                       allowNegative={false}
                       placeholder="Postal Code"
+                      isAllowed={(values) => {
+                        const { floatValue } = values;
+                        if (Number(floatValue) > Number(9999999999)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      }}
                     />
                   </Form.Item>
                 </>
@@ -503,7 +511,7 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
                               >
                                 {fields.length > 1 ? (
                                   <AiFillMinusCircle
-                                    className="absolute top-0 right-3 m-2 text-danger text-3xl cursor-pointer"
+                                    className="absolute top-0 right-3 z-10 m-2 text-danger text-3xl cursor-pointer"
                                     onClick={() => remove(name)}
                                   />
                                 ) : null}

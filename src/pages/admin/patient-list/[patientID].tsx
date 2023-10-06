@@ -189,29 +189,31 @@ export function PatientRecord({
               />
             </Radio.Group>
           </div>
-          <Tab
-            items={[
-              `Personal Info`,
-              "Dental History",
-              "Medical History",
-              "Treatment Plan",
-              "Charting",
-              "Treatment Records",
-              "Medical Gallery",
-              "Prescription",
-              "Change History",
-            ]}
-            activeTab={
-              router?.query.tab === undefined
-                ? "Personal Info"
-                : router?.query.tab
-            }
-            onClick={(value) => {
-              router.replace({
-                query: { ...router.query, tab: value },
-              });
-            }}
-          />
+          <div className=" py-5 w-full">
+            <Tab
+              items={[
+                `Personal Info`,
+                "Dental History",
+                "Medical History",
+                "Treatment Plan",
+                "Charting",
+                "Treatment Records",
+                "Medical Gallery",
+                "Prescription",
+                "Change History",
+              ]}
+              activeTab={
+                router?.query.tab === undefined
+                  ? "Personal Info"
+                  : router?.query.tab
+              }
+              onClick={(value) => {
+                router.replace({
+                  query: { ...router.query, tab: value },
+                });
+              }}
+            />
+          </div>
         </nav>
 
         {!loadingPatient ? (
@@ -316,26 +318,27 @@ export function PatientRecord({
               </Card>
             </div>
 
-            <Tab
-              className="rounded-lg shadow-lg"
-              items={[
-                `Personal Info`,
-                "Dental History",
-                "Medical History",
-                "Treatment Plan",
-                "Charting",
-                "Treatment Records",
-                "Medical Gallery",
-                "Prescription",
-                "Change History",
-              ]}
-              activeTab={router?.query.tab}
-              onClick={(value) => {
-                router.replace({
-                  query: { ...router.query, tab: value },
-                });
-              }}
-            />
+            <div className=" p-5 bg-white rounded-lg shadow-lg">
+              <Tab
+                items={[
+                  `Personal Info`,
+                  "Dental History",
+                  "Medical History",
+                  "Treatment Plan",
+                  "Charting",
+                  "Treatment Records",
+                  "Medical Gallery",
+                  "Prescription",
+                  "Change History",
+                ]}
+                activeTab={router?.query.tab}
+                onClick={(value) => {
+                  router.replace({
+                    query: { ...router.query, tab: value },
+                  });
+                }}
+              />
+            </div>
 
             <AnimateContainer
               variants={fadeIn}

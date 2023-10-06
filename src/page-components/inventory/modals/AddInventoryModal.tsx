@@ -146,7 +146,7 @@ export default function AddInventoryModal({
           className="space-y-12"
         >
           <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
+            <div className="flex flex-col gap-4">
               <Form.Item
                 label="Item Name"
                 name="item_name"

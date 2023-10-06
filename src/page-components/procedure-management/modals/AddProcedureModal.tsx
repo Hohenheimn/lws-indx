@@ -9,6 +9,7 @@ import { Button } from "@components/Button";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import Avatar from "@src/components/Avatar";
+import ColorPicker from "@src/components/ColorPicker";
 import { Select } from "@src/components/Select";
 import Uploader from "@src/components/Uploader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -257,13 +258,13 @@ export default function AddProcedureModal({
               name="icon"
               valuePropName="file"
               getValueFromEvent={handleChange}
-              rules={[
-                {
-                  required: true,
-                  message: "This field is required",
-                },
-              ]}
-              required={true}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: "This field is required",
+              //   },
+              // ]}
+              // required={true}
               className="w-fit m-auto [&_.ant-form-item-explain]:text-center [&_.avatar]:[&.ant-form-item-has-error]:border-red-500"
             >
               <Uploader
@@ -342,7 +343,7 @@ export default function AddProcedureModal({
               />
             </Form.Item>
             <Form.Item
-              label="Color Code"
+              label="Pick Color"
               name="color_code"
               rules={[
                 {
@@ -352,7 +353,11 @@ export default function AddProcedureModal({
               ]}
               required={true}
             >
-              <Input id="color_code" placeholder="Color Code" />
+              <ColorPicker
+                onChange={(value) => {
+                  form.setFieldValue("color_code", value);
+                }}
+              />
             </Form.Item>
 
             <Form.Item

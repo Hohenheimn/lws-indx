@@ -30,7 +30,7 @@ export default function VerifyAuth(gssp: {
     const userToken = token ? token : "";
     let subdomain =
       req.headers.host.split(".").length > 1
-        ? req.headers.host.split(".")[0]
+        ? req.headers.host.replace("www.", "").split(".")[0]
         : null;
 
     if (token) {

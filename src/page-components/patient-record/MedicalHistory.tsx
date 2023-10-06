@@ -428,10 +428,6 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     <Form.Item
                       label="Zip Code"
                       name="clinic_zip_code"
-                      rules={[
-                        { required: true, message: "Zip Code is required" },
-                      ]}
-                      required={true}
                       className="col-span-12 lg:col-span-4"
                     >
                       <NumericFormat
@@ -440,6 +436,14 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                         allowNegative={false}
                         placeholder="Zip Code"
                         disabled={pageType === "view"}
+                        isAllowed={(values) => {
+                          const { floatValue } = values;
+                          if (Number(floatValue) > Number(9999999999)) {
+                            return false;
+                          } else {
+                            return true;
+                          }
+                        }}
                       />
                     </Form.Item>
                   </>
@@ -463,10 +467,6 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                     <Form.Item
                       label="Postal Code"
                       name="clinic_postal_code"
-                      rules={[
-                        { required: true, message: "Postal Code is required" },
-                      ]}
-                      required={true}
                       className="col-span-12 lg:col-span-4"
                     >
                       <NumericFormat
@@ -475,6 +475,14 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                         disabled={pageType === "view"}
                         allowNegative={false}
                         placeholder="Postal Code"
+                        isAllowed={(values) => {
+                          const { floatValue } = values;
+                          if (Number(floatValue) > Number(9999999999)) {
+                            return false;
+                          } else {
+                            return true;
+                          }
+                        }}
                       />
                     </Form.Item>
                   </>

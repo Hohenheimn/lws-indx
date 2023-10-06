@@ -181,7 +181,7 @@ export default function AddPrescriptionManagementModal({
                             >
                               {fields.length > 1 ? (
                                 <AiFillMinusCircle
-                                  className="absolute top-0 right-3 m-2 text-danger text-3xl cursor-pointer"
+                                  className="absolute top-0 z-10 right-3 m-2 text-danger text-3xl cursor-pointer"
                                   onClick={() => remove(name)}
                                 />
                               ) : null}
