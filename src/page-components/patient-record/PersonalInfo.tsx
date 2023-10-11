@@ -32,7 +32,13 @@ function dataURLtoFile(dataurl: any, filename: any) {
   return new File([u8arr], filename, { type: mime });
 }
 
-export function PersonalInfo({ patientRecord, tab, pageType }: any) {
+export function PersonalInfo({
+  patientRecord,
+  tab,
+  pageType,
+  setImage,
+  profile_picture,
+}: any) {
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
   const [PersonalInfoForm] = Form.useForm();
@@ -82,6 +88,12 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
           message: "Personal Information Updated",
           description: `Personal Information Updated`,
         });
+        setImage({
+          imageUrl: "",
+          error: false,
+          file: null,
+          loading: false,
+        });
       },
       onMutate: async (newData) => {
         await queryClient.cancelQueries({ queryKey: ["patient"] });
@@ -129,11 +141,13 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
           ) {
             delete values.patient_signature_path;
           }
+          if (profile_picture) {
+            values.profile_picture = profile_picture;
+          }
           values.insurance_effective_date = moment(
             values.insurance_effective_date
           ).format("MMMM DD, YYYY");
           values.birthdate = moment(values.birthdate).format("MMMM DD, YYYY");
-
           editPatient(values);
         }}
         onFinishFailed={(data) => {
@@ -274,7 +288,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     form: PersonalInfoForm,
                     initialValue: "civil_status",
                   }}
-                  queryKey={["civil_status"]}
+                  queryKey={[
+                    "civil_status",
+                    PersonalInfoForm.getFieldValue("civil_status"),
+                  ]}
                   displayValueKey="name"
                   returnValueKey="_id"
                 />
@@ -316,7 +333,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                     form: PersonalInfoForm,
                     initialValue: "nationality",
                   }}
-                  queryKey={["nationality"]}
+                  queryKey={[
+                    "nationality",
+                    PersonalInfoForm.getFieldValue("nationality"),
+                  ]}
                   displayValueKey="name"
                   returnValueKey="_id"
                 />
@@ -430,7 +450,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                           initialValue: "country",
                         }}
                         initialValue={patientRecord?.country}
-                        queryKey={["country"]}
+                        queryKey={[
+                          "country",
+                          PersonalInfoForm.getFieldValue("country"),
+                        ]}
                         displayValueKey="name"
                         returnValueKey="_id"
                         disabled={pageType === "view"}
@@ -465,7 +488,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                               initialValue: "province",
                             }}
                             initialValue={patientRecord?.province}
-                            queryKey={["province"]}
+                            queryKey={[
+                              "province",
+                              PersonalInfoForm.getFieldValue("province"),
+                            ]}
                             displayValueKey="name"
                             returnValueKey="_id"
                             disabled={
@@ -508,7 +534,12 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                               form: PersonalInfoForm,
                               initialValue: "city",
                             }}
-                            queryKey={["city", getFieldValue("province")]}
+                            queryKey={[
+                              "city",
+                              getFieldValue("province"),
+                              ,
+                              getFieldValue("city"),
+                            ]}
                             displayValueKey="name"
                             returnValueKey="_id"
                             disabled={
@@ -553,7 +584,12 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                               form: PersonalInfoForm,
                               initialValue: "barangay",
                             }}
-                            queryKey={["barangay", getFieldValue("city")]}
+                            queryKey={[
+                              "barangay",
+                              getFieldValue("city"),
+                              ,
+                              getFieldValue("barangay"),
+                            ]}
                             displayValueKey="name"
                             returnValueKey="_id"
                             disabled={
@@ -764,6 +800,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                       rules={[
                         { required: true, message: "Country is required" },
                       ]}
+                      initialValue={""}
                     >
                       <InfiniteSelect
                         placeholder="Country"
@@ -774,7 +811,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                           initialValue: "office_country",
                         }}
                         initialValue={patientRecord?.office_country}
-                        queryKey={["office_country"]}
+                        queryKey={[
+                          "office_country",
+                          getFieldValue("office_country"),
+                        ]}
                         displayValueKey="name"
                         disabled={pageType === "view"}
                         returnValueKey="_id"
@@ -815,7 +855,10 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                               form: PersonalInfoForm,
                               initialValue: "office_province",
                             }}
-                            queryKey={["office_province"]}
+                            queryKey={[
+                              "office_province",
+                              getFieldValue("office_province"),
+                            ]}
                             displayValueKey="name"
                             returnValueKey="_id"
                             disabled={
@@ -856,6 +899,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                             queryKey={[
                               "office_city",
                               getFieldValue("office_province"),
+                              getFieldValue("office_city"),
                             ]}
                             displayValueKey="name"
                             returnValueKey="_id"
@@ -882,7 +926,13 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                   >
                     {({ getFieldValue, resetFields }) => {
                       return (
-                        <Form.Item name="office_barangay">
+                        <Form.Item
+                          name="office_barangay"
+                          rules={[
+                            { required: true, message: "Address is required" },
+                          ]}
+                          initialValue={""}
+                        >
                           <InfiniteSelect
                             placeholder="Barangay"
                             id="office_barangay"
@@ -898,6 +948,7 @@ export function PersonalInfo({ patientRecord, tab, pageType }: any) {
                             queryKey={[
                               "office_barangay",
                               getFieldValue("office_city"),
+                              getFieldValue("office_barangay"),
                             ]}
                             displayValueKey="name"
                             returnValueKey="_id"

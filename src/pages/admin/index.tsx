@@ -4,6 +4,7 @@ import Form from "antd/lib/form";
 import "chart.js/auto";
 import { format, parseISO } from "date-fns";
 import moment from "moment";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import {
@@ -292,6 +293,7 @@ export function Dashboard({ profile }: any) {
                                 status,
                                 _id,
                                 remarks,
+                                profile_picture,
                                 ...rest
                               },
                               index
@@ -308,10 +310,20 @@ export function Dashboard({ profile }: any) {
                                   >
                                     <div className=" flex md:justify-between space-y-5 md:space-y-0 justify-center items-center flex-wrap">
                                       <div className="md:w-[10%] w-full flex items-center justify-center">
-                                        <div className="relative md:w-full w-16 aspect-square bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
-                                          {patient_name
-                                            ? patient_name.charAt(0)
-                                            : doctor_name.charAt(0)}
+                                        <div className="relative overflow-hidden md:w-full w-16 aspect-square bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
+                                          {profile_picture ? (
+                                            <Image
+                                              src={profile_picture}
+                                              alt=""
+                                              fill
+                                            />
+                                          ) : (
+                                            <>
+                                              {patient_name
+                                                ? patient_name.charAt(0)
+                                                : doctor_name.charAt(0)}
+                                            </>
+                                          )}
                                         </div>
                                       </div>
 

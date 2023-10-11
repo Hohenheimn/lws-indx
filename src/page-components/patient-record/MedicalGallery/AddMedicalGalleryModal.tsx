@@ -91,6 +91,7 @@ export default function AddMedicalGalleryModal({
           layout="vertical"
           onFinish={(values) => {
             delete values.created_at;
+            console.log(values);
             addMedicalGallery(values);
           }}
           // onFinishFailed={(data) => {

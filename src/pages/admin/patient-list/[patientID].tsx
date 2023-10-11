@@ -16,6 +16,7 @@ import { fadeIn, fadeInUp } from "@src/components/animation/animation";
 import DeleteButton from "@src/components/DeleteButton";
 import { Radio } from "@src/components/Radio";
 import Tab from "@src/components/Tab";
+import Uploader from "@src/components/Uploader";
 import ChangeHistory from "@src/page-components/patient-record/ChangeHistory";
 import Charting from "@src/page-components/patient-record/Charting";
 import DentalHistory from "@src/page-components/patient-record/DentalHistory";
@@ -52,6 +53,13 @@ export function PatientRecord({
   let [isImageError, setIsImageError] = React.useState(false);
 
   const router = useRouter();
+
+  let [image, setImage] = React.useState({
+    imageUrl: "",
+    error: false,
+    file: null,
+    loading: false,
+  });
 
   const { data: patient, isFetching: loadingPatient, isError } = useQuery(
     ["patient", selectedPatientID],
@@ -122,6 +130,14 @@ export function PatientRecord({
       window.removeEventListener("scroll", checkOutOfView);
     };
   }, []);
+
+  React.useEffect(() => {
+    if (patient?.profile_picture)
+      setImage({
+        ...image,
+        imageUrl: patient?.profile_picture ? patient?.profile_picture : "/",
+      });
+  }, [patient]);
 
   if (isError) {
     return (
@@ -239,7 +255,43 @@ export function PatientRecord({
               <Card className="text-base sticky top-0">
                 <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                   <div className="flex flex-col justify-center items-center gap-4">
-                    <Avatar className="h-28 w-28 p-4 overflow-hidden relative border border-gray-300 avatar transition">
+                    <aside
+                      className={` inline-block ${pageType === "view" &&
+                        "pointer-events-none"}`}
+                    >
+                      <Uploader
+                        image={image}
+                        setImage={(value: any) => {
+                          setImage(value);
+                        }}
+                        className={`[&_.ant-upload]:!border-0`}
+                        id="profile_picture"
+                        capture={true}
+                      >
+                        <div className="space-y-2 text-center">
+                          <Avatar className="h-40 w-40 p-8 overflow-hidden relative border border-gray-300 avatar transition">
+                            {image.imageUrl ? (
+                              <Image
+                                src={image.imageUrl}
+                                alt="random pics"
+                                fill
+                                sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
+                                className="object-center contain h-full w-full object-cover"
+                              />
+                            ) : (
+                              <IoPersonOutline className="h-full w-full text-white" />
+                            )}
+                          </Avatar>
+                          {pageType === "edit" && (
+                            <div className="text-casper-500">
+                              {image.imageUrl ? "Change" : "Upload"} Profile
+                              Picture
+                            </div>
+                          )}
+                        </div>
+                      </Uploader>
+                    </aside>
+                    {/* <Avatar className="h-28 w-28 p-4 overflow-hidden relative border border-gray-300 avatar transition">
                       {!patient?.profile_picture || isImageError ? (
                         <IoPersonOutline className="h-full w-full text-white" />
                       ) : (
@@ -255,7 +307,7 @@ export function PatientRecord({
                           }}
                         />
                       )}
-                    </Avatar>
+                    </Avatar> */}
                     <h5>
                       {patient?.first_name} {patient?.last_name}
                     </h5>
@@ -351,6 +403,8 @@ export function PatientRecord({
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
+                  setImage={setImage}
+                  profile_picture={image?.file}
                 />
               )}
               {router.query.tab === "Dental History" && (

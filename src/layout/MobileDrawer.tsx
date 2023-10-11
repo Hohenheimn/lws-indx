@@ -88,6 +88,7 @@ export const MobileDrawer = ({
                             <Menu.Item
                               key={`${link}/${subMenuLink}`}
                               onClick={() => {
+                                setIsDrawerOpen(false);
                                 router.push(`${link}/${subMenuLink}`);
                               }}
                               disabled={disabledSubMenu}
@@ -108,6 +109,7 @@ export const MobileDrawer = ({
                   <Menu.Item
                     key={link}
                     onClick={() => {
+                      setIsDrawerOpen(false);
                       router.push(link);
                     }}
                     disabled={disabled}
