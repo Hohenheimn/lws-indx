@@ -684,7 +684,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Position"
                 name="occupation_position"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -696,7 +695,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Company Name"
                 name="company_name"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -708,7 +706,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Email Address"
                 name="occupation_email"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -740,7 +737,6 @@ export function PersonalInfo({
                       "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
                   },
                 ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <PatternFormat
@@ -783,7 +779,6 @@ export function PersonalInfo({
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Country"
-                required={true}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -831,7 +826,6 @@ export function PersonalInfo({
                 <>
                   <Form.Item
                     label="Province"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -868,7 +862,6 @@ export function PersonalInfo({
                   </Form.Item>
                   <Form.Item
                     label="City"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -911,7 +904,6 @@ export function PersonalInfo({
                   </Form.Item>
                   <Form.Item
                     label="Barangay"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -960,7 +952,6 @@ export function PersonalInfo({
                   <Form.Item
                     label="Street"
                     name="office_street"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -996,8 +987,6 @@ export function PersonalInfo({
                   <Form.Item
                     label="Address"
                     name="office_address"
-                    rules={[{ required: true, message: "Address is required" }]}
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input

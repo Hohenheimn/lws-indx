@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { notification, Menu, MenuProps } from "antd";
+import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { AiFillCaretDown } from "react-icons/ai";
 import { IoPersonOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
-import Modal from "@src/components/Modal";
 
+import Modal from "@src/components/Modal";
 import ChangePaswordAD from "@src/page-components/profile/Actions/ChangePasswordAD";
+
+import { useQueryClient } from "@tanstack/react-query";
 import { Context } from "@utilities/context/Provider";
 
 import MobileDrawer from "./MobileDrawer";
@@ -131,6 +134,37 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
     } else {
       // Keep the last opened submenu open
       setOpenKeys([keys[keys.length - 1]]);
+    }
+  };
+
+  const queryClient = useQueryClient();
+  const LogoutHandler = async () => {
+    const token = parseCookies().a_t;
+    const subdomainCookie = parseCookies().subdomain;
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/user/logout?subdomain=${subdomainCookie}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            api_key: !token ? process.env.REACT_APP_API_KEY : "",
+          },
+        }
+      );
+      queryClient.removeQueries();
+      destroyCookie(undefined, "a_t", { path: "/" });
+      destroyCookie(undefined, "subdomain", { path: "/" });
+      window.localStorage.clear();
+      notification.success({
+        message: "Logout Succesful",
+        description: "All done! Have a nice day!",
+      });
+      router.reload();
+    } catch (error) {
+      notification.warning({
+        message: "Unauthorized",
+        description: "Unauthorized user!",
+      });
     }
   };
 
@@ -258,13 +292,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                     {
                       label: "Logout",
                       onClick: () => {
-                        destroyCookie(undefined, "a_t", { path: "/" });
-                        destroyCookie(undefined, "subdomain", { path: "/" });
-                        router.reload();
-                        notification.success({
-                          message: "Logout Succesful",
-                          description: "All done! Have a nice day!",
-                        });
+                        LogoutHandler();
                       },
                     },
                   ]}
