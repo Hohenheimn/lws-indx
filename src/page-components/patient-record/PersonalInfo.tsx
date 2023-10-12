@@ -196,7 +196,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Middle Name"
                 name="middle_name"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1053,7 +1052,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Middle Name"
                 name="emergency_middle_name"
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input

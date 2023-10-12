@@ -164,6 +164,7 @@ export function PatientRecord({
                   }`}
                   fill
                   alt="picture"
+                  className="object-cover"
                 />
               </aside>
               <h5>
