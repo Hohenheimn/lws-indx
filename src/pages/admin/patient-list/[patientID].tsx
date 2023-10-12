@@ -256,7 +256,8 @@ export function PatientRecord({
                 <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <aside
-                      className={` inline-block ${pageType === "view" &&
+                      className={` inline-block ${(pageType === "view" ||
+                        router.query.tab !== "Personal Info") &&
                         "pointer-events-none"}`}
                     >
                       <Uploader
@@ -282,12 +283,13 @@ export function PatientRecord({
                               <IoPersonOutline className="h-full w-full text-white" />
                             )}
                           </Avatar>
-                          {pageType === "edit" && (
-                            <div className="text-casper-500">
-                              {image.imageUrl ? "Change" : "Upload"} Profile
-                              Picture
-                            </div>
-                          )}
+                          {pageType === "edit" &&
+                            router.query.tab === "Personal Info" && (
+                              <div className="text-casper-500">
+                                {image.imageUrl ? "Change" : "Upload"} Profile
+                                Picture
+                              </div>
+                            )}
                         </div>
                       </Uploader>
                     </aside>
