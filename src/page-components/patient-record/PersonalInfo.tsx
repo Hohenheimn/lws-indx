@@ -450,10 +450,7 @@ export function PersonalInfo({
                           initialValue: "country",
                         }}
                         initialValue={patientRecord?.country}
-                        queryKey={[
-                          "country",
-                          PersonalInfoForm.getFieldValue("country"),
-                        ]}
+                        queryKey={["country", country]}
                         displayValueKey="name"
                         returnValueKey="_id"
                         disabled={pageType === "view"}
@@ -811,10 +808,7 @@ export function PersonalInfo({
                           initialValue: "office_country",
                         }}
                         initialValue={patientRecord?.office_country}
-                        queryKey={[
-                          "office_country",
-                          getFieldValue("office_country"),
-                        ]}
+                        queryKey={["office_country", office_country]}
                         displayValueKey="name"
                         disabled={pageType === "view"}
                         returnValueKey="_id"
