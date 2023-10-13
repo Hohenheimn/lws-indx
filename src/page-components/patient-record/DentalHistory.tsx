@@ -101,10 +101,6 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Previous Dentist"
                 name="previous_dentist"
-                rules={[
-                  { required: true, message: "Previous Dentist is required" },
-                ]}
-                required={true}
                 className="col-span-12 md:col-span-6"
               >
                 <Input
@@ -116,10 +112,6 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Last Dentist Visit"
                 name="last_visit_date"
-                rules={[
-                  { required: true, message: "Last Dentist Visit is required" },
-                ]}
-                required={true}
                 className="col-span-12 md:col-span-6"
               >
                 <DatePicker
@@ -138,16 +130,9 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
               <Form.Item
                 label="Reason for Last Visit"
                 name="last_visit_reason"
-                rules={[
-                  {
-                    required: true,
-                    message: "Reason for Last Visit is required",
-                  },
-                ]}
-                required={true}
                 className="col-span-12"
               >
-                <InfiniteSelect
+                {/* <InfiniteSelect
                   placeholder="Select Reason for Visit"
                   id="last_visit_reason"
                   disabled={pageType === "view"}
@@ -155,18 +140,16 @@ export function DentalHistory({ patientRecord, tab, pageType }: any) {
                   queryKey={["procedure"]}
                   displayValueKey="name"
                   returnValueKey="_id"
+                /> */}
+                <Input
+                  id="last_visit_reason"
+                  disabled={pageType === "view"}
+                  placeholder="Reason for Visit"
                 />
               </Form.Item>
               <Form.Item
                 label="Chief Complaint"
                 name="chief_complaint"
-                rules={[
-                  {
-                    required: true,
-                    message: "Chief Complaint is required",
-                  },
-                ]}
-                required={true}
                 className="col-span-12"
               >
                 <Input

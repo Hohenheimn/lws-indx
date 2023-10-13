@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
 import { differenceInYears, parse } from "date-fns";
 import moment from "moment";
@@ -11,6 +11,7 @@ import Card from "@components/Card";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
 import { Select } from "@components/Select";
+import Modal from "@src/components/Modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchData, postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
@@ -42,6 +43,8 @@ export function PersonalInfo({
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
   const [PersonalInfoForm] = Form.useForm();
+
+  const [isViewTermsAndCondition, setViewTermsAndCondition] = useState(false);
 
   let signatureCanvasRef = React.useRef<any>(null);
   let [isSignatureCleared, setIsSignatureCleared] = React.useState(false);
@@ -220,6 +223,8 @@ export function PersonalInfo({
               <Form.Item
                 label="Birthdate"
                 name="birthdate"
+                rules={[{ required: true, message: "Birthdate is required" }]}
+                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <DatePicker
@@ -272,10 +277,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Civil Status"
                 name="civil_status"
-                rules={[
-                  { required: true, message: "Civil Status is required" },
-                ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <InfiniteSelect
@@ -298,8 +299,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Religion"
                 name="religion"
-                rules={[{ required: true, message: "Religion is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Select
@@ -319,8 +318,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Nationality"
                 name="nationality"
-                rules={[{ required: true, message: "Nationality is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <InfiniteSelect
@@ -366,10 +363,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Landline Number"
                 name="landline_no"
-                rules={[
-                  { required: true, message: "Landline Number is required" },
-                ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <NumericFormat
@@ -384,7 +377,6 @@ export function PersonalInfo({
                 label="Mobile Number"
                 name="mobile_no"
                 rules={[
-                  { required: true, message: "Mobile Number is required" },
                   {
                     pattern:
                       country === "174" ? /^(09)\d{2}-\d{3}-\d{4}$/ : /\d+/g,
@@ -426,7 +418,6 @@ export function PersonalInfo({
             <div className="grid grid-cols-12 gap-4">
               <Form.Item
                 label="Country"
-                required={true}
                 className="col-span-12 lg:col-span-4"
                 shouldUpdate={(prev, curr) => {
                   return true;
@@ -434,12 +425,7 @@ export function PersonalInfo({
               >
                 {({ getFieldValue, resetFields }) => {
                   return (
-                    <Form.Item
-                      name="country"
-                      rules={[
-                        { required: true, message: "Country is required" },
-                      ]}
-                    >
+                    <Form.Item name="country">
                       <InfiniteSelect
                         placeholder="Country"
                         id="country"
@@ -466,7 +452,6 @@ export function PersonalInfo({
                 <>
                   <Form.Item
                     label="Province"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -504,7 +489,6 @@ export function PersonalInfo({
                   </Form.Item>
                   <Form.Item
                     label="City"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -512,12 +496,7 @@ export function PersonalInfo({
                   >
                     {({ getFieldValue, resetFields }) => {
                       return (
-                        <Form.Item
-                          name="city"
-                          rules={[
-                            { required: true, message: "City is required" },
-                          ]}
-                        >
+                        <Form.Item name="city">
                           <InfiniteSelect
                             placeholder="City"
                             id="city"
@@ -554,7 +533,6 @@ export function PersonalInfo({
                   </Form.Item>
                   <Form.Item
                     label="Barangay"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                     shouldUpdate={(prev, curr) => {
                       return true;
@@ -562,12 +540,7 @@ export function PersonalInfo({
                   >
                     {({ getFieldValue, resetFields }) => {
                       return (
-                        <Form.Item
-                          name="barangay"
-                          rules={[
-                            { required: true, message: "City is required" },
-                          ]}
-                        >
+                        <Form.Item name="barangay">
                           <InfiniteSelect
                             placeholder="Barangay"
                             id="barangay"
@@ -603,8 +576,6 @@ export function PersonalInfo({
                   <Form.Item
                     label="Street"
                     name="street"
-                    rules={[{ required: true, message: "Street is required" }]}
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -640,8 +611,6 @@ export function PersonalInfo({
                   <Form.Item
                     label="Address"
                     name="address"
-                    rules={[{ required: true, message: "Address is required" }]}
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <Input
@@ -653,7 +622,6 @@ export function PersonalInfo({
                   <Form.Item
                     label="Postal Code"
                     name="postal_code"
-                    required={true}
                     className="col-span-12 lg:col-span-4"
                   >
                     <NumericFormat
@@ -786,13 +754,7 @@ export function PersonalInfo({
               >
                 {({ getFieldValue, resetFields }) => {
                   return (
-                    <Form.Item
-                      name="office_country"
-                      rules={[
-                        { required: true, message: "Country is required" },
-                      ]}
-                      initialValue={""}
-                    >
+                    <Form.Item name="office_country" initialValue={""}>
                       <InfiniteSelect
                         placeholder="Country"
                         id="office_country"
@@ -1028,8 +990,6 @@ export function PersonalInfo({
               <Form.Item
                 label="First Name"
                 name="emergency_first_name"
-                rules={[{ required: true, message: "First Name is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1052,8 +1012,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Last Name"
                 name="emergency_last_name"
-                rules={[{ required: true, message: "Last Name is required" }]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1065,10 +1023,7 @@ export function PersonalInfo({
               <Form.Item
                 label="Email Address"
                 name="emergency_email"
-                rules={[
-                  { type: "email", message: "Must be a valid email" },
-                  { required: true, message: "Email Address is required" },
-                ]}
+                rules={[{ type: "email", message: "Must be a valid email" }]}
                 required={true}
                 className="col-span-12 lg:col-span-4"
               >
@@ -1095,7 +1050,6 @@ export function PersonalInfo({
                 label="Mobile Number"
                 name="emergency_mobile_no"
                 rules={[
-                  { required: true, message: "Mobile Number is required" },
                   {
                     pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
                     message:
@@ -1125,10 +1079,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Dental Insurance"
                 name="insurance_name"
-                rules={[
-                  { required: true, message: "Dental Insurance is required" },
-                ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1140,10 +1090,6 @@ export function PersonalInfo({
               <Form.Item
                 label="Effective Date"
                 name="insurance_effective_date"
-                rules={[
-                  { required: true, message: "Effective Date is required" },
-                ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <DatePicker
@@ -1231,36 +1177,39 @@ export function PersonalInfo({
               <h4>Terms and Conditions</h4>
             </div>
             <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-full">
-                {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                suscipit vitae justo vel fermentum. Aliquam sed bibendum ligula.
-                Nullam dapibus libero convallis, tincidunt erat viverra,
-                molestie sem. Nam commodo tellus sed massa rutrum, et consequat
-                mauris vulputate. Curabitur feugiat quis tortor quis posuere.
-                Donec quis consectetur tellus. Maecenas mauris leo, suscipit a
-                ipsum nec, vehicula bibendum nulla. Duis iaculis dignissim
-                congue. */}
-              </div>
-              <Form.Item
-                name="patient_consent"
-                valuePropName="checked"
-                rules={[
-                  {
-                    required: true,
-                    transform: (value: any) => value || undefined,
-                    type: "boolean",
-                    message: "Must accept patient's consent to submit.",
-                  },
-                ]}
-                required={true}
-                className="col-span-full text-base"
-              >
-                {pageType === "edit" && (
-                  <Checkbox id="patient_consent" className="font-medium">
-                    {`Patient's Consent`}
-                  </Checkbox>
-                )}
-              </Form.Item>
+              <aside className=" flex col-span-12 items-center gap-2 w-full">
+                <Form.Item
+                  name="patient_consent"
+                  valuePropName="checked"
+                  rules={[
+                    {
+                      required: true,
+                      transform: (value: any) => value || undefined,
+                      type: "boolean",
+                      message: "Must accept patient's consent to submit.",
+                    },
+                  ]}
+                  required={true}
+                  className="col-span-full text-base"
+                >
+                  {pageType === "edit" && (
+                    <div className=" flex items-center gap-2">
+                      <Checkbox
+                        id="patient_consent"
+                        className="font-medium"
+                      ></Checkbox>
+                      <div
+                        onClick={() => {
+                          setViewTermsAndCondition(true);
+                        }}
+                        className=" text-bold hover:text-primary duration-150 cursor-pointer"
+                      >
+                        {`Patient's Consent`}
+                      </div>
+                    </div>
+                  )}
+                </Form.Item>
+              </aside>
               {isSignatureCleared || !patientRecord?.patient_signature_path ? (
                 <Form.Item
                   label="Patient Signature"
@@ -1353,6 +1302,47 @@ export function PersonalInfo({
           )}
         </div>
       </Form>
+      <Modal
+        show={isViewTermsAndCondition}
+        onClose={() => {
+          setViewTermsAndCondition(false);
+        }}
+      >
+        <section className=" space-y-5">
+          <h3>Terms and Condition</h3>
+          <p>
+            TREATMENT TO BE DONE:I understand and consent to have any treatment
+            done by the dentist after the procedure, the risks & bonofits & cost
+            have been fully explained. These treatments include, but are not
+            limited to, x-rays, cleanings, periodontal treatments, fillings,
+            crowns, bridges, all typen of extraction, root canals, &/or dentures
+            local anesthetics & surgical cases.
+          </p>
+          <p>
+            DRUGS & MEDICATIONS I understand that antibiotics, analgesics &
+            other medications can cause allergic reactions like rodness &
+            swelling of Unsues, pain, itching, vomiting.&/or anaphylactic shock.
+          </p>
+          <p>
+            CHANGES IN TREATMENT PLAN:1 understand that during treatment it may
+            be necessary to changel add procedures because of conditions found
+            while working on the tooth that was not discovered during
+            oxamination For examplo, root canal therapy may be needed following
+            routine restorative procedures. I give my perminnion to the dentist
+            to make any/all changes and additions as necessary w/ my
+            responsibility to pay all the costs agrood.
+          </p>
+          <p>
+            RADIOGRAPH:1 understand that an x-ray shot or a radiograph maybe
+            necessary as part of diagnostic aid to come up with tentative
+            diagnosis of my Dental problem and to make a good treatment plan,
+            but, this will not give me a 100% assurance for the accuracy of the
+            treatment since all are subject to unpredictablo complications that
+            later on may load to sudden chango of treatment plan and subject to
+            new charges.
+          </p>
+        </section>
+      </Modal>
     </Card>
   );
 }
