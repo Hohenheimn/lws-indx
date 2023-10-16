@@ -115,7 +115,6 @@ const sideMenu: Array<sideMenuProps> = [
 const rootSubmenuKeys = ["sub1", "sub2", "sub4"];
 
 export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
-  console.log(profile);
   const router = useRouter();
   const {
     isDrawerOpen,
