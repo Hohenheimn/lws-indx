@@ -204,7 +204,7 @@ export function ProfileInfo({ profile, tab }: any) {
                         alt="random pics"
                         fill
                         sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                        className="object-center contain h-full w-full"
+                        className="object-center object-cover h-full w-full"
                       />
                     ) : (
                       <IoPersonOutline className="h-full w-full text-white" />
@@ -279,9 +279,9 @@ export function ProfileInfo({ profile, tab }: any) {
                 placeholder="Birthdate"
                 id="birthdate"
                 format="MMMM DD, YYYY"
-                defaultPickerValue={moment().subtract(3, "year")}
+                defaultPickerValue={moment().subtract(0, "year")}
                 disabledDate={(current) => {
-                  return current && current >= moment().subtract(3, "year");
+                  return current && current >= moment().subtract(0, "year");
                 }}
                 onChange={(dob, dobString) => {
                   const date = parse(dobString, "MMMM dd, yyyy", new Date());
@@ -451,7 +451,7 @@ export function ProfileInfo({ profile, tab }: any) {
                         form: DoctorInfoForm,
                         initialValue: "country",
                       }}
-                      queryKey={["country", getFieldValue("country")]}
+                      queryKey={["country", country]}
                       displayValueKey="name"
                       returnValueKey="_id"
                       onChange={() => {

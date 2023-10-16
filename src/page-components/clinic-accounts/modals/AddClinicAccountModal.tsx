@@ -498,7 +498,7 @@ export default function AddClinicAccountModal({
                           form,
                           initialValue: "country",
                         }}
-                        queryKey={["country"]}
+                        queryKey={["country", country]}
                         displayValueKey="name"
                         returnValueKey="_id"
                         onChange={() => {
