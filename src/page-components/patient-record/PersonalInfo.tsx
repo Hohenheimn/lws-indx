@@ -1183,7 +1183,7 @@ export function PersonalInfo({
                       required: true,
                       transform: (value: any) => value || undefined,
                       type: "boolean",
-                      message: "Must accept patient&apos;s consent to submit.",
+                      message: "Must accept patient's consent to submit.",
                     },
                   ]}
                   required={true}
@@ -1201,7 +1201,7 @@ export function PersonalInfo({
                         }}
                         className=" text-bold hover:text-primary duration-150 cursor-pointer"
                       >
-                        {`Patient&apos;s Consent`}
+                        {`Patient's Consent`}
                       </div>
                     </div>
                   )}
@@ -1305,7 +1305,7 @@ export function PersonalInfo({
           setViewTermsAndCondition(false);
         }}
       >
-        <section className=" space-y-5">
+        <section className=" space-y-5 text-[1rem]">
           <h3>Terms and Condition</h3>
           <p>
             TREATMENT TO BE DONE: I understand and consent to have any treatment
@@ -1427,7 +1427,7 @@ export function PersonalInfo({
             me. I understand that these are subject to modification depending on
             undiagnosable circumstances that may arise during the course of
             treatment. I understand that regardless of any dental insurance
-            coverage I may have, I am responsible for payment of dental fees, I
+            coverage I may have, I am responsible for payment of dental fees,
             agree to pay any attorney&apos;s fees, collection fee, or court
             costs that may be incurred to satisfy any obligation to this office.
             All treatment were properly explained to me & any untoward
@@ -1436,6 +1436,17 @@ export function PersonalInfo({
             trust & confidence in him/her, to undergo dental Treatment under
             his/her care.
           </p>
+          <div className=" flex justify-end w-full">
+            <div>
+              <Button
+                appearance="primary"
+                className=" inline-block"
+                onClick={() => setViewTermsAndCondition(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
         </section>
       </Modal>
     </Card>
