@@ -308,7 +308,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                           alt="Profile Picture"
                           fill
                           sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                          className="object-center contain h-full w-full"
+                          className="object-center object-cover h-full w-full"
                           onError={() => {
                             setIsImageError(true);
                           }}

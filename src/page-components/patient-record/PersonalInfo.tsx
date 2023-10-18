@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Checkbox, DatePicker, Form, notification } from "antd";
-import { differenceInYears, parse } from "date-fns";
 import moment from "moment";
 import Image from "next/image";
 import { NumericFormat, PatternFormat } from "react-number-format";
@@ -13,11 +12,10 @@ import Input from "@components/Input";
 import { Select } from "@components/Select";
 import Modal from "@src/components/Modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchData, postData } from "@utilities/api";
+import { postData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import gender from "@utilities/global-data/gender";
 import religion from "@utilities/global-data/religion";
-import { getInitialValue } from "@utilities/helpers";
 
 function dataURLtoFile(dataurl: any, filename: any) {
   var arr = dataurl.split(","),
@@ -1021,7 +1019,6 @@ export function PersonalInfo({
                 label="Email Address"
                 name="emergency_email"
                 rules={[{ type: "email", message: "Must be a valid email" }]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <Input
@@ -1053,7 +1050,6 @@ export function PersonalInfo({
                       "Please use correct format!\n\nFormat:09XX-XXX-XXXXX",
                   },
                 ]}
-                required={true}
                 className="col-span-12 lg:col-span-4"
               >
                 <PatternFormat

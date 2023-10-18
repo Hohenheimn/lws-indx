@@ -316,6 +316,7 @@ export function Dashboard({ profile }: any) {
                                               src={profile_picture}
                                               alt=""
                                               fill
+                                              className=" object-cover"
                                             />
                                           ) : (
                                             <>
