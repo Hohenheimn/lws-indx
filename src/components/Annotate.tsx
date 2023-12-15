@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Tooltip } from "antd";
 import Image from "next/image";
 import Annotation from "react-image-annotation";
 import { twMerge } from "tailwind-merge";
+
 import { Button } from "@components/Button";
 
 import Input from "./Input";
@@ -285,33 +287,36 @@ export function Annotate({
           <div className="w-full k grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4 lg:w-80">
             {ProceduresData?.map((itemMap, index) => (
               <div key={index}>
-                <div
-                  key={index}
-                  style={{ backgroundColor: itemMap.color_code }}
-                  className={`  cursor-pointer  flex justify-center items-center p-2 rounded-md shadow-md`}
-                  onClick={() => {
-                    onSubmit({
-                      title: itemMap.procedure_name,
-                      description: itemMap.abbreviation,
-                      color: itemMap.color_code,
-                      annotation: annotation,
-                      id: itemMap._id,
-                      icon: itemMap.icon
-                        ? itemMap.icon
-                        : "/images/default_tooth.png",
-                    });
-                  }}
-                >
-                  <Image
-                    src={
-                      itemMap.icon ? itemMap.icon : "/images/default_tooth.png"
-                    }
-                    alt="Icon"
-                    height={25}
-                    width={25}
-                    className=" rounded-full flex justify-center aspect-square"
-                  />
-                </div>
+                <Tooltip title={itemMap.procedure_name}>
+                  <div
+                    style={{ backgroundColor: itemMap.color_code }}
+                    className={`  cursor-pointer  flex justify-center items-center p-2 rounded-md shadow-md`}
+                    onClick={() => {
+                      onSubmit({
+                        title: itemMap.procedure_name,
+                        description: itemMap.abbreviation,
+                        color: itemMap.color_code,
+                        annotation: annotation,
+                        id: itemMap._id,
+                        icon: itemMap.icon
+                          ? itemMap.icon
+                          : "/images/default_tooth.png",
+                      });
+                    }}
+                  >
+                    <Image
+                      src={
+                        itemMap.icon
+                          ? itemMap.icon
+                          : "/images/default_tooth.png"
+                      }
+                      alt="Icon"
+                      height={25}
+                      width={25}
+                      className=" rounded-full flex justify-center aspect-square"
+                    />
+                  </div>
+                </Tooltip>
               </div>
             ))}
           </div>

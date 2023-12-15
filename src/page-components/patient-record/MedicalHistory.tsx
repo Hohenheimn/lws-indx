@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Checkbox, DatePicker, Form, Radio, notification } from "antd";
 import { AnimatePresence } from "framer-motion";
 import moment from "moment";
@@ -103,23 +103,22 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
 
-  const { data } = useQuery(
-    ["medical-history"],
-    () =>
-      fetchData({
-        url: `/api/patient/medical-history/${patientRecord._id}`,
-      }),
-    {
-      onSuccess: (e) => {
-        MedicalHistoryForm.setFieldsValue({
-          ...e,
-          last_medical_exam_date: moment(e.last_medical_exam_date).isValid()
-            ? moment(e.last_medical_exam_date)
-            : undefined,
-        });
-      },
-    }
+  const { data } = useQuery(["medical-history"], () =>
+    fetchData({
+      url: `/api/patient/medical-history/${patientRecord._id}`,
+    })
   );
+
+  useEffect(() => {
+    if (data) {
+      MedicalHistoryForm.setFieldsValue({
+        ...data,
+        last_medical_exam_date: moment(data.last_medical_exam_date).isValid()
+          ? moment(data.last_medical_exam_date)
+          : undefined,
+      });
+    }
+  }, [data]);
 
   const { mutate: editMedicalHistory } = useMutation(
     (payload: any) => {

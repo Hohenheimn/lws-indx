@@ -153,7 +153,7 @@ export function PatientRecord({
         <nav
           className={`${
             isOutOfView ? "" : "opacity-0 pointer-events-none"
-          } duration-150 flex-wrap ease-linear z-[9999999] flex-col xs:flex-row fixed left-0 top-0 bg-white shadow-md px-5 xs:px-9 w-full pt-5 flex items-center justify-between`}
+          } duration-150 flex-wrap ease-linear z-50 flex-col xs:flex-row fixed left-0 top-0 bg-white shadow-md px-5 xs:px-9 w-full pt-5 flex items-center justify-between`}
         >
           <div className="xs:space-x-5 flex items-center flex-col xs:flex-row">
             <aside className=" flex items-center gap-3">
@@ -253,7 +253,7 @@ export function PatientRecord({
             />
 
             <div ref={elementRef}>
-              <Card className="text-base sticky top-0">
+              <Card className="text-base sticky top-0 ">
                 <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr] items-center gap-8">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <aside

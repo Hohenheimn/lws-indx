@@ -138,6 +138,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
   };
 
   const queryClient = useQueryClient();
+
   const LogoutHandler = async () => {
     const token = parseCookies().a_t;
     const subdomainCookie = parseCookies().subdomain;

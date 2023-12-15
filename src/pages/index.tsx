@@ -54,8 +54,8 @@ type sideMenuProps = {
   appearance: string;
 };
 
-const registerUrl = "/pre-register";
-// const registerUrl = '/registration'
+// const registerUrl = "/pre-register";
+const registerUrl = "/registration";
 
 const menu: Array<sideMenuProps> = [
   {

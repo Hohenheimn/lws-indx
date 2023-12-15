@@ -68,13 +68,13 @@ export default function App({ Component, pageProps, router }: AppProps) {
     }
   }
 
-  if(isSubdomain){
-      axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/setting?subdomain=${isSubdomain}`)
-  .then(response => {
-    setClinicLogo(response?.data?.clinic_logo)
-  }).catch(error => {
-  
-  })}
+  useEffect(() => {
+    if(isSubdomain){
+      axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/setting?subdomain=${isSubdomain}`).then(response => {
+        setClinicLogo(response?.data?.clinic_logo)
+      }).catch(error => {
+    })}
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

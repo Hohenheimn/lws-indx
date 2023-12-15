@@ -72,7 +72,10 @@ export function Charting({ patientRecord, pageType }: any) {
                   <Button
                     className="p-3 max-w-xs"
                     appearance="primary"
-                    onClick={() => setIsChartingModalOpen(true)}
+                    onClick={() => {
+                      setIsChartingModalOpen(true);
+                      setdefaultAnnotation([]);
+                    }}
                   >
                     New Chart
                   </Button>
