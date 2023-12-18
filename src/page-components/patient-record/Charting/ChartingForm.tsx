@@ -128,9 +128,9 @@ export default function ChartingForm({
     return annotateWithValue;
   };
 
-  // useEffect(() => {
-  //   setAnnotationValues();
-  // }, [ChartView, defaultAnnotation, age]);
+  useEffect(() => {
+    setAnnotationValues();
+  }, [ChartView, defaultAnnotation, age]);
 
   const setAnnotationValues = () => {
     let UpperLeft: AnnotationType[] = [];

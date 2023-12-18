@@ -16,7 +16,6 @@ const SubAccountMessageExpiration = () => {
         height={100}
         className="object-center mb-10"
       />
-      <h2 className=" text-white mb-3">Hello!</h2>
       <p className=" text-[1.5rem] w-10/12 max-w-[40rem] text-center">
         As you are currently logged in as a sub-account user, please reach out
         to the account owner as it appears that the subscription has lapsed.
