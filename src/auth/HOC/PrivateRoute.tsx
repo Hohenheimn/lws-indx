@@ -9,6 +9,9 @@ import Modal from "@src/components/Modal";
 
 import ChangePaswordAD from "@src/page-components/profile/Actions/ChangePasswordAD";
 
+import SubAccountMessageExpiration from "@src/page-components/registration/SubAccountMessageExpiration";
+import SubscriptionAccount from "@src/page-components/registration/SubscriptionAccount";
+
 import Layout from "../../layout";
 import Login from "../Login";
 
