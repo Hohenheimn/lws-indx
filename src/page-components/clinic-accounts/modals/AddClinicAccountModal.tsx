@@ -452,7 +452,9 @@ export default function AddClinicAccountModal({
                 required={true}
                 className="col-span-3 lg:col-span-1"
               >
-                {country === "174" ? (
+                {country === "174" ||
+                country === "" ||
+                country === undefined ? (
                   <PatternFormat
                     customInput={Input}
                     placeholder={"09XX-XXX-XXXXX"}
