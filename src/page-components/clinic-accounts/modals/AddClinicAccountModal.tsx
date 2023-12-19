@@ -444,7 +444,8 @@ export default function AddClinicAccountModal({
                 rules={[
                   { required: true, message: "This is required!" },
                   {
-                    pattern: /^(09)\d{2}-\d{3}-\d{4}$/,
+                    pattern:
+                      country === "174" ? /^(09)\d{2}-\d{3}-\d{4}$/ : undefined,
                     message: "Please use correct format!",
                   },
                 ]}

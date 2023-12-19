@@ -134,6 +134,7 @@ export default function ChartingForm({
 
   const setAnnotationValues = () => {
     let UpperLeft: AnnotationType[] = [];
+
     let UpperRight: AnnotationType[] = [];
     let LowerLeft: AnnotationType[] = [];
     let LowerRight: AnnotationType[] = [];
