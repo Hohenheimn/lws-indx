@@ -54,8 +54,11 @@ type sideMenuProps = {
   appearance: string;
 };
 
-// const registerUrl = "/pre-register";
-const registerUrl = "/registration";
+const registerUrl = {
+  url: "/pre-register",
+  label: "Pre-register",
+};
+// const registerUrl = "/registration";
 
 const menu: Array<sideMenuProps> = [
   {
@@ -68,14 +71,14 @@ const menu: Array<sideMenuProps> = [
     link: "#contact-us",
     appearance: "link",
   },
+  // {
+  //   label: "Login",
+  //   link: "/enter-email",
+  //   appearance: "primary",
+  // },
   {
-    label: "Login",
-    link: "/enter-email",
-    appearance: "primary",
-  },
-  {
-    label: "Register Now",
-    link: registerUrl,
+    label: registerUrl.label,
+    link: registerUrl.url,
     appearance: "primary",
   },
 ];
@@ -291,9 +294,9 @@ export function Website({ router }: any) {
                         appearance="blumine"
                         className="w-full max-w-xs py-4"
                         // onClick={() => router.push("/registration")}
-                        onClick={() => router.push(registerUrl)}
+                        onClick={() => router.push(registerUrl.url)}
                       >
-                        Register Now
+                        {registerUrl.label}
                       </Button>
                     </div>
                   </div>
@@ -636,9 +639,9 @@ export function Website({ router }: any) {
                 <Button
                   appearance="primary"
                   className="bg-white text-primary md:w-auto mt-8 p-4 px-8 hover:bg-white hover:scale-105 font-medium"
-                  onClick={() => router.push(registerUrl)}
+                  onClick={() => router.push(registerUrl.url)}
                 >
-                  Register Now
+                  {registerUrl.label}
                 </Button>
               </AnimateContainer>
               <AnimateContainer

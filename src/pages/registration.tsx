@@ -309,3 +309,12 @@ export default function Registration({ router }: any) {
     </>
   );
 }
+
+export const getServerSideProps = async ({ req }: any) => {
+  return {
+    redirect: {
+      destination: "/pre-register",
+      permanent: false, // Set to true if it's a permanent redirect
+    },
+  };
+};
