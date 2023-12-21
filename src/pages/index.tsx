@@ -55,8 +55,8 @@ type sideMenuProps = {
 };
 
 const registerUrl = {
-  url: "/pre-register",
-  label: "Pre-register",
+  url: "/registration",
+  label: "Register",
 };
 // const registerUrl = "/registration";
 
@@ -71,11 +71,11 @@ const menu: Array<sideMenuProps> = [
     link: "#contact-us",
     appearance: "link",
   },
-  // {
-  //   label: "Login",
-  //   link: "/enter-email",
-  //   appearance: "primary",
-  // },
+  {
+    label: "Login",
+    link: "/enter-email",
+    appearance: "primary",
+  },
   {
     label: registerUrl.label,
     link: registerUrl.url,
