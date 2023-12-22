@@ -1,18 +1,33 @@
 import React from "react";
 import Image from "next/image";
 import { AiOutlinePrinter } from "react-icons/ai";
+import LoadingScreen from "@src/layout/LoadingScreen";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "@utilities/api";
 
 type Props = {
   children: React.ReactNode;
-  patientRecord: any;
+  patientID: any;
 };
 
-export default function PrintTemplate({ children, patientRecord }: Props) {
+export default function PrintTemplate({ children, patientID }: Props) {
+  const { data: patientRecord, isLoading, isError } = useQuery(
+    ["patient", patientID],
+    () =>
+      fetchData({
+        url: `/api/patient/${patientID}`,
+      })
+  );
   const printhandler = () => {
     print();
   };
   return (
     <div className={` printThis top-0`}>
+      {isLoading && (
+        <div className=" bg-[#00000048] fixed w-screen h-screen top-0 left-0 flex justify-center items-center">
+          <LoadingScreen />
+        </div>
+      )}
       <aside className="w-full py-5 flex justify-end px-5 hidePrint">
         <AiOutlinePrinter
           onClick={printhandler}

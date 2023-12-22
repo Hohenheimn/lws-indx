@@ -460,6 +460,7 @@ export function PatientRecord({
                   patientRecord={patient}
                   pageType={pageType}
                   tab={router.query.tab ?? "2"}
+                  currency={profile.setting.currency}
                 />
               )}
               {router.query.tab === "Change History" && (

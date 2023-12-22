@@ -73,9 +73,9 @@ export function TreatmentPlan({ patientRecord, pageType, currency }: any) {
         return (
           <div className="w-full flex justify-center">
             <Link
-              href={`/admin/print?page=treatment plan&patient=${JSON.stringify(
-                patientRecord
-              )}&tableData=${JSON.stringify(record)}`}
+              href={`/admin/print?page=treatment plan&patient_id=${
+                patientRecord?._id
+              }&tableData=${JSON.stringify(record)}&currency=${currency}`}
               target="_blank"
             >
               <AiOutlinePrinter className=" text-xl text-gray-400" />
@@ -104,44 +104,6 @@ export function TreatmentPlan({ patientRecord, pageType, currency }: any) {
       fetchData({
         url: `/api/patient/treatment-plan/${patientRecord._id}?limit=5&page=${page}&search=${search}`,
       })
-  );
-
-  const { mutate: deleteTreatmentPlan }: any = useMutation(
-    (treatment_plan_id: number) =>
-      deleteData({
-        url: `/api/patient/treatment-plan/${treatment_plan_id}`,
-      }),
-    {
-      onSuccess: async (res) => {
-        notification.success({
-          message: "Treatment Plan Deleted",
-          description: "Treatment Plan has been deleted",
-        });
-      },
-      onMutate: async (newData) => {
-        await queryClient.cancelQueries({
-          queryKey: ["treatment-plan"],
-        });
-        const previousValues = queryClient.getQueryData(["treatment-plan"]);
-        queryClient.setQueryData(["treatment-plan"], (oldData: any) =>
-          oldData ? [...oldData, newData] : undefined
-        );
-
-        return { previousValues };
-      },
-      onError: (err: any, _, context: any) => {
-        notification.warning({
-          message: "Something Went Wrong",
-          description: `${
-            err.response.data[Object.keys(err.response.data)[0]]
-          }`,
-        });
-        queryClient.setQueryData(["treatment-plan"], context.previousValues);
-      },
-      onSettled: async () => {
-        queryClient.invalidateQueries({ queryKey: ["treatment-plan"] });
-      },
-    }
   );
 
   return (

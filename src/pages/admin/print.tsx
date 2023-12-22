@@ -6,14 +6,14 @@ import {
 } from "@src/components/PrintTables";
 import PrintTemplate from "@src/components/PrintTemplate";
 
-export default function Print({ patient, page, tableData, currency }: any) {
-  const patientRecord = JSON.parse(patient);
+export default function Print({ patient_id, page, tableData, currency }: any) {
+  // const patientRecord = JSON.parse(patient);
   const tableDataRecord = JSON.parse(tableData);
   return (
     // <div className=" w-full h-screen overflow-auto">
     <div className="flex items-center flex-col ">
       <div className="w-[90%] max-w-[1366px]">
-        <PrintTemplate patientRecord={patientRecord}>
+        <PrintTemplate patientID={patient_id}>
           <h1 className=" text-[24px] mb-[15px] capitalize">{page}</h1>
           {page === "treatment plan" && (
             <TreatmentPlanPrintTable
@@ -41,12 +41,12 @@ export default function Print({ patient, page, tableData, currency }: any) {
 }
 
 export async function getServerSideProps({ query }: any) {
-  const patient = query.patient;
+  const patient_id = query.patient_id;
   const page = query.page;
   const tableData = query.tableData;
   return {
     props: {
-      patient: patient,
+      patient_id: patient_id,
       page: page,
       tableData: tableData,
       currency: query.currency,

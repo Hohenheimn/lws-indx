@@ -1,5 +1,13 @@
 import React from "react";
-import { Checkbox, DatePicker, Form, Popover, Table, Tooltip, notification } from "antd";
+import {
+  Checkbox,
+  DatePicker,
+  Form,
+  Popover,
+  Table,
+  Tooltip,
+  notification,
+} from "antd";
 import moment from "moment";
 import Link from "next/link";
 import { AiOutlinePrinter, AiOutlineSearch } from "react-icons/ai";
@@ -15,15 +23,9 @@ import Input from "@components/Input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, fetchData } from "@utilities/api";
 
-
-
-
 import AddPrescriptionModal from "./AddPrescriptionModal";
 
-
-
-
-export function Prescription({ patientRecord, pageType }: any) {
+export function Prescription({ patientRecord, pageType, currency }: any) {
   const [PrescriptionForm] = Form.useForm();
   const queryClient = useQueryClient();
   let [page, setPage] = React.useState(1);
@@ -31,7 +33,6 @@ export function Prescription({ patientRecord, pageType }: any) {
   let [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = React.useState(
     false
   );
-
   const SelectedRowHandler = (record: any) => {
     PrescriptionForm.setFieldsValue({
       ...record,
@@ -72,23 +73,21 @@ export function Prescription({ patientRecord, pageType }: any) {
       render: (_: any, record: any) => {
         return (
           <div className="w-full flex justify-center space-x-4">
-            {
-              pageType === 'edit' && (
-                <Tooltip title="Delete">
-                  <BsTrash
-                    className=" text-xl text-gray-400"
-                    onClick={() => deletePrescription(record._id)}
-                  />
-                </Tooltip>
-              )
-            }
+            {pageType === "edit" && (
+              <Tooltip title="Delete">
+                <BsTrash
+                  className=" text-xl text-gray-400"
+                  onClick={() => deletePrescription(record._id)}
+                />
+              </Tooltip>
+            )}
             <Link
-              href={`/admin/print?page=prescription&patient=${JSON.stringify(
-                patientRecord
-              )}&tableData=${JSON.stringify(record)}`}
+              href={`/admin/print?page=prescription&patient_id=${
+                patientRecord?._id
+              }&tableData=${JSON.stringify(record)}&currency=${currency}`}
               target="_blank"
             >
-              <Tooltip title='Print'>
+              <Tooltip title="Print">
                 <AiOutlinePrinter className=" text-xl text-gray-400" />
               </Tooltip>
             </Link>
@@ -130,8 +129,9 @@ export function Prescription({ patientRecord, pageType }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["prescription"], context.previousValues);
       },
