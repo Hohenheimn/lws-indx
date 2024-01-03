@@ -108,6 +108,7 @@ export default function AdvanceCalendar({
                           }}
                           noFilter={true}
                           value={year}
+                          id="calendar-advance-filter-year"
                         >
                           {options.map((item: number, index: number) => (
                             <Select.Option key={index} value={item}>
@@ -126,6 +127,7 @@ export default function AdvanceCalendar({
                           }}
                           noFilter={true}
                           value={month}
+                          id="calendar-advance-filter-month"
                         >
                           {monthOptions.map((item: string, index: number) => (
                             <Select.Option key={index} value={item}>
@@ -140,6 +142,7 @@ export default function AdvanceCalendar({
                         onChange={(e) => onTypeChange(e.target.value)}
                         value={type}
                         className=" rounded-md shadow-md overflow-hidden border-none"
+                        id="calendar-advance-filter-year-month"
                       >
                         <Radio.Button value="month">
                           <div className=" px-2 py-1">Month</div>

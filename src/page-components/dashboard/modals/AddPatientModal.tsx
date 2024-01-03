@@ -185,7 +185,7 @@ export default function AddPatientModal({
                 }}
                 capture={true}
                 className="[&_.ant-upload]:!border-0"
-                id="profile_picture"
+                id="patient-form-profile_picture"
               >
                 <div className="space-y-2 text-center">
                   <Avatar className="h-40 w-40 p-8 overflow-hidden object-cover relative border border-gray-300 avatar transition">
@@ -217,7 +217,7 @@ export default function AddPatientModal({
                 className="col-span-3 lg:col-span-1"
                 initialValue={""}
               >
-                <Input id="first_name" placeholder="First Name" />
+                <Input id="patient-form-first_name" placeholder="First Name" />
               </Form.Item>
               <Form.Item
                 label="Middle Name"
@@ -225,7 +225,10 @@ export default function AddPatientModal({
                 className="col-span-3 lg:col-span-1"
                 initialValue={""}
               >
-                <Input id="middle_name" placeholder="Middle Name" />
+                <Input
+                  id="patient-form-middle_name"
+                  placeholder="Middle Name"
+                />
               </Form.Item>
               <Form.Item
                 label="Last Name"
@@ -235,7 +238,7 @@ export default function AddPatientModal({
                 className="col-span-3 lg:col-span-1"
                 initialValue={""}
               >
-                <Input id="last_name" placeholder="Last Name" />
+                <Input id="patient-form-last_name" placeholder="Last Name" />
               </Form.Item>
               <Form.Item
                 label="Birthdate"
@@ -249,7 +252,7 @@ export default function AddPatientModal({
                     return triggerNode.parentNode;
                   }}
                   placeholder="Birthdate"
-                  id="birthdate"
+                  id="patient-form-birthdate"
                   format="MMMM DD, YYYY"
                   defaultPickerValue={moment().subtract(0, "year")}
                   disabledDate={(current) => {
@@ -271,7 +274,11 @@ export default function AddPatientModal({
                 required={true}
                 className="col-span-3 lg:col-span-1"
               >
-                <Input id="age" placeholder="Age" disabled={true} />
+                <Input
+                  id="patient-form-age"
+                  placeholder="Age"
+                  disabled={true}
+                />
               </Form.Item>
               <Form.Item
                 label="Gender"
@@ -280,7 +287,7 @@ export default function AddPatientModal({
                 required={true}
                 className="col-span-3 lg:col-span-1"
               >
-                <Select placeholder="Gender" id="gender">
+                <Select placeholder="Gender" id="patient-form-gender">
                   {gender.map((gender, index) => {
                     return (
                       <Select.Option value={gender} key={index}>
@@ -305,7 +312,10 @@ export default function AddPatientModal({
                 required={true}
                 className="col-span-3 lg:col-span-1"
               >
-                <Input id="email" placeholder="juandelacruz@xxxxx.xxx" />
+                <Input
+                  id="patient-form-email"
+                  placeholder="juandelacruz@xxxxx.xxx"
+                />
               </Form.Item>
               <Form.Item
                 label="Landline Number"
@@ -315,7 +325,7 @@ export default function AddPatientModal({
               >
                 <NumericFormat
                   customInput={Input}
-                  id="landline_no"
+                  id="patient-form-landline_no"
                   allowNegative={false}
                   placeholder="Landline Number"
                 />
@@ -341,12 +351,12 @@ export default function AddPatientModal({
                     patternChar="*"
                     format="****-***-****"
                     allowEmptyFormatting={false}
-                    id="mobile_no"
+                    id="patient-form-mobile_no"
                   />
                 ) : (
                   <NumericFormat
                     customInput={Input}
-                    id="mobile_no"
+                    id="patient-form-mobile_no"
                     allowNegative={false}
                     placeholder="Mobile no"
                   />
@@ -375,7 +385,7 @@ export default function AddPatientModal({
                     >
                       <InfiniteSelect
                         placeholder="Country"
-                        id="country"
+                        id="patient-form-country"
                         api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true&page=1`}
                         getInitialValue={{
                           form,
@@ -416,7 +426,7 @@ export default function AddPatientModal({
                         >
                           <InfiniteSelect
                             placeholder="Province"
-                            id="province"
+                            id="patient-form-province"
                             api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
                             getInitialValue={{
                               form,
@@ -445,14 +455,14 @@ export default function AddPatientModal({
                     {({ getFieldValue, resetFields }) => {
                       return (
                         <Form.Item
-                          name="city"
+                          name="patient-form-city"
                           rules={[
                             { required: true, message: "City is required" },
                           ]}
                         >
                           <InfiniteSelect
                             placeholder="City"
-                            id="city"
+                            id="patient-form-city"
                             api={`${
                               process.env.REACT_APP_API_BASE_URL
                             }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
@@ -495,7 +505,7 @@ export default function AddPatientModal({
                         >
                           <InfiniteSelect
                             placeholder="Barangay"
-                            id="barangay"
+                            id="patient-form-barangay"
                             api={`${
                               process.env.REACT_APP_API_BASE_URL
                             }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
@@ -524,7 +534,10 @@ export default function AddPatientModal({
                     required={true}
                     className="col-span-full lg:col-span-1"
                   >
-                    <Input id="street" placeholder="Add street name" />
+                    <Input
+                      id="patient-form-street"
+                      placeholder="Add street name"
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Zip Code"
@@ -533,7 +546,7 @@ export default function AddPatientModal({
                   >
                     <NumericFormat
                       customInput={Input}
-                      id="zip_code"
+                      id="patient-form-zip_code"
                       allowNegative={true}
                       placeholder="Zip Code"
                       isAllowed={(values) => {
@@ -556,7 +569,10 @@ export default function AddPatientModal({
                     required={true}
                     className="col-span-full lg:col-span-1"
                   >
-                    <Input id="street" placeholder="Add full address" />
+                    <Input
+                      id="patient-form-street"
+                      placeholder="Add full address"
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Postal Code"
@@ -565,7 +581,7 @@ export default function AddPatientModal({
                   >
                     <NumericFormat
                       customInput={Input}
-                      id="postal_code"
+                      id="patient-form-postal_code"
                       allowNegative={false}
                       placeholder="Postal Code"
                       isAllowed={(values) => {
@@ -587,6 +603,7 @@ export default function AddPatientModal({
               appearance="link"
               className="p-4 bg-transparent border-none text-casper-500 font-semibold"
               onClick={() => onClose()}
+              id="patient-form-cancel"
             >
               Cancel
             </Button>
@@ -594,6 +611,7 @@ export default function AddPatientModal({
               appearance="primary"
               className="max-w-[10rem]"
               type="submit"
+              id="patient-form-save"
             >
               Save
             </Button>

@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Space, Form, notification } from "antd";
+import { Form, notification } from "antd";
 
 import { motion } from "framer-motion";
 // import { useMutation } from "react-query";
 // import { postData } from "@utilities/api";
 import { AnimatePresence } from "framer-motion";
-
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { setCookie } from "nookies";
-import { SwapRightOutlined } from "@ant-design/icons";
 import { AnimateContainer, PageContainer } from "@components/animation";
-import {
-  fadeIn,
-  fadeInLeft,
-  fadeInRight,
-} from "@components/animation/animation";
+import { fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import Input from "@components/Input";
 import LoadingScreen from "@src/layout/LoadingScreen";
@@ -222,7 +215,7 @@ export default function Login() {
                   ]}
                   required={false}
                 >
-                  <Input id="email" placeholder="Email" />
+                  <Input id="login-email" placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                   name="password"
@@ -234,24 +227,30 @@ export default function Login() {
                   ]}
                   required={false}
                 >
-                  <Input id="password" placeholder="Password" type="password" />
+                  <Input
+                    id="login-password"
+                    placeholder="Password"
+                    type="password"
+                  />
                 </Form.Item>
               </div>
               <div
                 className="!text-primary-500 cursor-pointer hover:underline mt-2 inline-block"
-                // onClick={SendEmailHandler}
                 onClick={() => router.push("/forgot-password")}
+                id="login-forgot-password"
               >
                 Forgot password?
               </div>
 
               <div className="space-y-4 mt-10">
-                <Button appearance="secondary" type="submit" className="py-4">
+                <Button
+                  appearance="secondary"
+                  type="submit"
+                  className="py-4"
+                  id="login-submit"
+                >
                   LOG IN
                 </Button>
-                {/* <Button className="!text-secondary-500 border-secondary-500 py-4">
-                  CREATE ACCOUNT
-                </Button> */}
               </div>
             </Form>
           </div>

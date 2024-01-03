@@ -177,6 +177,7 @@ export function Website({ router }: any) {
                       setIsDrawerOpen(false);
                     }}
                     className={appearance !== "link" ? "p-4" : ""}
+                    id={`website-mobile-${link.replaceAll("/", "-")}`}
                   >
                     {label}
                   </Button>
@@ -215,6 +216,7 @@ export function Website({ router }: any) {
                   onClick={() => {
                     router.push(link);
                   }}
+                  id={`website-${link.replaceAll("/", "-")}`}
                 >
                   {label}
                 </Button>
@@ -226,6 +228,7 @@ export function Website({ router }: any) {
               appearance="link"
               className="text-2xl"
               onClick={() => setIsDrawerOpen(true)}
+              id={"website-drawer"}
             >
               <GrMenu />
             </Button>
@@ -295,6 +298,7 @@ export function Website({ router }: any) {
                         className="w-full max-w-xs py-4"
                         // onClick={() => router.push("/registration")}
                         onClick={() => router.push(registerUrl.url)}
+                        id={"website-register-1"}
                       >
                         {registerUrl.label}
                       </Button>
@@ -459,6 +463,7 @@ export function Website({ router }: any) {
                     appearance="blumine"
                     className="md:w-auto py-4"
                     onClick={() => router.push("/registration")}
+                    id={"website-register-get-started"}
                   >
                     Get Started
                   </Button>
@@ -529,6 +534,7 @@ export function Website({ router }: any) {
                     appearance="blumine"
                     className="md:w-auto py-4"
                     onClick={() => router.push("/registration")}
+                    id={"website-register-get-started-2"}
                   >
                     Get Started
                   </Button>
@@ -640,6 +646,7 @@ export function Website({ router }: any) {
                   appearance="primary"
                   className="bg-white text-primary md:w-auto mt-8 p-4 px-8 hover:bg-white hover:scale-105 font-medium"
                   onClick={() => router.push(registerUrl.url)}
+                  id={"website-register-2"}
                 >
                   {registerUrl.label}
                 </Button>
@@ -692,7 +699,7 @@ export function Website({ router }: any) {
                           required={false}
                         >
                           <Input
-                            id="first_name"
+                            id="website-first_name"
                             placeholder="First Name"
                             className="shadow-none border-2"
                           />
@@ -709,7 +716,7 @@ export function Website({ router }: any) {
                           required={false}
                         >
                           <Input
-                            id="last_name"
+                            id="website-last_name"
                             placeholder="Last Name"
                             className="shadow-none border-2"
                           />
@@ -727,7 +734,7 @@ export function Website({ router }: any) {
                           required={false}
                         >
                           <Input
-                            id="email_address"
+                            id="website-email-address"
                             placeholder="Email Address"
                             className="shadow-none border-2"
                           />
@@ -753,7 +760,7 @@ export function Website({ router }: any) {
                             patternChar="*"
                             format="****-***-****"
                             allowEmptyFormatting={false}
-                            id="mobile_number"
+                            id="website-mobile-number"
                             className="shadow-none border-2"
                           />
                         </Form.Item>
@@ -766,7 +773,7 @@ export function Website({ router }: any) {
                           className="md:col-span-2"
                         >
                           <TextArea
-                            id="message"
+                            id="website-message"
                             placeholder="Your message here"
                             rows={8}
                             className="!border-2"
@@ -778,6 +785,7 @@ export function Website({ router }: any) {
                           type="submit"
                           appearance="blumine"
                           className="md:max-w-[15rem] p-4 hover:scale-105 font-medium"
+                          id={"website-submit-contact"}
                         >
                           Submit
                         </Button>
@@ -805,6 +813,7 @@ export function Website({ router }: any) {
                 onClick={() =>
                   window.open("https://www.facebook.com/indxhealth", "_blank")
                 }
+                id={"website-facebook"}
               >
                 <FaFacebookF />
               </Button>
@@ -817,6 +826,7 @@ export function Website({ router }: any) {
                     "_blank"
                   )
                 }
+                id={"website-linkedin"}
               >
                 <BsLinkedin />
               </Button>
@@ -826,6 +836,7 @@ export function Website({ router }: any) {
                 onClick={() =>
                   window.open("https://www.instagram.com/indxhealth/", "_blank")
                 }
+                id={"website-instragram"}
               >
                 <BsInstagram />
               </Button>

@@ -5,29 +5,16 @@ import axios from "axios";
 // import { useMutation } from "react-query";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
-
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { setCookie } from "nookies";
-import { BsCheckCircle } from "react-icons/bs";
-import { PatternFormat } from "react-number-format";
-import { SwapRightOutlined } from "@ant-design/icons";
 import { AnimateContainer, PageContainer } from "@components/animation";
-import {
-  fadeIn,
-  fadeInLeft,
-  fadeInRight,
-} from "@components/animation/animation";
+import { fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import Input from "@components/Input";
 import Modal from "@components/Modal";
 import LoadingScreen from "@src/layout/LoadingScreen";
 import { useMutation } from "@tanstack/react-query";
-import { postData, postDataNoToken } from "@utilities/api";
-import { Context } from "@utilities/context/Provider";
-
-// import { Media } from "../../../context/Media";
+import { postDataNoToken } from "@utilities/api";
 
 export default function EnterSubdomain() {
   const router = useRouter();
@@ -134,11 +121,16 @@ export default function EnterSubdomain() {
                     ]}
                     required={false}
                   >
-                    <Input id="email" placeholder="Email" />
+                    <Input id="enter-email" placeholder="Email" />
                   </Form.Item>
                 </div>
                 <div className="space-y-4 mt-10">
-                  <Button className="py-4" appearance="blumine" type="submit">
+                  <Button
+                    className="py-4"
+                    appearance="blumine"
+                    type="submit"
+                    id="enter-email-submit"
+                  >
                     Next
                   </Button>
                 </div>

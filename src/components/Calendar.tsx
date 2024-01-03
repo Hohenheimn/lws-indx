@@ -83,16 +83,19 @@ export default function Calendar({ onChange, ScheduledDates }: CalendarProps) {
             <BsArrowLeft
               className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
               onClick={() => calendarNavigation(-1, "months")}
+              id="calendar-left-arrow"
             />
             <div className="text-casper-500 text-center uppercase text-base font-medium">
               <div
                 onClick={() => setMonthModalIsOpen(true)}
+                id="calendar-set-month"
                 className="cursor-pointer transition hover:text-primary-500"
               >
                 {format(selectedDate, "MMMM")}{" "}
               </div>
               <div
                 className="cursor-pointer transition hover:text-primary-500"
+                id="calendar-set-year"
                 onClick={() => setYearModalIsOpen(true)}
               >
                 {format(selectedDate, "yyyy")}
@@ -101,6 +104,7 @@ export default function Calendar({ onChange, ScheduledDates }: CalendarProps) {
             <BsArrowRight
               className="transition text-4xl p-2 rounded-lg bg-transparent text-casper-500 hover:text-primary-500 cursor-pointer hover:bg-gray-50"
               onClick={() => calendarNavigation(1, "months")}
+              id="calendar-right-arrow"
             />
           </div>
           <div className="grid grid-cols-7 mt-7 leading-6 text-center text-slate-400 text-lg font-semibold">
@@ -143,6 +147,7 @@ export default function Calendar({ onChange, ScheduledDates }: CalendarProps) {
                         setSelectedDate(day);
                         onChange(day);
                       }}
+                      id={`calendar-${format(day, "yyyy-MM-dd")}`}
                     >
                       <time
                         dateTime={format(day, "yyyy-MM-dd")}

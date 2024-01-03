@@ -7,6 +7,7 @@ type ButtonProps = {
   className?: string;
   type?: "button" | "submit" | "reset" | undefined;
   variant?: string;
+  id?: string;
   appearance?:
     | "primary"
     | "secondary"

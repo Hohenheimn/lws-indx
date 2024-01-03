@@ -68,11 +68,16 @@ function EnterEmail({ setLoading }: { setLoading: Function }) {
             ]}
             required={false}
           >
-            <Input id="email" placeholder="Email" />
+            <Input id="forgot-password-email" placeholder="Email" />
           </Form.Item>
         </div>
         <div className="space-y-4 mt-10">
-          <Button className="py-4" appearance="blumine" type="submit">
+          <Button
+            className="py-4"
+            appearance="blumine"
+            type="submit"
+            id="forgot-password-next"
+          >
             Next
           </Button>
         </div>

@@ -1,25 +1,13 @@
 import React, { useState } from "react";
-import { Space, Form, notification, Checkbox } from "antd";
-
-import axios from "axios";
-// import { useMutation } from "react-query";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
-
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { setCookie } from "nookies";
-import { BsCheckCircle } from "react-icons/bs";
-import { PatternFormat } from "react-number-format";
-import { SwapRightOutlined } from "@ant-design/icons";
 import { AnimateContainer, PageContainer } from "@components/animation";
 import { fadeIn } from "@components/animation/animation";
 import LoadingScreen from "@src/layout/LoadingScreen";
 import EnterEmail from "@src/page-components/forgot-password/EnterEmail";
 import Recover from "@src/page-components/forgot-password/Recover";
-
-// import { Media } from "../../../context/Media";
 
 export default function ForgotPassword() {
   const [isLoading, setLoading] = useState(false);

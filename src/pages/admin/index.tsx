@@ -11,17 +11,8 @@ import {
   AiOutlineSearch,
   AiOutlineCalendar,
   AiOutlineClockCircle,
-  AiOutlineStop,
-  AiOutlineMenu,
 } from "react-icons/ai";
-import {
-  BsCalendarMinus,
-  BsCameraVideo,
-  BsCheck2Square,
-  BsCheckSquare,
-  BsPencilSquare,
-  BsTrash,
-} from "react-icons/bs";
+import { BsCheckSquare, BsPencilSquare } from "react-icons/bs";
 import { FaTooth } from "react-icons/fa";
 import { IoIosAdd } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
@@ -52,8 +43,6 @@ import PrivateRoute from "../../auth/HOC/PrivateRoute";
 import VerifyAuth from "../../auth/HOC/VerifyAuth";
 import AddPatientModal from "../../page-components/dashboard/modals/AddPatientModal";
 import AddScheduleModal from "../../page-components/dashboard/modals/AddScheduleModal";
-
-const highlightDate = "bg-black text-white";
 
 export function Dashboard({ profile }: any) {
   const router = useRouter();
@@ -190,6 +179,7 @@ export function Dashboard({ profile }: any) {
               prefix={<AiOutlineSearch className="text-lg text-casper-500" />}
               className="rounded-full text-base shadow-none"
               onChange={(e: any) => setSearch(e.target.value)}
+              id="dashboard-search"
             />
           </div>
           <div className="basis-full lg:basis-auto flex-wrap xs:flex-nowrap flex gap-4">
@@ -201,6 +191,7 @@ export function Dashboard({ profile }: any) {
                   ? "disabled"
                   : "primary"
               }
+              id="dashboard-add-new-schedule"
             >
               <div className="flex justify-center items-center">
                 <IoIosAdd className="inline-block text-2xl" />{" "}
@@ -211,6 +202,7 @@ export function Dashboard({ profile }: any) {
               className="p-3 w-full"
               appearance="primary"
               onClick={() => setIsPatientModalOpen(true)}
+              id="dashboard-add-new-patient"
             >
               <div className="flex justify-center items-center">
                 <IoIosAdd className="inline-block text-2xl" />{" "}
@@ -247,6 +239,7 @@ export function Dashboard({ profile }: any) {
                       queryKey={["doctorList"]}
                       displayValueKey="name"
                       returnValueKey="_id"
+                      id="dashboard-filter-doctor"
                     />
                   </div>
                   <div className="text-sm font-medium col-span-12 xs:col-span-5">
@@ -258,6 +251,7 @@ export function Dashboard({ profile }: any) {
                       queryKey={["branchList"]}
                       displayValueKey="name"
                       returnValueKey="_id"
+                      id="dashboard-filter-branch"
                     />
                   </div>
                 </div>
@@ -379,6 +373,7 @@ export function Dashboard({ profile }: any) {
                                     <div className="transition absolute top-0 left-0 w-full h-full flex justify-center items-center text-3xl text-white bg-[#006669B3] opacity-0 card-overlay gap-6">
                                       <Tooltip title="Edit">
                                         <BsPencilSquare
+                                          id="dashboard-patient-edit"
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                           onClick={() => {
                                             ScheduleForm.setFieldsValue({
@@ -423,6 +418,7 @@ export function Dashboard({ profile }: any) {
 
                                       <Tooltip title="Start Consultation">
                                         <FaTooth
+                                          id="dashboard-patient-start-consultation"
                                           onClick={() =>
                                             router.push(
                                               `/admin/patient-list/${patient_id}?tab=Personal Info`
@@ -434,6 +430,7 @@ export function Dashboard({ profile }: any) {
 
                                       <Tooltip title="Complete">
                                         <BsCheckSquare
+                                          id="dashboard-patient-complete"
                                           onClick={() =>
                                             UpdateStatushandler(
                                               "Completed",
@@ -446,6 +443,7 @@ export function Dashboard({ profile }: any) {
 
                                       <Tooltip title="Cancel">
                                         <MdOutlineCancel
+                                          id="dashboard-patient-cancel"
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                           onClick={() =>
                                             UpdateStatushandler("Canceled", _id)

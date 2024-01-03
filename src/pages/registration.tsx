@@ -146,7 +146,10 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="first_name" placeholder="First Name" />
+                    <Input
+                      id="registration-first-name"
+                      placeholder="First Name"
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Last Name"
@@ -157,7 +160,10 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="last_name" placeholder="Last Name" />
+                    <Input
+                      id="registration-last-name"
+                      placeholder="Last Name"
+                    />
                   </Form.Item>
 
                   <Form.Item
@@ -173,7 +179,10 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="email_address" placeholder="Email Address" />
+                    <Input
+                      id="registration-email-address"
+                      placeholder="Email Address"
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Mobile Number"
@@ -194,7 +203,7 @@ export default function Registration({ router }: any) {
                       patternChar="*"
                       format="****-***-****"
                       allowEmptyFormatting={false}
-                      id="mobile_number"
+                      id="registration-mobile-number"
                     />
                   </Form.Item>
                   <Form.Item
@@ -206,7 +215,10 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="clinic_name" placeholder="Clinic Name" />
+                    <Input
+                      id="registration-clinic-name"
+                      placeholder="Clinic Name"
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Clinic Address"
@@ -217,7 +229,10 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="clinic_address" placeholder="Clinic Address" />
+                    <Input
+                      id="registration-clinic-address"
+                      placeholder="Clinic Address"
+                    />
                   </Form.Item>
                   <Form.Item
                     label="Index Url"
@@ -232,7 +247,7 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="indx_url" placeholder="Index Url" />
+                    <Input id="registration-indx-url" placeholder="Index Url" />
                   </Form.Item>
 
                   <Form.Item
@@ -249,12 +264,13 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full text-sm mt-4"
                   >
-                    <Checkbox id="terms">
+                    <Checkbox id="registration-terms">
                       By clicking the submit button below, I hereby agree to and
                       accept the following{" "}
                       <a
                         className="underline font-semibold"
                         onClick={() => router.push("/terms-and-conditions")}
+                        id="registration-terms-conditions"
                       >
                         Terms and Conditions
                       </a>{" "}
@@ -263,6 +279,7 @@ export default function Registration({ router }: any) {
                       <a
                         className="underline font-semibold"
                         onClick={() => router.push("/privacy-policy")}
+                        id="registration-privacy-policy"
                       >
                         Privacy Policy
                       </a>
@@ -271,7 +288,12 @@ export default function Registration({ router }: any) {
                   </Form.Item>
                 </div>
                 <div className="space-y-4 mt-10">
-                  <Button className="py-4" appearance="blumine" type="submit">
+                  <Button
+                    className="py-4"
+                    appearance="blumine"
+                    type="submit"
+                    id="registration-submit"
+                  >
                     Register Now!
                   </Button>
                 </div>

@@ -206,7 +206,7 @@ export default function AddSMSTemplate({
             ]}
             required={true}
           >
-            <Input id="template_name" placeholder="SMS Template Name" />
+            <Input id="sms-template_name" placeholder="SMS Template Name" />
           </Form.Item>
           <Form.Item
             name="message_content"
@@ -220,7 +220,7 @@ export default function AddSMSTemplate({
             required={true}
           >
             <TextArea
-              id="message_content"
+              id="sms-message_content"
               placeholder="Message Content"
               className=" shadow-md"
             />
@@ -230,6 +230,7 @@ export default function AddSMSTemplate({
               appearance="link"
               className="p-4 bg-transparent border-none text-casper-500 font-semibold"
               onClick={() => onClose()}
+              id="sms-cancel"
             >
               Cancel
             </Button>
@@ -237,6 +238,7 @@ export default function AddSMSTemplate({
               appearance="primary"
               className="max-w-[10rem]"
               type="submit"
+              id="sms-save"
             >
               Save
             </Button>

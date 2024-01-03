@@ -378,7 +378,7 @@ export default function AddScheduleModal({
                 >
                   <InfiniteAutoComplete
                     placeholder="Patient"
-                    id="patient_id"
+                    id="dashboard-schedule-form-patient-name"
                     api={`${
                       process.env.REACT_APP_API_BASE_URL
                     }/api/patient?limit=3&for_dropdown=true&page=1${getInitialValue(
@@ -422,7 +422,7 @@ export default function AddScheduleModal({
                 >
                   <InfiniteSelect
                     placeholder="Select Reason for Visit"
-                    id="reason_for_visit_id"
+                    id="dashboard-schedule-form-reason-visit"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
                     queryKey={["procedure"]}
                     displayValueKey="name"
@@ -443,7 +443,7 @@ export default function AddScheduleModal({
                 >
                   <InfiniteSelect
                     placeholder="Select Doctor"
-                    id="doctor_id"
+                    id="dashboard-schedule-form-doctort"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
                     getInitialValue={{
                       form,
@@ -471,7 +471,7 @@ export default function AddScheduleModal({
                 >
                   <InfiniteSelect
                     placeholder="Select Branch"
-                    id="branch_id"
+                    id="dashboard-schedule-form-branch"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
                     getInitialValue={{
                       form,
@@ -500,7 +500,7 @@ export default function AddScheduleModal({
                   className="col-span-4"
                 >
                   <Select
-                    id="dental_chair"
+                    id="dashboard-schedule-form-dental-chair"
                     placeholder="Select chair"
                     className="border-transparent"
                     disabled={selectedBranch === undefined}
@@ -528,7 +528,7 @@ export default function AddScheduleModal({
                 >
                   <DatePicker
                     placeholder="Date"
-                    id="date"
+                    id="dashboard-schedule-form-date"
                     format="MMMM DD, YYYY"
                     onChange={(value: any) => {
                       setSelectedDate(value);
@@ -562,6 +562,7 @@ export default function AddScheduleModal({
                     onChange={(value) => {
                       form.setFieldValue("time", value);
                     }}
+                    id="dashboard-schedule-form-time"
                     isTime={isTime}
                     disabled={selectedBranch === undefined}
                     blockOutSide={isOutsideRange}
@@ -577,7 +578,7 @@ export default function AddScheduleModal({
                   initialValue={""}
                 >
                   <TextArea
-                    id="remarks"
+                    id="dashboard-schedule-form-remarks"
                     placeholder="Remarks"
                     rows={8}
                     className="!border-2"
@@ -602,7 +603,7 @@ export default function AddScheduleModal({
                 >
                   <InfiniteAutoComplete
                     placeholder="Doctor"
-                    id="doctor_id"
+                    id="dashboard-schedule-form-doctor"
                     api={`${
                       process.env.REACT_APP_API_BASE_URL
                     }/api/account?limit=3&for_dropdown=true&page=1${getInitialValue(
@@ -632,7 +633,7 @@ export default function AddScheduleModal({
                 >
                   <Select
                     placeholder="Reason for Leave"
-                    id="doctor_schedule_type"
+                    id="dashboard-schedule-form-schedule-type"
                   >
                     {leaveReasons.map((props, index) => {
                       return (
@@ -657,7 +658,7 @@ export default function AddScheduleModal({
                 >
                   <InfiniteSelect
                     placeholder="Select Branch"
-                    id="branch_id"
+                    id="dashboard-schedule-form-branch"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
                     getInitialValue={{
                       form,
@@ -682,11 +683,11 @@ export default function AddScheduleModal({
                   className="col-span-4 md:col-span-2"
                 >
                   <DatePicker
+                    id="dashboard-schedule-form-date"
                     getPopupContainer={(triggerNode: any) => {
                       return triggerNode.parentNode;
                     }}
                     placeholder="Date"
-                    id="date"
                     format="MMMM DD, YYYY"
                     onChange={(value: any) => {
                       form.setFieldsValue({ time: [] });
@@ -717,6 +718,7 @@ export default function AddScheduleModal({
                   }}
                 >
                   <TimeRangePicker
+                    id="dashboard-schedule-form-time"
                     onChange={(value) => {
                       form.setFieldValue("time", value);
                     }}
@@ -736,7 +738,7 @@ export default function AddScheduleModal({
                   className="col-span-4"
                 >
                   <Select
-                    id="dental_chair"
+                    id="dashboard-schedule-form-dental-chair"
                     placeholder="Select chair"
                     className="border-transparent"
                   >
@@ -761,7 +763,7 @@ export default function AddScheduleModal({
                   className="col-span-4"
                 >
                   <TextArea
-                    id="remarks"
+                    id="dashboard-schedule-form-remarks"
                     placeholder="Remarks"
                     rows={8}
                     className="!border-2"
@@ -780,6 +782,7 @@ export default function AddScheduleModal({
                 setSelectedDoctor("");
                 onClose();
               }}
+              id="dashboard-schedule-form-cancel"
             >
               Cancel
             </Button>
@@ -787,6 +790,7 @@ export default function AddScheduleModal({
               appearance="primary"
               className="max-w-[10rem]"
               type="submit"
+              id="dashboard-schedule-form-submit"
             >
               Save
             </Button>

@@ -251,6 +251,10 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                                     disabled={disabledSubMenu}
                                     data-ping="normal"
                                     data-ping-type="primary"
+                                    id={`sidebar-submenu-${label.replaceAll(
+                                      " ",
+                                      "-"
+                                    )}`}
                                   >
                                     <div className="flex justify-between items-center gap-4 solo">
                                       <div>{subMenuLabel}</div>
@@ -271,6 +275,7 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
                           disabled={disabled}
                           data-ping="normal"
                           data-ping-type="primary"
+                          id={`sidebar-${label.replaceAll(" ", "-")}`}
                         >
                           <div className="flex justify-between items-center gap-4 solo">
                             <div>{label}</div>

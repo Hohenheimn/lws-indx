@@ -101,6 +101,7 @@ export function SMSManager({ router, profile }: any) {
                 appearance="primary"
                 className="p-3"
                 onClick={() => setShowBuySMSModal(true)}
+                id="sms-email-manager-buy-credit"
               >
                 Buy Credit
               </Button>
@@ -131,6 +132,7 @@ export function SMSManager({ router, profile }: any) {
                     smsSettings[0]?.sms_reminder_frequency,
                 });
               }}
+              id="sms-email-manager-settings"
             >
               SMS / Email Settings
             </Button>
@@ -138,6 +140,7 @@ export function SMSManager({ router, profile }: any) {
               className="p-3"
               appearance="primary"
               onClick={() => setShowAddSMSTemplateModal(true)}
+              id="sms-email-manager-template"
             >
               <div className="flex justify-center items-center">
                 <IoIosAdd className="inline-block text-2xl" />{" "}
