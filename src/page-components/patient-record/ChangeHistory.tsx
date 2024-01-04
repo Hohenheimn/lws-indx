@@ -106,6 +106,8 @@ export function ChangeHistory({ patientRecord }: any) {
             hideOnSinglePage: true,
             showSizeChanger: false,
             onChange: (page) => setPage(page),
+
+            total: changeHistory?.meta?.total,
           }}
           className="[&.ant-table]:!rounded-none"
         />
