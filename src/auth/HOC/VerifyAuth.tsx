@@ -33,7 +33,7 @@ export default function VerifyAuth(gssp: {
         ? req.headers.host.replace("www.", "").split(".")[0]
         : null;
 
-    if (!subdomain) {
+    if (!subdomain || subdomain === "dev" || subdomain === "staging") {
       return {
         redirect: {
           permanent: false,
