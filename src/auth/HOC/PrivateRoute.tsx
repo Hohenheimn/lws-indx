@@ -3,7 +3,7 @@ import React, { useState } from "react";
 // import { useQuery } from "react-query";
 import Image from "next/image";
 
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
 import Modal from "@src/components/Modal";
 
@@ -35,7 +35,6 @@ export default function PrivateRoute(Component: any) {
     ...rest
   }: AuthProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
     if (!profile?.is_subscribed && profile?.is_admin && userToken) {
       return <SubscriptionAccount profile={profile} subdomain={subdomain} />;
     }

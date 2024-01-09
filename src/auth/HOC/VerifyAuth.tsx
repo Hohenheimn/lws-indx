@@ -33,6 +33,15 @@ export default function VerifyAuth(gssp: {
         ? req.headers.host.replace("www.", "").split(".")[0]
         : null;
 
+    if (!subdomain) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/",
+        },
+      };
+    }
+
     if (token) {
       await axios
         .get(
@@ -60,7 +69,6 @@ export default function VerifyAuth(gssp: {
           throw err;
         });
     }
-
     return await gssp(ctx, {
       profile,
       openMenus,

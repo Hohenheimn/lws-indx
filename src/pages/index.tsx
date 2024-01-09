@@ -943,7 +943,7 @@ export const getServerSideProps = async ({ req }: any) => {
       domainExist = false;
     });
 
-  if (domainExist) {
+  if (domainExist && subdomain !== "dev" && subdomain !== "staging") {
     return {
       redirect: {
         permanent: false,
