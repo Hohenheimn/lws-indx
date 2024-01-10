@@ -15,8 +15,10 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { capitalizeTitle } from "@utilities/helpers";
 
+
 import "../../styles/globals.scss";
 import Layout from "../layout";
+
 
 
 const AppProvider = dynamic(() => import("@utilities/context/Provider"));
@@ -72,7 +74,8 @@ export default function App({ Component, pageProps, router }: AppProps) {
     if(isSubdomain){
       axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/setting?subdomain=${isSubdomain}`).then(response => {
         setClinicLogo(response?.data?.clinic_logo)
-      }).catch(error => {
+      }).catch((error) => {
+        console.log(error)
     })}
   });
 

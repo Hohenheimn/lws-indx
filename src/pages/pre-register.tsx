@@ -12,14 +12,9 @@ import { PatternFormat } from "react-number-format";
 import { SwapRightOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
 
-import { postData } from "../../utils/api";
+import { postData, postDataNoSubDomain } from "../../utils/api";
 import { Context } from "../../utils/context/Provider";
-import { AnimateContainer, PageContainer } from "../components/animation";
-import {
-  fadeIn,
-  fadeInLeft,
-  fadeInRight,
-} from "../components/animation/animation";
+import { PageContainer } from "../components/animation";
 import { Button } from "../components/Button";
 import Input from "../components/Input";
 import Modal from "../components/Modal";
@@ -33,7 +28,7 @@ export default function Registration({ router }: any) {
 
   const { mutate: register } = useMutation(
     (payload: {}) =>
-      postData({
+      postDataNoSubDomain({
         url: "/api/pre-registration",
         payload,
         options: {
@@ -88,7 +83,11 @@ export default function Registration({ router }: any) {
               <Form
                 form={RegistrationForm}
                 layout="vertical"
-                onFinish={(values) => {
+                onFinish={(values: any) => {
+                  values.mobile_number = values.mobile_number.replaceAll(
+                    "-",
+                    ""
+                  );
                   register(values);
                 }}
                 className="w-full"

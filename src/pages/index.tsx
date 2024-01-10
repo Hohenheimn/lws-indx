@@ -56,7 +56,7 @@ type sideMenuProps = {
 
 const registerUrl = {
   url: "/pre-register",
-  label: "Pre-register",
+  label: "Pre-Register",
 };
 // const registerUrl = "/registration";
 
@@ -159,7 +159,7 @@ export function Website({ router }: any) {
             <div className="items-center h-12 w-full relative">
               <Image
                 src="/images/logo.png"
-                alt="random pics"
+                alt="Clinic Logo"
                 fill
                 sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
                 className="object-center object-contain cursor-pointer"
@@ -197,7 +197,7 @@ export function Website({ router }: any) {
           <div className="items-center h-16 w-32 relative">
             <Image
               src="/images/logo.png"
-              alt="random pics"
+              alt="Clinic Logo"
               fill
               sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
               className="object-center object-contain cursor-pointer"
@@ -255,15 +255,6 @@ export function Website({ router }: any) {
               <div className="flex flex-col lg:flex-auto justify-center">
                 <AnimateContainer variants={fadeIn} className="space-y-8">
                   <div className="space-y-2">
-                    {/* <div className="relative h-14 w-full">
-                    <Image
-                      src="/images/logo.png"
-                      alt="random pics"
-                      fill
-                      sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                      className="object-left object-contain"
-                    />
-                  </div> */}
                     <h2 className="font-bold text-4xl xs:text-5xl">
                       Your Digital
                       <span className="text-primary font-semibold">
@@ -377,54 +368,6 @@ export function Website({ router }: any) {
                 </div>
               </div>
             </AnimateContainer>
-            {/* <AnimateContainer variants={fadeIn}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
-                <div className="items-center h-48 w-full relative">
-                  <Image
-                    src="https://picsum.photos/seed/98/1000/500"
-                    alt="random pics"
-                    fill
-                    sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                    className="object-center object-cover"
-                  />
-                </div>
-                <div className="p-[5%]">
-                  {`Running a dental practice is tough enough. You can't afford to
-                lose your patients, or the time and money spent processing paper
-                records.`}
-                </div>
-              </div>
-              <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
-                <div className="items-center h-48 w-full relative">
-                  <Image
-                    src="https://picsum.photos/seed/99/1000/500"
-                    alt="random pics"
-                    fill
-                    sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                    className="object-center object-cover"
-                  />
-                </div>
-                <div className="p-[5%]">
-                  {`But it happens all too often. You are losing patients and your productivity is down.`}
-                </div>
-              </div>
-              <div className="border border-solid border-primary rounded-2xl overflow-hidden min-h-[25rem]">
-                <div className="items-center h-48 w-full relative">
-                  <Image
-                    src="https://picsum.photos/seed/100/1000/500"
-                    alt="random pics"
-                    fill
-                    sizes="(max-width: 500px) 100px, (max-width: 1023px) 400px, 1000px"
-                    className="object-center object-cover"
-                  />
-                </div>
-                <div className="p-[5%]">
-                  {`INDX software is a complete dental management system that integrates with your billing, scheduling and inventory – giving you visibility into all aspects of your business. A smarter, more seamless way to run your practice.`}
-                </div>
-              </div>
-            </div>
-          </AnimateContainer> */}
           </div>
           <div
             className="flex flex-col flex-none px-[5%] pb-[5%] relative space-y-12"
