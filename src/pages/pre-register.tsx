@@ -233,11 +233,11 @@ export default function Registration({ router }: any) {
   );
 }
 
-// export const getServerSideProps = async ({ req }: any) => {
-//   return {
-//     redirect: {
-//       destination: "/registration",
-//       permanent: false, // Set to true if it's a permanent redirect
-//     },
-//   };
-// };
+export const getServerSideProps = async ({ req }: any) => {
+  return {
+    redirect: {
+      destination: "/registration",
+      permanent: false, // Set to true if it's a permanent redirect
+    },
+  };
+};

@@ -69,6 +69,8 @@ export default function VerifyAuth(gssp: {
           throw err;
         });
     }
+    console.log(userToken);
+    console.log(profile);
     return await gssp(ctx, {
       profile,
       openMenus,

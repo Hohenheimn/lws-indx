@@ -3,14 +3,11 @@ import React, { useState } from "react";
 // import { useQuery } from "react-query";
 import Image from "next/image";
 
-import Router, { useRouter } from "next/router";
+import Router from "next/router";
 
 import Modal from "@src/components/Modal";
 
 import ChangePaswordAD from "@src/page-components/profile/Actions/ChangePasswordAD";
-
-import SubAccountMessageExpiration from "@src/page-components/registration/SubAccountMessageExpiration";
-import SubscriptionAccount from "@src/page-components/registration/SubscriptionAccount";
 
 import Layout from "../../layout";
 import Login from "../Login";
@@ -51,35 +48,34 @@ export default function PrivateRoute(Component: any) {
           router={router}
           subdomain={subdomain}
         >
-          <Component
-            profile={profile}
-            router={router}
-            selectedDate={selectedDate}
-            setSelectedDate={(date: Date) => setSelectedDate(date)}
-            {...rest}
-          />
-        </Layout>
-      );
-    }
-
-    if (!profile?.is_password_changed && userToken) {
-      return (
-        <section className=" w-screen h-screen bg-primary">
-          <Modal show={true} onClose={() => {}} className=" w-[40rem]">
-            <Image
-              src={"/images/logo.png"}
-              alt="random pics"
-              width={200}
-              height={100}
-              className="object-center mb-10"
-            />
-            <ChangePaswordAD
-              onBack={() => {}}
+          <div>
+            <Component
               profile={profile}
-              firstLogin={true}
+              router={router}
+              selectedDate={selectedDate}
+              setSelectedDate={(date: Date) => setSelectedDate(date)}
+              {...rest}
             />
-          </Modal>
-        </section>
+            {!profile?.is_password_changed && userToken && (
+              <section className=" w-screen h-screen bg-primary">
+                <Modal show={true} onClose={() => {}} className=" w-[40rem]">
+                  <Image
+                    src={"/images/logo.png"}
+                    alt="random pics"
+                    width={200}
+                    height={100}
+                    className="object-center mb-10"
+                  />
+                  <ChangePaswordAD
+                    onBack={() => {}}
+                    profile={profile}
+                    firstLogin={true}
+                  />
+                </Modal>
+              </section>
+            )}
+          </div>
+        </Layout>
       );
     }
     return <Login {...rest} />;

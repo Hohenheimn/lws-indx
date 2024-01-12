@@ -60,20 +60,13 @@ export default function ChangePaswordAD({
         destroyCookie(undefined, "a_t", { path: "/" });
         destroyCookie(undefined, "subdomain", { path: "/" });
         router.push(
-          `http://${isSubdomain}.staging.indxhealth.com/admin?email=${profile.email}`
+          `http://${isSubdomain}.${process.env.AFTER_PAYMENT_REDIRECTION}/admin?email=${profile.email}`
         );
         notification.success({
           message: "Logout Succesful",
           description: "All done! Have a nice day!",
         });
       },
-      // onError: () => {
-      //   notification.warning({
-      //     key: "login",
-      //     message: `Something went wrong`,
-      //     description: ``,
-      //   });
-      // },
     }
   );
 
@@ -141,11 +134,11 @@ export default function ChangePaswordAD({
           <Form.Item
             name="current_password"
             rules={[
-              {
-                pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
-                message:
-                  "Must be 6 character and at least one capital letter with numbers",
-              },
+              // {
+              //   pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$/,
+              //   message:
+              //     "Must be 6 character and at least one capital letter with numbers",
+              // },
               {
                 required: true,
                 message: "This is required!",
