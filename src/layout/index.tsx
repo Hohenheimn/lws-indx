@@ -37,7 +37,7 @@ export const Layout = ({
   return (
     <>
       {routerCS.query.reference_no && (
-        <SuccessModalSMS currency={profile.setting.currency} />
+        <SuccessModalSMS currency={profile?.setting.currency} />
       )}
       <AnimatePresence mode="wait">
         {isAppLoading && (

@@ -8,11 +8,7 @@ import { Button } from "@src/components/Button";
 import Card from "@src/components/Card";
 import Input from "@src/components/Input";
 import { useMutation } from "@tanstack/react-query";
-import {
-  postData,
-  postDataNoFormData,
-  postDataNoSubDomain,
-} from "@utilities/api";
+import { postData, postDataNoSubDomain } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 
 type Props = {
@@ -60,8 +56,9 @@ export default function ChangePaswordAD({
         destroyCookie(undefined, "a_t", { path: "/" });
         destroyCookie(undefined, "subdomain", { path: "/" });
         router.push(
-          `http://${isSubdomain}.indxhealth.com/admin?email=${profile.email}`
+          `http://${window?.location?.hostname}/admin?email=${profile.email}`
         );
+
         notification.success({
           message: "Logout Succesful",
           description: "All done! Have a nice day!",
