@@ -61,9 +61,9 @@ export const Layout = ({
             <SideMenu openMenus={openMenus} profile={profile} />
           )}
           <div className="w-[100%] mx-auto flex flex-col flex-auto bg-default-page relative">
-            <div className="absolute top-0 left-0 h-full w-full flex flex-auto">
+            <main className="absolute top-0 left-0 h-full w-full flex flex-auto">
               {children}
-            </div>
+            </main>
           </div>
         </div>
         {profile && subdomain && (

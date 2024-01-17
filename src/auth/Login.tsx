@@ -38,7 +38,7 @@ export default function Login() {
     }
   });
 
-  const { mutate: login } = useMutation(
+  const { mutate: login, isLoading: loginLoading } = useMutation(
     (payload) =>
       postData({
         url: `/api/auth/login`,
@@ -126,7 +126,7 @@ export default function Login() {
   return (
     <PageContainer className="md:p-0">
       <AnimatePresence mode="wait">
-        {isLoading && (
+        {(isLoading || loginLoading) && (
           <AnimateContainer
             variants={fadeIn}
             rootMargin="0px"

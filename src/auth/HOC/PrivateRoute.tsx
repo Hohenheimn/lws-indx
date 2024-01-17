@@ -48,33 +48,31 @@ export default function PrivateRoute(Component: any) {
           router={router}
           subdomain={subdomain}
         >
-          <div>
-            <Component
-              profile={profile}
-              router={router}
-              selectedDate={selectedDate}
-              setSelectedDate={(date: Date) => setSelectedDate(date)}
-              {...rest}
-            />
-            {!profile?.is_password_changed && userToken && (
-              <section className=" w-screen h-screen bg-primary">
-                <Modal show={true} onClose={() => {}} className=" w-[40rem]">
-                  <Image
-                    src={"/images/logo.png"}
-                    alt="random pics"
-                    width={200}
-                    height={100}
-                    className="object-center mb-10"
-                  />
-                  <ChangePaswordAD
-                    onBack={() => {}}
-                    profile={profile}
-                    firstLogin={true}
-                  />
-                </Modal>
-              </section>
-            )}
-          </div>
+          <Component
+            profile={profile}
+            router={router}
+            selectedDate={selectedDate}
+            setSelectedDate={(date: Date) => setSelectedDate(date)}
+            {...rest}
+          />
+          {!profile?.is_password_changed && userToken && (
+            <section className=" w-screen h-screen bg-primary">
+              <Modal show={true} onClose={() => {}} className=" w-[40rem]">
+                <Image
+                  src={"/images/logo.png"}
+                  alt="random pics"
+                  width={200}
+                  height={100}
+                  className="object-center mb-10"
+                />
+                <ChangePaswordAD
+                  onBack={() => {}}
+                  profile={profile}
+                  firstLogin={true}
+                />
+              </Modal>
+            </section>
+          )}
         </Layout>
       );
     }

@@ -40,7 +40,7 @@ export function ProfileInfo({ profile, tab }: any) {
   const [DoctorInfoForm] = Form.useForm();
   const router = useRouter();
   let [image, setImage] = React.useState({
-    imageUrl: profile.profile_picture,
+    imageUrl: profile?.profile_picture,
     error: false,
     file: null,
     loading: false,
@@ -85,9 +85,9 @@ export function ProfileInfo({ profile, tab }: any) {
       DoctorInfoForm.setFieldsValue({
         ...profile,
         middle_name:
-          !profile.middle_name || profile.middle_name === null
+          !profile?.middle_name || profile?.middle_name === null
             ? ""
-            : profile.middle_name,
+            : profile?.middle_name,
         entry_date: moment(profile?.created_at).isValid()
           ? moment(profile?.created_at)
           : undefined,
@@ -155,7 +155,7 @@ export function ProfileInfo({ profile, tab }: any) {
           values.permissions = JSON.stringify(values.permissions);
           values.civil_status = "";
           values.id = id;
-          values.account_role = profile.account_role;
+          values.account_role = profile?.account_role;
           if (typeof values.profile_picture !== "object") {
             delete values.profile_picture;
           }

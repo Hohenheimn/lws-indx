@@ -194,8 +194,8 @@ export const SideMenu = ({ openMenus, profile, ...rest }: SideMenuProps) => {
               <div className="items-center h-16 w-full relative">
                 <Image
                   src={
-                    profile.setting.clinic_logo
-                      ? profile.setting.clinic_logo
+                    profile?.setting?.clinic_logo
+                      ? profile?.setting?.clinic_logo
                       : "/images/logo.png"
                   }
                   alt="random pics"

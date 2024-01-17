@@ -33,6 +33,7 @@ export function ProfilePage({ profile: myProfile, subdomain }: any) {
             items={profile({
               profile: myProfile,
               tab: router.query.tab ?? "1",
+              subdomain: subdomain,
             })}
           />
         </div>

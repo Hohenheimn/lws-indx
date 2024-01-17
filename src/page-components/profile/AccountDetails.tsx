@@ -13,12 +13,18 @@ import ManagePaymentInfo from "./Actions/ManagePaymentInfo";
 
 const li = "flex justify-between space-x-2 items-center";
 
-export function AccountDetails({ patientRecord, profile, myProfile }: any) {
+export function AccountDetails({
+  patientRecord,
+  profile,
+  myProfile,
+  subdomain,
+}: any) {
   const router = useRouter();
   const [toShow, setToShow] = React.useState("");
-  const parsedDate = parseISO(profile.created_at);
-  const formattedDate = format(parsedDate, "MMM dd, yyyy");
-
+  const parsedDate = parseISO(profile?.created_at);
+  const formattedDate = "";
+  // format(parsedDate, "MMM dd, yyyy");
+  console.log(subdomain);
   return (
     <>
       {toShow === "" && (

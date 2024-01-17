@@ -69,7 +69,6 @@ export default function VerifyAuth(gssp: {
           throw err;
         });
     }
-
     return await gssp(ctx, {
       profile,
       openMenus,
