@@ -817,7 +817,7 @@ span.ant-radio + * {
 }
 
 div.ant-select.ant-select-multiple .ant-select-selector {
-  @apply overflow-auto;
+  @apply overflow-auto px-4;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {

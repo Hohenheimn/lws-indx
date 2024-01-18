@@ -93,6 +93,9 @@ export const RecordColumns = (
       dataIndex: "tooth_no",
       width: "10rem",
       align: "center",
+      render: (_: string, record: any) => {
+        return <div>{record?.tooth_no.join(", ")}</div>;
+      },
     },
     {
       title: "Surface",

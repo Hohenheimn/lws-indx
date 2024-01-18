@@ -292,6 +292,8 @@ export default function AddScheduleModal({
     return false;
   };
 
+  const reasonForVisit = Form.useWatch("reason_for_visit_id", form);
+
   return (
     <Modal
       show={show}
@@ -424,7 +426,7 @@ export default function AddScheduleModal({
                     placeholder="Select Reason for Visit"
                     id="dashboard-schedule-form-reason-visit"
                     api={`${process.env.REACT_APP_API_BASE_URL}/api/procedure?limit=3&for_dropdown=true&page=1`}
-                    queryKey={["procedure"]}
+                    queryKey={["procedure", reasonForVisit]}
                     displayValueKey="name"
                     returnValueKey="_id"
                   />

@@ -19,6 +19,7 @@ export default function MultipleSelect({
       placeholder={placeholder}
       {...rest}
       mode="multiple"
+      allowClear
       className=" shadow-md"
     >
       {Selection.map((item, index) => (

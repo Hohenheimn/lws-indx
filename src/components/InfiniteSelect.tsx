@@ -141,7 +141,9 @@ export function InfiniteSelect({
         return data?.map((props: any, index: number) => {
           return (
             <Select.Option
-              displayValue={props[displayValueKey]}
+              displayValue={
+                isListLoading ? "Loading..." : props[displayValueKey]
+              }
               value={returnAllValue ? props : props[returnValueKey]}
               key={index}
               onClick={() => setSelectedDetail && setSelectedDetail(props)}
