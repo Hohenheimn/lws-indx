@@ -162,6 +162,9 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
   );
 
   const clinic_country = Form.useWatch("clinic_country", MedicalHistoryForm);
+  const clinic_province = Form.useWatch("clinic_province", MedicalHistoryForm);
+  const clinic_city = Form.useWatch("clinic_city", MedicalHistoryForm);
+  const clinic_barangay = Form.useWatch("clinic_barangay", MedicalHistoryForm);
 
   return (
     <Card className="flex-auto md:p-12 p-6">
@@ -252,7 +255,7 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                             form: MedicalHistoryForm,
                             initialValue: "clinic_country",
                           }}
-                          queryKey={["clinic_country"]}
+                          queryKey={["clinic_country", clinic_country]}
                           displayValueKey="name"
                           disabled={pageType === "view"}
                           returnValueKey="_id"
@@ -301,15 +304,11 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                                 form: MedicalHistoryForm,
                                 initialValue: "clinic_province",
                               }}
-                              queryKey={[
-                                "clinic_province",
-                                getFieldValue("clinic_country"),
-                              ]}
+                              queryKey={["clinic_province", clinic_country]}
                               displayValueKey="name"
                               returnValueKey="_id"
                               disabled={
-                                Boolean(!getFieldValue("clinic_country")) ||
-                                pageType === "view"
+                                Boolean(!clinic_country) || pageType === "view"
                               }
                               onChange={() => {
                                 resetFields(["clinic_city", "clinic_barangay"]);
@@ -338,24 +337,16 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                             <InfiniteSelect
                               placeholder="City"
                               id="clinic_city"
-                              api={`${
-                                process.env.REACT_APP_API_BASE_URL
-                              }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                                "clinic_province"
-                              )}`}
+                              api={`${process.env.REACT_APP_API_BASE_URL}/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${clinic_province}`}
                               getInitialValue={{
                                 form: MedicalHistoryForm,
                                 initialValue: "clinic_city",
                               }}
-                              queryKey={[
-                                "clinic_city",
-                                getFieldValue("clinic_province"),
-                              ]}
+                              queryKey={["clinic_city", clinic_province]}
                               displayValueKey="name"
                               returnValueKey="_id"
                               disabled={Boolean(
-                                pageType === "view" ||
-                                  !getFieldValue("clinic_province")
+                                pageType === "view" || !clinic_province
                               )}
                               onChange={() => {
                                 resetFields(["clinic_barangay"]);
@@ -384,25 +375,18 @@ export function MedicalHistory({ patientRecord, pageType }: any) {
                             <InfiniteSelect
                               placeholder="Barangay"
                               id="clinic_barangay"
-                              api={`${
-                                process.env.REACT_APP_API_BASE_URL
-                              }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                                "clinic_province"
-                              )}&city_code=${getFieldValue("clinic_city")}`}
+                              api={`${process.env.REACT_APP_API_BASE_URL}/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${clinic_province}&city_code=${clinic_city}`}
                               getInitialValue={{
                                 form: MedicalHistoryForm,
                                 initialValue: "clinic_barangay",
                               }}
-                              queryKey={[
-                                "clinic_barangay",
-                                getFieldValue("clinic_city"),
-                              ]}
+                              queryKey={["clinic_barangay", clinic_city]}
                               displayValueKey="name"
                               returnValueKey="_id"
                               disabled={Boolean(
                                 pageType === "view" ||
-                                  !getFieldValue("clinic_province") ||
-                                  !getFieldValue("clinic_city")
+                                  !clinic_province ||
+                                  !clinic_city
                               )}
                             />
                           </Form.Item>

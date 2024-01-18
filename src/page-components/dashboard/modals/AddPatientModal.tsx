@@ -132,6 +132,9 @@ export default function AddPatientModal({
   }
 
   const country = Form.useWatch("country", form);
+  const province = Form.useWatch("province", form);
+  const city = Form.useWatch("city", form);
+  const barangay = Form.useWatch("barangay", form);
   return (
     <Modal
       show={show}
@@ -432,7 +435,7 @@ export default function AddPatientModal({
                               form,
                               initialValue: "province",
                             }}
-                            queryKey={["province", getFieldValue("country")]}
+                            queryKey={["province", country]}
                             displayValueKey="name"
                             returnValueKey="_id"
                             disabled={Boolean(!getFieldValue("country"))}
@@ -455,30 +458,23 @@ export default function AddPatientModal({
                     {({ getFieldValue, resetFields }) => {
                       return (
                         <Form.Item
-                          name="patient-form-city"
+                          name="city"
                           rules={[
                             { required: true, message: "City is required" },
                           ]}
                         >
                           <InfiniteSelect
                             placeholder="City"
-                            id="patient-form-city"
-                            api={`${
-                              process.env.REACT_APP_API_BASE_URL
-                            }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                              "province"
-                            )}`}
+                            id="city"
+                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${province}`}
                             getInitialValue={{
                               form,
                               initialValue: "city",
                             }}
-                            queryKey={["city", getFieldValue("province")]}
+                            queryKey={["city", province]}
                             displayValueKey="name"
                             returnValueKey="_id"
-                            disabled={Boolean(
-                              !getFieldValue("country") ||
-                                !getFieldValue("province")
-                            )}
+                            disabled={Boolean(!country || !province)}
                             onChange={() => {
                               resetFields(["barangay"]);
                             }}
@@ -500,28 +496,21 @@ export default function AddPatientModal({
                         <Form.Item
                           name="barangay"
                           rules={[
-                            { required: true, message: "City is required" },
+                            { required: true, message: "Barangay is required" },
                           ]}
                         >
                           <InfiniteSelect
                             placeholder="Barangay"
                             id="patient-form-barangay"
-                            api={`${
-                              process.env.REACT_APP_API_BASE_URL
-                            }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
-                              "province"
-                            )}&city_code=${getFieldValue("city")}`}
+                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${province}&city_code=${city}`}
                             getInitialValue={{
                               form,
                               initialValue: "barangay",
                             }}
-                            queryKey={["barangay", getFieldValue("city")]}
+                            queryKey={["barangay", city, province]}
                             displayValueKey="name"
                             returnValueKey="_id"
-                            disabled={Boolean(
-                              !getFieldValue("province") ||
-                                !getFieldValue("city")
-                            )}
+                            disabled={Boolean(!province || !city)}
                           />
                         </Form.Item>
                       );

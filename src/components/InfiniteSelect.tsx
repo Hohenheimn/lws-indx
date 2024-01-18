@@ -39,7 +39,7 @@ export function InfiniteSelect({
 }: InfiniteSelectProps) {
   let [search, setSearch] = React.useState("");
   let [initialFetch, setInitialFetch] = React.useState(true);
-  let [isOpen, setIsOpen] = React.useState(false);
+
   let searchParameterAPI =
     api.split("?").length <= 1
       ? `${api}?search=${search}`
@@ -77,7 +77,7 @@ export function InfiniteSelect({
     queryKey: [...queryKey, search],
     queryFn: ({ pageParam = initialValueParameterAPI }) => {
       return fetchData({
-        url: pageParam,
+        url: initialValueParameterAPI,
         options: {
           noBaseURL: true,
         },
