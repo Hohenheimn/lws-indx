@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Select } from "antd";
 
 type Props = {
@@ -14,19 +14,22 @@ export default function MultipleSelect({
   ...rest
 }: Props) {
   return (
-    <Select
-      id={id}
-      placeholder={placeholder}
-      {...rest}
-      mode="multiple"
-      allowClear
-      className=" shadow-md"
-    >
-      {Selection.map((item, index) => (
-        <Select.Option key={index} value={item}>
-          {item}
-        </Select.Option>
-      ))}
-    </Select>
+    <div className=" w-full" id="multilple-dropdown">
+      <Select
+        id={id}
+        placeholder={placeholder}
+        {...rest}
+        mode="multiple"
+        allowClear
+        className=" shadow-sm"
+        getPopupContainer={() => document.getElementById("multilple-dropdown")!}
+      >
+        {Selection.map((item, index) => (
+          <Select.Option key={index} value={item}>
+            {item}
+          </Select.Option>
+        ))}
+      </Select>
+    </div>
   );
 }
