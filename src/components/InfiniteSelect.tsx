@@ -1,8 +1,9 @@
 import React from "react";
+import { parseCookies } from "nookies";
 import { useInView } from "react-intersection-observer";
 import { Select } from "@components/Select";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchData } from "@utilities/api";
+import { fetchData, fetchDataNoSubdomain } from "@utilities/api";
 import { getInitialValue as getFieldInitialValue } from "@utilities/helpers";
 
 interface InfiniteSelectProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -63,39 +64,42 @@ export function InfiniteSelect({
           )
         : "");
   }
+
   const { ref: listRef, inView: listRefInView } = useInView({
     triggerOnce: false,
     rootMargin: "0px",
   });
+
+  const subdomainCookie = parseCookies().subdomain;
+
+  const fetchData = ({ pageParam = 1 }) => {
+    let subdomain = "";
+    if (initialValueParameterAPI.includes("?")) {
+      subdomain = `&subdomain=${subdomainCookie}`;
+    } else {
+      subdomain = `?subdomain=${subdomainCookie}`;
+    }
+    return fetchDataNoSubdomain({
+      url: `${initialValueParameterAPI}${subdomain}&page=${pageParam}`,
+      options: {
+        noBaseURL: true,
+      },
+    });
+  };
 
   const {
     data: listData,
     isFetching: isListLoading,
     hasNextPage: listHasNextPage,
     fetchNextPage: listFetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: [...queryKey, search],
-    queryFn: ({ pageParam = initialValueParameterAPI }) => {
-      return fetchData({
-        url: initialValueParameterAPI,
-        options: {
-          noBaseURL: true,
-        },
-      });
-    },
+  } = useInfiniteQuery([...queryKey, search], fetchData, {
     getNextPageParam: (lastPage, pages) => {
-      if (pages?.slice(-1)?.pop()?.links?.next) {
-        return pages?.slice(-1)?.pop()?.links?.next;
+      if (pages.length < lastPage?.meta?.last_page) {
+        return pages.length + 1;
+      } else {
+        return undefined;
       }
     },
-    // enabled: getInitialValue
-    //   ? Boolean(
-    //       getFieldInitialValue(
-    //         getInitialValue?.form,
-    //         getInitialValue?.initialValue
-    //       )
-    //     )
-    //   : true,
   });
 
   React.useEffect(() => {
@@ -127,6 +131,7 @@ export function InfiniteSelect({
     getInitialValue?.initialValue,
     getInitialValue,
     isListLoading,
+    search,
   ]);
 
   return !initialFetch ? (

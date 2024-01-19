@@ -389,7 +389,7 @@ export default function AddPatientModal({
                       <InfiniteSelect
                         placeholder="Country"
                         id="patient-form-country"
-                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true&page=1`}
+                        api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true`}
                         getInitialValue={{
                           form,
                           initialValue: "country",
@@ -430,7 +430,7 @@ export default function AddPatientModal({
                           <InfiniteSelect
                             placeholder="Province"
                             id="patient-form-province"
-                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
+                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true`}
                             getInitialValue={{
                               form,
                               initialValue: "province",
@@ -466,7 +466,7 @@ export default function AddPatientModal({
                           <InfiniteSelect
                             placeholder="City"
                             id="city"
-                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${province}`}
+                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/city?limit=3&for_dropdown=true&province_code=${province}`}
                             getInitialValue={{
                               form,
                               initialValue: "city",
@@ -502,7 +502,7 @@ export default function AddPatientModal({
                           <InfiniteSelect
                             placeholder="Barangay"
                             id="patient-form-barangay"
-                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${province}&city_code=${city}`}
+                            api={`${process.env.REACT_APP_API_BASE_URL}/api/location/barangay?limit=3&for_dropdown=true&province_code=${province}&city_code=${city}`}
                             getInitialValue={{
                               form,
                               initialValue: "barangay",

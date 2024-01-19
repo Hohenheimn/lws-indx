@@ -53,7 +53,7 @@ export function PrescriptionPrintTable({ data, currency }: Props) {
                 {item.name}
               </td>
               <td className=" text-center text-[16px] py-[10px]">
-                {currency} {numberSeparator(item.quantity, 0)}
+                {numberSeparator(item.quantity, 0)}
               </td>
             </tr>
           ))}

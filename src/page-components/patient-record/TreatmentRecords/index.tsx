@@ -36,10 +36,10 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
   const [SelectedPayment, setSelectedPayment] = useState<SelectedPayment[]>([]);
 
   let { data: invoiceTotal, isLoading: invoiceTotalLoading } = useQuery(
-    ["invoice-total", patientRecord._id],
+    ["invoice-total", patientRecord?._id],
     () =>
       fetchData({
-        url: `/api/patient/invoice/total/${patientRecord._id}`,
+        url: `/api/patient/invoice/total/${patientRecord?._id}`,
       })
   );
 
@@ -60,7 +60,8 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
     SelectedPayment,
     setSelectedPayment,
     pageType,
-    currency
+    currency,
+    patientRecord?._id
   );
 
   let [
@@ -127,7 +128,7 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
         </div>
 
         <ul className="flex flex-auto md:px-12 px-6">
-          {tabs.map((row, index) => (
+          {tabs?.map((row, index) => (
             <li
               key={index}
               className={`cursor-pointer mr-5 ${row === isTabActive &&

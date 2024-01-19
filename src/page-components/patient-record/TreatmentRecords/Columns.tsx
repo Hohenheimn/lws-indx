@@ -93,8 +93,14 @@ export const RecordColumns = (
       dataIndex: "tooth_no",
       width: "10rem",
       align: "center",
-      render: (_: string, record: any) => {
-        return <div>{record?.tooth_no.join(", ")}</div>;
+      render: (_: string, record: { tooth_no: string[] }) => {
+        return (
+          <div>
+            {record?.tooth_no.length > 0
+              ? record?.tooth_no?.join(", ")
+              : record?.tooth_no}
+          </div>
+        );
       },
     },
     {
@@ -256,7 +262,8 @@ export const PaymentColumns = (
   SelectedPayment: SelectedPayment[],
   setSelectedPayment: Function,
   pageType: string,
-  currency: string
+  currency: string,
+  patientId: string
 ) => {
   const columns: any = [
     {
@@ -342,9 +349,9 @@ export const PaymentColumns = (
         return (
           <div className="w-full flex justify-center space-x-4">
             <Link
-              href={`/admin/print?page=treament record payment&patient=${JSON.stringify(
+              href={`/admin/print?page=treament record payment&patient_id=${patientId}&tableData=${JSON.stringify(
                 record
-              )}&tableData=${JSON.stringify(record)}&currency=${currency}`}
+              )}&currency=${currency}`}
               target="_blank"
             >
               <Tooltip title="Print">
