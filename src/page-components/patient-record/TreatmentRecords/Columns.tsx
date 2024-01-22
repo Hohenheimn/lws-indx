@@ -21,7 +21,8 @@ import {
 export const RecordColumns = (
   SelectedTreatments: SelectedTreatment[],
   setSelectedTreatments: Function,
-  pageType: string
+  pageType: string,
+  onClick: (data: any) => void
 ) => {
   const columns: any = [
     {
@@ -74,19 +75,31 @@ export const RecordColumns = (
       dataIndex: "created_at",
       width: "10rem",
       align: "center",
-      render: (created_at: Date) => moment(created_at).format("MMMM DD, YYYY"),
+      render: (created_at: Date, record: any) => {
+        return (
+          <div onClick={() => onClick(record)}>
+            {moment(created_at).format("MMMM DD, YYYY")}
+          </div>
+        );
+      },
     },
     {
       title: "Dentist",
       dataIndex: "doctor_name",
       width: "10rem",
       align: "center",
+      render: (value: string, record: any) => {
+        return <div onClick={() => onClick(record)}>{value}</div>;
+      },
     },
     {
       title: "Branch",
       dataIndex: "branch_name",
       width: "10rem",
       align: "center",
+      render: (value: string, record: any) => {
+        return <div onClick={() => onClick(record)}>{value}</div>;
+      },
     },
     {
       title: "Tooth No.",
@@ -95,7 +108,7 @@ export const RecordColumns = (
       align: "center",
       render: (_: string, record: { tooth_no: string[] }) => {
         return (
-          <div>
+          <div onClick={() => onClick(record)} className=" line-clamp-2">
             {record?.tooth_no.length > 0
               ? record?.tooth_no?.join(", ")
               : record?.tooth_no}
@@ -108,20 +121,27 @@ export const RecordColumns = (
       dataIndex: "surface",
       width: "10rem",
       align: "center",
+      render: (value: string, record: any) => {
+        return <div onClick={() => onClick(record)}>{value}</div>;
+      },
     },
     {
       title: "Procedure",
       dataIndex: "procedure_name",
       width: "10rem",
       align: "center",
+      render: (value: string, record: any) => {
+        return <div onClick={() => onClick(record)}>{value}</div>;
+      },
     },
     {
       title: "Status",
       dataIndex: "status",
       width: "10rem",
       align: "center",
-      render: (status: string) => (
+      render: (status: string, record: any) => (
         <div
+          onClick={() => onClick(record)}
           className={twMerge(
             "capitalize rounded-full w-full flex justify-center items-center p-2 text-xs ",
             paymentStatusPalette(status === null ? "no payment" : status)

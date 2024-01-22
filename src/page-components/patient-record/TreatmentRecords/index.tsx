@@ -20,6 +20,7 @@ import { BillingColumns, PaymentColumns, RecordColumns } from "./Columns";
 import CreateBillingStatementModal from "./CreateBillingStatementModal";
 import CreatePaymentModal from "./CreatePaymentModal";
 import PerCertainAmountModal from "./PayCertainAmountModal";
+import PreviewModal, { TreatmentRecordType } from "./PreviewModal";
 import TreatmentRecordTable from "./Table";
 import { SelectedTreatment, SelectedBilling, SelectedPayment } from "./types";
 import ViewPaymentModal from "./ViewPaymentModa";
@@ -35,6 +36,13 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
 
   const [SelectedPayment, setSelectedPayment] = useState<SelectedPayment[]>([]);
 
+  let [previewModal, setPreviewModal] = React.useState(false);
+
+  let [
+    previewModalData,
+    setPreviewModalData,
+  ] = React.useState<TreatmentRecordType | null>(null);
+
   let { data: invoiceTotal, isLoading: invoiceTotalLoading } = useQuery(
     ["invoice-total", patientRecord?._id],
     () =>
@@ -46,7 +54,11 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
   const TableRecordColumns = RecordColumns(
     SelectedTreatments,
     setSelectedTreatments,
-    pageType
+    pageType,
+    (data: any) => {
+      setPreviewModalData(data);
+      setPreviewModal(true);
+    }
   );
 
   const TableBillingColumns = BillingColumns(
@@ -257,6 +269,15 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
         id="create-payment"
         patientRecord={patientRecord}
         SelectedPayment={SelectedPayment}
+        currency={currency}
+      />
+
+      <PreviewModal
+        show={previewModal}
+        onClose={() => {
+          setPreviewModal(false);
+        }}
+        previewData={previewModalData}
         currency={currency}
       />
 

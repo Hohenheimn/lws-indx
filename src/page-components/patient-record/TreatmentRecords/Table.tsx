@@ -37,6 +37,18 @@ export default function TreatmentRecordTable({
     return "";
   };
 
+  const headerRowProps = (columns: any, index: number) => {
+    return {
+      onClick: (e: any) => {
+        const target = e.target;
+        const columnIndex = Array.from(target.parentNode.children).indexOf(
+          target
+        );
+        console.log("Column clicked:", index, columnIndex);
+      },
+    };
+  };
+
   return (
     <>
       <Table
