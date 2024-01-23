@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Form, notification, Checkbox } from "antd";
 
 import { motion } from "framer-motion";
@@ -18,6 +18,7 @@ import SubscriptionAccount, {
 import { useMutation } from "@tanstack/react-query";
 import { postDataNoToken } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
+import { slugify } from "@utilities/helpers";
 
 export default function Registration({ router }: any) {
   const [RegistrationForm] = Form.useForm();
@@ -51,6 +52,11 @@ export default function Registration({ router }: any) {
       },
     }
   );
+
+  const subdomain = Form.useWatch("subdomain", RegistrationForm);
+  useEffect(() => {
+    RegistrationForm.setFieldValue("indx_url", slugify(subdomain));
+  }, [subdomain]);
 
   if (isSubscription) {
     return (
@@ -130,8 +136,7 @@ export default function Registration({ router }: any) {
                 form={RegistrationForm}
                 layout="vertical"
                 onFinish={(values) => {
-                  // delete values.terms;
-
+                  delete values.subdomain;
                   register(values);
                 }}
                 className="w-full"
@@ -236,18 +241,30 @@ export default function Registration({ router }: any) {
                   </Form.Item>
                   <Form.Item
                     label="Index Url"
-                    name="indx_url"
+                    name="subdomain"
                     rules={[
                       { required: true, message: "Index Url is required" },
-                      {
-                        pattern: /^[a-zA-Z-_]+$/,
-                        message: "Index Url must not have an space",
-                      },
                     ]}
                     required={false}
                     className="col-span-full"
                   >
                     <Input id="registration-indx-url" placeholder="Index Url" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Index Url Slug"
+                    name="indx_url"
+                    rules={[
+                      { required: true, message: "Index Url Slug is required" },
+                      // {
+                      //   pattern: /^[a-zA-Z-_]+$/,
+                      //   message:
+                      //     "Index Url only accept - or _ for more than 2 words",
+                      // },
+                    ]}
+                    required={false}
+                    className="col-span-full"
+                  >
+                    <Input placeholder="Index Url" />
                   </Form.Item>
 
                   <Form.Item
