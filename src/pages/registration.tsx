@@ -53,10 +53,10 @@ export default function Registration({ router }: any) {
     }
   );
 
-  const subdomain = Form.useWatch("subdomain", RegistrationForm);
+  const clinicName = Form.useWatch("clinic_name", RegistrationForm);
   useEffect(() => {
-    RegistrationForm.setFieldValue("indx_url", slugify(subdomain));
-  }, [subdomain]);
+    RegistrationForm.setFieldValue("indx_url", slugify(clinicName));
+  }, [clinicName]);
 
   if (isSubscription) {
     return (
@@ -241,7 +241,7 @@ export default function Registration({ router }: any) {
                   </Form.Item>
                   <Form.Item
                     label="Index Url"
-                    name="subdomain"
+                    name="indx_url"
                     rules={[
                       { required: true, message: "Index Url is required" },
                     ]}
@@ -250,7 +250,7 @@ export default function Registration({ router }: any) {
                   >
                     <Input id="registration-indx-url" placeholder="Index Url" />
                   </Form.Item>
-                  <Form.Item
+                  {/* <Form.Item
                     label="Index Url Slug"
                     name="indx_url"
                     rules={[
@@ -265,7 +265,7 @@ export default function Registration({ router }: any) {
                     className="col-span-full"
                   >
                     <Input placeholder="Index Url" />
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Form.Item
                     name="terms"

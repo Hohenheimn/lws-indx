@@ -89,21 +89,10 @@ export default function AddMedicalGalleryModal({
         <Form
           form={form}
           layout="vertical"
-          onFinish={(values) => {
+          onFinish={(values: any) => {
             delete values.created_at;
-
             addMedicalGallery(values);
           }}
-          // onFinishFailed={(data) => {
-          //   scroller.scrollTo(
-          //     data?.errorFields[0]?.name?.join("-")?.toString(),
-          //     {
-          //       smooth: true,
-          //       offset: -50,
-          //       containerId: rest?.id,
-          //     }
-          //   );
-          // }}
           className="space-y-12"
         >
           <div className="grid grid-cols-1 gap-4">

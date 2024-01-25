@@ -28,36 +28,36 @@ export default function AddBranchModal({ show, onClose, form, ...rest }: any) {
 
   const schedules = Form.useWatch("schedules", form);
 
-  useEffect(() => {
-    if (schedules?.length <= 0) {
-      form.setFieldValue("schedules", [
-        {
-          day: "Monday",
-          time_range: ["08:00 AM", "05:00 PM"],
-        },
-        {
-          day: "Tuesday",
-          time_range: ["08:00 AM", "05:00 PM"],
-        },
-        {
-          day: "Wednesday",
-          time_range: ["08:00 AM", "05:00 PM"],
-        },
-        {
-          day: "Thursday",
-          time_range: ["08:00 AM", "05:00 PM"],
-        },
-        {
-          day: "Friday",
-          time_range: ["08:00 AM", "05:00 PM"],
-        },
-        {
-          day: "Saturday",
-          time_range: ["08:00 AM", "05:00 PM"],
-        },
-      ]);
-    }
-  }, [schedules]);
+  // useEffect(() => {
+  //   if (schedules?.length <= 0) {
+  //     form.setFieldValue("schedules", [
+  //       {
+  //         day: "Monday",
+  //         time_range: ["08:00 AM", "05:00 PM"],
+  //       },
+  //       {
+  //         day: "Tuesday",
+  //         time_range: ["08:00 AM", "05:00 PM"],
+  //       },
+  //       {
+  //         day: "Wednesday",
+  //         time_range: ["08:00 AM", "05:00 PM"],
+  //       },
+  //       {
+  //         day: "Thursday",
+  //         time_range: ["08:00 AM", "05:00 PM"],
+  //       },
+  //       {
+  //         day: "Friday",
+  //         time_range: ["08:00 AM", "05:00 PM"],
+  //       },
+  //       {
+  //         day: "Saturday",
+  //         time_range: ["08:00 AM", "05:00 PM"],
+  //       },
+  //     ]);
+  //   }
+  // }, [schedules]);
 
   const { mutate: addBranch } = useMutation(
     (payload: any) => {

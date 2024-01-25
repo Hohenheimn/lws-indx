@@ -30,6 +30,7 @@ export default function AddAndUseCredit({
   onCloseSecondModal,
   patientRecord,
   setUseCreditAmount,
+  currency,
   ...rest
 }: any) {
   const [form] = Form.useForm();
@@ -114,7 +115,7 @@ export default function AddAndUseCredit({
               customInput={Input}
               placeholder="Enter Amount"
               id="amount"
-              prefix={"₱"}
+              prefix={currency}
               className=" text-end"
               thousandSeparator
               isAllowed={({ floatValue }: any) => {

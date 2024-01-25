@@ -76,14 +76,6 @@ export default function CreatePaymentModal({
     });
   }, [show]);
 
-  useEffect(() => {
-    if (mode_of_payment === "Use Credits") {
-      form.setFieldValue("amount", Number(Credit?.amount));
-    } else {
-      form.setFieldValue("amount", 0);
-    }
-  }, [mode_of_payment]);
-
   let { data: Credit, isLoading: CreditLoading } = useQuery(
     ["credit", patientRecord._id],
     () =>
@@ -91,6 +83,14 @@ export default function CreatePaymentModal({
         url: `/api/patient/credit/show/${patientRecord._id}`,
       })
   );
+
+  useEffect(() => {
+    if (mode_of_payment === "Use Credits") {
+      form.setFieldValue("amount", Number(Credit?.amount));
+    } else {
+      form.setFieldValue("amount", 0);
+    }
+  }, [mode_of_payment, Credit?.amount]);
 
   const { mutate: addPayment } = useMutation(
     (payload: any) => {
@@ -269,7 +269,10 @@ export default function CreatePaymentModal({
                 return;
               }
 
-              if (values.amount > TotalBalance) {
+              if (
+                values.amount > TotalBalance &&
+                values.mode_of_payment !== "Use Credits"
+              ) {
                 notification.warning({
                   message: "Must pay exact price",
                   description:
@@ -374,9 +377,10 @@ export default function CreatePaymentModal({
               </li>
               <li className="  space-y-4">
                 <p className=" text-end">
-                  Remaining Credit:{" "}
-                  {Credit?.amount !== undefined &&
-                    numberSeparator(Credit?.amount, 0)}
+                  Remaining Credit: {currency}{" "}
+                  {Credit?.amount !== undefined
+                    ? numberSeparator(Credit?.amount, 0)
+                    : 0}
                 </p>
                 {/* <p className=" text-end">
                   Use Credit:{" "}
@@ -470,6 +474,7 @@ export default function CreatePaymentModal({
           id="add-or-use-credit"
           patientRecord={patientRecord}
           setUseCreditAmount={setUseCreditAmount}
+          currency={currency}
         />
       </Modal>
     </>

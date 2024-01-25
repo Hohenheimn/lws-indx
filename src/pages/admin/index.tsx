@@ -302,6 +302,11 @@ export function Dashboard({ profile }: any) {
                                         : null
                                     }
                                   >
+                                    <h5 className="truncate">
+                                      {patient_name
+                                        ? patient_name
+                                        : doctor_name}
+                                    </h5>
                                     <div className=" flex md:justify-between space-y-5 md:space-y-0 justify-center items-center flex-wrap">
                                       <div className="md:w-[10%] w-full flex items-center justify-center">
                                         <div className="relative overflow-hidden md:w-full w-16 aspect-square bg-primary-50 text-primary font-medium text-2xl rounded-full flex flex-none justify-center items-center leading-[normal]">
@@ -323,11 +328,6 @@ export function Dashboard({ profile }: any) {
                                       </div>
 
                                       <div className="  md:w-[33%] w-full md:text-start text-center space-y-1 ">
-                                        <h5 className="truncate">
-                                          {patient_name
-                                            ? patient_name
-                                            : doctor_name}
-                                        </h5>
                                         <p className="truncate">{email}</p>
                                         <p>{mobile_number}</p>
                                         <div className="flex flex-wrap md:justify-start justify-center">

@@ -247,7 +247,7 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
         setSelectedTreatments={setSelectedTreatments}
         currency={currency}
       />
-
+      {/* Billing tab payment */}
       <CreatePaymentModal
         show={createPaymentModalOpen}
         onClose={() => {

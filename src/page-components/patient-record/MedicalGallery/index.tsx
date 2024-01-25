@@ -9,37 +9,19 @@ import { Button } from "@components/Button";
 import Card from "@components/Card";
 import Input from "@components/Input";
 import { fadeIn } from "@src/components/animation/animation";
+
+import VideoPlayer from "@src/components/VideoPlayer";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { deleteData, fetchData, postData } from "@utilities/api";
+
 import { Context } from "@utilities/context/Provider";
 
-
-
-
-
-
-
-
-
-
-
-
-
 import AddMedicalGalleryModal from "./AddMedicalGalleryModal";
+import GalleryItem from "./GalleryItem";
 
-
-
-
-
-
-
-
-
-
-
-
-
-type gallery = {
+export type galleryType = {
   _id: string;
   patient_id: string;
   filename: string;
@@ -50,7 +32,7 @@ type gallery = {
   created_at: string;
 };
 
-type SelectedEdit = {
+export type SelectedEditType = {
   id: number | null | undefined | string;
   name: string;
   description: string;
@@ -63,13 +45,13 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
   const { setIsAppLoading } = React.useContext(Context);
   let [search, setSearch] = React.useState("");
 
-  const [SelectedEdit, setSelectedEdit] = useState<SelectedEdit>({
+  const [SelectedEdit, setSelectedEdit] = useState<SelectedEditType>({
     id: null,
     name: "",
     description: "",
   });
 
-  const [prevSelectedEdit, setPrevSelectedEdit] = useState<SelectedEdit>({
+  const [prevSelectedEdit, setPrevSelectedEdit] = useState<SelectedEditType>({
     id: null,
     name: "",
     description: "",
@@ -88,14 +70,28 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
     ["medical-gallery", page, search, isTabActive === "All" ? "" : isTabActive],
     () =>
       fetchData({
-        url: `/api/patient/gallery/${patientRecord._id
-          }?limit=7&page=${page}&search=${search}&category=${isTabActive === "All" ? "" : isTabActive
-          }`,
+        url: `/api/patient/gallery/${
+          patientRecord._id
+        }?limit=7&page=${page}&search=${search}&category=${
+          isTabActive === "All" ? "" : isTabActive
+        }`,
       })
   );
 
-  const gallery_list: gallery[] = MedicalGallery?.data
-    ? MedicalGallery.data
+  const gallery_list: galleryType[] = MedicalGallery?.data
+    ? [
+        ...MedicalGallery.data,
+        {
+          _id: "23131",
+          patient_id: "232131",
+          filename: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+          category: "videos",
+          name: "sample",
+          description: "sample",
+          user_id: "23455",
+          created_at: "",
+        },
+      ]
     : [];
 
   const { mutate: deleteMedicalGallery }: any = useMutation(
@@ -124,8 +120,9 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["medical-gallery"], context.previousValues);
       },
@@ -178,8 +175,9 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
       onError: (err: any, _, context: any) => {
         notification.warning({
           message: "Something Went Wrong",
-          description: `${err.response.data[Object.keys(err.response.data)[0]]
-            }`,
+          description: `${
+            err.response.data[Object.keys(err.response.data)[0]]
+          }`,
         });
         queryClient.setQueryData(["medical-gallery"], context.previousValues);
       },
@@ -238,7 +236,7 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
                   onClick={SaveHandler}
                 >
                   {prevSelectedEdit.name === SelectedEdit.name &&
-                    prevSelectedEdit.description === SelectedEdit.description
+                  prevSelectedEdit.description === SelectedEdit.description
                     ? "BACK"
                     : "SAVE"}
                 </Button>
@@ -271,111 +269,56 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
               ))}
             </ul>
 
-            <div className="grid grid-cols-4 gap-12 !mt-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 !mt-12">
               <div className="aspect-[1.3/1] w-full relative rounded-3xl overflow-hidden border-2 border-gray-300">
                 <div
                   onClick={() => setIsMedicalGalleryModalOpen(true)}
-                  className={` cursor-pointer flex justify-center items-center w-full h-full text-base text-gray-400 ${pageType === 'view' && 'bg-gray-100 pointer-events-none'}`}
+                  className={` cursor-pointer flex justify-center items-center w-full h-full text-base text-gray-400 ${pageType ===
+                    "view" && "bg-gray-100 pointer-events-none"}`}
                 >
                   + Add
                 </div>
               </div>
               <Image.PreviewGroup>
-                {gallery_list?.map((gallery: gallery, index) => {
-                  return (
-                    <div key={index}>
-                      <div
+                {gallery_list
+                  .filter(
+                    (filter) =>
+                      !filter.filename.includes(".mp4") &&
+                      !filter.filename.includes(".mkv")
+                  )
+                  ?.map((gallery: galleryType, index) => {
+                    return (
+                      <GalleryItem
                         key={index}
-                        className="  group aspect-[1.3/1] w-full relative rounded-3xl border-2 border-gray-300 overflow-hidden"
-                      >
-                        {
-                          pageType === 'edit' && (
-                            <Popover
-                              showArrow={false}
-                              content={
-                                <div className="grid grid-cols-1 gap-2">
-                                  <Button
-                                    appearance="link"
-                                    className="text-casper-500 p-2"
-                                    onClick={() => {
-                                      setSelectedEdit({
-                                        id: gallery._id,
-                                        name: gallery.name,
-                                        description: gallery.description,
-                                      });
-                                      setPrevSelectedEdit({
-                                        id: gallery._id,
-                                        name: gallery.name,
-                                        description: gallery.description,
-                                      });
-                                    }}
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <BsPencilSquare className="text-base" />
-                                      <div>Edit</div>
-                                    </div>
-                                  </Button>
-                                  <Button
-                                    appearance="link"
-                                    className="text-casper-500 p-2"
-                                    onClick={() => {
-                                      deleteMedicalGallery(gallery._id);
-                                    }}
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <BsTrashFill className="text-base" />
-                                      <div>Delete</div>
-                                    </div>
-                                  </Button>
-                                </div>
-                              }
-                              trigger="click"
-                            >
-                              <BiDotsHorizontalRounded className=" cursor-pointer absolute z-10 top-1 right-1 text-primary-500 text-4xl" />
-                            </Popover>
-                          )
-                        }
-
-                        <Image
-                          height={"100%"}
-                          width={"100%"}
-                          className=" object-contain"
-                          src={gallery.filename}
-                        />
-
-                      </div>
-                      <AnimatePresence>
-                        {SelectedEdit.id === gallery._id && (
-                          <motion.div variants={fadeIn}>
-                            <Input
-                              placeholder="Name"
-                              value={SelectedEdit.name}
-                              className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
-                              onChange={(e: any) => {
-                                setSelectedEdit({
-                                  ...SelectedEdit,
-                                  name: e.target.value,
-                                });
-                              }}
-                            />
-                            <Input
-                              placeholder="Description"
-                              value={SelectedEdit.description}
-                              className=" border-2 border-gray-300 text-base shadow-none p-1 mt-3"
-                              onChange={(e: any) => {
-                                setSelectedEdit({
-                                  ...SelectedEdit,
-                                  description: e.target.value,
-                                });
-                              }}
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                        pageType={pageType}
+                        setSelectedEdit={setSelectedEdit}
+                        setPrevSelectedEdit={setPrevSelectedEdit}
+                        gallery={gallery}
+                        deleteMedicalGallery={deleteMedicalGallery}
+                        SelectedEdit={SelectedEdit}
+                      />
+                    );
+                  })}
+              </Image.PreviewGroup>
+              {gallery_list
+                .filter(
+                  (filter) =>
+                    filter.filename.includes(".mp4") ||
+                    filter.filename.includes(".mkv")
+                )
+                ?.map((gallery: galleryType, index) => {
+                  return (
+                    <GalleryItem
+                      key={index}
+                      pageType={pageType}
+                      setSelectedEdit={setSelectedEdit}
+                      setPrevSelectedEdit={setPrevSelectedEdit}
+                      gallery={gallery}
+                      deleteMedicalGallery={deleteMedicalGallery}
+                      SelectedEdit={SelectedEdit}
+                    />
                   );
                 })}
-              </Image.PreviewGroup>
             </div>
             <div className=" flex justify-end mt-5">
               <Pagination
@@ -405,6 +348,17 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
         patientRecord={patientRecord}
         form={MedicalGalleryForm}
       />
+      {/* <VideoModal
+        videoList={gallery_list
+          .filter(
+            (filter) =>
+              filter.filename.includes(".mp4") ||
+              filter.filename.includes(".mkv")
+          )
+          .map((item) => item.filename)}
+        activeVideoIndex={activeVideoIndex}
+        setActiveVideoIndex={setActiveVideoIndex}
+      /> */}
     </>
   );
 }

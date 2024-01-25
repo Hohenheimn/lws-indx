@@ -36,11 +36,14 @@ const DragAndDropUpload = ({ children, id, ...rest }: Props) => {
       file.type === "image/jpeg" ||
       file.type === "image/png" ||
       file.type === "video/mp4" ||
-      file.type === "video/ogg";
-    // ||applicationType === "pdf";
+      file.type === "video/mkv" ||
+      file.type === "video/ogg" ||
+      file.type === "video/quicktime";
 
     if (!allowedFile) {
-      message.error("You can only upload jpg | jpeg | png | mp4 | ogg file");
+      message.error(
+        "You can only upload jpg | jpeg | png | mp4 | mkv | ogg | quicktime file"
+      );
       return;
     }
     return allowedFile;
@@ -51,7 +54,7 @@ const DragAndDropUpload = ({ children, id, ...rest }: Props) => {
       id={id}
       beforeUpload={beforeUpload}
       customRequest={customRequest}
-      accept=".jpg, .jpeg, .mp4, .ogg, .png"
+      accept=".jpg, .jpeg, .mp4, .mkv, .png, .ogg, .quicktime"
       listType="picture"
       showUploadList={{
         showRemoveIcon: true,

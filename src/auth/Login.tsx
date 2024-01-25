@@ -78,55 +78,10 @@ export default function Login() {
     }
   );
 
-  const { mutate: SendEmail, isLoading } = useMutation(
-    (payload) =>
-      postData({
-        url: `/api/auth/forget-password`,
-        payload,
-        options: {
-          isLoading: (show: boolean) => setIsAppLoading(show),
-        },
-        isSubdomain,
-      }),
-    {
-      onSuccess: async (res) => {
-        notification.success({
-          key: "email sent",
-          message: "Email Sent Successful",
-          description: `Check your email`,
-        });
-      },
-      onError: () => {
-        notification.warning({
-          key: "email sent",
-          message: `Invalid Email`,
-          description: `Kindly check your email`,
-        });
-      },
-    }
-  );
-
-  const SendEmailHandler = () => {
-    if (!regexEmail.test(LoginForm.getFieldValue("email"))) {
-      notification.warning({
-        key: "sent",
-        message: "Invalid Email",
-        description: `Enter a correct email`,
-      });
-      return;
-    }
-    //mutate
-    const Payload: any = {
-      email: LoginForm.getFieldValue("email"),
-      subdomain: isSubdomain,
-    };
-    SendEmail(Payload);
-  };
-
   return (
     <PageContainer className="md:p-0">
       <AnimatePresence mode="wait">
-        {(isLoading || loginLoading) && (
+        {loginLoading && (
           <AnimateContainer
             variants={fadeIn}
             rootMargin="0px"
@@ -136,7 +91,10 @@ export default function Login() {
           </AnimateContainer>
         )}
       </AnimatePresence>
-      <div className="flex items-center justify-center flex-auto h-full">
+      <div
+        className="flex items-center justify-center flex-auto h-full"
+        style={{ margin: "0" }}
+      >
         <motion.div
           initial={{ x: "-100%" }}
           animate={{

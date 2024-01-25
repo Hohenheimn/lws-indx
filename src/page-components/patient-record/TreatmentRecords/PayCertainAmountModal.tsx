@@ -95,7 +95,7 @@ export default function PerCertainAmountModal({
     } else {
       form.setFieldValue("amount", 0);
     }
-  }, [mode_of_payment]);
+  }, [mode_of_payment, Credit?.amount]);
 
   const { mutate: addPayment } = useMutation(
     (payload: any) => {
@@ -321,12 +321,12 @@ export default function PerCertainAmountModal({
                         {currency} {numberSeparator(CertainAmount, 0)}
                       </p>
                     </li>
-                    <li className=" pb-2 border-b border-primary-500 flex justify-between">
+                    {/* <li className=" pb-2 border-b border-primary-500 flex justify-between">
                       <p>Total</p>
                       <p className="pr-4">
                         {currency} {numberSeparator(isTotal, 0)}
                       </p>
-                    </li>
+                    </li> */}
                     {useCreditAmount > 0 && (
                       <li className=" pb-2 border-b border-primary-500 flex justify-between">
                         <p>Credit</p>
@@ -388,6 +388,7 @@ export default function PerCertainAmountModal({
           id="add-or-use-credit"
           patientRecord={patientRecord}
           setUseCreditAmount={setUseCreditAmount}
+          currency={currency}
         />
       </Modal>
     </>

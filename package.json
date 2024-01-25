@@ -21,6 +21,7 @@
     "@types/node": "18.11.9",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.10",
+    "@types/video-react": "^0.15.5",
     "antd": "^4.24.0",
     "autoprefixer": "^10.4.13",
     "axios": "^1.2.1",
@@ -47,7 +48,8 @@
     "sharp": "^0.31.1",
     "tailwind-merge": "^1.8.0",
     "tailwindcss": "^3.2.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "video-react": "^0.16.0"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.37",
