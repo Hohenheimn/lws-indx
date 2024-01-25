@@ -140,14 +140,15 @@ export function getInitialValue(form: any, name: string, initial?: boolean) {
 }
 
 export function slugify(str: string) {
-  str = str.replace(/^\s+|\s+$/g, ""); // trim leading/trailing white space
-  str = str.toLowerCase(); // convert to lower case
-  str = str
+  let text = str ? str : "";
+  text = text?.replace(/^\s+|\s+$/g, ""); // trim leading/trailing white space
+  text = text?.toLowerCase(); // convert to lower case
+  text = text
     .replace(/[^a-z0-9 -]/g, "") // remove any non-alphanumeric characters except spaces and hyphens
     .replace(/\s+/g, "-") // replace spaces with hyphens
     .replace(/-+/g, "-"); // remove consecutive hyphens
 
-  return str;
+  return text;
 }
 
 export function getBase64(img: any, callback: any) {
