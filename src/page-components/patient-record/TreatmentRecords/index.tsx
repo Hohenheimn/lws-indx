@@ -125,6 +125,7 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
                 onChange={(e: any) => setSearch(e.target.value)}
               />
             </div>
+
             <div>
               <Button
                 className="p-3 max-w-xs"
