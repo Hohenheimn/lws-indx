@@ -86,8 +86,19 @@ export default function CreatePaymentModal({
 
   useEffect(() => {
     if (mode_of_payment === "Use Credits") {
-      form.setFieldValue("amount", Number(Credit?.amount));
+      if (Credit.amount < TotalBalance) {
+        notification.warning({
+          message: "Not enough credits remaining",
+          description: `Add more credit to proceed`,
+        });
+        form.setFieldValue("mode_of_payment", "");
+        return;
+      }
+
+      form.setFieldValue("amount", Number(TotalBalance));
+      setUseCreditAmount(TotalBalance);
     } else {
+      setUseCreditAmount(0);
       form.setFieldValue("amount", 0);
     }
   }, [mode_of_payment, Credit?.amount]);
@@ -280,7 +291,6 @@ export default function CreatePaymentModal({
                 });
                 return;
               }
-
               addPayment(values);
             }}
             onFinishFailed={(data) => {
