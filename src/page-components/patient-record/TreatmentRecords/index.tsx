@@ -43,7 +43,7 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
     setPreviewModalData,
   ] = React.useState<TreatmentRecordType | null>(null);
 
-  let { data: invoiceTotal, isLoading: invoiceTotalLoading } = useQuery(
+  let { data: invoiceTotal, isLoading } = useQuery(
     ["invoice-total", patientRecord?._id],
     () =>
       fetchData({
