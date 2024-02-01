@@ -73,7 +73,7 @@ const menu: Array<sideMenuProps> = [
   },
   {
     label: "Login",
-    link: "/enter-email",
+    link: "/enter-index-url",
     appearance: "primary",
   },
   {
@@ -869,13 +869,14 @@ export const getServerSideProps = async ({ req }: any) => {
       ? req.headers.host.split(".")[0]
       : null;
 
+  subdomain = subdomain?.replace("www.", "");
+
   let domainExist = false;
+
   await axios
     .post(
       `${process.env.REACT_APP_API_BASE_URL}/api/domain-checker?api_key=${process.env.REACT_APP_API_KEY}`,
-      {
-        email: subdomain?.replace("www.", ""),
-      }
+      { subdomain: subdomain }
     )
     .then((response) => {
       domainExist = response.data;

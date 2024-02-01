@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Form, notification, Checkbox } from "antd";
 
 import axios from "axios";
@@ -20,6 +20,7 @@ export default function EnterSubdomain() {
   const router = useRouter();
   const [checkDomain] = Form.useForm();
   const [isLoading, setLoading] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
 
   const { mutate: checkAccountID } = useMutation(
     (payload: {}) =>
@@ -33,9 +34,13 @@ export default function EnterSubdomain() {
     {
       onSuccess: (res) => {
         if (res) {
-          router.push(
-            `http://${res.indx_url}.staging.indxhealth.com/admin?email=${res.email}`
-          );
+          var routePath = "";
+          if (window?.location?.hostname.includes("localhost")) {
+            routePath = `http://${subdomain}.${window?.location?.hostname}:3000/admin`;
+          } else {
+            routePath = `https://${subdomain}.${window?.location?.hostname}/admin`;
+          }
+          router.push(routePath);
         } else {
           notification.warning({
             key: "check-account-id",
@@ -101,27 +106,28 @@ export default function EnterSubdomain() {
             className="absolute md:relative h-full w-full md:w-auto top-0 left-0 flex flex-col justify-center items-center flex-auto p-[5%] md:p-20 bg-white"
           >
             <div className="space-y-6 w-full">
-              <h1 className="font-['Mulish']">Enter your Email</h1>
+              <h1 className="font-['Mulish']">Enter your Index Url</h1>
               <Form
                 form={checkDomain}
                 layout="vertical"
-                onFinish={(values) => {
+                onFinish={(values: { subdomain: string }) => {
+                  setSubdomain(values.subdomain);
                   checkAccountID(values);
                 }}
                 className="w-full"
               >
                 <div>
                   <Form.Item
-                    name="email"
+                    name="subdomain"
                     rules={[
                       {
                         required: true,
-                        message: "Enter email to proceed",
+                        message: "Enter Index URL to proceed",
                       },
                     ]}
                     required={false}
                   >
-                    <Input id="enter-email" placeholder="Email" />
+                    <Input id="subdomain" placeholder="Index URL" />
                   </Form.Item>
                 </div>
                 <div className="space-y-4 mt-10">
