@@ -869,7 +869,7 @@ export const getServerSideProps = async ({ req }: any) => {
       ? req.headers.host.split(".")[0]
       : null;
 
-  let domainExist = true;
+  let domainExist = false;
   await axios
     .post(
       `${process.env.REACT_APP_API_BASE_URL}/api/domain-checker?api_key=${process.env.REACT_APP_API_KEY}`,
@@ -878,9 +878,7 @@ export const getServerSideProps = async ({ req }: any) => {
       }
     )
     .then((response) => {
-      if (response.data) {
-        domainExist = true;
-      }
+      domainExist = response.data;
     })
     .catch((error) => {
       domainExist = false;
