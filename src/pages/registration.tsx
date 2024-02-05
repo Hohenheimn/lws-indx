@@ -248,7 +248,11 @@ export default function Registration({ router }: any) {
                     required={false}
                     className="col-span-full"
                   >
-                    <Input id="registration-indx-url" placeholder="Index Url" />
+                    <Input
+                      id="registration-indx-url"
+                      disabled
+                      placeholder="Index Url"
+                    />
                   </Form.Item>
                   {/* <Form.Item
                     label="Index Url Slug"
