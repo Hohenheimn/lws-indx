@@ -44,8 +44,8 @@ export default function EnterSubdomain() {
         } else {
           notification.warning({
             key: "check-account-id",
-            message: "Invalid Email",
-            description: "Email does not exist",
+            message: "Invalid Index Url",
+            description: "Index Url does not exist",
           });
         }
       },
@@ -135,7 +135,7 @@ export default function EnterSubdomain() {
                     className="py-4"
                     appearance="blumine"
                     type="submit"
-                    id="enter-email-submit"
+                    id="enter-indx-url-submit"
                   >
                     Next
                   </Button>

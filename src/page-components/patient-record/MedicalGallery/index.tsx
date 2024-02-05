@@ -79,20 +79,21 @@ export function MedicalGallery({ patientRecord, pageType }: any) {
   );
 
   const gallery_list: galleryType[] = MedicalGallery?.data
-    ? [
-        ...MedicalGallery.data,
-        {
-          _id: "23131",
-          patient_id: "232131",
-          filename: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-          category: "videos",
-          name: "sample",
-          description: "sample",
-          user_id: "23455",
-          created_at: "",
-        },
-      ]
-    : [];
+    ? MedicalGallery?.data
+    : // [
+      //     ...MedicalGallery.data,
+      //     {
+      //       _id: "23131",
+      //       patient_id: "232131",
+      //       filename: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+      //       category: "videos",
+      //       name: "sample",
+      //       description: "sample",
+      //       user_id: "23455",
+      //       created_at: "",
+      //     },
+      //   ]
+      [];
 
   const { mutate: deleteMedicalGallery }: any = useMutation(
     (gallery_id: number) =>
