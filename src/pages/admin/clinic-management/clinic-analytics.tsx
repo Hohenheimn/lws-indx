@@ -383,7 +383,7 @@ export function ClinicAnalytics({ profile }: any) {
           },
           body: {
             row: ({ ...rest }: any) => {
-              return <tr {...rest} />;
+              return <tr {...rest} className=" cursor-default" />;
             },
           },
         }}

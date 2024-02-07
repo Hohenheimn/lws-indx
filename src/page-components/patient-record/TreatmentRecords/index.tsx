@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, DatePicker, Form, Popover, Table, notification } from "antd";
-import { AnimatePresence } from "framer-motion";
-import { motion } from "framer-motion";
+import { Form } from "antd";
+import moment from "moment";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BsEyeFill, BsPencilSquare, BsTrashFill } from "react-icons/bs";
-import { scroller } from "react-scroll";
-import { twMerge } from "tailwind-merge";
 import { Button } from "@components/Button";
 import Card from "@components/Card";
 import Input from "@components/Input";
-
 import { useQuery } from "@tanstack/react-query";
-
 import { fetchData } from "@utilities/api";
 import { numberSeparator } from "@utilities/helpers";
 
@@ -20,7 +14,6 @@ import { BillingColumns, PaymentColumns, RecordColumns } from "./Columns";
 import CreateBillingStatementModal from "./CreateBillingStatementModal";
 import CreatePaymentModal from "./CreatePaymentModal";
 import PerCertainAmountModal from "./PayCertainAmountModal";
-import PreviewModal, { TreatmentRecordType } from "./PreviewModal";
 import TreatmentRecordTable from "./Table";
 import { SelectedTreatment, SelectedBilling, SelectedPayment } from "./types";
 import ViewPaymentModal from "./ViewPaymentModa";
@@ -38,11 +31,6 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
 
   let [previewModal, setPreviewModal] = React.useState(false);
 
-  let [
-    previewModalData,
-    setPreviewModalData,
-  ] = React.useState<TreatmentRecordType | null>(null);
-
   let { data: invoiceTotal, isLoading } = useQuery(
     ["invoice-total", patientRecord?._id],
     () =>
@@ -51,14 +39,24 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
       })
   );
 
+  const setDefaultValueTreatment = (record: any) => {
+    TreatmentRecordForm.setFieldsValue({
+      ...record,
+      _id: record?._id,
+      branch_id: record?.branch,
+      amount: record?.amount,
+      created_at: moment(record.created_at).isValid()
+        ? moment(record.created_at)
+        : undefined,
+    });
+    setIsTreatmentRecordModalOpen(true);
+  };
+
   const TableRecordColumns = RecordColumns(
     SelectedTreatments,
     setSelectedTreatments,
     pageType,
-    (data: any) => {
-      setPreviewModalData(data);
-      setPreviewModal(true);
-    }
+    setDefaultValueTreatment
   );
 
   const TableBillingColumns = BillingColumns(
@@ -224,6 +222,7 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
         currency={currency}
         patientRecord={patientRecord}
         form={TreatmentRecordForm}
+        pageType={pageType}
       />
       <PerCertainAmountModal
         show={isPayCertainAmountModalOpen}
@@ -270,15 +269,6 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
         id="create-payment"
         patientRecord={patientRecord}
         SelectedPayment={SelectedPayment}
-        currency={currency}
-      />
-
-      <PreviewModal
-        show={previewModal}
-        onClose={() => {
-          setPreviewModal(false);
-        }}
-        previewData={previewModalData}
         currency={currency}
       />
 

@@ -101,10 +101,12 @@ export default function CreateBillingStatementModal({
     });
     vat_exclusive = total * 0.12;
     senior_discount = total * 0.2;
-    discounted = total * Number(removeNumberFormatting(enter_discount));
     if (vat_and_discount?.includes("VAT Exclusive")) {
-      total = total + vat_exclusive;
+      total = total - vat_exclusive;
       setVat_exclusive(vat_exclusive);
+      // const enterAmount = total;
+      // const inclusiveVat = enterAmount - (enterAmount * 100) / 112;
+      // setVat_exclusive(inclusiveVat);
     }
     if (vat_and_discount?.includes("Senior Citizen Discount")) {
       total = total - senior_discount;
@@ -115,6 +117,8 @@ export default function CreateBillingStatementModal({
       setEntered_discount(Number(removeNumberFormatting(enter_discount)));
     }
     if (type_discount === "Percent") {
+      discounted =
+        total * (Number(removeNumberFormatting(enter_discount)) / 100);
       total = total - Number(discounted);
       setEntered_discount(discounted);
     }
@@ -312,8 +316,13 @@ export default function CreateBillingStatementModal({
             initialValue={0}
           >
             <NumericFormat
+              disabled={!type_discount}
               customInput={Input}
-              placeholder="Enter Discount Amount"
+              placeholder={
+                type_discount === "Amount"
+                  ? "Enter discount amount"
+                  : "Enter discount percentage"
+              }
               className=" text-end"
               id="discount"
               prefix={type_discount === "Amount" ? currency : ""}
@@ -325,7 +334,7 @@ export default function CreateBillingStatementModal({
             {vat_exclusive > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  VAT Exclusive (12%): + {currency}{" "}
+                  VAT Exclusive (12%): - {currency}{" "}
                   {numberSeparator(vat_exclusive, 0)}
                 </p>
               </div>

@@ -141,6 +141,8 @@ export function InfiniteSelect({
       noFilter={true}
       onSearch={(e: any) => setSearch(e)}
       {...rest}
+      className=" pr-[3.5rem]"
+      aria-autocomplete="none"
     >
       {listData?.pages?.map(({ data }) => {
         return data?.map((props: any, index: number) => {

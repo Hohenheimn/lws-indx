@@ -31,8 +31,10 @@ export default function AddTreatmentRecordModal({
   form,
   patientRecord,
   currecncy,
+  pageType,
   ...rest
 }: any) {
+  const id = form.getFieldValue("_id");
   const age = getAge(patientRecord.birthdate);
 
   const queryClient = useQueryClient();
@@ -50,10 +52,13 @@ export default function AddTreatmentRecordModal({
   useEffect(() => {
     const procedure_cost = procedure_id ? Number(procedureDetail?.cost) : 0;
     const amount = Number(removeNumberFormatting(quantity)) * procedure_cost;
-    form.setFieldValue("amount", isNaN(amount) ? 0 : amount);
+    form.setFieldValue(
+      "amount",
+      isNaN(amount) ? form.getFieldValue("amount") : amount
+    );
   }, [procedure_id, quantity]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     form.setFieldsValue({
       ...form,
       created_at: moment(form?.getFieldValue("created_at")).isValid()
@@ -127,7 +132,9 @@ export default function AddTreatmentRecordModal({
     >
       <div className="space-y-8">
         <div className="flex items-center justify-between">
-          <div className="font-bold text-3xl">New Treatment Record</div>
+          <div className="font-bold text-3xl">
+            {id ? "Update" : "New"} Treatment Record
+          </div>
         </div>
         <Form
           form={form}
@@ -135,8 +142,12 @@ export default function AddTreatmentRecordModal({
           onFinish={(values: any) => {
             delete values.created_at;
             values.amount = removeNumberFormatting(values.amount);
-
-            addTreatmentRecord(values);
+            if (id) {
+              //update mutate here
+              console.log(values);
+            } else {
+              addTreatmentRecord(values);
+            }
           }}
           onFinishFailed={(data) => {
             scroller.scrollTo(
@@ -161,24 +172,6 @@ export default function AddTreatmentRecordModal({
                 format="MMMM DD, YYYY"
               />
             </Form.Item>
-            {/*          
-            <Form.Item
-              label="Chart Name"
-              name="chart_id"
-              required={true}
-              initialValue={""}
-              className="col-span-12"
-            >
-              <InfiniteSelect
-                placeholder="Select Chart Name"
-                id="chart_id"
-                api={`${process.env.REACT_APP_API_BASE_URL}/api/patient/charting/${patientRecord._id}?limit=3&for_dropdown=true&page=1`}
-                queryKey={["charting-list"]}
-                displayValueKey="name"
-                returnValueKey="_id"
-              />
-            </Form.Item> */}
-
             <Form.Item
               label="Designated Dentist"
               name="doctor_id"
@@ -345,13 +338,24 @@ export default function AddTreatmentRecordModal({
             >
               Cancel
             </Button>
-            <Button
-              appearance="primary"
-              className="max-w-[10rem]"
-              type="submit"
-            >
-              Save
-            </Button>
+            {/* {(pageType === "edit" || !id) && (
+              <Button
+                appearance="primary"
+                className="max-w-[10rem]"
+                type="submit"
+              >
+                Save
+              </Button>
+            )} */}
+            {!id && (
+              <Button
+                appearance="primary"
+                className="max-w-[10rem]"
+                type="submit"
+              >
+                Save
+              </Button>
+            )}
           </div>
         </Form>
       </div>
