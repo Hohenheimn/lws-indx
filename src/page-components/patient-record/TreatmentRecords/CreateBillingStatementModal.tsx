@@ -67,7 +67,7 @@ export default function CreateBillingStatementModal({
 
   const vat_and_discount = Form.useWatch("vat_and_discount", form);
 
-  const enter_discount = Form.useWatch("discount", form);
+  const enterDiscount = Form.useWatch("discount", form);
 
   const type_discount = Form.useWatch("discount_type", form);
 
@@ -81,7 +81,7 @@ export default function CreateBillingStatementModal({
 
   const [senior_discount, setSenior_discount] = useState(0);
 
-  const [entered_discount, setEntered_discount] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
 
   React.useEffect(() => {
     setTreatments(SelectedTreatments);
@@ -91,7 +91,7 @@ export default function CreateBillingStatementModal({
     setProcedureTotal(0);
     setVat_exclusive(0);
     setSenior_discount(0);
-    setEntered_discount(0);
+    setDiscountAmount(0);
     let total = 0;
     let vat_exclusive = 0;
     let senior_discount = 0;
@@ -99,10 +99,10 @@ export default function CreateBillingStatementModal({
     Treatments.map((item: SelectedTreatment) => {
       total = total + Number(item.amount);
     });
-    vat_exclusive = total * 0.12;
-    senior_discount = total * 0.2;
+    vat_exclusive = total - total / 1.12; // 12%
+    senior_discount = total - total / 1.2; // 20%
     if (vat_and_discount?.includes("VAT Exclusive")) {
-      total = total - vat_exclusive;
+      total = total + vat_exclusive;
       setVat_exclusive(vat_exclusive);
       // const enterAmount = total;
       // const inclusiveVat = enterAmount - (enterAmount * 100) / 112;
@@ -113,17 +113,18 @@ export default function CreateBillingStatementModal({
       setSenior_discount(senior_discount);
     }
     if (type_discount === "Amount") {
-      total = total - Number(removeNumberFormatting(enter_discount));
-      setEntered_discount(Number(removeNumberFormatting(enter_discount)));
+      total = total - Number(removeNumberFormatting(enterDiscount));
+      setDiscountAmount(Number(removeNumberFormatting(enterDiscount)));
     }
     if (type_discount === "Percent") {
-      discounted =
-        total * (Number(removeNumberFormatting(enter_discount)) / 100);
+      const getPercentage =
+        1 + Number(removeNumberFormatting(enterDiscount)) / 100; // get 1.xx
+      discounted = total - total / getPercentage;
       total = total - Number(discounted);
-      setEntered_discount(discounted);
+      setDiscountAmount(discounted);
     }
     setProcedureTotal(total);
-  }, [Treatments, vat_and_discount, enter_discount, type_discount]);
+  }, [Treatments, vat_and_discount, enterDiscount, type_discount]);
 
   React.useEffect(() => {
     form.setFieldsValue({
@@ -328,13 +329,22 @@ export default function CreateBillingStatementModal({
               prefix={type_discount === "Amount" ? currency : ""}
               suffix={type_discount === "Percent" ? "%" : ""}
               thousandSeparator
+              isAllowed={({ floatValue }: any) => {
+                if (type_discount === "Percent") {
+                  return floatValue <= 99 || floatValue === undefined;
+                } else {
+                  return (
+                    floatValue <= isProcedureTotal || floatValue === undefined
+                  );
+                }
+              }}
             />
           </Form.Item>
           <div className=" border-t-2 border-gray-300 space-y-2 pt-5">
             {vat_exclusive > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  VAT Exclusive (12%): - {currency}{" "}
+                  VAT Exclusive (12%): + {currency}{" "}
                   {numberSeparator(vat_exclusive, 0)}
                 </p>
               </div>
@@ -347,11 +357,12 @@ export default function CreateBillingStatementModal({
                 </p>
               </div>
             )}
-            {entered_discount > 0 && (
+            {discountAmount > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  Entered Discount: - {currency}{" "}
-                  {numberSeparator(entered_discount, 0)}
+                  Entered Discount{" "}
+                  {type_discount === "Percent" ? `(${enterDiscount})` : ""}: -{" "}
+                  {currency} {numberSeparator(discountAmount, 0)}
                 </p>
               </div>
             )}

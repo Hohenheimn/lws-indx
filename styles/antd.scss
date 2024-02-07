@@ -827,3 +827,9 @@ div.ant-select.ant-select-multiple .ant-select-selector {
 label.ant-checkbox-wrapper {
   @apply ml-4;
 }
+
+div.ant-select.ant-select-multiple
+  .ant-select-selector
+  .ant-select-selection-item {
+  line-height: unset !important;
+}
