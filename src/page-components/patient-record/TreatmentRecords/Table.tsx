@@ -37,18 +37,6 @@ export default function TreatmentRecordTable({
     return "";
   };
 
-  const headerRowProps = (columns: any, index: number) => {
-    return {
-      onClick: (e: any) => {
-        const target = e.target;
-        const columnIndex = Array.from(target.parentNode.children).indexOf(
-          target
-        );
-        console.log("Column clicked:", index, columnIndex);
-      },
-    };
-  };
-
   return (
     <>
       <Table
@@ -82,10 +70,6 @@ export default function TreatmentRecordTable({
           },
           body: {
             row: ({ ...rest }: any) => {
-              let rowrecord = TableData?.data?.find(
-                ({ _id }: any) => _id === rest["data-row-key"]
-              );
-
               return <tr {...rest} />;
             },
           },

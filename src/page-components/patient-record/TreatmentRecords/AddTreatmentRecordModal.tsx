@@ -34,7 +34,9 @@ export default function AddTreatmentRecordModal({
   pageType,
   ...rest
 }: any) {
+  const fromCharting = form.getFieldValue("fromCharting");
   const id = form.getFieldValue("_id");
+
   const age = getAge(patientRecord.birthdate);
 
   const queryClient = useQueryClient();
@@ -67,10 +69,13 @@ export default function AddTreatmentRecordModal({
     });
   }, [show]);
 
-  const { mutate: addTreatmentRecord } = useMutation(
+  const mutateAPI = id
+    ? `/api/patient/treatment/update/${id}?_method=PUT`
+    : `/api/patient/treatment/${patientRecord?._id}`;
+  const { mutate } = useMutation(
     (payload: any) => {
       return postDataNoFormData({
-        url: `/api/patient/treatment/${patientRecord?._id}`,
+        url: mutateAPI,
         payload,
         options: {
           isLoading: (show: boolean) => setIsAppLoading(show),
@@ -80,8 +85,8 @@ export default function AddTreatmentRecordModal({
     {
       onSuccess: async (res) => {
         notification.success({
-          message: "Adding Treatment Record Success",
-          description: `Adding Treatment Record Success`,
+          message: `${id ? "Updating" : "Adding"} Treatment Record Success`,
+          description: `${id ? "Updating" : "Adding"} Treatment Record Success`,
         });
         form.resetFields();
         queryClient.invalidateQueries({
@@ -141,13 +146,9 @@ export default function AddTreatmentRecordModal({
           layout="vertical"
           onFinish={(values: any) => {
             delete values.created_at;
+            delete values.fromCharting;
             values.amount = removeNumberFormatting(values.amount);
-            if (id) {
-              //update mutate here
-              console.log(values);
-            } else {
-              addTreatmentRecord(values);
-            }
+            mutate(values);
           }}
           onFinishFailed={(data) => {
             scroller.scrollTo(
@@ -188,7 +189,11 @@ export default function AddTreatmentRecordModal({
                 placeholder="Select Dentist"
                 id="doctor_id"
                 api={`${process.env.REACT_APP_API_BASE_URL}/api/account?limit=3&for_dropdown=true&page=1`}
-                queryKey={["doctor"]}
+                getInitialValue={{
+                  form,
+                  initialValue: "doctor_id",
+                }}
+                queryKey={["doctor ", Form.useWatch("doctor_id")]}
                 displayValueKey="name"
                 returnValueKey="_id"
               />
@@ -210,7 +215,11 @@ export default function AddTreatmentRecordModal({
                 placeholder="Select Clinic"
                 id="branch_id"
                 api={`${process.env.REACT_APP_API_BASE_URL}/api/branch?limit=3&for_dropdown=true&page=1`}
-                queryKey={["branch"]}
+                getInitialValue={{
+                  form,
+                  initialValue: "branch_id",
+                }}
+                queryKey={["branch", Form.useWatch("branch_id")]}
                 displayValueKey="name"
                 returnValueKey="_id"
               />
@@ -274,12 +283,13 @@ export default function AddTreatmentRecordModal({
                   process.env.REACT_APP_API_BASE_URL
                 }/api/procedure?limit=3&for_dropdown=true&page=1${getInitialValue(
                   form,
-                  "procedure"
+                  "procedure_id"
                 )}`}
-                queryKey={["procedure"]}
+                queryKey={["procedure", procedure_id]}
                 displayValueKey="name"
                 returnValueKey="_id"
                 setSelectedDetail={setProcedureDetail}
+                disabled={fromCharting}
               />
             </Form.Item>
 
@@ -338,16 +348,7 @@ export default function AddTreatmentRecordModal({
             >
               Cancel
             </Button>
-            {/* {(pageType === "edit" || !id) && (
-              <Button
-                appearance="primary"
-                className="max-w-[10rem]"
-                type="submit"
-              >
-                Save
-              </Button>
-            )} */}
-            {!id && (
+            {(pageType === "edit" || !id) && (
               <Button
                 appearance="primary"
                 className="max-w-[10rem]"

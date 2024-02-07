@@ -29,8 +29,6 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
 
   const [SelectedPayment, setSelectedPayment] = useState<SelectedPayment[]>([]);
 
-  let [previewModal, setPreviewModal] = React.useState(false);
-
   let { data: invoiceTotal, isLoading } = useQuery(
     ["invoice-total", patientRecord?._id],
     () =>
@@ -43,8 +41,10 @@ export function TreatmentRecords({ patientRecord, pageType, currency }: any) {
     TreatmentRecordForm.setFieldsValue({
       ...record,
       _id: record?._id,
+      fromCharting: record?.chart_id ? true : false,
       branch_id: record?.branch,
       amount: record?.amount,
+      procedure_id: record?.procedure_id,
       created_at: moment(record.created_at).isValid()
         ? moment(record.created_at)
         : undefined,
