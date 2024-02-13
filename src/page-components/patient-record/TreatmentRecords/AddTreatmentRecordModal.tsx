@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { DatePicker, Form, TimePicker, notification } from "antd";
+import { DatePicker, Form, notification } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
-import Image from "next/image";
-import { AiFillMinusCircle } from "react-icons/ai";
-import { IoMdAddCircle } from "react-icons/io";
 import { NumericFormat } from "react-number-format";
 import { scroller } from "react-scroll";
-import { AnimateContainer } from "@components/animation";
-import { fadeIn } from "@components/animation/animation";
 import { Button } from "@components/Button";
 import { InfiniteSelect } from "@components/InfiniteSelect";
 import Input from "@components/Input";
@@ -16,7 +11,7 @@ import Modal from "@components/Modal";
 import { Select } from "@components/Select";
 import MultipleSelect from "@src/components/MultipleSelect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteData, postData, postDataNoFormData } from "@utilities/api";
+import { postDataNoFormData } from "@utilities/api";
 import { Context } from "@utilities/context/Provider";
 import {
   getAge,
@@ -35,6 +30,7 @@ export default function AddTreatmentRecordModal({
   ...rest
 }: any) {
   const fromCharting = form.getFieldValue("fromCharting");
+
   const id = form.getFieldValue("_id");
 
   const age = getAge(patientRecord.birthdate);
@@ -52,13 +48,13 @@ export default function AddTreatmentRecordModal({
   const procedure_id = Form.useWatch("procedure_id", form);
 
   useEffect(() => {
-    const procedure_cost = procedure_id ? Number(procedureDetail?.cost) : 0;
-    const amount = Number(removeNumberFormatting(quantity)) * procedure_cost;
+    const procedureCost = procedureDetail ? Number(procedureDetail?.cost) : 0;
+    const amount = Number(removeNumberFormatting(quantity)) * procedureCost;
     form.setFieldValue(
       "amount",
       isNaN(amount) ? form.getFieldValue("amount") : amount
     );
-  }, [procedure_id, quantity]);
+  }, [procedureDetail, quantity]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -148,6 +144,7 @@ export default function AddTreatmentRecordModal({
             delete values.created_at;
             delete values.fromCharting;
             values.amount = removeNumberFormatting(values.amount);
+
             mutate(values);
           }}
           onFinishFailed={(data) => {

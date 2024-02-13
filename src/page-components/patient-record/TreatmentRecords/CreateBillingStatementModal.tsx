@@ -65,7 +65,8 @@ export default function CreateBillingStatementModal({
 
   const [Treatments, setTreatments] = useState(SelectedTreatments);
 
-  const vat_and_discount = Form.useWatch("vat_and_discount", form);
+  const vatInclusive = Form.useWatch("vat_inclusive", form);
+  const seniorPwdDiscount = Form.useWatch("senior_pwd_discount", form);
 
   const enterDiscount = Form.useWatch("discount", form);
 
@@ -77,7 +78,7 @@ export default function CreateBillingStatementModal({
 
   const [isProcedureTotal, setProcedureTotal] = useState(0);
 
-  const [vat_exclusive, setVat_exclusive] = useState(0);
+  const [isAVatInclusive, setVatInclusive] = useState(0);
 
   const [senior_discount, setSenior_discount] = useState(0);
 
@@ -89,42 +90,45 @@ export default function CreateBillingStatementModal({
 
   React.useEffect(() => {
     setProcedureTotal(0);
-    setVat_exclusive(0);
+    setVatInclusive(0);
     setSenior_discount(0);
     setDiscountAmount(0);
     let total = 0;
-    let vat_exclusive = 0;
-    let senior_discount = 0;
-    let discounted = 0;
     Treatments.map((item: SelectedTreatment) => {
       total = total + Number(item.amount);
     });
-    vat_exclusive = total - total / 1.12; // 12%
-    senior_discount = total - total / 1.2; // 20%
-    if (vat_and_discount?.includes("VAT Exclusive")) {
-      total = total + vat_exclusive;
-      setVat_exclusive(vat_exclusive);
-      // const enterAmount = total;
-      // const inclusiveVat = enterAmount - (enterAmount * 100) / 112;
-      // setVat_exclusive(inclusiveVat);
-    }
-    if (vat_and_discount?.includes("Senior Citizen Discount")) {
-      total = total - senior_discount;
+    let senior_discount = total * 0.2; // 20%
+    let senior_discount_value = 0;
+    let vat_inclusive = total - total / 1.12;
+    let vat_inclusive_value = 0;
+    let discounted = 0;
+
+    if (seniorPwdDiscount?.includes("Senior Citizen Discount")) {
+      senior_discount_value = senior_discount;
       setSenior_discount(senior_discount);
     }
     if (type_discount === "Amount") {
-      total = total - Number(removeNumberFormatting(enterDiscount));
-      setDiscountAmount(Number(removeNumberFormatting(enterDiscount)));
-    }
-    if (type_discount === "Percent") {
-      const getPercentage =
-        1 + Number(removeNumberFormatting(enterDiscount)) / 100; // get 1.xx
-      discounted = total - total / getPercentage;
-      total = total - Number(discounted);
+      discounted = Number(removeNumberFormatting(enterDiscount));
       setDiscountAmount(discounted);
     }
+    if (type_discount === "Percent") {
+      const getPercentage = Number(removeNumberFormatting(enterDiscount)) / 100;
+      discounted = total * getPercentage;
+      setDiscountAmount(discounted);
+    }
+    if (vatInclusive?.includes("VAT")) {
+      vat_inclusive_value = vat_inclusive;
+      setVatInclusive(vat_inclusive);
+    }
+    total = total - senior_discount_value - discounted + vat_inclusive_value;
     setProcedureTotal(total);
-  }, [Treatments, vat_and_discount, enterDiscount, type_discount]);
+  }, [
+    Treatments,
+    seniorPwdDiscount,
+    vatInclusive,
+    enterDiscount,
+    type_discount,
+  ]);
 
   React.useEffect(() => {
     form.setFieldsValue({
@@ -211,8 +215,8 @@ export default function CreateBillingStatementModal({
           onFinish={(values: any) => {
             values.discount = removeNumberFormatting(values.discount);
             values.total = isProcedureTotal.toFixed(2);
-            values.vat_exclusive = vat_exclusive > 0 ? true : false;
-            values.vat = Number(vat_exclusive.toFixed(2));
+            values.vat_exclusive = isAVatInclusive > 0 ? true : false;
+            values.vat = Number(isAVatInclusive.toFixed(2));
             values.senior_discount = senior_discount > 0 ? true : false;
             values.treatments = Treatments.map((item: SelectedTreatment) => {
               return {
@@ -279,16 +283,16 @@ export default function CreateBillingStatementModal({
             }}
           />
           <div>
+            <h4>Deductions</h4>
             <Form.Item
-              name="vat_and_discount"
+              name="senior_pwd_discount"
               required={false}
               className="text-base"
               initialValue={[]}
             >
               <Checkbox.Group className="grid grid-cols-1 gap-1 justify-center text-lg">
-                <Checkbox value="VAT Exclusive">VAT Exclusive</Checkbox>
                 <Checkbox value="Senior Citizen Discount">
-                  Senior Citizen Discount
+                  Senior Citizen / PWD Discount
                 </Checkbox>
               </Checkbox.Group>
             </Form.Item>
@@ -340,15 +344,17 @@ export default function CreateBillingStatementModal({
               }}
             />
           </Form.Item>
+          <Form.Item
+            name="vat_inclusive"
+            required={false}
+            className="text-base"
+            initialValue={[]}
+          >
+            <Checkbox.Group className="grid grid-cols-1 gap-1 justify-center text-lg">
+              <Checkbox value="VAT">VAT Inclusive</Checkbox>
+            </Checkbox.Group>
+          </Form.Item>
           <div className=" border-t-2 border-gray-300 space-y-2 pt-5">
-            {vat_exclusive > 0 && (
-              <div className="flex justify-end">
-                <p className=" text-lg text-gray-400">
-                  VAT Exclusive (12%): + {currency}{" "}
-                  {numberSeparator(vat_exclusive, 0)}
-                </p>
-              </div>
-            )}
             {senior_discount > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
@@ -360,9 +366,16 @@ export default function CreateBillingStatementModal({
             {discountAmount > 0 && (
               <div className="flex justify-end">
                 <p className=" text-lg text-gray-400">
-                  Entered Discount{" "}
-                  {type_discount === "Percent" ? `(${enterDiscount})` : ""}: -{" "}
-                  {currency} {numberSeparator(discountAmount, 0)}
+                  Entered Discount: -{currency}{" "}
+                  {numberSeparator(discountAmount, 0)}
+                </p>
+              </div>
+            )}
+            {isAVatInclusive > 0 && (
+              <div className="flex justify-end">
+                <p className=" text-lg text-gray-400">
+                  VAT Inclusive (12% of Total Charge): + {currency}{" "}
+                  {numberSeparator(isAVatInclusive, 0)}
                 </p>
               </div>
             )}

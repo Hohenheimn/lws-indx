@@ -143,14 +143,13 @@ export function InfiniteSelect({
       {...rest}
       className=" pr-[3.5rem]"
       aria-autocomplete="none"
+      infiniteSelect={true}
     >
       {listData?.pages?.map(({ data }) => {
         return data?.map((props: any, index: number) => {
           return (
             <Select.Option
-              displayValue={
-                isListLoading ? "Loading..." : props[displayValueKey]
-              }
+              displayValue={props[displayValueKey]}
               value={returnAllValue ? props : props[returnValueKey]}
               key={index}
               onClick={() => setSelectedDetail && setSelectedDetail(props)}

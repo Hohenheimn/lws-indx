@@ -28,6 +28,7 @@ interface SelectProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   noData?: string;
   hideResetField?: boolean;
+  infiniteSelect?: boolean;
 }
 
 const Option: React.FC<SelectOptionProps> = ({
@@ -68,6 +69,7 @@ export function Select({
   hideResetField,
   disabled,
   noData,
+  infiniteSelect,
   ...rest
 }: SelectProps) {
   let [selectedValue, setSelectedValue] = React.useState("");
@@ -182,9 +184,11 @@ export function Select({
                   let displayValue = flattenChildren.find(
                     (val: any) => val.props.value === value
                   )?.props?.displayValue;
-
                   if (open) {
                     return "";
+                  }
+                  if (selectedValue && !displayValue && infiniteSelect) {
+                    return "loading...";
                   }
                   if (displayValue) {
                     return (

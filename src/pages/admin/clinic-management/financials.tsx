@@ -178,7 +178,7 @@ export function Financials({ profile }: any) {
   return (
     <PageContainer>
       <AnimatePresence mode="wait">
-        {(isLoading || invoicesLoading) && (
+        {/* {(isLoading || invoicesLoading) && (
           <AnimateContainer
             variants={fadeIn}
             rootMargin="0px"
@@ -186,7 +186,7 @@ export function Financials({ profile }: any) {
           >
             <LoadingScreen />
           </AnimateContainer>
-        )}
+        )} */}
       </AnimatePresence>
       <div className="flex justify-between items-center gap-4 flex-wrap md:flex-nowrap">
         <h3 className="basis-auto whitespace-nowrap">Financials</h3>
@@ -282,7 +282,7 @@ export function Financials({ profile }: any) {
         <div className="basis-full lg:basis-auto flex gap-4">
           <Select
             placeholder="View Payment Status"
-            className="border-transparent"
+            className="border-transparent capitalize"
             value={status}
             onChange={(value: string) => setStatus(value)}
           >
