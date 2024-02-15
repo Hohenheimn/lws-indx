@@ -48,6 +48,13 @@ export default function CreateBillingStatementModal({
       dataIndex: "procedure_name",
       width: "10rem",
       align: "center",
+      render: (_: string, record: SelectedTreatment) => {
+        return (
+          <div>
+            {`(${record?.quantity}x)`} {record?.procedure_name}
+          </div>
+        );
+      },
     },
     {
       title: "Charge",

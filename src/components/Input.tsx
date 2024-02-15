@@ -87,7 +87,9 @@ export const Input: React.ForwardRefRenderFunction<
             className
           )}
           disabled={disabled}
-          value={value ? value : inputValue ? inputValue : ""}
+          value={
+            value === "null" ? "" : value ? value : inputValue ? inputValue : ""
+          }
           onChange={(e) => {
             onChange && onChange(e);
             setInputValue(e.target.value);

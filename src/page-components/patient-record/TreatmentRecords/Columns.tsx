@@ -49,6 +49,7 @@ export const RecordColumns = (
                       amount: Number(record.amount),
                       procedure_name: record.procedure_name,
                       treatment_id: record._id,
+                      quantity: record.quantity,
                     },
                   ]);
                 }

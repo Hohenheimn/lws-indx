@@ -52,6 +52,7 @@ export type payment = {
 export type SelectedTreatment = {
   amount: number;
   procedure_name: string;
+  quantity: number;
   treatment_id: any;
 };
 

@@ -34,6 +34,7 @@ function dataURLtoFile(dataurl: any, filename: any) {
 }
 
 export function ProfileInfo({ profile, tab }: any) {
+  console.log(profile);
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
   const [DoctorInfoForm] = Form.useForm();
@@ -79,6 +80,9 @@ export function ProfileInfo({ profile, tab }: any) {
     }
   }
   const country = Form.useWatch("country", DoctorInfoForm);
+  const province = Form.useWatch("province", DoctorInfoForm);
+  const city = Form.useWatch("city", DoctorInfoForm);
+  const barangay = Form.useWatch("barangay", DoctorInfoForm);
   React.useEffect(() => {
     if (tab === "1") {
       DoctorInfoForm.setFieldsValue({
@@ -492,10 +496,10 @@ export function ProfileInfo({ profile, tab }: any) {
                             form: DoctorInfoForm,
                             initialValue: "province",
                           }}
-                          queryKey={["province", getFieldValue("country")]}
+                          queryKey={["province", country, province]}
                           displayValueKey="name"
                           returnValueKey="_id"
-                          disabled={Boolean(!getFieldValue("country"))}
+                          disabled={Boolean(!country)}
                           onChange={() => {
                             resetFields(["city", "barangay"]);
                           }}
@@ -533,13 +537,10 @@ export function ProfileInfo({ profile, tab }: any) {
                             form: DoctorInfoForm,
                             initialValue: "city",
                           }}
-                          queryKey={["city", getFieldValue("province")]}
+                          queryKey={["city", province, country, city]}
                           displayValueKey="name"
                           returnValueKey="_id"
-                          disabled={Boolean(
-                            !getFieldValue("country") ||
-                              !getFieldValue("province")
-                          )}
+                          disabled={Boolean(!country || !province)}
                           onChange={() => {
                             resetFields(["barangay"]);
                           }}
@@ -577,14 +578,16 @@ export function ProfileInfo({ profile, tab }: any) {
                             form: DoctorInfoForm,
                             initialValue: "barangay",
                           }}
-                          queryKey={["barangay", getFieldValue("city")]}
+                          queryKey={[
+                            "barangay",
+                            city,
+                            province,
+                            country,
+                            barangay,
+                          ]}
                           displayValueKey="name"
                           returnValueKey="_id"
-                          disabled={Boolean(
-                            !getFieldValue("country") ||
-                              !getFieldValue("province") ||
-                              !getFieldValue("city")
-                          )}
+                          disabled={Boolean(!country || !province || !city)}
                         />
                       </Form.Item>
                     );
