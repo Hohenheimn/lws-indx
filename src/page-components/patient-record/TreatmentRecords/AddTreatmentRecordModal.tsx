@@ -25,7 +25,7 @@ export default function AddTreatmentRecordModal({
   onClose,
   form,
   patientRecord,
-  currecncy,
+  currency,
   pageType,
   ...rest
 }: any) {
@@ -324,7 +324,7 @@ export default function AddTreatmentRecordModal({
                 placeholder="Amount Charge"
                 id="amount"
                 className=" text-end"
-                prefix={currecncy}
+                prefix={currency}
                 thousandSeparator
               />
             </Form.Item>

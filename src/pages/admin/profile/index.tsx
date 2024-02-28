@@ -8,7 +8,6 @@ import profile from "@pagecomponents/profile";
 
 export function ProfilePage({ profile: myProfile, subdomain }: any) {
   const router = useRouter();
-
   return (
     <>
       <PageContainer>

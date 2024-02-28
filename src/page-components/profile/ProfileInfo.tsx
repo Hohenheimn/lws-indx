@@ -34,7 +34,6 @@ function dataURLtoFile(dataurl: any, filename: any) {
 }
 
 export function ProfileInfo({ profile, tab }: any) {
-  console.log(profile);
   const queryClient = useQueryClient();
   const { setIsAppLoading } = React.useContext(Context);
   const [DoctorInfoForm] = Form.useForm();
