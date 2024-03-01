@@ -426,7 +426,7 @@ export function PersonalInfo({
                     <Form.Item name="country">
                       <InfiniteSelect
                         placeholder="Country"
-                        id="country"
+                        id="address-country"
                         api={`${process.env.REACT_APP_API_BASE_URL}/api/location/country?limit=3&for_dropdown=true&page=1`}
                         getInitialValue={{
                           form: PersonalInfoForm,
@@ -460,7 +460,7 @@ export function PersonalInfo({
                         <Form.Item name="province">
                           <InfiniteSelect
                             placeholder="Province"
-                            id="province"
+                            id="address-province"
                             api={`${process.env.REACT_APP_API_BASE_URL}/api/location/province?limit=3&for_dropdown=true&page=1`}
                             getInitialValue={{
                               form: PersonalInfoForm,
@@ -497,7 +497,7 @@ export function PersonalInfo({
                         <Form.Item name="city">
                           <InfiniteSelect
                             placeholder="City"
-                            id="city"
+                            id="address-city"
                             api={`${
                               process.env.REACT_APP_API_BASE_URL
                             }/api/location/city?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(
@@ -541,7 +541,7 @@ export function PersonalInfo({
                         <Form.Item name="barangay">
                           <InfiniteSelect
                             placeholder="Barangay"
-                            id="barangay"
+                            id="address-barangay"
                             api={`${
                               process.env.REACT_APP_API_BASE_URL
                             }/api/location/barangay?limit=3&for_dropdown=true&page=1&province_code=${getFieldValue(

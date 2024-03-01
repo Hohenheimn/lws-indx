@@ -333,12 +333,7 @@ export function Dashboard({ profile }: any) {
                                         <div className="flex flex-wrap md:justify-start justify-center">
                                           <div className="align-middle text-sm whitespace-nowrap">
                                             <AiOutlineCalendar className="inline-block align-middle" />{" "}
-                                            <span>
-                                              {format(
-                                                parseISO(created_at),
-                                                "dd/MM/yyyy"
-                                              )}
-                                            </span>
+                                            <span>{date}</span>
                                           </div>
                                           <div className="align-middle text-sm whitespace-nowrap truncate">
                                             <AiOutlineClockCircle className="inline-block align-middle" />{" "}
@@ -364,7 +359,13 @@ export function Dashboard({ profile }: any) {
                                       </div>
 
                                       <div className=" md:w-[15%] w-[48%] text-center space-y-0 font-medium basis-full md:basis-auto">
-                                        <div className=" px-2 py-1 border border-primary-500 text-sm rounded-lg">
+                                        <div
+                                          className={` px-2 py-1 ${
+                                            status === "Canceled"
+                                              ? "bg-danger-300 border-danger-500 text-white"
+                                              : "border border-primary-500"
+                                          } text-sm rounded-lg `}
+                                        >
                                           {status}
                                         </div>
                                       </div>

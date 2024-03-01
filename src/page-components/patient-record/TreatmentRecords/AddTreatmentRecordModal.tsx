@@ -144,7 +144,6 @@ export default function AddTreatmentRecordModal({
             delete values.created_at;
             delete values.fromCharting;
             values.amount = removeNumberFormatting(values.amount);
-
             mutate(values);
           }}
           onFinishFailed={(data) => {

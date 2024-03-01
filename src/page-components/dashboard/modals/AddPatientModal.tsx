@@ -155,7 +155,8 @@ export default function AddPatientModal({
           form={form}
           layout="vertical"
           onFinish={(values) => {
-            register(values);
+            console.log(values);
+            // register(values);
           }}
           onFinishFailed={(data) => {
             scroller.scrollTo(data?.errorFields[0]?.name[0].toString(), {

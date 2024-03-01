@@ -135,44 +135,46 @@ export function InfiniteSelect({
   ]);
 
   return !initialFetch ? (
-    <Select
-      loading={isListLoading}
-      lastChildRef={listRef}
-      noFilter={true}
-      onSearch={(e: any) => setSearch(e)}
-      {...rest}
-      className=" pr-[3.5rem]"
-      aria-autocomplete="none"
-      infiniteSelect={true}
-    >
-      {listData?.pages?.map(({ data }) => {
-        return data?.map((props: any, index: number) => {
-          return (
-            <Select.Option
-              displayValue={props[displayValueKey]}
-              value={returnAllValue ? props : props[returnValueKey]}
-              key={index}
-              onClick={() => setSelectedDetail && setSelectedDetail(props)}
-            >
-              {CustomizedOption ? (
-                <CustomizedOption data={props} />
-              ) : (
-                props.name
-              )}
-            </Select.Option>
-          );
-        });
-      })}
-      {isListLoading && (
-        <Select.Option
-          value="loading"
-          key="loading"
-          className="pointer-events-none p-4 text-sm"
-        >
-          Loading...
-        </Select.Option>
-      )}
-    </Select>
+    <>
+      <Select
+        loading={isListLoading}
+        lastChildRef={listRef}
+        noFilter={true}
+        onSearch={(e: any) => setSearch(e)}
+        {...rest}
+        className=" pr-[3.5rem]"
+        aria-autocomplete="none"
+        infiniteSelect={true}
+      >
+        {listData?.pages?.map(({ data }) => {
+          return data?.map((props: any, index: number) => {
+            return (
+              <Select.Option
+                displayValue={props[displayValueKey]}
+                value={returnAllValue ? props : props[returnValueKey]}
+                key={index}
+                onClick={() => setSelectedDetail && setSelectedDetail(props)}
+              >
+                {CustomizedOption ? (
+                  <CustomizedOption data={props} />
+                ) : (
+                  props.name
+                )}
+              </Select.Option>
+            );
+          });
+        })}
+        {isListLoading && (
+          <Select.Option
+            value="loading"
+            key={`${getInitialValue}-loading`}
+            className="pointer-events-none p-4 text-sm"
+          >
+            Loading...
+          </Select.Option>
+        )}
+      </Select>
+    </>
   ) : (
     <Select disabled={true}>
       <Select.Option value="">Loading</Select.Option>

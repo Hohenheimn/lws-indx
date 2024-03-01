@@ -187,6 +187,7 @@ export function Select({
                   if (open) {
                     return "";
                   }
+
                   if (selectedValue && !displayValue && infiniteSelect) {
                     return "loading...";
                   }

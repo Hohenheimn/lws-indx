@@ -212,9 +212,9 @@ export default function PerCertainAmountModal({
             onFinish={(values: any) => {
               values.amount = removeNumberFormatting(values.amount);
               values.credits = useCreditAmount;
-              if (values.amount !== CertainAmount) {
+              if (values.amount <= 0) {
                 notification.warning({
-                  message: "Must pay exact price",
+                  message: "Please enter an amount",
                 });
                 return;
               }
