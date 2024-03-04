@@ -218,6 +218,8 @@ export default function PerCertainAmountModal({
                 });
                 return;
               }
+              delete values.created_at;
+
               addPayment(values);
             }}
             onFinishFailed={(data) => {
