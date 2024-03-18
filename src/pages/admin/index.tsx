@@ -147,6 +147,8 @@ export function Dashboard({ profile }: any) {
           description: `Change Status Schedule Success`,
         });
         queryClient.invalidateQueries({ queryKey: ["schedule"] });
+        queryClient.invalidateQueries({ queryKey: ["schedule-dates"] });
+        queryClient.invalidateQueries({ queryKey: ["all-patient"] });
       },
       onError: (err: any, _, context: any) => {
         notification.warning({
@@ -416,7 +418,6 @@ export function Dashboard({ profile }: any) {
                                           }}
                                         />
                                       </Tooltip>
-
                                       <Tooltip title="Start Consultation">
                                         <FaTooth
                                           id="dashboard-patient-start-consultation"
@@ -428,7 +429,6 @@ export function Dashboard({ profile }: any) {
                                           className="align-middle cursor-pointer hover:text-secondary transition"
                                         />
                                       </Tooltip>
-
                                       <Tooltip title="Complete">
                                         <BsCheckSquare
                                           id="dashboard-patient-complete"

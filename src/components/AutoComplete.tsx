@@ -181,7 +181,7 @@ export function AutoComplete({
                 childrenWithProps
               ) : (
                 <div
-                  className="p-4 text-casper text-center border border-black"
+                  className="p-4 text-casper text-center"
                   onClick={(e) => {
                     e.preventDefault();
                   }}
