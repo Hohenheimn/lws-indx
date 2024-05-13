@@ -68,16 +68,8 @@ export default function SubscriptionAccount({ profile, subdomain }: Props) {
                 className=" p-5 lg:p-10 shadow-lg  duration-75 ease-linear bg-white space-y-5 rounded-md"
               >
                 <h4>{item.name}</h4>
-                {/* <p className=" text-[1rem] text-gray-400">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Itaque modi tempore voluptate velit? Earum, ipsum.
-                </p> */}
+
                 <h1>PHP {numberSeparator(item.amount, 2)}</h1>
-                {/* <h5>Recommended for</h5> */}
-                {/* <p className=" text-[1rem] text-gray-400">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Dolorum ipsa ducimus eligendi esse repellendus atque.
-                </p> */}
                 <Button
                   appearance="primary"
                   onClick={() => {
